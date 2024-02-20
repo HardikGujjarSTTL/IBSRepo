@@ -85,7 +85,7 @@
                             var id = data.ID;
                             var editUrl = '@Url.Action("ManageDetail", "HolidayMaster")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '<a onclick="HolidayDetailDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            //html += '<a onclick="HolidayDetailDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
 

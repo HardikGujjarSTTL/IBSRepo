@@ -207,6 +207,12 @@ namespace IBS.Repositories
             string BPOCd = "";
             if (model.BpoCd == null)
             {
+                var Cnt = context.T12BillPayingOfficers.Where(x => x.BpoType == model.BpoType && x.BpoRly == (model.BpoType == "R" ? model.BpoRlylst : model.BpoRly) && x.BpoRegion == model.BpoRegion).Count();
+                if(Cnt > 0)
+                {
+                    return "-1";
+                }
+
                 BPOCd = GetMaxBPOCd();
 
                 T12BillPayingOfficer bpo = new()

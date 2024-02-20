@@ -88,7 +88,7 @@
             }
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
-            debugger
+            
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
             $("#ActionType").val(type);

@@ -95,7 +95,7 @@
                             var RailId = data.RailId;
                             var editUrl = '@Url.Action("ManageDetails", "CentralItemMaster")/' + Id;
                             var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '<a onclick="DeleteDetails(' + Id + ',' + RailId + '); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            //html += '<a onclick="DeleteDetails(' + Id + ',' + RailId + '); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

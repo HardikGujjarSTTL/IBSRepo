@@ -103,6 +103,13 @@ namespace IBS.Repositories
         {
             if (model.CityCd == 0)
             {
+                var Cnt = context.T03Cities.Where(x => x.City.ToLower() == model.City.ToLower() && x.PinCode == model.PinCode && x.StateCd == model.StateCd).Count();
+
+                if(Cnt > 0)
+                {
+                    return -1;
+                }
+
                 int CityCd = GetMaxCityCd();
                 CityCd += 1;
 

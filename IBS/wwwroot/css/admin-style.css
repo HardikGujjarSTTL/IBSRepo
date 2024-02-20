@@ -1096,7 +1096,7 @@ section.table-section { background: #fff; border-radius: 12px; overflow: hidden;
 
 /*list-IBS*/
 .tast-list h2 { color: #000000; padding-left: 0; margin: 0; font-weight: 600; font-family: 'Poppins', sans-serif; line-height: 1; font-size: 24px; }
-.list-inner { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top:30px; }
+.list-inner{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top:30px; }
 .list-btn { display: flex; align-items: center; justify-content: space-between; }
 .list-btn a.btnicons { transition: all 0.4s; border: 1px solid #848484; height: 40px; width: 40px; display: flex; align-items: center; justify-content: space-around; border-radius: 50%; margin: 0 6px; }
 .list-btn a.btnicons:hover { border: 1px solid #ebeef3; background: #ebeef3; }
@@ -1573,3 +1573,5 @@ margin-right:15px;
 .userShowHideChat{ display:none; cursor:pointer;}
 .custom-readio .company-checkbox .remember{ margin-right:20px;}
 .custom-readio .company-checkbox .remember:last-child{ margin-right:0;}
+.loginForm .fa.fa-long-arrow-left{ vertical-align:middle; color:#F66A2F;}
+.tast-list{ margin-top:30px;}

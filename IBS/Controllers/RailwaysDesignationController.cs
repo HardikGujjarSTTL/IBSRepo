@@ -66,7 +66,7 @@ namespace IBS.Controllers
                     return RedirectToAction("Index");
                 }
                 else
-                    AlertAlreadyExist();
+                    AlertAlreadyExist("Designation Code already exists !!");
             }
             catch (Exception ex)
             {

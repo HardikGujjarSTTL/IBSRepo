@@ -45,7 +45,12 @@ namespace IBS.Controllers
                 {
                     model.Createdby = UserId;
                     model.UserId = UserName.Substring(0, 8);
-                    billrepository.BPOSave(model);
+                    var res = billrepository.BPOSave(model);
+                    if(res == "-1")
+                    {
+                        AlertAlreadyExist("Record already exists !!");
+                        return View(model);
+                    }
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else

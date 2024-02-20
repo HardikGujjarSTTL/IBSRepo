@@ -99,6 +99,11 @@ namespace IBS.Controllers
                                 {
                                     return Json(new { status = true, responseText = "Search of Hologram to IE Inserted Successfully." });
                                 }
+                                else if(result < 0)
+                                {
+                                    AlertAlreadyExist("Record already exists !!");
+                                    return View(model);
+                                }
                                 else
                                 {
                                     AlertDanger();

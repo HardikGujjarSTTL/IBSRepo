@@ -41,7 +41,12 @@ namespace IBS.Controllers
                 if (model.RDesigCd == 0)
                 {
                     model.Createdby = UserId;
-                    ritesDesignationMasterRepository.SaveDetails(model);
+                    var res = ritesDesignationMasterRepository.SaveDetails(model);
+                    if(res < 0)
+                    {
+                        AlertAlreadyExist("Record Already Exists !!");
+                        return View(model);
+                    }
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else

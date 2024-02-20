@@ -113,7 +113,7 @@ namespace IBS.Controllers.InspectionBilling
 
         public IActionResult BindCluster()
         {
-            return Json(Common.GetCluster(GetRegionCode));
+            return Json(Common.GetCluster(GetRegionCode, DateTime.Now.Date));
         }
 
         public IActionResult GetVendorDetails(int MfgCd, string CaseNo)
@@ -165,7 +165,7 @@ namespace IBS.Controllers.InspectionBilling
                             AlertDanger("SMS Send Success...");
                         }
                     }
-                    
+
                 }
                 if (i != null)
                 {
@@ -301,7 +301,7 @@ namespace IBS.Controllers.InspectionBilling
                                         }
                                         else
                                         {
-                                            if(Client == "Y")
+                                            if (Client == "Y")
                                             {
                                                 return Json(new { status = true, responseText = "", code, dt, w_itemBlocked = "N", Client = Client });
                                             }
@@ -969,4 +969,3 @@ namespace IBS.Controllers.InspectionBilling
         }
     }
 }
-    

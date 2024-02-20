@@ -1415,7 +1415,7 @@ namespace IBS.Repositories
                             RegionCode = l.RegionCode,
                         };
             }
-            else if (ActionType == "M" || ActionType == "A" || ActionType == "C" || ActionType == "U" || ActionType == "S" || ActionType == "T")
+            else if (ActionType == "A" || ActionType == "C" || ActionType == "T")
             {
                 query = from l in context.ViewGetCallRegCancellations
                         where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
@@ -1437,6 +1437,27 @@ namespace IBS.Repositories
                             RegionCode = l.RegionCode,
                         };
 
+            }
+            else if (ActionType == "M" || ActionType == "U" || ActionType == "S")
+            {
+                query = from l in context.ViewGetCallRegCancellations
+                        where l.RegionCode == Region && l.CStatus == ActionType
+                        orderby l.CaseNo, l.CallRecvDt
+                        select new AdminCountListing
+                        {
+                            CaseNo = l.CaseNo,
+                            CallRecvDt = l.CallRecvDt,
+                            CallInstallNo = l.CallInstallNo,
+                            CallSno = Convert.ToInt16(l.CallSno),
+                            CallStatus = l.CallStatus,
+                            CallLetterNo = l.CallLetterNo,
+                            Remarks = l.Remarks,
+                            PoNo = l.PoNo,
+                            PoDt = l.PoDt,
+                            IeSname = l.IeSname,
+                            Vendor = l.Vendor,
+                            RegionCode = l.RegionCode,
+                        };
             }
             else if (ActionType == "TB")
             {

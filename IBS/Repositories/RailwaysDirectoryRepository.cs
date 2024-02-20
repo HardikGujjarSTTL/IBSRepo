@@ -96,6 +96,12 @@ namespace IBS.Repositories
         {
             if (model.Id == 0)
             {
+                var Cnt = context.T91Railways.Where(x => x.RlyCd.ToLower().Contains(model.RlyCd)).Count();
+                if(Cnt > 0)
+                {
+                    return -1;
+                }
+
                 T91Railway railway = new()
                 {
                     RlyCd = model.RlyCd,
