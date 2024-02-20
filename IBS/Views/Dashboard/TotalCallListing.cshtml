@@ -10,7 +10,7 @@
     </div>
 </div>
 <input type="hidden" asp-for="ActionType" />
-<div class="accordion-body">
+<div class="accordion-body" id="divFilter">
     <div class="row my-0">
         <div class="col-md-3">
             <div class="input-search">
@@ -77,6 +77,7 @@
                 $("#spnHeading").text("No. of Pending Calls");
                 $("#FromDate").val("");
                 $("#ToDate").val("");
+                $("#divFilter").hide();
             }
             else if (type == "A") {
                 $("#spnHeading").text("No. of Accepted Calls");
@@ -88,23 +89,31 @@
                 $("#spnHeading").text("No. of Under Lab Testing");
                 $("#FromDate").val("");
                 $("#ToDate").val("");
+                $("#divFilter").hide();
             }
             else if (type == "S") {
                 $("#spnHeading").text("No. of Still Under Inspection");
                 $("#FromDate").val("");
                 $("#ToDate").val("");
+                $("#divFilter").hide();
             }
             else if (type == "T") {
                 $("#spnHeading").text("No. of Stage Rejection");
             } 
             else if (type == "ICNR") {
                 $("#spnHeading").text("Issued IC Not Received in Office");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
+                $("#divFilter").hide();
             } 
             else if (type == "TB") {
                 $("#spnHeading").text("No. of Total Bills");
             } 
             else if (type == "ICRNB") {
                 $("#spnHeading").text("Issued IC and Received in Office Not Billed IC");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
+                $("#divFilter").hide();
             }
 
             if (type == "TC" || type == "M" || type == "A" || type == "C" || type == "U" || type == "S" || type == "T") {

@@ -1475,12 +1475,26 @@ namespace IBS.Repositories
             }
             else if (ActionType == "ICNR")
             {
+                //query = (from t20 in context.T20Ics
+                //         join t30 in context.T30IcReceiveds on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
+                //         from t30 in t30Group.DefaultIfEmpty()
+                //         where t20.CaseNo.StartsWith(Region) &&
+                //               t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
+                //               (t20.BkNo != t30.BkNo || t20.SetNo != t30.SetNo)
+                //         select new AdminCountListing
+                //         {
+                //             CaseNo = t20.CaseNo,
+                //             CallRecvDt = t20.CallRecvDt,
+                //             CallSno = t20.CallSno,
+                //             IC_NO = t20.IcNo,
+                //             IC_DT = t20.IcDt,
+                //             BKNO = t20.BkNo,
+                //             SETNO = t20.SetNo,
+                //         }).Distinct();
+
                 query = (from t20 in context.T20Ics
-                         join t30 in context.T30IcReceiveds on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
-                         from t30 in t30Group.DefaultIfEmpty()
-                         where t20.CaseNo.StartsWith(Region) &&
-                               t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
-                               (t20.BkNo != t30.BkNo || t20.SetNo != t30.SetNo)
+                         where t20.CaseNo.StartsWith("N")
+                            && !context.T30IcReceiveds.Any(t30 => t30.BkNo == t20.BkNo && t30.SetNo == t20.SetNo)
                          select new AdminCountListing
                          {
                              CaseNo = t20.CaseNo,
@@ -1491,24 +1505,43 @@ namespace IBS.Repositories
                              BKNO = t20.BkNo,
                              SETNO = t20.SetNo,
                          }).Distinct();
+
+                // Execute the query or further manipulate it as needed
+
             }
             else if (ActionType == "ICRNB")
             {
-                var result = context.T20Ics
-                            .Where(t20 => t20.CaseNo.StartsWith(Region) &&
-                                          t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
-                                          !context.T30IcReceiveds.Any(t30 => t30.BkNo == t20.BkNo && t30.SetNo == t20.SetNo))
-                            .Select(t20 => new
-                            {
-                                t20.CaseNo,
-                                t20.CallRecvDt,
-                                t20.CallSno,
-                                t20.IcNo,
-                                t20.IcDt,
-                                t20.BkNo,
-                                t20.SetNo
-                            })
-                            .Distinct();
+                //var result = context.T20Ics
+                //            .Where(t20 => t20.CaseNo.StartsWith(Region) &&
+                //                          t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
+                //                          !context.T30IcReceiveds.Any(t30 => t30.BkNo == t20.BkNo && t30.SetNo == t20.SetNo))
+                //            .Select(t20 => new
+                //            {
+                //                t20.CaseNo,
+                //                t20.CallRecvDt,
+                //                t20.CallSno,
+                //                t20.IcNo,
+                //                t20.IcDt,
+                //                t20.BkNo,
+                //                t20.SetNo
+                //            })
+                //            .Distinct();
+
+                query = (from t20 in context.T20Ics
+                         join t30 in context.T30IcReceiveds
+                         on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo }
+                         where t30.Region == Region &&
+                               !context.T22Bills.Any(t22 => t22.CaseNo == t20.CaseNo)
+                         select new AdminCountListing
+                         {
+                             CaseNo = t20.CaseNo,
+                             CallRecvDt = t20.CallRecvDt,
+                             CallSno = t20.CallSno,
+                             IC_NO = t20.IcNo,
+                             IC_DT = t20.IcDt,
+                             BKNO = t20.BkNo,
+                             SETNO = t20.SetNo,
+                         }).Distinct();
             }
 
             dTResult.recordsTotal = query.Count();
