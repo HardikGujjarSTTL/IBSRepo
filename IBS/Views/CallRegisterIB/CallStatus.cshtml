@@ -769,7 +769,31 @@
                     $('#Holograms').show();
                     $('#frmcancelled').hide();
                 }
-                else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
+                else if (selectedValue == "PR") {
+                    $(".CallRejected").show();
+                    $('#accepteddrp').show();
+                    $('#savedetails').hide();
+                    $('#bkset').hide();
+                    $('#CallCancelStatusdrp').hide();
+                    $('#accepteuploadddrp').show();
+                    $('#localdrp').hide();
+                    $('#AcceptReject').text('Accepted');
+                    $('.rejvalue').hide();
+                    $("#ForARS").show();
+                    $('#Remarksval').hide();
+                    $('#AcceptReject').show();
+                    $('#Holograms').hide();
+                    $('#frmcancelled').hide();
+                    $('#uploadfile').show();
+                    $('#RefreshAll').show();
+                    $('#ViewPrintIC').show();
+                    $('#CallCancelChargesdrp').hide();
+                    $('#uploadcancel').show();
+                    $('#ReasonFIFOdv').show();
+                    $('#consigneeFirmDropdown').trigger('change');
+
+                }
+                else if (selectedValue == "RB" || selectedValue == "PRB" || selectedValue == "CB") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
                     $('.rejvalue').hide();
@@ -894,7 +918,37 @@
                 $('#frmcancelled').hide();
                 $('#consigneeFirmDropdown').trigger('change');
                 $('#ReasonFIFOdv').show();
-            } else if (CallStatusdrp == "R") {
+            }
+            else if (CallStatusdrp == "PR") {
+                $(".CallRejected").show();
+                $('#CallStatusdrp').prop('disabled', true);
+                $('#savefiles').prop('disabled', true);
+                $('#savefiles').addClass('disabled-button');
+                $('#AcceptReject').addClass('disabled-button');
+                $('#AcceptReject').prop('disabled', true);
+                $('#uploadfile').addClass('disabled-button');
+                $('#uploadfile').prop('disabled', true);
+                $('#RefreshAll').addClass('disabled-button');
+                $('#RefreshAll').prop('disabled', true);
+                $('#accepteddrp').show();
+                $('#savedetails').hide();
+                $('#bkset').hide();
+                $('#CallCancelStatusdrp').hide();
+                $('#accepteuploadddrp').show();
+                $('#localdrp').hide();
+                $('#Remarksval').hide();
+                $('#Holograms').hide();
+                $('.rejvalue').hide();
+                $('#uploadfile').show();
+                $('#CallCancelChargesdrp').hide();
+                $('#ViewPrintIC').show();
+                $('#uploadcancel').show();
+                $('#AcceptReject').text('Accepted');
+                $('#frmcancelled').hide();
+                $('#consigneeFirmDropdown').trigger('change');
+                $('#ReasonFIFOdv').show();
+            }
+            else if (CallStatusdrp == "R") {
                 $(".CallRejected").hide();
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
@@ -1049,7 +1103,7 @@
                 $('#uploadcancel').hide();
                 $('#CallCancelChargesdrp').hide();
                 $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
+            } else if (CallStatusdrp == "RB" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
                 $('.rejvalue').hide();

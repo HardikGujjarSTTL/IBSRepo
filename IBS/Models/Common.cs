@@ -4464,7 +4464,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             return (from a in context.T08IeControllOfficers
-                    where a.CoStatus == null && a.CoRegion == Region
+                    where (a.CoStatus == null || a.CoStatus == "W") && a.CoRegion == Region
                     select new SelectListItem
                     {
                         Text = Convert.ToString(a.CoName),

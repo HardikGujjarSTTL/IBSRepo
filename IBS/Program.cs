@@ -185,8 +185,7 @@ builder.Services.AddScoped<IClientRailwayRepository, IBS.Repositories.ClientRail
 builder.Services.AddScoped<IAllGeneratedBillsRepository, IBS.Repositories.AllGeneratedBillsRepository>();
 builder.Services.AddScoped<ILabInvoiceRepository, IBS.Repositories.LabInvoiceRepository>();
 
-
-
+builder.Services.AddScoped<ISAPInvoicesExportRepository, IBS.Repositories.SAPInvoicesExportRepository>();
 
 #region IE Report
 
