@@ -5105,6 +5105,20 @@ namespace IBS.Models
             }
             return base64String;
         }
+
+        public static List<SelectListItem> GetDashboardRegion()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.T01Regions
+                       select new SelectListItem
+                       {
+                           Value = c.RegionCode.ToString(),
+                           Text = c.Region
+                           //}).OrderBy(c => c.Text).ToList();
+                       }).ToList();
+            obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
+            return obj;
+        }
     }
 
     public static class DbContextHelper

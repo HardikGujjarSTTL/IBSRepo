@@ -12,7 +12,7 @@ namespace IBS.Interfaces
         public DashboardModel GetVendorDashBoardCount(int Vend_Cd, string RegionCode, string RoleName);
         public DashboardModel GetClientDashBoardCount(string OrgnType, string Organisation, string RegionCode, string RoleName);
         DTResult<IE_Per_CM_Model> Get_CM_Wise_IE_Detail(DTParameters dtParameters);
-        DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region);
+        DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters);
         DTResult<AdminCountListing> Dashboard_Client_List(DTParameters dtParameters, string Region, string OrgnType, string Organisation);
         DTResult<CMDFOListing> CMDFO_List(DTParameters dtParameters);
         DTResult<DashboardModel> Dashboard_CMGeneral_ViewAll_List(DTParameters dtParameters, string COCD);
@@ -30,7 +30,7 @@ namespace IBS.Interfaces
         public LabSampleInfoModel GetNOOfRegisterCount(string Regin);
 
         DTResult<VendorDetailListModel> GetDataVendorListing(DTParameters dtParameters, string Vend_Cd);
-        DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters, string RegionCode);
+        DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters);
         DTResult<VendorViewAllList> Dashboard_Vendor_ViewAll_List(DTParameters dtParameters, string RegionCode, int Vend_Cd);
         DTResult<IEViewAllList> Dashboard_IE_ViewAll_List(DTParameters dtParameters, int IE_CD, string RegionCode);
 

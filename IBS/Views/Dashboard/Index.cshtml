@@ -3,14 +3,22 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="dashHeader cf">
-    <h2 class="alignLeft">Admin Dashboard</h2>
+<div class="list-innerf">
+    <div class="tast-list">
+        <h2 class="alignLeft">Admin Dashboard</h2>
+    </div>
+    <div class="list-btn" style="width:16%;">
+        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class="formBtn viewall-btn" ,@onChange = "OnChangeRegion();"})
+    </div>
+    @*<div class="list-btn">
+    <a asp-area="" asp-controller="ContractEntry" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Contract</a>
+    </div>*@
 </div>
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
         <div class="row admin-dashboard">
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a class="totalcall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TC" })">
+                <a class="totalcall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TC", Region = Model.Region })">
                     <div class="dashboard-box das1">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -25,7 +33,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a class="PendingCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "M" })">
+                <a class="PendingCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "M", Region = Model.Region })">
                     <div class="dashboard-box das2">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -40,7 +48,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a class="AcceptedCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "A" })">
+                <a class="AcceptedCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "A", Region = Model.Region })">
                     <div class="dashboard-box das3">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -55,7 +63,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a class="CancelleCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "C" })">
+                <a class="CancelleCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "C", Region = Model.Region })">
                     <div class="dashboard-box das4">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -70,7 +78,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a class="UnderLabCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "U" })">
+                <a class="UnderLabCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "U", Region = Model.Region })">
                     <div class="dashboard-box das5">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -85,7 +93,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a class="StillUnderInspCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "S" })">
+                <a class="StillUnderInspCall" href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "S", Region = Model.Region})">
                     <div class="dashboard-box das6">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -100,7 +108,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "T" })">
+                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "T", Region = Model.Region })">
                     <div class="dashboard-box das7">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -114,23 +122,8 @@
                     </div>
                 </a>
             </div>
-           
-            @*<div class="col-md-6 col-lg-4 col-xxl-3">
-                <div class="dashboard-box das8">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">100</div>
-                        </div>
-                        <div class="total-inner">
-                            Issued IC and<br /> received in office
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/dash-icon-2-sml.svg" width="46" height="54" alt="Issued IC and received in office"> </div>
-                </div>
-            </div>*@
-        
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TB" })">
+                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "TB", Region = Model.Region })">
                     <div class="dashboard-box das10">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -146,20 +139,20 @@
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
                 <a href="@Url.Action("IEPerCM","Dashboard")">
-                <div class="dashboard-box das11">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.NOOFIEPERCM</div>
+                    <div class="dashboard-box das11">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NOOFIEPERCM</div>
+                            </div>
+                            <div class="total-inner">
+                                No. of IEs<br /> per CMs
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            No. of IEs<br /> per CMs
-                        </div>
+                        <div class="total-icons"><img src="images/no-of-IEs-per-CMs-icon.svg" width="46" height="54" alt="No. of IEs per CMs"> </div>
                     </div>
-                    <div class="total-icons"><img src="images/no-of-IEs-per-CMs-icon.svg" width="46" height="54" alt="No. of IEs per CMs"> </div>
-                </div>
                 </a>
             </div>
-           
+
             <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das14">
                     <div class="dash-total">
@@ -173,20 +166,7 @@
                     <div class="total-icons"><img src="images/no-of-calls-per-IE-icon.svg" width="46" height="54" alt="No. of Calls per IE"> </div>
                 </div>
             </div>
-           @* <div class="col-md-6 col-lg-4 col-xxl-3">
-                <div class="dashboard-box das12">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">100</div>
-                        </div>
-                        <div class="total-inner">
-                            Issued<br /> IC
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/issued-IC-1-icon.svg" width="46" height="54" alt="Issued IC"> </div>
-                </div>
-            </div>*@
-           
+
             <div class="col-md-6 col-lg-4 col-xxl-3">
                 <div class="dashboard-box das15">
                     <div class="dash-total">
@@ -201,7 +181,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICNR" })">
+                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICNR", Region = Model.Region})">
                     <div class="dashboard-box das12">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -216,7 +196,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-3">
-                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICRNB" })">
+                <a href="@Url.Action("TotalCallListing", "Dashboard", new { Type = "ICRNB", Region = Model.Region })">
                     <div class="dashboard-box das9">
                         <div class="dash-total">
                             <div class="dash-count">
@@ -230,32 +210,7 @@
                     </div>
                 </a>
             </div>
-            @*<div class="col-md-6 col-lg-4 col-xxl-3">
-                <div class="dashboard-box das16">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">100</div>
-                        </div>
-                        <div class="total-inner">
-                            Issued<br /> IC
-                        </div>
-                    </div>
-                    <div class="total-icons"><img src="images/issued-IC-icon.svg" width="46" height="54" alt="Issued IC"> </div>
-                </div>
-            </div>*@
         </div>
-
-        @* <div class="row admin-dashboard">
-        <div class="col-lg-12">
-        <div class="savenext-btn btnAlign">
-        <button type="button" class="save-btn active" onclick="AutometicCallMark();">No. of Automatic Marked  calls</button>
-        <button type="button" class="save-btn active" onclick="ManuallyCallMark();">No. of Manually Marked  Calls</button>
-        <button type="button" class="save-btn active" onclick="POAwaitingcase();">No. of POs, Awaiting for  Case No.</button>
-        <button type="button" class="save-btn active" onclick="PendingCallsRemark();">No. of Pending Calls to Remark</button>
-        <button type="button" class="save-btn active" onclick="PendingOnlineCallsAwaiting();">No. of pending online calls awaiting marking</button>
-        </div>
-        </div>
-        </div> *@
     </div>
 </div>
 <section>
@@ -367,7 +322,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightPayment.Count()</span> records*@</div>
-        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "CHP" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "CHP", Region = Model.Region })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -410,7 +365,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstHightOutstanding.Count()</span> records*@</div>
-        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "CHO" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "CHO", Region = Model.Region })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -453,7 +408,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstPendingCase.Count()</span> records*@</div>
-        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "OPC" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "OPC", Region = Model.Region })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -496,7 +451,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstJiCase.Count()</span> records*@</div>
-        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "OJC" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_Admin_ViewAll_List", "Dashboard", new { Type = "OJC", Region = Model.Region })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -540,275 +495,6 @@
     <div class="tableBottomLink">
     </div>
 </section>
-@*<section class="graph-section">
-    <div class="invoice">
-        <h3 class="headingh3">Inspection Requests</h3>
-        <div class="datefrom">
-            <div class="from-celender">
-                <input placeholder="From" type="text" class="datepicker" />
-            </div>
-            <div class="colwithbtn">
-                <input placeholder="To" type="text" class="datepicker" />
-            </div>
-        </div>
-    </div>
-    <div class="graph">
-        <div id="monthlychart"></div>
-    </div>
-</section>
- <section>
-    <div class="row">
-        <div class="col-lg-12">
-            <ul class="countBlock boxRadius">
-                <li>No. of Bills <span class="countValue">96,000</span></li>
-                <li>No. of IEs/ CMs <span class="countValue">250/50</span></li>
-                <li>No. of Vendor <span class="countValue">45,000</span></li>
-                <li>No. of Consignee <span class="countValue">38,000</span></li>
-                <li>No. of Clients <span class="countValue">5,500</span></li>
-            </ul>
-        </div>
-    </div>
-</section>
-<section>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="boxRadius">
-                <div class="row">
-                    <div class="col-lg-12 d-flex justify-content-between">
-                        <h3 class="headingh3">Region wise Inspection Requests</h3>
-                        <div class="dateDrop">
-                            <select>
-                                <option>2022</option>
-                                <option>2023</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div id="region-wise-pie"></div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="boxRadius">
-                <div class="row">
-                    <div class="col-lg-12 d-flex justify-content-between">
-                        <h3 class="headingh3">Region wise Clients</h3>
-                        <div class="dateDrop">
-                            <select>
-                                <option>2022</option>
-                                <option>2023</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="bar-graph bar-graph-horizontal bar-graph-one">
-                    <div class="bar-one">
-                        <span class="region">Northern Region (NR)</span>
-                        <div class="barHolder">
-                            <div class="bar" style="width:90%"></div>
-                        </div>
-                        <span class="value">1240</span>
-                    </div>
-                    <div class="bar-two">
-                        <span class="region">Southern Region (SR)</span>
-                        <div class="barHolder">
-                            <div class="bar" style="width:80%"></div>
-                        </div>
-                        <span class="value">1060</span>
-                    </div>
-                    <div class="bar-three">
-                        <span class="region">Western Region (WR)</span>
-                        <div class="barHolder">
-                            <div class="bar" style="width:60%"></div>
-                        </div>
-                        <span class="value">920</span>
-                    </div>
-                    <div class="bar-four">
-                        <span class="region">Eastern Region (ER)</span>
-                        <div class="barHolder">
-                            <div class="bar" style="width:40%"></div>
-                        </div>
-                        <span class="value">860</span>
-                    </div>
-                    <div class="bar-five">
-                        <span class="region">Central Region (CR)</span>
-                        <div class="barHolder">
-                            <div class="bar" style="width:20%"></div>
-                        </div>
-                        <span class="value">740</span>
-                    </div>
-                    <div class="bar-six">
-                        <span class="region">QA Corporate</span>
-                        <div class="barHolder">
-                            <div class="bar" style="width:10%"></div>
-                        </div>
-                        <span class="value">680</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="table-section">
-    <div class="table-title">
-        <h3 class="headingh3">Recent Request for Inspection Vendor</h3>
-        <a class="viewall" href="#">View All</a>
-    </div>
-    <div class="dash-table">
-        <table class="table-responsive">
-            <thead>
-                <tr>
-                    <th scope="col">Sr. No</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Req. No.</th>
-                    <th scope="col">Client</th>
-                    <th scope="col">Zone</th>
-                    <th scope="col">Work Type</th>
-                    <th scope="col">Inspection Engineers</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Payment</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>01</td>
-                    <td>20-07-2023</td>
-                    <td>#15484</td>
-                    <td>Millennium Enterprises</td>
-                    <td>Northern Region</td>
-                    <td>Telecommunication</td>
-                    <td>Vishal Shah</td>
-                    <td>Ongoing</td>
-                    <td class="oranges">Overdue</td>
-                </tr>
-                <tr>
-                    <td>02</td>
-                    <td>20-07-2023</td>
-                    <td>#15881</td>
-                    <td>Krishana Enterprises</td>
-                    <td>Southern Region</td>
-                    <td>Work Construction of Road</td>
-                    <td>Manoj Kumar</td>
-                    <td>Not Assign</td>
-                    <td class="green-color">Resolve</td>
-                </tr>
-                <tr>
-                    <td>03</td>
-                    <td>20-07-2023</td>
-                    <td>#15841</td>
-                    <td>Shree Vighnaharta</td>
-                    <td>Western Region</td>
-                    <td>Drip Course Work</td>
-                    <td>-</td>
-                    <td>Ongoing</td>
-                    <td class="blue-color">Pending</td>
-                </tr>
-                <tr>
-                    <td>04</td>
-                    <td>20-07-2023</td>
-                    <td>#21548</td>
-                    <td>Zenith Enterprises</td>
-                    <td>Eastern Region</td>
-                    <td>Fencing Wall</td>
-                    <td>Ram Bhai</td>
-                    <td>Not Assign</td>
-                    <td class="green-color">Resolve</td>
-                </tr>
-                <tr>
-                    <td>05</td>
-                    <td>20-07-2023</td>
-                    <td>#14361</td>
-                    <td>Zenith Enterprises</td>
-                    <td>Central Region</td>
-                    <td>RCC Boundary Wall</td>
-                    <td>Ramesh</td>
-                    <td>Completed</td>
-                    <td class="oranges">Overdue</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-<section class="table-section">
-    <div class="table-title">
-        <h3 class="headingh3">Recent Purchase Order</h3>
-        <a class="viewall" href="#">View All</a>
-    </div>
-    <div class="dash-table">
-        <table class="table-responsive">
-            <thead>
-                <tr>
-                    <th scope="col">Sr. No</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Req. No.</th>
-                    <th scope="col">Submitted By</th>
-                    <th scope="col">Zone</th>
-                    <th scope="col">Work Type</th>
-                    <th scope="col">Inspection by</th>
-                    <th scope="col">P.O. Amount</th>
-                    <th scope="col">Payment</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>01</td>
-                    <td>20-07-2023</td>
-                    <td>#15484</td>
-                    <td>Client</td>
-                    <td>Northern Region</td>
-                    <td>Telecommunication</td>
-                    <td>Vishal Shah</td>
-                    <td>₹ 5,80,600</td>
-                    <td class="blue-color">In Progress</td>
-                </tr>
-                <tr>
-                    <td>02</td>
-                    <td>20-07-2023</td>
-                    <td>#15881</td>
-                    <td>Vendor</td>
-                    <td>Southern Region</td>
-                    <td>Work Construction of Road</td>
-                    <td>Manoj Kumar</td>
-                    <td>₹ 10,90,800</td>
-                    <td class="blue-color">In Progress</td>
-                </tr>
-                <tr>
-                    <td>03</td>
-                    <td>20-07-2023</td>
-                    <td>#15841</td>
-                    <td>Client</td>
-                    <td>Western Region</td>
-                    <td>Drip Course Work</td>
-                    <td>Akash</td>
-                    <td>₹ 25,50,200</td>
-                    <td class="blue-color">In Progress</td>
-                </tr>
-                <tr>
-                    <td>04</td>
-                    <td>20-07-2023</td>
-                    <td>#21548</td>
-                    <td>Client</td>
-                    <td>Eastern Region</td>
-                    <td>Fencing Wall</td>
-                    <td>Ram Bhai</td>
-                    <td>₹ 3,70,500</td>
-                    <td class="green-color">Completed</td>
-                </tr>
-                <tr>
-                    <td>05</td>
-                    <td>20-07-2023</td>
-                    <td>#14361</td>
-                    <td>Vendor</td>
-                    <td>Central Region</td>
-                    <td>RCC Boundary Wall</td>
-                    <td>Ramesh</td>
-                    <td>₹ 12,58,900</td>
-                    <td class="green-color">Completed</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>*@
 
 @section scripts{
     <script>
@@ -856,7 +542,7 @@
                             if (this.y > 0) {
                                 return this.y
                             }
-                            else{
+                            else {
                                 return ''
                             }
                         }
@@ -869,154 +555,11 @@
             }],
         });
 
-                        //Highcharts.chart('monthlychart', {
-                        //    chart: {
-                        //        type: 'column'
-                        //    },
-                        //    title: {
-                        //        text: ''
-                        //    },
-                        //    subtitle: {
-                        //        text: ''
-                        //    },
-                        //    xAxis: {
-                        //        categories: [
-                        //            'Jan',
-                        //            'Feb',
-                        //            'Mar',
-                        //            'Apr',
-                        //            'May',
-                        //            'Jun',
-                        //            'Jul',
-                        //            'Aug',
-                        //            'Sep',
-                        //            'Oct',
-                        //            'Nov',
-                        //            'Dec'
-                        //        ],
-                        //        crosshair: true
-                        //    },
-                        //    yAxis: {
-                        //        min: 0,
-                        //        title: {
-                        //            text: 'Number of Inspection Requests'
-                        //        }
-                        //    },
-                        //    tooltip: {
-                        //        headerFormat: '<span style="font-size:14px">{point.key}</span><table style="border:none; margin:0;"><tr>',
-                        //        pointFormat: '<td style="color:{series.color};padding:5px; font-size:14px; text-align:center; border:none;">£ {point.y:.1f}' +
-                        //            '<span style="display:block; color:#000; font-size:11px;">{series.name}</span></td>',
-                        //        footerFormat: '</tr></table>',
-                        //        shared: true,
-                        //        useHTML: true
-                        //    },
-                        //    plotOptions: {
-                        //        column: {
-                        //            pointPadding: 0.2,
-                        //            borderWidth: 0
-                        //        }
-                        //    },
-                        //    exporting: {
-                        //        enabled: false
-                        //    },
-                        //    series: [{
-                        //        name: 'Inspection Assigned',
-                        //        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4,
-                        //            194.1, 95.6, 54.4]
-
-                        //    }, {
-                        //        name: 'Inspection Completed',
-                        //        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5,
-                        //            106.6, 92.3]
-
-                        //    }, {
-                        //        name: 'Inspection Pending',
-                        //        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3,
-                        //            51.2]
-
-                        //    }]
-                        //});
-
-
-                        //// Pie Chart
-
-                        //Highcharts.chart('region-wise-pie', {
-                        //    colors: ['#7ab971', '#f16a6b', '#5fb8e2', '#6c82e2', '#1962c1', '#e89b00'],
-                        //    chart: {
-                        //        type: 'pie',
-                        //        height: '250',
-                        //    },
-                        //    title: {
-                        //        text: ''
-                        //    },
-                        //    tooltip: {
-                        //        valueSuffix: '%'
-                        //    },
-                        //    legend: {
-                        //        layout: 'vertical',
-                        //        align: 'right',
-                        //        verticalAlign: 'middle',
-                        //        itemMarginTop: 10,
-                        //        itemMarginBottom: 10
-                        //    },
-                        //    plotOptions: {
-                        //        pie: {
-                        //            allowPointSelect: true,
-                        //            cursor: 'pointer',
-
-                        //            dataLabels: {
-                        //                distance: -20,
-                        //                enabled: true,
-                        //                //format: '{point.name}: {y} %'
-                        //                format: '{y} %'
-                        //            },
-                        //            showInLegend: true
-                        //        }
-                        //    },
-                        //    series: [{
-                        //        name: 'Percentage',
-                        //        colorByPoint: true,
-                        //        innerSize: '45%',
-                        //        data: [{
-                        //            name: 'Northern Region (NR)',
-                        //            y: 13
-                        //        }, {
-                        //            name: 'Southern Region (SR)',
-                        //            y: 22
-                        //        }, {
-                        //            name: 'Western Region (WR)',
-                        //            y: 19
-                        //        }, {
-                        //            name: 'Eastern Region (ER)',
-                        //            y: 17
-                        //        }, {
-                        //            name: 'Central Region (CR)',
-                        //            y: 15
-                        //        }, {
-                        //            name: 'QA Corporate',
-                        //            y: 14
-                        //        }]
-                        //    }]
-                        //});
-
-                        // function TotalCall() {
-                        //     window.location.href = '@Url.Action("TotalCallListing", "Dashboard")?Type=TC';
-                        // }
-                        // function AutometicCallMark() {
-                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=ACM';
-                        // }
-                        // function ManuallyCallMark() {
-                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=MCM';
-                        // }
-                        // function POAwaitingcase() {
-                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POAC';
-                        // }
-                        // function PendingCallsRemark() {
-                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=PCR';
-                        // }
-                        // function PendingOnlineCallsAwaiting() {
-                        //     window.location.href = '@Url.Action("CallDeskInfo", "Dashboard")?Type=POCAM';
-                        // }
-
+        function OnChangeRegion() {
+            var Region = $("#Region").val();
+            var url = '@Url.Action("Index", "Dashboard")?Region=' + Region;
+            $(".overlayLoader").show();
+            window.location.href = url;
+        }
     </script>
 }
