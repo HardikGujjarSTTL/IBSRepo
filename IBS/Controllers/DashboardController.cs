@@ -322,7 +322,7 @@ namespace IBS.Controllers
         {
             DashboardModel model = new();
             model.ActionType = Type;
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -338,7 +338,7 @@ namespace IBS.Controllers
         {
             DashboardModel model = new();
             model.ActionType = Type;
-            return View();
+            return View(model);
         }
 
         [HttpPost]

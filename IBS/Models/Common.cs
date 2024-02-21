@@ -784,6 +784,16 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ClientType)).ToList();
         }
 
+        public static List<TextValueDropDownDTO> SanctionedStrength()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.SanctionedStrength)).ToList();
+        }
+
+        public static List<TextValueDropDownDTO> DiscDepartment()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.DiscDepartment)).ToList();
+        }
+
         public static List<SelectListItem> GetAccountCode()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
