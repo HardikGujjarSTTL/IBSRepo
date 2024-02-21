@@ -226,7 +226,7 @@
         // Clear Functions End
 
         function ViewReport() {
-            debugger
+            
             $("#spnErrorFromDate").html("");
             $("#spnErrorToDate").html("");
 
@@ -280,7 +280,6 @@
             var Type = $('input[name="rdType"]:checked').val();
             let myObject = { ReportType, FromDate, ToDate };
 
-
             if (Type == "Detailed") {
                 var IsDetailed = "true";
                 var IsRly = $("#rdPRly").is(":checked") == true ? "true" : null;
@@ -300,7 +299,6 @@
                 var url = '@Url.Action("ManageCrisRlySummary", "RealisationPayment")?' + $.param(myObject);
                 window.open(url, '_blank');
             }
-
         }
 
         // Check From & To Date Validation

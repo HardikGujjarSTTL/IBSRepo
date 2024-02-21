@@ -30,9 +30,6 @@
         <input type="hidden" asp-for="Callstatus" />
         <input type="hidden" asp-for="CallCancelCharges" />
 
-
-
-
         <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
 
         <div class="boxRadius highlightBox">
@@ -688,8 +685,6 @@
                     </div>
                 </div>
             }
-
-
         </div>
 
     </form>
@@ -777,7 +772,6 @@
             $("#IcTypeId").change(function () {
                 if ($("#IcTypeId").val() == "9") {
                     $(".divCnoteBill").show();
-
                 }
                 else {
                     $(".divCnoteBill").hide();
@@ -1101,7 +1095,7 @@
                     dataType: "JSON",
                     data: { "BillNo": BillNo },
                     success: function (contacts) {
-                        debugger
+                        
                         if (contacts.data && contacts.data.length > 0) {
                             var CaseN = contacts.data[0].Caseno;
                             if (CaseNo == CaseN) {
@@ -1145,7 +1139,7 @@
                     dataType: "JSON",
                     data: { "BillNo": BillNo },
                     success: function (contacts) {
-                        debugger
+                        
                         if (contacts.data && contacts.data.length > 0) {
                             var CaseN = contacts.data[0].Caseno;
                             // if (CaseNo == CaseN) {
@@ -1362,7 +1356,7 @@
         }
 
         function UpdateCallDetails() {
-            debugger
+            
             var CaseNo = $("#Caseno").val();
             var CallRecvDt = $("#Callrecvdt").val();
             var CallSno = $("#Callsno").val();
@@ -1590,15 +1584,13 @@
             var CaseNo = $("#Caseno").val();
             var Callrecvdt = $("#Callrecvdt").val();
             var Callsno = $("#Callsno").val();
-            debugger
+            
             if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB" || $("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
                 window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")?CaseNo=' + CaseNo + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&ActionType=M";
             }
             else {
                 location.reload();
             }
-
-
         }
 
         $("#btnBillDtUpdate").click(function () {
@@ -1636,7 +1628,6 @@
                     ShowHideMsgNew(response.status, response.responseText);
                 }
             });
-
         }
 
         function lnkbtnMRDT() {

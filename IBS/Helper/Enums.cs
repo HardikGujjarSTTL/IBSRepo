@@ -746,13 +746,29 @@ namespace IBS.Helper
             N,
         }
 
-        //public enum CreditDebitNote
-        //{
-        //    [Description("Credit Note")]
-        //    C = 9,
-        //    [Description("Debit Zone")]
-        //    D = 10,
-        //}
+        public enum DiscDepartment
+        {
+            [Description("Mechanical")]
+            M,
+            [Description("Electrical")]
+            E,
+            [Description("Civil")]
+            C,
+            [Description("M & C")]
+            A,
+            [Description("Others")]
+            O,
+        }
+        
+        public enum SanctionedStrength
+        {
+            [Description("Regular")]
+            R,
+            [Description("Contract")]
+            C,
+            [Description("Through MPA")]
+            T,
+        }
 
     }
 

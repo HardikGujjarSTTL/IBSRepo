@@ -5,6 +5,9 @@
 
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">CM/JI Incharge Dashboard</h2>
+    <div class="list-btn" style="width:16%;">
+        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class="formBtn viewall-btn" ,@onChange = "OnChangeRegion();"})
+    </div>
 </div>
 <section class="table-section">
     <div class="table-title">
@@ -54,7 +57,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records*@</div>
-        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "IEP" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "IEP",Region = Model.Region })">View All</a>
     </div>
 </section>
 <section>
@@ -154,7 +157,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount">@*Showing <span>5</span> out of <span>@Model.lstClientVEND.Count</span> records*@</div>
-        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "OPJC" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "OPJC",Region = Model.Region })">View All</a>
     </div>
 </section>
 <section>
@@ -292,7 +295,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount"></div>
-        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "ICC" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "ICC",Region = Model.Region })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -331,7 +334,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount"></div>
-        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "VCC" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "VCC",Region = Model.Region })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -370,7 +373,7 @@
     </div>
     <div class="tableBottomLink">
         <div class="recordCount"></div>
-        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "CCC" })">View All</a>
+        <a class="viewall" href="@Url.Action("Dashboard_CM_JI_ViewAll_List", "Dashboard", new { Type = "CCC",Region = Model.Region })">View All</a>
     </div>
 </section>
 <section class="table-section">
@@ -600,5 +603,12 @@
                 data: @Html.Raw(Model.DefectCodeJISummary),
             }],
         });
+
+        function OnChangeRegion() {
+            var Region = $("#Region").val();
+            var url = '@Url.Action("CMJIIncharge", "Dashboard")?Region=' + Region;
+            $(".overlayLoader").show();
+            window.location.href = url;
+        }
     </script>
 }

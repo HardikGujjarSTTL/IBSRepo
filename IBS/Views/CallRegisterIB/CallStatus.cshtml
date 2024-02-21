@@ -856,7 +856,7 @@
                     }
                 });
             });
-            debugger
+            
             var CallStatusdrp = $('#CallStatusdrp').val();
 
             if (CallStatusdrp == "C") {
@@ -1190,7 +1190,7 @@
             });
 
             function CallCancelStatus() {
-                debugger
+                
                 $('#MatCanvalue').hide();
                 var selectedValue1 = $('#CallCancelStatusdrp').val();
                 var selectedValue = $('#CallStatusdrp').val();
@@ -1392,7 +1392,7 @@
         }
 
         function Save() {
-            debugger
+            
             if ($("#ReasonFIFO").val() == "") {
                 $("#spnReasonFIFO").html("Reason For Violating FIFO.");
                 return;
@@ -1406,7 +1406,7 @@
 
             //if (bknoaccpted != "" && setnoaccpted != "") {
             var ajaxData = AjaxModel();
-            debugger;
+            ;
             if (CallStatus == "G" || CallStatus == "T") {
                 //var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
                 var hiddenInput = $("#hdnUploadedDocumentList_tab-2");

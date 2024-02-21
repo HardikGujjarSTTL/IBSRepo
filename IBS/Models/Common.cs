@@ -784,6 +784,16 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.ClientType)).ToList();
         }
 
+        public static List<TextValueDropDownDTO> SanctionedStrength()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.SanctionedStrength)).ToList();
+        }
+
+        public static List<TextValueDropDownDTO> DiscDepartment()
+        {
+            return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.DiscDepartment)).ToList();
+        }
+
         public static List<SelectListItem> GetAccountCode()
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
@@ -5151,6 +5161,20 @@ namespace IBS.Models
                 base64String = "data:image/png;base64," + Convert.ToBase64String(qrCodeImage);
             }
             return base64String;
+        }
+
+        public static List<SelectListItem> GetDashboardRegion()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.T01Regions
+                       select new SelectListItem
+                       {
+                           Value = c.RegionCode.ToString(),
+                           Text = c.Region
+                           //}).OrderBy(c => c.Text).ToList();
+                       }).ToList();
+            obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
+            return obj;
         }
     }
 

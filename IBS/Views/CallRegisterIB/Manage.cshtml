@@ -345,7 +345,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-            debugger
+            
             $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
             $("#PoDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
             $("#CallStatusDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
@@ -528,7 +528,7 @@
         });
 
         $("#btnRegiserCallSave").click(function () {
-            debugger
+            
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
 
@@ -612,7 +612,7 @@
             //var CallSNo = urlParams.get('CallSNo');
             var cstatus = urlParams.get('cstatus');
             var status = "";
-            debugger
+            
             if ($('#btnRegisterCallSave').is(':hidden') || $('#btnDelete').is(':hidden')) {
                 status = "M";
             }

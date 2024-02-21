@@ -21,33 +21,33 @@
     <div class="task-listinput">
         <div class="accordion-body">
             <div class="row align-items-end my-0">
-                        <div class="col-md-4">
-                        <label for="Reference">Voucher No</label>
-                        <input type="text" asp-for="VCHR_NO" id="Vchr_no"  maxlength="300" />
-                    </div>
+                <div class="col-md-4">
+                    <label for="Reference">Voucher No</label>
+                    <input type="text" asp-for="VCHR_NO" id="Vchr_no" maxlength="300" />
+                </div>
                 <div class="col-md-4">
                     <div class="BtnEdit savenext-btn">
-                     <button type="button" class="save-btn active Permission_Save" onclick="Edit();">Edit Voucher</button>
+                        <button type="button" class="save-btn active Permission_Save" onclick="Edit();">Edit Voucher</button>
                     </div>
-                  </div>
+                </div>
             </div>
             <table id="dtInterUnitReciept" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>IU Advice No/Ref No.</th>
-                            <th>IU Advice Date./Ref Date.</th>
-                            <th>Amount</th>
-                            <th>Region From Which Recieved</th>
-                            <th>BPO</th>
-                            <th>Account</th>
-                            <th>Narration</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                    </tbody>
-                </table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>IU Advice No/Ref No.</th>
+                        <th>IU Advice Date./Ref Date.</th>
+                        <th>Amount</th>
+                        <th>Region From Which Recieved</th>
+                        <th>BPO</th>
+                        <th>Account</th>
+                        <th>Narration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
@@ -57,32 +57,29 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
+
             $("#dtInterUnitReciept").css("display", "none");
-           // var vchrNo = "";
-           // InitializeDatatable(vchrNo);
-          
+            // var vchrNo = "";
+            // InitializeDatatable(vchrNo);
         });
+
         function Edit() {
-            debugger;
-              var vchrNo = $("#Vchr_no").val();
+            var vchrNo = $("#Vchr_no").val();
 
             if (vchrNo != "") {
                 $("#dtInterUnitReciept").css("display", "block");
                 InitializeDatatable(vchrNo);
-            }     
-            else{
+            }
+            else {
                 alert("Please enter Voucher No.");
             }
         }
         completed = function (response) {
-            debugger;
-          
         };
 
         function InitializeDatatable(vchrNo) {
             var VCHR_NO = vchrNo;
-            debugger;
+
             $("#dtInterUnitReciept").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
@@ -99,9 +96,9 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: function (d) {
-                        debugger;
+
                         var AdditionalValues = {
-                           
+
                             VCHR_NO: VCHR_NO
                         };
                         d.AdditionalValues = AdditionalValues;
@@ -113,7 +110,6 @@
                         data: '', orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
-                            ;
                         }
                     },
                     //{ data: "SNO" },
@@ -127,12 +123,12 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            debugger;
+
                             var VCHR_NO = data.VCHR_NO;
                             var CHQ_NO = data.CHQ_NO;
                             var CHQ_DT = data.CHQ_DT;
                             var BANK_CD = data.BANK_NAME;
-                           var VCHR_DT = data.VCHR_DT;
+                            var VCHR_DT = data.VCHR_DT;
 
 
                             var editUrl = '@Url.Action("Manage", "InterUnitReciept")?VCHR_NO=' + VCHR_NO + '&BANK_CD=' + BANK_CD + '&CHQ_NO=' + CHQ_NO + '&CHQ_DT=' + CHQ_DT + '&VCHR_DT=' + VCHR_DT;
@@ -148,7 +144,7 @@
         }
 
         function Delete(VCHR_NO, CHQ_NO, CHQ_DT, BANK_CD) {
-            debugger;
+
             var url = '@Url.Action("Delete", "InterUnitReciept")';
             url += '?VCHR_NO=' + encodeURIComponent(VCHR_NO) +
                 '&CHQ_NO=' + encodeURIComponent(CHQ_NO) +
@@ -157,7 +153,5 @@
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
-
-      
     </script>
 }

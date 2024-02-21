@@ -1,6 +1,48 @@
 ﻿@model IBS.Models.AdminCountListing
 @{
-    ViewData["Title"] = "No. of Total Calls";
+    var type = ViewContext.HttpContext.Request.Query["Type"].First(); //Request.Params["Type"];
+    var title = "";
+    if (type == "TC")
+    {
+        title = "No. of Total Calls";
+    }
+    else if (type == "M")
+    {
+        title = "No. of Pending Calls";
+    }
+    else if (type == "A")
+    {
+        title = "No. of Accepted Calls";
+    }
+    else if (type == "C")
+    {
+        title = "No. of Cancelled Calls";
+    }
+    else if (type == "U")
+    {
+        title = "No. of Under Lab Testing";        
+    }
+    else if (type == "S")
+    {
+        title = "No. of Still Under Inspection";        
+    }
+    else if (type == "T")
+    {
+        title ="No. of Stage Rejection";
+    }
+    else if (type == "ICNR")
+    {
+        title = "Issued IC Not Received in Office";       
+    }
+    else if (type == "TB")
+    {
+        title = "No. of Total Bills";
+    }
+    else if (type == "ICRNB")
+    {
+        title ="Issued IC and Received in Office Not Billed IC";
+    }
+    ViewData["Title"] = title;
 }
 
 <div class="list-inner">
@@ -10,7 +52,8 @@
     </div>
 </div>
 <input type="hidden" asp-for="ActionType" />
-<div class="accordion-body">
+<input type="hidden" id="Region" />
+<div class="accordion-body" id="divFilter">
     <div class="row my-0">
         <div class="col-md-3">
             <div class="input-search">
@@ -64,12 +107,12 @@
             }
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearStartDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
-
-            //$("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
-            //$("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
+            
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
+            const regionCode = urlParams.get('Region');
             $("#ActionType").val(type);
+            $("#Region").val(regionCode);
             if (type == "TC") {
                 $("#spnHeading").text("No. of Total Calls");
             }
@@ -77,6 +120,7 @@
                 $("#spnHeading").text("No. of Pending Calls");
                 $("#FromDate").val("");
                 $("#ToDate").val("");
+                $("#divFilter").hide();
             }
             else if (type == "A") {
                 $("#spnHeading").text("No. of Accepted Calls");
@@ -88,23 +132,31 @@
                 $("#spnHeading").text("No. of Under Lab Testing");
                 $("#FromDate").val("");
                 $("#ToDate").val("");
+                $("#divFilter").hide();
             }
             else if (type == "S") {
                 $("#spnHeading").text("No. of Still Under Inspection");
                 $("#FromDate").val("");
                 $("#ToDate").val("");
+                $("#divFilter").hide();
             }
             else if (type == "T") {
                 $("#spnHeading").text("No. of Stage Rejection");
             } 
             else if (type == "ICNR") {
                 $("#spnHeading").text("Issued IC Not Received in Office");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
+                $("#divFilter").hide();
             } 
             else if (type == "TB") {
                 $("#spnHeading").text("No. of Total Bills");
             } 
             else if (type == "ICRNB") {
                 $("#spnHeading").text("Issued IC and Received in Office Not Billed IC");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
+                $("#divFilter").hide();
             }
 
             if (type == "TC" || type == "M" || type == "A" || type == "C" || type == "U" || type == "S" || type == "T") {
@@ -217,6 +269,7 @@
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var ActionType = $("#ActionType").val();
+            var Region = $("#Region").val();
 
             $("#dtList").DataTable({
                 stateSave: false,
@@ -235,7 +288,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, ActionType
+                            FromDate, ToDate, ActionType, Region
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
