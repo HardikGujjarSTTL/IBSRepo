@@ -912,7 +912,7 @@
 
             $("#vendorVENDPER").autocomplete({
                 source: function (request, response) {
-                    debugger
+                    
                     $.ajax({
                         url: "@Url.Action("GetVendorData", "Search")",
                        // url: "/Search/GetVendorData",
@@ -1469,7 +1469,7 @@
         }
 
         function ViewReportIEWISET() {
-            debugger
+            
             var ReportType = '@ReportType';
             var IENAME = $('#IENAME').val();
             var TrainingArea = $('#TrainingArea').val();
@@ -1525,7 +1525,6 @@
                 IsValid = false;
             }
 
-
             if (!IsValid) return;
             var IsValid = true;
             var ReportType = '@ReportType';
@@ -1554,7 +1553,6 @@
             var department = $('#department').val();
             var allreport = $("#allreport").is(":checked") == true ? "true" : "false";
             var departreport = $("#departreport").is(":checked") == true ? "true" : "false";
-
 
             $('#frmCLUSVENDOR').find("#hdnReportType").val(ReportType);
             $('#frmCLUSVENDOR').find("#hdndepartment").val(department);

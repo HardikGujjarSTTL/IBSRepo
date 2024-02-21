@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "SAP Invoice Export";
+}
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-4 mb-3">
+            <label for="FromDt">From Dt</label> <br />
+            <input type="text" class="datepicker" id="FromDt" placeholder="DD/MM/YYYY">
+            <span class="text-danger field-validation-error" id="spnErrorFromDt"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="ToDt">To Dt</label> <br />
+            <input type="text" class="datepicker" id="ToDt" placeholder="DD/MM/YYYY">
+            <span class="text-danger field-validation-error" id="spnErrorToDt"></span>
+        </div>
+    </div>
+    <div class="savenext-btn">
+        <button type="button" class="save-btn active" onclick="ExportExcel();">Export Excel</button>
+    </div>
+</div>
+
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+        });
+
+        function ExportExcel() {
+            debugger
+            var FromDt = $("#FromDt").val();
+            var ToDt = $("#ToDt").val();
+            var IsValid = true;
+            $("#spnErrorFromDt").html("");
+            $("#spnErrorToDt").html("");
+            if ($("#FromDt").val() == "") {
+                $("#spnErrorFromDt").html("From Date are required.");
+                IsValid = false;
+            }
+            if ($("#ToDt").val() == "") {
+                $("#spnErrorToDt").html("To Date are required.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
+
+            window.open('@Url.Action("ExportToExcel", "SAPInvoicesExport")' + '?FromDt=' + FromDt + '&ToDt=' + ToDt);
+
+        }
+    </script>
+}

@@ -4226,10 +4226,9 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("BPO_DTL");
             entity.Property(e => e.ConsgnCallStatus)
-                .HasMaxLength(1)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .ValueGeneratedOnAdd()
-                .IsFixedLength()
                 .HasColumnName("CONSGN_CALL_STATUS");
             entity.Property(e => e.ConsigneeDesg)
                 .HasMaxLength(50)

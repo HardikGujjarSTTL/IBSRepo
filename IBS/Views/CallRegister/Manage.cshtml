@@ -246,7 +246,7 @@
 
         $("#btnSave").click(function () {
             if ($("#frmDetails").valid()) {
-                debugger
+                
                 var qord = parseInt($("#QtyOrdered").val());
                 var ppass = parseInt($("#CumQtyPrevPassed").val());
                 var qoff = parseInt($("#QtyToInsp").val());
@@ -267,7 +267,7 @@
                 }
 
                 var formData = new FormData($("#frmDetails")[0]);
-                debugger
+                
                 $.ajax({
                     url: '@Url.Action("DetailsSave", "CallRegister")',
                     type: "POST",

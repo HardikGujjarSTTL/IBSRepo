@@ -143,7 +143,7 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            debugger
+                            
                             var Checksheet = row["FilePath"];
                             var html = "<td width='10%' valign='top' align='center'>";
                             if (FileExists(Checksheet)) {
@@ -187,7 +187,6 @@
                     exists = false;
                 }
             });
-
             return exists;
         }
 
@@ -196,6 +195,5 @@
             $("#btn-delete-yes").attr("href", url);
             $("#modal-delete-conf").modal("show");
         }
-
     </script>
 }

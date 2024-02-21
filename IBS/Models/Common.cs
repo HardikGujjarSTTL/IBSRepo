@@ -4474,7 +4474,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             return (from a in context.T08IeControllOfficers
-                    where a.CoStatus == null && a.CoRegion == Region
+                    where (a.CoStatus == null || a.CoStatus == "W") && a.CoRegion == Region
                     select new SelectListItem
                     {
                         Text = Convert.ToString(a.CoName),
@@ -5114,6 +5114,20 @@ namespace IBS.Models
                 base64String = "data:image/png;base64," + Convert.ToBase64String(qrCodeImage);
             }
             return base64String;
+        }
+
+        public static List<SelectListItem> GetDashboardRegion()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.T01Regions
+                       select new SelectListItem
+                       {
+                           Value = c.RegionCode.ToString(),
+                           Text = c.Region
+                           //}).OrderBy(c => c.Text).ToList();
+                       }).ToList();
+            obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
+            return obj;
         }
     }
 

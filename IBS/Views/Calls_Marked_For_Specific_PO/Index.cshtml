@@ -69,7 +69,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
+            
             $('#railwaytypes').change(function () {
                
                 var selectedValue = $(this).val();
@@ -109,7 +109,7 @@
 
         });
         function Search() {
-            debugger;
+            
             var railwaytypes = $("#railwaytypes").val();
             var railwaytypes1 = $("#railwaytypes1").val();
             var podt = $("#podt").val();
@@ -181,7 +181,7 @@
 
 
         $('#table1').on('click', '.custom-edit-button', function () {
-            debugger;
+            
             // Get the data for the clicked row
             var table1 = $("#table1").DataTable();
             var rowData = table1.row($(this).closest('tr')).data();

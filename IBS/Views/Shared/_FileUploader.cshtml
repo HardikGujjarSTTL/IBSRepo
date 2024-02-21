@@ -462,7 +462,7 @@ else
     }
 
     function OnFileUpload(ControlID, DocumentID, e, IsSignleFile) {
-        debugger
+        
         var files = e.files;
         var filesize = $(e).attr("data-filesize");
         if (files.length > 0) {
@@ -594,7 +594,7 @@ else
 
 
     function HideDocuments(hiddedidString) {
-        //debugger;
+        
         var HiddenIds = hiddedidString.toString().split(',');
         if (HiddenIds.length > 0) {
             var i = 0;
@@ -611,7 +611,7 @@ else
     }
 
     function ShowDocuments(hiddedidString) {
-        //debugger;
+        
         var HiddenIds = hiddedidString.toString().split(',');
         if (HiddenIds.length > 0) {
             var i = 0;

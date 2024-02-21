@@ -436,7 +436,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetCMDashBoardCount(int CoCd)
+        public DashboardModel GetCMDashBoardCount(int CoCd, string Region)
         {
             DashboardModel model = new();
 
@@ -460,10 +460,11 @@ namespace IBS.Repositories
                 }
             }
 
-            OracleParameter[] par2 = new OracleParameter[2];
+            OracleParameter[] par2 = new OracleParameter[3];
 
             par2[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CoCd, ParameterDirection.Input);
-            par2[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par2[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par2);
             List<DashboardModel> listVend = new();
@@ -1355,7 +1356,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters, string Region)
+        public DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters)
         {
             DTResult<AdminCountListing> dTResult = new() { draw = 0 };
             IQueryable<AdminCountListing>? query = null;
@@ -1381,7 +1382,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string FromDate = "", ToDate = "", ActionType = "";
+            string FromDate = "", ToDate = "", ActionType = "", Region = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
             {
                 FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
@@ -1394,10 +1395,15 @@ namespace IBS.Repositories
             {
                 ActionType = Convert.ToString(dtParameters.AdditionalValues["ActionType"]);
             }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Region"]))
+            {
+                Region = Convert.ToString(dtParameters.AdditionalValues["Region"]);
+            }
             if (ActionType == "TC")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                            && (Region == "All" || (Region != "All" && l.RegionCode == Region))
                         orderby l.CaseNo, l.CallRecvDt
                         select new AdminCountListing
                         {
@@ -1418,8 +1424,9 @@ namespace IBS.Repositories
             else if (ActionType == "A" || ActionType == "C" || ActionType == "T")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate)) && l.RegionCode == Region
-                              && l.CStatus == ActionType
+                        where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
+                            && (Region == "All" || (Region != "All" && l.RegionCode == Region))
+                            && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new AdminCountListing
                         {
@@ -1441,7 +1448,7 @@ namespace IBS.Repositories
             else if (ActionType == "M" || ActionType == "U" || ActionType == "S")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where l.RegionCode == Region && l.CStatus == ActionType
+                        where (Region == "All" || (Region != "All" && l.RegionCode == Region)) && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new AdminCountListing
                         {
@@ -1462,7 +1469,8 @@ namespace IBS.Repositories
             else if (ActionType == "TB")
             {
                 query = from l in context.T22Bills
-                        where (l.BillDt >= Convert.ToDateTime(FromDate) && l.BillDt <= Convert.ToDateTime(ToDate)) && l.CaseNo.StartsWith(Region)
+                        where (l.BillDt >= Convert.ToDateTime(FromDate) && l.BillDt <= Convert.ToDateTime(ToDate))
+                        && (Region == "All" || (Region != "All" && l.CaseNo.StartsWith(Region)))
                         select new AdminCountListing
                         {
                             CaseNo = l.CaseNo,
@@ -1475,12 +1483,26 @@ namespace IBS.Repositories
             }
             else if (ActionType == "ICNR")
             {
+                //query = (from t20 in context.T20Ics
+                //         join t30 in context.T30IcReceiveds on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
+                //         from t30 in t30Group.DefaultIfEmpty()
+                //         where t20.CaseNo.StartsWith(Region) &&
+                //               t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
+                //               (t20.BkNo != t30.BkNo || t20.SetNo != t30.SetNo)
+                //         select new AdminCountListing
+                //         {
+                //             CaseNo = t20.CaseNo,
+                //             CallRecvDt = t20.CallRecvDt,
+                //             CallSno = t20.CallSno,
+                //             IC_NO = t20.IcNo,
+                //             IC_DT = t20.IcDt,
+                //             BKNO = t20.BkNo,
+                //             SETNO = t20.SetNo,
+                //         }).Distinct();
+
                 query = (from t20 in context.T20Ics
-                         join t30 in context.T30IcReceiveds on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo } into t30Group
-                         from t30 in t30Group.DefaultIfEmpty()
-                         where t20.CaseNo.StartsWith(Region) &&
-                               t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
-                               (t20.BkNo != t30.BkNo || t20.SetNo != t30.SetNo)
+                         where (Region == "All" || (Region != "All" && t20.CaseNo.StartsWith(Region)))
+                            && !context.T30IcReceiveds.Any(t30 => t30.BkNo == t20.BkNo && t30.SetNo == t20.SetNo)
                          select new AdminCountListing
                          {
                              CaseNo = t20.CaseNo,
@@ -1491,24 +1513,43 @@ namespace IBS.Repositories
                              BKNO = t20.BkNo,
                              SETNO = t20.SetNo,
                          }).Distinct();
+
+                // Execute the query or further manipulate it as needed
+
             }
             else if (ActionType == "ICRNB")
             {
-                var result = context.T20Ics
-                            .Where(t20 => t20.CaseNo.StartsWith(Region) &&
-                                          t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
-                                          !context.T30IcReceiveds.Any(t30 => t30.BkNo == t20.BkNo && t30.SetNo == t20.SetNo))
-                            .Select(t20 => new
-                            {
-                                t20.CaseNo,
-                                t20.CallRecvDt,
-                                t20.CallSno,
-                                t20.IcNo,
-                                t20.IcDt,
-                                t20.BkNo,
-                                t20.SetNo
-                            })
-                            .Distinct();
+                //var result = context.T20Ics
+                //            .Where(t20 => t20.CaseNo.StartsWith(Region) &&
+                //                          t20.CallRecvDt >= Convert.ToDateTime(FromDate) && t20.CallRecvDt <= Convert.ToDateTime(ToDate) &&
+                //                          !context.T30IcReceiveds.Any(t30 => t30.BkNo == t20.BkNo && t30.SetNo == t20.SetNo))
+                //            .Select(t20 => new
+                //            {
+                //                t20.CaseNo,
+                //                t20.CallRecvDt,
+                //                t20.CallSno,
+                //                t20.IcNo,
+                //                t20.IcDt,
+                //                t20.BkNo,
+                //                t20.SetNo
+                //            })
+                //            .Distinct();
+
+                query = (from t20 in context.T20Ics
+                         join t30 in context.T30IcReceiveds
+                         on new { t20.BkNo, t20.SetNo } equals new { t30.BkNo, t30.SetNo }
+                         where (Region == "All" || (Region != "All" && t30.Region == Region)) &&
+                               !context.T22Bills.Any(t22 => t22.CaseNo == t20.CaseNo)
+                         select new AdminCountListing
+                         {
+                             CaseNo = t20.CaseNo,
+                             CallRecvDt = t20.CallRecvDt,
+                             CallSno = t20.CallSno,
+                             IC_NO = t20.IcNo,
+                             IC_DT = t20.IcDt,
+                             BKNO = t20.BkNo,
+                             SETNO = t20.SetNo,
+                         }).Distinct();
             }
 
             dTResult.recordsTotal = query.Count();
@@ -1799,7 +1840,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters, string RegionCode)
+        public DTResult<AdminViewAllList> Dashboard_Admin_ViewAll_List(DTParameters dtParameters)
         {
             DTResult<AdminViewAllList> dTResult = new() { draw = 0 };
             IQueryable<AdminViewAllList>? query = null;
@@ -1811,6 +1852,7 @@ namespace IBS.Repositories
             string FromDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]) ? Convert.ToString(dtParameters.AdditionalValues["FromDate"]) : null;
             string ToDate = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]) ? Convert.ToString(dtParameters.AdditionalValues["ToDate"]) : null;
             string Status = !string.IsNullOrEmpty(dtParameters.AdditionalValues["TypeOfList"]) ? Convert.ToString(dtParameters.AdditionalValues["TypeOfList"]) : null;
+            string Region = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Region"]) ? Convert.ToString(dtParameters.AdditionalValues["Region"]) : null;
 
             if (dtParameters.Order != null)
             {
@@ -1848,7 +1890,7 @@ namespace IBS.Repositories
 
 
             OracleParameter[] par = new OracleParameter[5];
-            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, RegionCode, ParameterDirection.Input);
+            par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_TODate", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
             par[3] = new OracleParameter("P_ACTION_TYPE", OracleDbType.Varchar2, Status, ParameterDirection.Input);
@@ -2368,13 +2410,14 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DashboardModel GetCMGeneralDashBoard(int CO_CD)
+        public DashboardModel GetCMGeneralDashBoard(int CO_CD, string Region)
         {
             DashboardModel model = new DashboardModel();
-            OracleParameter[] par = new OracleParameter[2];
+            OracleParameter[] par = new OracleParameter[3];
 
             par[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par);
             List<DashboardModel> lstIEPer = new();
@@ -2401,13 +2444,14 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetCMJIDDashBoard(int CO_CD)
+        public DashboardModel GetCMJIDDashBoard(int CO_CD, string Region)
         {
             DashboardModel model = new DashboardModel();
-            OracleParameter[] par = new OracleParameter[2];
+            OracleParameter[] par = new OracleParameter[3];
 
             par[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par);
             List<DashboardModel> lstIEPer = new();
@@ -2580,7 +2624,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetCMDARDashBoard(int CO_CD)
+        public DashboardModel GetCMDARDashBoard(int CO_CD, string Region)
         {
             DashboardModel model = new();
 
@@ -2597,10 +2641,11 @@ namespace IBS.Repositories
                 }
             }
 
-            OracleParameter[] par2 = new OracleParameter[2];
+            OracleParameter[] par2 = new OracleParameter[3];
 
             par2[0] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par2[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par2[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds1 = DataAccessDB.GetDataSet("GET_CM_DASHBOARD_IE_WISE_PERFOMANCE", par2);
             List<DashboardModel> listVend = new();

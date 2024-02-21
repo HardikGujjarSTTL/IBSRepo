@@ -1,0 +1,94 @@
+﻿@model IBS.Models.ContractEntry
+@{
+    string clsView = "";
+    //if (Model.ID > 0)
+    //{
+    clsView = "Permission_View";
+    //}
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manpower in QA Vertical Entry</h2>
+    </div>
+    <div>
+        <a asp-controller="ManPowerQA" asp-action="Index" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+<section id="tab-1" class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ManPowerQA" asp-action="ManPowerQADetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContract">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">RIO</label>
+                        <input type="text" class="input" asp-for="TPFROM">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Name of Employee</label>
+                        <input type="text" class="input" asp-for="TPFROM">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>                    
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Employee No</label>
+                        <input type="text" class="input" asp-for="TPFROM">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Designation</label>
+                        <input type="text" class="input" asp-for="TPFROM">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Cadre</label>
+                        <input type="text" class="input" asp-for="TPFROM">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Discipline</label>
+                        <input type="text" class="input" asp-for="TPFROM">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Status </label>
+                        <input type="text" class="input" asp-for="TPFROM">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Birth</label>
+                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Joining in RITES</label>
+                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Joining in RIO</label>
+                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <label for="Reference">Date of Repatriation /Retirement/Term Completion</label>
+                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="BtnSave()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+

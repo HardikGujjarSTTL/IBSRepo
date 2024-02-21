@@ -325,7 +325,7 @@
             processData: false,
             contentType: false
         }).done(function (response) {
-           // debugger
+           
             if (response != null) {
                 $(".chatLeftBoxBody").html("");
                 $(".chatLeftBoxBody").html(response);
@@ -338,7 +338,7 @@
     }
 
     function GetChatMessageList(recvid) {
-       // debugger
+       
         ReceiverId = recvid;
         if (ReceiverId != "") {
             var arrRecvID = ReceiverId.split(",");

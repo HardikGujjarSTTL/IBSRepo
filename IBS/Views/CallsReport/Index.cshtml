@@ -258,7 +258,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
+            
             if ('@ReportType' == "IeVendorWise") {
                 $(".report1").css("display", "");
             }
@@ -314,7 +314,7 @@
 
         });
         function Search() {
-            debugger;
+            
 
             var ReportType = '@ReportType';
             var frmDate = $("#frmDate").val();
@@ -328,7 +328,7 @@
 
         }
         function Submit() {
-            debugger;
+            
             var ReportType = '@ReportType';
             var WiseRadio = $("input[name='radioOptions']:checked").val();
             var IeStatus = $("input[name='radioOptions1']:checked").val();
@@ -350,7 +350,7 @@
         }
 
         function btnSubmit() {
-            debugger;
+            
             var ReportType = '@ReportType';
             var frmDate = $("#fromDate").val();
             var toDate = $("#ToDate").val();
@@ -443,7 +443,7 @@
         }
 
         $('#table1').on('click', '.custom-edit-button', function () {
-            debugger;
+            
             // Get the data for the clicked row
             var ReportType = '@ReportType';
             var table1 = $("#table1").DataTable();

@@ -93,7 +93,7 @@
             InitializeDatatable();
         }
         function setDefaultDate() {
-            debugger
+            
             $('#PoDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -194,7 +194,7 @@
         $("#btnModifyLOA").click(function () {
             var CaseNo = $("#CaseNo").val();
             var PoDt = $("#PoDt").val();
-            debugger
+            
             if (CaseNo != "") {
                 window.location.href = '@Url.Action("Manage", "PurchesOrder1LOA")' + '?CaseNo=' + CaseNo + "&PODT=" + PoDt;
             }

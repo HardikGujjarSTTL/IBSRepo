@@ -5274,7 +5274,7 @@ namespace IBS.Repositories.InspectionBilling
             {
                 try
                 {
-                    if (model.CallStatus == "A" || model.CallStatus == "R" || model.CallStatus == "G")
+                    if (model.CallStatus == "A" || model.CallStatus == "R" || model.CallStatus == "G" || model.CallStatus == "PR")
                     {
                         var count = context.T49IcPhotoEncloseds.Where(t => t.CaseNo == model.CaseNo && t.CallRecvDt == model.CallRecvDt && t.CallSno == model.CallSno && t.BkNo == model.DocBkNo && t.SetNo == model.DocSetNo).Count();
                         if (count > 0)

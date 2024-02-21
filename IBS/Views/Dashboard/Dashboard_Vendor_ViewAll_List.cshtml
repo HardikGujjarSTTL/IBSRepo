@@ -21,7 +21,7 @@
 
 <div class="accordion-body" id="body">
     <div class="row my-0">
-        <input asp-for="ActionType" hidden />
+        <input type="hidden" asp-for="ActionType" />
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
@@ -76,7 +76,6 @@
             debugger
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
-            $("#ActionType").val(type);
             $("#ActionType").val(type);
             if (type == "RCS") {
                 $("#spnHeading").text("Recent Calls Status ");
