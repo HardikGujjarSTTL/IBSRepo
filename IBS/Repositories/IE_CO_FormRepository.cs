@@ -136,6 +136,36 @@ namespace IBS.Repositories
 
                 context.T08IeControllOfficers.Add(co);
                 context.SaveChanges();
+
+                T02User user = new()
+                {
+                    UserId = "CM" + CoCd,
+                    UserName = model.CoName,
+                    RitesEmp = "Y",
+                    Region = model.CoRegion,
+                    Password = "WPg3mg2hKkFI3zwp72u8SA==",
+                    Status = model.CoStatus,
+                    CallRemarking = "Y",
+                    Createdby = Convert.ToString(model.Createdby),
+                    Createddate = DateTime.Now,
+                    Migtype = "CM",
+                    Mobile = model.CoPhoneNo,
+                    CoCd = CoCd,
+                    UserEmail = model.CoEmail,
+                };
+                context.T02Users.Add(user);
+                context.SaveChanges();
+
+                UserMaster usermaster = new()
+                {
+                    UserId = "CM" + CoCd,
+                    Name = model.CoName,
+                    UserType = "CM",
+                    Createdby = Convert.ToString(model.Createdby),
+                    Createddate = DateTime.Now,
+                };
+                context.UserMasters.Add(usermaster);
+                context.SaveChanges();
             }
             else
             {
