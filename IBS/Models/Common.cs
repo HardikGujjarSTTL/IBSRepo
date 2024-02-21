@@ -3494,6 +3494,52 @@ namespace IBS.Models
             return obj;
         }
 
+        static bool IsNumeric(string input)
+        {
+            return double.TryParse(input, out _);
+        }
+        public static List<SelectListItem> GetConsigneeSearch(string ConsigneeSearch)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> objdata = new List<SelectListItem>();
+            if (ConsigneeSearch != null && ConsigneeSearch != "")
+            {
+                List<SelectListItem> model = new();
+                OracleParameter[] par = new OracleParameter[3];
+                string charType = "";
+                if (IsNumeric(ConsigneeSearch))
+                {
+                    charType = "1";
+                    par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
+                    par[1] = new OracleParameter("p_charType", OracleDbType.Varchar2, charType, ParameterDirection.Input);
+                    par[2] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                }
+                else
+                {
+                    charType = "0";
+                    par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
+                    par[1] = new OracleParameter("p_charType", OracleDbType.Varchar2, charType, ParameterDirection.Input);
+                    par[2] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                }
+                
+                var ds = DataAccessDB.GetDataSet("GetConsineeSearchData", par, 1);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
+
+                objdata = (from a in model
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.Text,
+                          Value = a.Value
+                      }).ToList();
+            }
+            return objdata;
+        }
+
         public static List<SelectListItem> GetConsigneeUsingConsignee(int ConsigneeSearch)
         {
             List<SelectListItem> objdata = new List<SelectListItem>();
@@ -3513,6 +3559,7 @@ namespace IBS.Models
                       }).ToList();
             }
             return objdata;
+
         }
 
         public static List<SelectListItem> GetConsigneeUsingConsigneeLike(string ConsigneeSearch)
