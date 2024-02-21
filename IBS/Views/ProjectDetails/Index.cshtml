@@ -10,94 +10,100 @@
     </div>
 </div>
 
-<div class="task-listinput">
-    <form asp-controller="" asp-action="" id="frmCityMaster">
-        <input type="hidden" value="0" id="In_ID" />
-        <div class="accordion-body">
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Project Name</label>
-                    <input type="text" class="input" asp-for="ProjectName" maxlength="50" />
-                </div>
-                <div class="col-md-4 mb-4">
-                    <label for="Reference">Start Date</label>
-                    <input type="text" class="input datepicker" asp-for="StartDate" maxlength="300" />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <label for="Reference">Completion Date</label>
-                    <input type="text" class="input datepicker" asp-for="CompletionDate" maxlength="300" />
-                    <span asp-validation-for="CompletionDate" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="accordion-body">
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Sanctioned strength</label>
-                    @Html.DropDownListFor(model => model.SancStrength, new SelectList(IBS.Models.Common.SanctionedStrength(), "Value", "Text"), new { })
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Department</label>
-                    @Html.DropDownListFor(model => model.Disc, new SelectList(IBS.Models.Common.DiscDepartment(), "Value", "Text"), new { })
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Number</label>
-                    <input type="text" class="input" asp-for="Numbers" onkeypress="return isNumber(event)" maxlength="50" />
-                </div>
-                <div class="col-md-3 mb-3 savenext-btn">
-                    <button type="button" id="BtnAdd" class="save-btn active">Add</button>
+<section id="tab-1">
+    <div class="task-listinput">
+        <form asp-controller="" asp-action="" id="">
+            <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+            <input type="hidden" value="0" id="In_ID" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Project Name</label>
+                        <input type="text" class="input" asp-for="ProjectName" maxlength="50" />
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Details_Of_Sanctioned_File" />
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Start Date</label>
+                        <input type="text" class="input datepicker" asp-for="StartDate" maxlength="300" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="Reference">Completion Date</label>
+                        <input type="text" class="input datepicker" asp-for="CompletionDate" maxlength="300" />
+                        <span asp-validation-for="CompletionDate" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row my-0">
-            <div class="col-md-12 mb-3">
-                <section class="table-section">
-                    <div class="task-listinput">
-                        <div class="dash-table">
-                            <table id="dtProject" class="table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th>Sanctioned Strength</th>
-                                        <th>Department</th>
-                                        <th>Number</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Sanctioned strength</label>
+                        @Html.DropDownListFor(model => model.SancStrength, new SelectList(IBS.Models.Common.SanctionedStrength(), "Value", "Text"), new { })
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Department</label>
+                        @Html.DropDownListFor(model => model.Disc, new SelectList(IBS.Models.Common.DiscDepartment(), "Value", "Text"), new { })
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Number</label>
+                        <input type="text" class="input" asp-for="Numbers" onkeypress="return isNumber(event)" maxlength="50" />
+                    </div>
+                    <div class="col-md-3 mb-3 savenext-btn">
+                        <button type="button" id="BtnAdd" class="save-btn active">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-0">
+                <div class="col-md-12 mb-3">
+                    <section class="table-section">
+                        <div class="task-listinput">
+                            <div class="dash-table">
+                                <table id="dtProject" class="table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Sanctioned Strength</th>
+                                            <th>Department</th>
+                                            <th>Number</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div id="modal-delete-conf-valuation-detail" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirmation!</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this record?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="savenext-btn">
+                                <button type="button" class="reset-btn" data-bs-dismiss="modal">No</button>
+                                <button type="button" class="save-btn active" id="btnDeletevaluationDetail" data-id="">Yes</button>
+                            </div>
                         </div>
                     </div>
-                </section>
-            </div>
-        </div>
-        <div id="modal-delete-conf-valuation-detail" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirmation!</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to delete this record?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="savenext-btn">
-                            <button type="button" class="reset-btn" data-bs-dismiss="modal">No</button>
-                            <button type="button" class="save-btn active" id="btnDeletevaluationDetail" data-id="">Yes</button>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="savenext-btn">
-            <button type="button" id="BtnSave" class="save-btn active">Save</button>
-        </div>
-    </form>
-</div>
+            <div class="savenext-btn">
+                <button type="button" id="BtnSave" class="save-btn active">Save</button>
+            </div>
+        </form>
+    </div>
+</section>
 
 @section scripts {
 
@@ -108,6 +114,7 @@
         $(document).ready(function () {
 
             $("#BtnSave").on("click", function () {
+                SaveSingleDocuments("tab-1");
                 var formData = {
                     SancStrength: $("#SancStrength").val(),
                     ProjectName: $("#ProjectName").val(),
