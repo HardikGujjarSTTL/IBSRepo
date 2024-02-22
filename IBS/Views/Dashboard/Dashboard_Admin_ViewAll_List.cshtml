@@ -34,26 +34,30 @@
     <div class="row my-0">
         <input type="hidden" asp-for="ActionType" />
         <input type="hidden" asp-for="Region" />
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
                 <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">To</label>
                 <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Region</label>
+                @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion().Where(x=>x.Value == Model.Region), new { })
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
             <div class="savenext-btn">
                 <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
 
 <section class="table-section">

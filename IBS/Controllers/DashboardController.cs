@@ -304,11 +304,12 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Dashboard_Admin_ViewAll_List(string Type)
+        public IActionResult Dashboard_Admin_ViewAll_List(string Type, string Region)
         {
             DashboardModel model = new();
             model.ActionType = Type;
-            return View();
+            model.Region = Region;
+            return View(model);
         }
 
         [HttpPost]
@@ -446,10 +447,11 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Dashboard_CM_JI_ViewAll_List(string Type)
+        public IActionResult Dashboard_CM_JI_ViewAll_List(string Type, string Region)
         {
             CM_JI_ViewAll_Model model = new CM_JI_ViewAll_Model();
             model.Type = Type;
+            model.JI_REGION = Region;
             return View(model);
         }
 
