@@ -39,6 +39,11 @@ namespace IBS.Controllers
         {
             try
             {
+                List<APPDocumentDTO> DocumentsList = new List<APPDocumentDTO>();
+                if (FrmCollection != null && FrmCollection["UploadeFile"].Count > 0)
+                {
+                    DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["UploadeFile"]);
+                }
                 model.Createdby = UserId;
                 model.UpdatedBy = UserId;
                 List<ProjectDetails> lstProjectDetails = new List<ProjectDetails>();
@@ -47,13 +52,13 @@ namespace IBS.Controllers
                     lstProjectDetails = objSessionHelper.lstProjectDetails;
                 }
                 int i = projectDetailsRepository.SaveProductDetailsList(model, lstProjectDetails);
-                if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+
+                if (!string.IsNullOrEmpty(FrmCollection["UploadeFile"]))
                 {
                     int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Details_Of_Sanctioned_File };
-                    List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                    DocumentHelper.SaveFiles(Convert.ToString(i), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.DetailsOfSanctionedFile), env, iDocument, string.Empty, i, DocumentIds);
+                    DocumentHelper.SaveFiles(Convert.ToString(i), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.DetailsOfSanctionedFile), env, iDocument, string.Empty, Convert.ToString(i), DocumentIds);
                 }
-                return Json(new { status = true, responseText = "Product Details Added Successfully." });
+                return Json(new { status = true, redirectToIndex = true, responseText = "Product Details Added Successfully." });
             }
             catch (Exception ex)
             {
@@ -79,7 +84,7 @@ namespace IBS.Controllers
                 }
                 lstProjectDetails.Add(model);
                 objSessionHelper.lstProjectDetails = lstProjectDetails;
-                return Json(new { status = true, responseText = "Product Details Added Successfully." });
+                return Json(new { status = true,  responseText = "Product Details Added Successfully." });
             }
             catch (Exception ex)
             {

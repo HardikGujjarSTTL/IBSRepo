@@ -111,8 +111,8 @@ namespace IBS.Repositories
                 ProjectDetail obj = new ProjectDetail();
                 obj.Id = ProjDID;
                 obj.ProdId = ProjectID;
-                obj.Sanctionedstrength = EnumUtility<Enums.DiscDepartment>.GetDescriptionByKey(item.SancStrength);
-                obj.Department = EnumUtility<Enums.DiscDepartment>.GetDescriptionByKey(item.Disc);
+                obj.Sanctionedstrength = item.SancStrength;
+                obj.Department = item.Disc;
                 obj.Nos = item.Numbers;
                 context.ProjectDetails.Add(obj);
                 context.SaveChanges();

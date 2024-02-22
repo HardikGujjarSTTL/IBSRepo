@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.ProjectDetails
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Project Details";
 }
 
 <div class="list-inner">
@@ -17,19 +17,19 @@
             <input type="hidden" value="0" id="In_ID" />
             <div class="accordion-body">
                 <div class="row my-0">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-2 mb-2">
                         <label for="Reference">Project Name</label>
                         <input type="text" class="input" asp-for="ProjectName" maxlength="50" />
                     </div>
                     <div class="col-md-2 mb-2">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Details_Of_Sanctioned_File" />
                     </div>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-2 mb-2">
                         <label for="Reference">Start Date</label>
                         <input type="text" class="input datepicker" asp-for="StartDate" maxlength="300" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-2 mb-2">
                         <label for="Reference">Completion Date</label>
                         <input type="text" class="input datepicker" asp-for="CompletionDate" maxlength="300" />
                         <span asp-validation-for="CompletionDate" class="text-danger"></span>
@@ -111,9 +111,18 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
-        $(document).ready(function () {
 
+        $(document).ready(function () {
+            InitializeClusterData();
             $("#BtnSave").on("click", function () {
+
+                var files = $('#hdnUploadedDocumentList_tab-1')[0];
+                debugger;
+
+                if (files && files.defaultValue && files.defaultValue != null) {
+                    var files = files.defaultValue;
+                    formData.append("UploadeFile", files);
+                }
                 SaveSingleDocuments("tab-1");
                 var formData = {
                     SancStrength: $("#SancStrength").val(),
@@ -123,11 +132,28 @@
                     Disc: $("#Disc").val(),
                     Numbers: $("#Numbers").val(),
                 }
-                $.post("@Url.Action("ProjectDetailsSave", "ProjectDetails")", { model: formData }, function (response) {
-                    if (response.status) {
-                        ShowHideMsgNew(response.status, response.responseText);
+                var urlpath = "@Url.Action("ProjectDetailsSave", "ProjectDetails")";
+
+                $.ajax({
+                    url: urlpath,
+                    type: 'POST',
+                    data: formData,
+                    success: function (dataToSend) {
+                        if (dataToSend.status === true) {
+                            if (dataToSend.redirectToIndex === true) {
+                                alert(dataToSend.alertMessage);
+                                window.location.href = "@Url.Action("Index", "ProjectDetails")";
+                            }
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
                     }
                 });
+                // $.post("@Url.Action("ProjectDetailsSave", "ProjectDetails")", { model: formData }, function (response) {
+                //     if (response.status) {
+                //         ShowHideMsgNew(response.status, response.responseText);
+                //     }
+                // });
             });
 
             $("#BtnAdd").on("click", function () {
@@ -142,47 +168,6 @@
                     if (response.status) {
                         InitializeClusterData();
                         $("#In_ID").val("0");
-                    }
-                });
-            });
-
-            function EditProject(id) {
-                $.ajax({
-                    url: '@Url.Action("EditProject", "InspectionEngineers")?id=' + id,
-                    type: 'GET',
-                    cache: false,
-                    processData: false,
-                    contentType: false
-                }).done(function (response) {
-                    if (response.status) {
-                        $("#In_ID").val(response.list.In_ID);
-                    }
-                });
-            }
-
-            $('#dtProject tbody').on('dblclick', 'tr', function () {
-                var rowData = $('#dtProject').DataTable().row($(this).closest('tr')).data();
-                EditIECluster(rowData.ID);
-            });
-
-            function DeleteProject(id) {
-                $("#btnDeletevaluationDetail").attr("data-id", id);
-                $("#modal-delete-conf-valuation-detail").modal("show");
-            }
-
-            $("#btnDeletevaluationDetail").click(function () {
-                $.ajax({
-                    url: '@Url.Action("DeleteprojectDetail", "ProjectDetails")?id=' + $(this).attr("data-id"),
-                    type: 'POST',
-                    cache: false,
-                    processData: false,
-                    contentType: false
-                }).done(function (response) {
-                    ShowHideMsgNew(response.status, response.responseText);
-                    if (response.status) {
-                        $("#btnDeletevaluationDetail").attr("data-id", "");
-                        $("#modal-delete-conf-valuation-detail").modal('hide');
-                        InitializeClusterData();
                     }
                 });
             });
@@ -219,8 +204,11 @@
                             data: null, orderable: false,
                             render: function (data, type, row) {
                                 var id = data.In_ID;
-                                var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="EditProject(' + id + ');" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                                html += '<a onclick="DeleteProject(' + id + ');"  href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                                // var id = 1;
+                                var html = '<div align=\"center\" class=\"reportIcon\"> <a onclick="ProjectDetailEdit(' + id + '); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                                // html += '<a onclick="Delete(' + id + '); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                                html += '<a class="delete" href="javascript:void(0);" data-id="' + id + '"><i class="fa fa-trash Permission_Delete" title="Delete" style="margin:10px;"></i></a>';
+                                // html += '<a onclick="DeleteCluster1(' + id + ');"  href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                                 html += '</div>';
                                 return html;
                             }
@@ -230,6 +218,58 @@
                 });
             }
 
+            function ProjectDetailEdit(id) {
+                debugger
+                $.ajax({
+                    url: '@Url.Action("EditProject", "ProjectDetails")?id=' + id,
+                    type: 'GET',
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response.status) {
+                        $("#SancStrength").val(response.list.SancStrength);
+                        $("#Disc").val(response.list.Disc);
+                        $("#Numbers").val(response.list.Numbers);
+                        $("#In_ID").val(response.list.In_ID);
+                    }
+                });
+            }
+
+            $('#dtProject tbody').on('click', 'tr', function () {
+                var rowData = $('#dtProject').DataTable().row($(this).closest('tr')).data();
+                ProjectDetailEdit(rowData.In_ID);
+            });
+
+            $('#dtProject tbody').on('click', '.delete', function () {
+                debugger;
+                var id = $(this).data('id');
+                Delete(id);
+                return false;
+            });
+
+            function Delete(id) {
+                debugger;
+                $("#btnDeletevaluationDetail").attr("data-id", id);
+                $("#modal-delete-conf-valuation-detail").modal("show");
+            }
+
+            $("#btnDeletevaluationDetail").click(function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteprojectDetail", "ProjectDetails")?id=' + $(this).attr("data-id"),
+                    type: 'POST',
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                    if (response.status) {
+                        $("#btnDeletevaluationDetail").attr("data-id", "");
+                        $("#modal-delete-conf-valuation-detail").modal('hide');
+                        InitializeClusterData();
+                    }
+                });
+            });
         });
     </script>
 }
