@@ -1,10 +1,11 @@
-﻿@model IBS.Models.ContractEntry
+﻿@model IBS.Models.ManpowerModel
 @{
     string clsView = "";
-    //if (Model.ID > 0)
-    //{
-    clsView = "Permission_View";
-    //}
+    if (Model.ID > 0)
+    {
+        clsView = "Permission_View";
+    }
+    ViewData["Title"] = "Manage Manpower in QA Vertical";
 }
 
 <div class="list-inner">
@@ -18,69 +19,67 @@
 
 <section id="tab-1" class="@clsView">
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="ManPowerQA" asp-action="ManPowerQADetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmContract">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ManPowerQA" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmContract">
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">RIO</label>
-                        <input type="text" class="input" asp-for="TPFROM">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.Region, Common.GetRegionType(), new { })
+                        <span asp-validation-for="Region" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Name of Employee</label>
-                        <input type="text" class="input" asp-for="TPFROM">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
-                    </div>                    
+                        <input type="text" class="input" asp-for="EmpName">
+                        <span asp-validation-for="EmpName" class="text-danger"></span>
+                    </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Employee No</label>
-                        <input type="text" class="input" asp-for="TPFROM">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="EmpNo">
+                        <span asp-validation-for="EmpNo" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="row my-0">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label for="Reference">Designation</label>
-                        <input type="text" class="input" asp-for="TPFROM">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="Reference">Cadre</label>
-                        <input type="text" class="input" asp-for="TPFROM">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.Desig, new SelectList(IBS.Models.Common.IEDesignation() , "Value", "Text"), "--Select--")
+                        <span asp-validation-for="Desig" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Cadre</label>
+                        @Html.DropDownListFor(model => model.Cadre, Common.GetRegionType(), new { })
+                        <span asp-validation-for="Cadre" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
                         <label for="Reference">Discipline</label>
-                        <input type="text" class="input" asp-for="TPFROM">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.Discp, new SelectList(IBS.Models.Common.IEDepartmentlist() , "Value", "Text"), "--Select--", new { @class = "", @onchange = "BindCluster();" })
+                        <span asp-validation-for="Discp" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Status </label>
-                        <input type="text" class="input" asp-for="TPFROM">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        @Html.DropDownListFor(model => model.Status, Common.GetManPowerStatus(), new { })
+                        <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Date of Birth</label>
-                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        <input type="text" class="input datepicker" asp-for="Dob" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="Dob" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Date of Joining in RITES</label>
-                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        <input type="text" class="input datepicker" asp-for="RitesDt" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="RitesDt" class="text-danger"></span>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Date of Joining in RIO</label>
-                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        <input type="text" class="input datepicker" asp-for="RioDt" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="RioDt" class="text-danger"></span>
                     </div>
-                    <div class="col-md-5 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="Reference">Date of Repatriation /Retirement/Term Completion</label>
-                        <input type="text" class="input datepicker" asp-for="TPFROM" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="TPFROM" class="text-danger"></span>
+                        <input type="text" class="input datepicker" asp-for="DrrtDt" placeholder="DD/MM/YYYY">
+                        <span asp-validation-for="DrrtDt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="savenext-btn">
