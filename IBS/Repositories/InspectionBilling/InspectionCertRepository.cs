@@ -7,6 +7,7 @@ using System.Data;
 using Newtonsoft.Json;
 using DocumentFormat.OpenXml.Drawing;
 using System.Globalization;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace IBS.Repositories.InspectionBilling
 {
@@ -47,7 +48,7 @@ namespace IBS.Repositories.InspectionBilling
                 orderAscendingDirection = true;
             }
 
-            string Caseno = "", Callrecvdt = "", Callsno = "";
+            string Caseno = "", Callrecvdt = "", Callsno = "", Bkno = "", Setno = "";
 
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Caseno"]))
             {
@@ -61,20 +62,33 @@ namespace IBS.Repositories.InspectionBilling
             {
                 Callsno = Convert.ToString(dtParameters.AdditionalValues["Callsno"]);
             }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Bkno"]))
+            {
+                Bkno = Convert.ToString(dtParameters.AdditionalValues["Bkno"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Setno"]))
+            {
+                Setno = Convert.ToString(dtParameters.AdditionalValues["Setno"]);
+            }
 
             Caseno = Caseno.ToString() == "" ? string.Empty : Caseno.ToString();
             DateTime? _CallRecvDt = Callrecvdt == "" ? null : DateTime.ParseExact(Callrecvdt, "dd/MM/yyyy", null);
             Callsno = Callsno.ToString() == "" ? string.Empty : Callsno.ToString();
 
-            OracleParameter[] par = new OracleParameter[8];
+            Bkno = Bkno.ToString() == "" ? string.Empty : Bkno.ToString();
+            Setno = Setno.ToString() == "" ? string.Empty : Setno.ToString();
+
+            OracleParameter[] par = new OracleParameter[10];
             par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_caseno", OracleDbType.Varchar2, Caseno, ParameterDirection.Input);
             par[2] = new OracleParameter("p_callrecvdt", OracleDbType.Date, _CallRecvDt, ParameterDirection.Input);
             par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, Callsno, ParameterDirection.Input);
-            par[4] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
-            par[5] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
-            par[6] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-            par[7] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, Bkno, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, Setno, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[7] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[8] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[9] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_INSPECTION_CERT_DETAILS", par, 2);
 
@@ -1523,7 +1537,7 @@ namespace IBS.Repositories.InspectionBilling
                 }
                 else
                 {
-                    if(model.Callstatus == "R" || model.Callstatus == "C")
+                    if (model.Callstatus == "R" || model.Callstatus == "C")
                     {
 
                     }
@@ -1531,7 +1545,7 @@ namespace IBS.Repositories.InspectionBilling
                     {
                         model.TaxType = "I";
                     }
-                    
+
                 }
             }
             return Cstatus;

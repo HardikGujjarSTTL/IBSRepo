@@ -812,7 +812,7 @@
             }
             if (actiontype == "M") {
                 $('input[type=radio][name=ConsigneeGST]').change();
-
+                $("#IcTypeId").prop('disabled', true);
                 InitializeDatatable();
 
                 if ($("#BillNo").val() == "") {
