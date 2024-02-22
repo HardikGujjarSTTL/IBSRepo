@@ -3782,7 +3782,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Mobile)
-                .HasMaxLength(12)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("MOBILE");
             entity.Property(e => e.Otp)

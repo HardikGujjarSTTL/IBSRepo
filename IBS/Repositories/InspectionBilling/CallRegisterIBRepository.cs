@@ -4847,19 +4847,31 @@ namespace IBS.Repositories.InspectionBilling
             return model;
         }
 
-        public VenderCallStatusModel RefreshAllDlt(VenderCallStatusModel model)
+        public VenderCallStatusModel RefreshAllDlt(string CaseNo, DateTime? CallRecvDt, int CallSno, string DocBkNo, string DocSetNo)
         {
+            VenderCallStatusModel model = new();
             var query = context.IcIntermediates
-        .Where(i => i.CaseNo == model.CaseNo &&
-                    i.CallRecvDt == model.CallRecvDt &&
-                    i.CallSno == model.CallSno &&
+        .Where(i => i.CaseNo == CaseNo &&
+                    i.CallRecvDt == CallRecvDt &&
+                    i.CallSno == CallSno &&
                     (i.ConsgnCallStatus != "A" && i.ConsgnCallStatus != "R") || i.ConsgnCallStatus == null);
 
             context.IcIntermediates.RemoveRange(query);
 
             context.SaveChanges();
 
+
+            var queryT49 = context.T49IcPhotoEncloseds.Where(i => i.CaseNo == CaseNo &&
+                    i.CallRecvDt == CallRecvDt &&
+                    i.CallSno == CallSno && i.BkNo == DocBkNo && i.SetNo == DocSetNo);
+            context.T49IcPhotoEncloseds.RemoveRange(queryT49);
+            context.SaveChanges();
+
             model.AlertMsg = "Success";
+
+            var ibsdoc = context.IbsAppdocuments.Where(i => i.Applicationid == CaseNo + "_" + CallSno);
+            context.IbsAppdocuments.RemoveRange(ibsdoc);
+            context.SaveChanges();
 
             return model;
         }
@@ -5900,7 +5912,7 @@ namespace IBS.Repositories.InspectionBilling
 
                 model.AlertMsg = "Book Number or Set Number Already Existing for this Consignee.!!!";
             }
-            
+
 
             return model;
         }
