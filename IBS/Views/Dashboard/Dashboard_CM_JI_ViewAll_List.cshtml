@@ -38,26 +38,33 @@
     <div class="row my-0">
         <input type="hidden" asp-for="Type" />
         <input type="hidden" asp-for="JI_REGION" />
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
                 <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">To</label>
                 <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Region</label>
+                @Html.DropDownListFor(model => model.JI_REGION, Common.GetDashboardRegion().Where(x=>x.Value == Model.JI_REGION), new { })
             </div>
         </div>
-    </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference"></label>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>    
 </div>
 
 <section class="table-section">
@@ -87,7 +94,7 @@
 
     <script type="text/javascript">
         var Columns = [];
-        $(function () {            
+        $(function () {
             var currentDate = new Date();
             var financialYearDates = GetFinancialYearStartEndDate(); //calculateFinancialYearDates(currentDate);
 
@@ -188,7 +195,7 @@
                 ]
             }
             InitializeDatatable();
-        });        
+        });
 
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
@@ -222,7 +229,7 @@
                 columns: Columns,
                 "order": [[0, "asc"]]
             });
-        }                
+        }
     </script>
 }
 

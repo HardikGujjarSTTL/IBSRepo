@@ -260,6 +260,8 @@ builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<ISAPIntegrationRepository, SAPIntegrationRepository>();
 builder.Services.AddScoped<IHolidayMasterRepository, HolidayMasterRepository>();
 
+builder.Services.AddScoped<IManPowerQARepository, ManPowerQARepository>();
+
 // SignalR Class and Configuration
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<ChatHub>();

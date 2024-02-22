@@ -160,6 +160,8 @@
             //var Callrecvdt = moment($('#Callrecvdt').datepicker('getDate')).format("YYYY-MM-DD");
             var Callrecvdt = $("#Callrecvdt").val();
             var Callsno = $("#Callsno").val();
+            var Bkno = $("#Bkno").val();
+            var Setno = $("#Setno").val();
 
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
@@ -180,7 +182,9 @@
                         var AdditionalValues = {
                             "Caseno": Caseno,
                             "Callrecvdt": Callrecvdt,
-                            "Callsno": Callsno
+                            "Callsno": Callsno,
+                            "Bkno": Bkno,
+                            "Setno": Setno
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);

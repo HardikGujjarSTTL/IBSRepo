@@ -43,7 +43,7 @@
                 <div class="row align-items-end my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">PL NO.</label>
-                        <input type="text" class="input" asp-for="PlNo">
+                        <input type="text" class="input" asp-for="PlNo" placeholder="PL NO.">
                         <span asp-validation-for="PlNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -53,19 +53,19 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Drawing No.</label>
-                        <input type="text" class="input" asp-for="DrawingNo">
+                        <input type="text" class="input" asp-for="DrawingNo" placeholder="Drawing No.">
                         <span asp-validation-for="DrawingNo" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Specification No.</label>
-                        <input type="text" class="input" asp-for="SpecificationNo">
+                        <input type="text" class="input" asp-for="SpecificationNo" placeholder="Specification NO.">
                         <span asp-validation-for="SpecificationNo" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row align-items-end my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Bill Paying Officer/Paying Authority</label>
-                        <input type="text" class="input" asp-for="SBPO">
+                        <input type="text" class="input" asp-for="SBPO" placeholder="SEARCH">
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="savenext-btn">
@@ -85,7 +85,7 @@
                 <div class="row align-items-end my-0">
                     <div class="col-md-3 mb-3">
                         <label for="Reference" style="width: 100%;">Consignee</label>
-                        <input type="text" class="input" asp-for="ConsigneeSearch">
+                        <input type="text" class="input" asp-for="ConsigneeSearch" placeholder="SEARCH">
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="savenext-btn">
@@ -104,7 +104,7 @@
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Quantity</label>
-                        <input type="text" class="input" asp-for="Qty" onblur="QuantityChanged()" maxlength="10">
+                        <input type="text" class="input" asp-for="Qty" onblur="QuantityChanged()" maxlength="10" placeholder="NUMBER" onkeypress="return isNumber(event)">
                         <span asp-validation-for="Qty" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -119,12 +119,12 @@
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Rate</label>
-                        <input type="text" class="input" asp-for="Rate" onblur="basevalue()" maxlength="10">
+                        <input type="text" class="input" asp-for="Rate" onblur="basevalue()" maxlength="10" placeholder="NUMBER" onkeypress="return isNumber(event)">
                         <span asp-validation-for="Rate" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Base Value</label>
-                        <input type="text" class="input" asp-for="BasicValue" readonly="readonly">
+                        <input type="text" class="input" asp-for="BasicValue" readonly="readonly" placeholder="NUMBER">
                         <span asp-validation-for="BasicValue" class="text-danger"></span>
                     </div>
                 </div>
@@ -137,12 +137,12 @@
                     <div class="col-md-2 mb-3">
                         <label for="Reference">Value</label>
                         @*<input type="text" class="input" asp-for="DiscountPer" onblur="discountype();">*@
-                        <input type="number" class="input" asp-for="DiscountPer" onblur="discountype();">
+                        <input type="number" class="input" asp-for="DiscountPer" onblur="discountype();" placeholder="NUMBER">
                         <span asp-validation-for="DiscountPer" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Discount</label>
-                        <input type="text" class="input" asp-for="Discount" onblur="discountype();" readonly="readonly">
+                        <input type="text" class="input" asp-for="Discount" onblur="discountype();" readonly="readonly" placeholder="NUMBER">
                         <span asp-validation-for="Discount" class="text-danger"></span>
                     </div>
                 </div>
@@ -158,14 +158,14 @@
                         <div class="reference">
                             <label for="Name">Value</label>
                             @*<input type="text" class="input" asp-for="ExcisePer" onblur="excise();">*@
-                            <input type="number" class="input" asp-for="ExcisePer" onblur="excise();">
+                            <input type="number" class="input" asp-for="ExcisePer" onblur="excise();" placeholder="NUMBER">
                             <span asp-validation-for="ExcisePer" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div class="reference">
                             <label for="Name">Excise</label>
-                            <input type="text" class="input" asp-for="Excise" onblur="excise();" readonly="readonly">
+                            <input type="text" class="input" asp-for="Excise" onblur="excise();" readonly="readonly" placeholder="NUMBER">
                             <span asp-validation-for="Excise" class="text-danger"></span>
                         </div>
                     </div>
@@ -175,13 +175,13 @@
                         <div class="reference">
                             <label for="Name">GST/Sale Tax(%)</label>
                             @*<input type="text" class="input" asp-for="SalesTaxPer" onblur="saletax();">*@
-                            <input type="number" class="input" asp-for="SalesTaxPer" min="0" max="100" oninput="this.value = Math.min(this.value)" onblur="saletax();">
+                            <input type="number" class="input" asp-for="SalesTaxPer" min="0" max="100" oninput="this.value = Math.min(this.value)" onblur="saletax();" placeholder="NUMBER">
                             <span asp-validation-for="SalesTaxPer" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Sale Tax</label>
-                        <input type="text" class="input" asp-for="SalesTax" onblur="saletax();" readonly="readonly">
+                        <input type="text" class="input" asp-for="SalesTax" onblur="saletax();" readonly="readonly" placeholder="NUMBER">
                         <span asp-validation-for="SalesTax" class="text-danger"></span>
                     </div>
                 </div>
@@ -197,13 +197,13 @@
                         <div class="reference">
                             <label for="Name">Value</label>
                             @*<input type="text" class="input" asp-for="OtChargePer" onblur="othercharges();">*@
-                            <input type="number" class="input" asp-for="OtChargePer" onblur="othercharges();">
+                            <input type="number" class="input" asp-for="OtChargePer" onblur="othercharges();" placeholder="NUMBER">
                             <span asp-validation-for="OtChargePer" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Other Charges (AMT)</label>
-                        <input type="text" class="input" asp-for="OtherCharges" readonly="readonly">
+                        <input type="text" class="input" asp-for="OtherCharges" readonly="readonly" placeholder="NUMBER">
                         <span asp-validation-for="OtherCharges" class="text-danger"></span>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Total Value</label>
-                        <input type="text" class="input" asp-for="Value" onfocus="total();" readonly="readonly">
+                        <input type="text" class="input" asp-for="Value" onfocus="total();" readonly="readonly" placeholder="NUMBER">
                         <span asp-validation-for="Value" class="text-danger"></span>
                     </div>
                 </div>
@@ -220,20 +220,20 @@
                     <div class="col-md-6 mb-3">
                         <div class="reference">
                             <label for="Name">Last Date of Supply</label>
-                            <input type="text" class="datetime" asp-for="DelvDt" style="text-transform: uppercase;" readonly="readonly" onblur="cpy();">
+                            <input type="text" class="datetime" asp-for="DelvDt" style="text-transform: uppercase;" readonly="readonly" onblur="cpy();" placeholder="DD/MM/YYYY" onchange="onDelvDtchange();">
                             <span asp-validation-for="DelvDt" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Delivery Deadline Date</label>
-                        <input type="text" class="datetime" asp-for="ExtDelvDt" style="text-transform: uppercase;" readonly="readonly">
+                        <input type="text" class="datetime" asp-for="ExtDelvDt" style="text-transform: uppercase;" readonly="readonly" placeholder="DD/MM/YYYY">
                         <span asp-validation-for="ExtDelvDt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-6 mb-3">
                         <label for="Reference">Item Description</label>
-                        <textarea rows="4" asp-for="ItemDesc" style="text-transform: uppercase;"></textarea>
+                        <textarea rows="4" asp-for="ItemDesc" style="text-transform: uppercase;" placeholder="DESCRIPTION"></textarea>
                         <span asp-validation-for="ItemDesc" class="text-danger"></span>
                     </div>
                 </div>
@@ -253,12 +253,12 @@
             $('#DelvDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd-mm-yy',
+                dateFormat: 'dd/mm/yy',
             });
             $('#ExtDelvDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd-mm-yy',
+                dateFormat: 'dd/mm/yy',
             });
             if ($("#UomCd").val() == "") {
                 $("#UomCd").val(6);
@@ -599,6 +599,10 @@
                     $("#SpecificationNo").val(response.model.SpecificationNo);
                 }
             });
+        }
+
+        function onDelvDtchange() {
+            $("#ExtDelvDt").val($("#DelvDt").val());
         }
 
         completed = function (response) {

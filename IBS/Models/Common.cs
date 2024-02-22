@@ -3531,7 +3531,7 @@ namespace IBS.Models
                     par[1] = new OracleParameter("p_charType", OracleDbType.Varchar2, charType, ParameterDirection.Input);
                     par[2] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
                 }
-                
+
                 var ds = DataAccessDB.GetDataSet("GetConsineeSearchData", par, 1);
                 if (ds != null && ds.Tables.Count > 0)
                 {
@@ -5174,6 +5174,19 @@ namespace IBS.Models
                            //}).OrderBy(c => c.Text).ToList();
                        }).ToList();
             obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
+            return obj;
+        }
+
+        public static List<SelectListItem> GetManPowerStatus()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.T115ManpowerStatuses
+                       select new SelectListItem
+                       {
+                           Value = c.Id.ToString(),
+                           Text = c.Status                           
+                       }).ToList();
+            //obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
             return obj;
         }
     }

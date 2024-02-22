@@ -295,6 +295,12 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<T114MultipleBillFileUpload> T114MultipleBillFileUploads { get; set; }
 
+    public virtual DbSet<T115ManpowerStatus> T115ManpowerStatuses { get; set; }
+
+    public virtual DbSet<T116ManpowerMaster> T116ManpowerMasters { get; set; }
+
+    public virtual DbSet<T117ManpowerDetail> T117ManpowerDetails { get; set; }
+
     public virtual DbSet<T11CallCancelCode> T11CallCancelCodes { get; set; }
 
     public virtual DbSet<T12BillPayingOfficer> T12BillPayingOfficers { get; set; }
@@ -11911,6 +11917,139 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Updateddate)
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
+        });
+
+        modelBuilder.Entity<T115ManpowerStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0012749");
+
+            entity.ToTable("T115_MANPOWER_STATUS");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("STATUS");
+        });
+
+        modelBuilder.Entity<T116ManpowerMaster>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0012751");
+
+            entity.ToTable("T116_MANPOWER_MASTER");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Cadre)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("CADRE");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Desig)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("DESIG");
+            entity.Property(e => e.Discp)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("DISCP");
+            entity.Property(e => e.Dob)
+                .HasColumnType("DATE")
+                .HasColumnName("DOB");
+            entity.Property(e => e.DrrtDt)
+                .HasColumnType("DATE")
+                .HasColumnName("DRRT_DT");
+            entity.Property(e => e.EmpName)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("EMP_NAME");
+            entity.Property(e => e.EmpNo)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("EMP_NO");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.Region)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("REGION");
+            entity.Property(e => e.RioDt)
+                .HasColumnType("DATE")
+                .HasColumnName("RIO_DT");
+            entity.Property(e => e.RitesDt)
+                .HasColumnType("DATE")
+                .HasColumnName("RITES_DT");
+            entity.Property(e => e.Status)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("STATUS");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+        });
+
+        modelBuilder.Entity<T117ManpowerDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0012753");
+
+            entity.ToTable("T117_MANPOWER_DETAIL");
+
+            entity.Property(e => e.Id)
+                .HasPrecision(6)
+                .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
+            entity.Property(e => e.PlacePosting)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("PLACE_POSTING");
+            entity.Property(e => e.ProjectName)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("PROJECT_NAME");
+            entity.Property(e => e.Staff)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("STAFF");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDDATE");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("USER_ID");
+            entity.Property(e => e.Working)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("WORKING");
         });
 
         modelBuilder.Entity<T11CallCancelCode>(entity =>
