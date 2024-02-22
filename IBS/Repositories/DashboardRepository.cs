@@ -2476,14 +2476,15 @@ namespace IBS.Repositories
             model.IEWisePerformance = lstIEPer;
 
 
-            OracleParameter[] par2 = new OracleParameter[7];
-            par2[0] = new OracleParameter("P_RESULT_PENDING_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
-            par2[1] = new OracleParameter("P_RESULT_IE_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
-            par2[2] = new OracleParameter("P_RESULT_VENDOR_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
-            par2[3] = new OracleParameter("P_RESULT_CLIENT_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
-            par2[4] = new OracleParameter("P_RESULT_INTER_REGION_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
-            par2[5] = new OracleParameter("P_RESULT_DEFECT_CODE_WISE_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
-            par2[6] = new OracleParameter("P_RESULT_NO_OF_JI", OracleDbType.RefCursor, ParameterDirection.Output);
+            OracleParameter[] par2 = new OracleParameter[8];
+            par2[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par2[1] = new OracleParameter("P_RESULT_PENDING_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[2] = new OracleParameter("P_RESULT_IE_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[3] = new OracleParameter("P_RESULT_VENDOR_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[4] = new OracleParameter("P_RESULT_CLIENT_WISE_CONG_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[5] = new OracleParameter("P_RESULT_INTER_REGION_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[6] = new OracleParameter("P_RESULT_DEFECT_CODE_WISE_JI_COMP", OracleDbType.RefCursor, ParameterDirection.Output);
+            par2[7] = new OracleParameter("P_RESULT_NO_OF_JI", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds2 = DataAccessDB.GetDataSet("GET_CM_JI_DASHBOARD", par2);
 
@@ -2869,7 +2870,7 @@ namespace IBS.Repositories
             var orderAscendingDirection = false;
 
             DateTime? FromDate = null, ToDate = null;
-            string ActionType = "";
+            string ActionType = "", Region = null;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
             {
                 FromDate = Convert.ToDateTime(dtParameters.AdditionalValues["FromDate"]);
@@ -2881,6 +2882,10 @@ namespace IBS.Repositories
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Type"]))
             {
                 ActionType = Convert.ToString(dtParameters.AdditionalValues["Type"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Region"]))
+            {
+                Region = Convert.ToString(dtParameters.AdditionalValues["Region"]);
             }
 
             if (dtParameters.Order != null)
@@ -2904,12 +2909,13 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            OracleParameter[] par = new OracleParameter[5];
+            OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("P_TYPE", OracleDbType.Varchar2, ActionType, ParameterDirection.Input);
             par[1] = new OracleParameter("P_FROMDATE", OracleDbType.Date, FromDate, ParameterDirection.Input);
             par[2] = new OracleParameter("P_TODATE", OracleDbType.Date, ToDate, ParameterDirection.Input);
             par[3] = new OracleParameter("P_COCD", OracleDbType.Int32, CO_CD, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds = DataAccessDB.GetDataSet("GET_CM_JI_DASHBOARD_VIEWALL_LIST", par);
             DataTable dt = ds.Tables[0];

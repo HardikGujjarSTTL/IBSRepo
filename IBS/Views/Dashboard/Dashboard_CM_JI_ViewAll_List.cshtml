@@ -1,6 +1,28 @@
 ﻿@model CM_JI_ViewAll_Model
 @{
-    ViewData["Title"] = "Dashboard_CM_JI_ViewAll_List";
+    var type = Model.Type;
+    var title = "";
+    if (type == "IEP")
+    {
+        title = "IE Wise Perfomance";
+    }
+    else if (type == "OPJC")
+    {
+        title = "Oldest Pending Cases";
+    }
+    else if (type == "ICC")
+    {
+        title = "IEs with the Highest Consignee Complaints";
+    }
+    else if (type == "VCC")
+    {
+        title = "Vendors with the Highest Consignee Complaints";
+    }
+    else if (type == "CCC")
+    {
+        title = "Clients with the Most Complaints Raised";
+    }
+    ViewData["Title"] = title;
 }
 
 <div class="list-inner">
@@ -14,7 +36,8 @@
 
 <div class="accordion-body" id="body">
     <div class="row my-0">
-        <input asp-for="Type" hidden />
+        <input type="hidden" asp-for="Type" />
+        <input type="hidden" asp-for="JI_REGION" />
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
@@ -73,8 +96,9 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
-            $("#ActionType").val(type);
-            $("#ActionType").val(type);
+            const region = urlParams.get('Region');
+            $("#Type").val(type);
+            $("#JI_REGION").val(region);
             if (type == "IEP") {
                 $("#spnHeading").text("IE Wise Perfomance");
                 Columns = [
@@ -95,7 +119,7 @@
                 ]
             }
             else if (type == "OPJC") {
-                $("#spnHeading").text("Oldest Pending Cases");
+                $("#spnHeading").text("Oldest Pending JI Cases");
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -127,7 +151,7 @@
                     },
                 ]
             } else if (type == "ICC") {
-                $("#spnHeading").text("IE Wise Consignee Complaints");
+                $("#spnHeading").text("IE with the Highest Consignee Complaints");
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -139,7 +163,7 @@
                     { data: "NO_OF_CONSINEE_COMPLAINTS", title: "Number of complaints" }
                 ]
             } else if (type == "VCC") {
-                $("#spnHeading").text("Vendor Wise Consignee Complaints");
+                $("#spnHeading").text("Vendors with the Highest Consignee Complaints");
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -170,6 +194,7 @@
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var Type = $("#Type").val();
+            var Region = $("#JI_REGION").val();
 
             $("#dtList").DataTable({
                 stateSave: false,
@@ -188,7 +213,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, Type
+                            FromDate, ToDate, Type, Region
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);

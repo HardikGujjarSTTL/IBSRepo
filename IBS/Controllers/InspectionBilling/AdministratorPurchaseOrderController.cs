@@ -339,11 +339,11 @@ namespace IBS.Controllers.InspectionBilling
         }
 
         [HttpGet]
-        public IActionResult getConsignee(int ConsigneeCd)
+        public IActionResult getConsignee(string ConsigneeCd)
         {
             try
             {
-                List<SelectListItem> objList = Common.GetConsigneeUsingConsignee(ConsigneeCd);
+                List<SelectListItem> objList = Common.GetConsigneeSearch(ConsigneeCd);
                 return Json(new { status = true, list = objList });
             }
             catch (Exception ex)
