@@ -90,6 +90,8 @@ namespace IBS.Helper
             Tech = 32,
             [Description("/ReadWriteData/LAB/PReciept")]
             LabPayment = 33,
+            [Description("/ReadWriteData/Files/Sanctioned_File")]
+            DetailsOfSanctionedFile = 35,
         }
 
         public enum DocumentCategory : int
@@ -124,6 +126,7 @@ namespace IBS.Helper
             UploadLab = 31,
             UploadLabPayment = 32,
             UploadJIReort = 34,
+            DetailsOfSanctionedFile = 35,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -159,6 +162,7 @@ namespace IBS.Helper
             Upload_IC_Annexue2 = 36,
             Cancellation_Document = 37,
             OnlineComplaints = 61,
+            Details_Of_Sanctioned_File = 62,
         }
 
         public enum DocumentICCancellation : int

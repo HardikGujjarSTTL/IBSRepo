@@ -1701,15 +1701,21 @@
         }
 
         function btnRefreshAll() {
-            var formData = AjaxModel();
+            debugger
+            //var formData = AjaxModel();
+
+            var CaseNo = $('#caseno').val();
+            var CallRecvDt = $('#CallRecvDt').val();
+            var CallSno = $('#callsnos').val();
+            var DocBkNo = $('#DocBkNo').val();
+            var DocSetNo = $('#DocSetNo').val();
+            alert(CaseNo);
+
             $.ajax({
                 url: '@Url.Action("RefreshAllDlt", "CallRegisterIB")',
                 type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
+                data: { _CaseNo: CaseNo, _CallRecvDt: CallRecvDt, _CallSno: CallSno, DocBkNo: DocBkNo, DocSetNo: DocSetNo },
                 success: function (response) {
-
                     if (response.Id == 1) {
                         var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
                         ShowHideMsgNew(true, response.responseText);
@@ -1726,6 +1732,33 @@
                     console.error('Error: ' + textStatus, errorThrown);
                 }
             });
+
+
+            // $.ajax({
+            //     url: '@Url.Action("RefreshAllDlt", "CallRegisterIB")',
+            //     type: 'POST',
+            //     // data: formData,
+            //     data: { _CaseNo: CaseNo, _CallRecvDt: CallRecvDt, _CallSno: CallSno },
+            //     processData: false,
+            //     contentType: false,
+            //     success: function (response) {
+
+            //         if (response.Id == 1) {
+            //             var redirectUrl = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")' + '?type=C';
+            //             ShowHideMsgNew(true, response.responseText);
+            //             setTimeout(function () {
+            //                 window.location.href = redirectUrl;
+            //             }, 1000);
+            //         }
+            //         else {
+            //             ShowHideMsgNew(false, response.responseText);
+            //         }
+            //     },
+            //     error: function (jqXHR, textStatus, errorThrown) {
+            //         // Handle error
+            //         console.error('Error: ' + textStatus, errorThrown);
+            //     }
+            // });
         }
 
         function btnCancel() {
