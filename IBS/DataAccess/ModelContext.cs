@@ -6737,9 +6737,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Nos)
                 .HasColumnType("NUMBER")
                 .HasColumnName("NOS");
-            entity.Property(e => e.ProdId)
+            entity.Property(e => e.ProjId)
                 .HasPrecision(6)
-                .HasColumnName("PROD_ID");
+                .HasColumnName("PROJ_ID");
             entity.Property(e => e.Sanctionedstrength)
                 .HasMaxLength(1)
                 .IsUnicode(false)

@@ -99,7 +99,7 @@ namespace IBS.Repositories
                 ProjMaster.Updatedby = model.UpdatedBy;
                 ProjMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                ProjID = Convert.ToInt32(ProjMaster.Id);
+                ProjectID = Convert.ToInt32(ProjMaster.Id);
             }
             #endregion
 
@@ -110,7 +110,7 @@ namespace IBS.Repositories
                 int ProjDID = context.ProjectDetails.Any() ? context.ProjectDetails.Max(x => x.Id) + 1 : 1;
                 ProjectDetail obj = new ProjectDetail();
                 obj.Id = ProjDID;
-                obj.ProdId = ProjectID;
+                obj.ProjId = ProjectID;
                 obj.Sanctionedstrength = item.SancStrength;
                 obj.Department = item.Disc;
                 obj.Nos = item.Numbers;
@@ -119,7 +119,7 @@ namespace IBS.Repositories
             }
             #endregion
 
-            return ProjID;
+            return ProjectID;
         }
     }
 }
