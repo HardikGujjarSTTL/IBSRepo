@@ -6,6 +6,10 @@ namespace IBS.Interfaces
     {
         DTResult<ManpowerModel> GetMasterList(DTParameters dtParameters);
         ManpowerModel FindByID(int id);
-        int SaveDetails(ManpowerModel model);
+        int SaveMaster(ManpowerModel model);
+
+        ManpowerDetailModel DetailFindByID(int id);
+        int SaveDetails(ManpowerDetailModel model);
+        DTResult<ManpowerDetailModel> GetDetailList(DTParameters dtParameters);
     }
 }

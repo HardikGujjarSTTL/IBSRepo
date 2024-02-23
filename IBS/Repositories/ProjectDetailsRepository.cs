@@ -99,7 +99,7 @@ namespace IBS.Repositories
                 ProjMaster.Updatedby = model.UpdatedBy;
                 ProjMaster.Updateddate = DateTime.Now;
                 context.SaveChanges();
-                ProjID = Convert.ToInt32(ProjMaster.Id);
+                ProjectID = Convert.ToInt32(ProjMaster.Id);
             }
             #endregion
 
@@ -119,7 +119,7 @@ namespace IBS.Repositories
             }
             #endregion
 
-            return ProjID;
+            return ProjectID;
         }
     }
 }

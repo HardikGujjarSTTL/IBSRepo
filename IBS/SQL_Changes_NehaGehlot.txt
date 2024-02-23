@@ -1933,3 +1933,6 @@ CREATE TABLE Project_Details (
 
 ALTER TABLE Project_Master 
 Add Sanctioned_File NVARCHAR2(50);
+
+ALTER TABLE Project_Details
+RENAME COLUMN PROD_ID TO PROJ_ID;

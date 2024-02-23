@@ -50,6 +50,56 @@ namespace IBS.Controllers
                 {
                     model.UserID = UserId;
                     model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
+                    var res = manPowerQARepository.SaveMaster(model);
+                    if (res < 0)
+                    {
+                        AlertAlreadyExist("Record already exists !!");
+                        return View(model);
+                    }
+                    AlertAddSuccess("Record Added Successfully.");
+                }
+                else
+                {
+                    model.UserID = UserId;
+                    model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
+                    manPowerQARepository.SaveMaster(model);
+                    AlertAddSuccess("Record Updated Successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ManPowerQA", "Manage", 1, GetIPAddress());
+            }
+            return RedirectToAction("Index");
+        }
+
+        [Authorization("ManPowerQA", "Index", "view")]
+        public IActionResult Detail()
+        {            
+            return View();            
+        }
+
+        [Authorization("ManPowerQA", "Index", "view")]
+        public IActionResult ManageDetail(int id)
+        {
+            ManpowerDetailModel model = new();
+            if (id > 0)
+            {
+                model = manPowerQARepository.DetailFindByID(id);
+            }
+            return View(model);
+        }
+
+        [Authorization("ManPowerQA", "Index", "edit")]
+        [HttpPost]
+        public IActionResult ManageDetail(ManpowerDetailModel model)
+        {
+            try
+            {
+                if (model.ID == 0)
+                {
+                    model.UserID = UserId;
+                    model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     var res = manPowerQARepository.SaveDetails(model);
                     if (res < 0)
                     {
@@ -65,14 +115,19 @@ namespace IBS.Controllers
                     manPowerQARepository.SaveDetails(model);
                     AlertAddSuccess("Record Updated Successfully.");
                 }
-
-                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                Common.AddException(ex.ToString(), ex.Message.ToString(), "ManPowerQA", "Manage", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "ManPowerQA", "ManageDetail", 1, GetIPAddress());
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Detail");
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableDetail([FromBody] DTParameters dtParameters)
+        {
+            DTResult<ManpowerDetailModel> dTResult = manPowerQARepository.GetDetailList(dtParameters);
+            return Json(dTResult);
         }
     }
 }

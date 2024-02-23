@@ -162,7 +162,7 @@ namespace IBS.Helper
             Upload_IC_Annexue2 = 36,
             Cancellation_Document = 37,
             OnlineComplaints = 61,
-            Details_Of_Sanctioned_File = 62,
+            DetailsOfSanctionedFile = 62,
         }
 
         public enum DocumentICCancellation : int

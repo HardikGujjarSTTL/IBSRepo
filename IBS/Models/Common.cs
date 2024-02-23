@@ -5189,6 +5189,41 @@ namespace IBS.Models
             //obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
             return obj;
         }
+
+        public static List<SelectListItem> GetWorking()
+        {
+            List<SelectListItem> textValueDropDownWorking = new List<SelectListItem>() {
+                new SelectListItem() { Text = "SBU", Value = "S" },
+                new SelectListItem() { Text = "Head", Value = "H" },
+                new SelectListItem() { Text = "C.M", Value = "C" },
+                new SelectListItem() { Text = "I.E", Value = "I" },
+                new SelectListItem() { Text = "DFO", Value = "D" },
+                new SelectListItem() { Text = "Other", Value = "O" }
+            };
+            return textValueDropDownWorking.ToList();
+        }
+
+        public static List<SelectListItem> GetStaff()
+        {
+            List<SelectListItem> textValueDropDownStaff = new List<SelectListItem>() {
+                new SelectListItem() { Text = "Technical", Value = "T" },
+                new SelectListItem() { Text = "Non Technical", Value = "N" },                
+            };
+            return textValueDropDownStaff.ToList();
+        }
+
+        public static List<SelectListItem> GetProjectName()
+        {
+            using ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var obj = (from c in context.ProjectMasters
+                       select new SelectListItem
+                       {
+                           Value = c.Id.ToString(),
+                           Text = c.Projectname
+                       }).ToList();
+            //obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
+            return obj;
+        }
     }
 
     public static class DbContextHelper

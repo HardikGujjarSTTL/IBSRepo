@@ -12,7 +12,7 @@
 
 <section id="tab-1">
     <div class="task-listinput">
-        <form asp-controller="" asp-action="" id="">
+        <form asp-controller="" asp-action="" id="frmProjectDetails">
             <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <input type="hidden" value="0" id="In_ID" />
             <div class="accordion-body">
@@ -113,35 +113,40 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            InitializeClusterData();
+
+            InitializeProjectData();
+
             $("#BtnSave").on("click", function () {
 
-                var files = $('#hdnUploadedDocumentList_tab-1')[0];
                 debugger;
+                // var formData = new FormData();
+                // formData.append("SancStrength", $("#SancStrength").val());
+                // formData.append("ProjectName", $("#ProjectName").val());
+                // formData.append("StartDate", $("#StartDate").val());
+                // formData.append("CompletionDate", $("#CompletionDate").val());
+                // formData.append("Disc", $("#Disc").val());
+                // formData.append("Numbers", $("#Numbers").val());
+                var formData = new FormData($("#frmProjectDetails")[0]);
 
-                if (files && files.defaultValue && files.defaultValue != null) {
-                    var files = files.defaultValue;
-                    formData.append("UploadeFile", files);
-                }
-                SaveSingleDocuments("tab-1");
-                var formData = {
-                    SancStrength: $("#SancStrength").val(),
-                    ProjectName: $("#ProjectName").val(),
-                    StartDate: $("#StartDate").val(),
-                    CompletionDate: $("#CompletionDate").val(),
-                    Disc: $("#Disc").val(),
-                    Numbers: $("#Numbers").val(),
-                }
+                if (!SaveSingleDocuments("tab-1")) return;
+
                 var urlpath = "@Url.Action("ProjectDetailsSave", "ProjectDetails")";
 
                 $.ajax({
                     url: urlpath,
-                    type: 'POST',
+                    type: "POST",
+                    dataType: "JSON",
                     data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function (dataToSend) {
                         if (dataToSend.status === true) {
                             if (dataToSend.redirectToIndex === true) {
-                                alert(dataToSend.alertMessage);
+                                debugger
+                                ShowHideMsgNew(dataToSend.status, dataToSend.responseText);
+                                if ($.fn.DataTable.isDataTable("#dtProject")) {
+                                    $("#dtProject").DataTable().destroy();
+                                }
                                 window.location.href = "@Url.Action("Index", "ProjectDetails")";
                             }
                         }
@@ -149,11 +154,6 @@
                     error: function (xhr, textStatus, errorThrown) {
                     }
                 });
-                // $.post("@Url.Action("ProjectDetailsSave", "ProjectDetails")", { model: formData }, function (response) {
-                //     if (response.status) {
-                //         ShowHideMsgNew(response.status, response.responseText);
-                //     }
-                // });
             });
 
             $("#BtnAdd").on("click", function () {
@@ -166,13 +166,13 @@
                 $.post("@Url.Action("SaveDetails", "ProjectDetails")", { model: formData }, function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
                     if (response.status) {
-                        InitializeClusterData();
+                        InitializeProjectData();
                         $("#In_ID").val("0");
                     }
                 });
             });
 
-            function InitializeClusterData() {
+            function InitializeProjectData() {
                 $("#dtProject").DataTable({
                     stateSave: false,// Design Assets
                     autoWidth: true,
@@ -242,14 +242,12 @@
             });
 
             $('#dtProject tbody').on('click', '.delete', function () {
-                debugger;
                 var id = $(this).data('id');
                 Delete(id);
                 return false;
             });
 
             function Delete(id) {
-                debugger;
                 $("#btnDeletevaluationDetail").attr("data-id", id);
                 $("#modal-delete-conf-valuation-detail").modal("show");
             }
@@ -266,7 +264,7 @@
                     if (response.status) {
                         $("#btnDeletevaluationDetail").attr("data-id", "");
                         $("#modal-delete-conf-valuation-detail").modal('hide');
-                        InitializeClusterData();
+                        InitializeProjectData();
                     }
                 });
             });
