@@ -1,0 +1,66 @@
+﻿@model IBS.Models.ManpowerDetailModel
+@{
+    string clsView = "";
+    if (Model.ID > 0)
+    {
+        clsView = "Permission_View";
+    }
+    ViewData["Title"] = "Manage Manpower in QA Vertical Detail";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manpower in QA Vertical Detail Entry</h2>
+    </div>
+    <div>
+        <a asp-controller="ManPowerQA" asp-action="Detail" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+<section id="tab-1" class="@clsView">
+    <div class="task-listinput">
+        <form role="form" asp-controller="ManPowerQA" asp-action="ManageDetail" id="frmManpowerDetail">
+            <input type="hidden" asp-for="ID" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Working</label>
+                        @Html.DropDownListFor(model => model.Working, new SelectList(IBS.Models.Common.GetWorking() , "Value", "Text"), "--Select--")
+                        <span asp-validation-for="Working" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Staff</label>
+                        @Html.DropDownListFor(model => model.Staff, new SelectList(IBS.Models.Common.GetStaff() , "Value", "Text"), "--Select--")
+                        <span asp-validation-for="Staff" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Place of posting</label>
+                        <input type="text" class="input" asp-for="PlacePosting">
+                        <span asp-validation-for="PlacePosting" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Project Name</label>
+                        @Html.DropDownListFor(model => model.ProjectName, new SelectList(IBS.Models.Common.GetProjectName() , "Value", "Text"), "--Select--")
+                        <span asp-validation-for="ProjectName" class="text-danger"></span>
+                    </div>
+                </div>                
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="BtnSaveDetail()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function BtnSaveDetail() {
+            if ($("#frmManpowerDetail").valid()) {
+                $("#frmManpowerDetail").submit();
+            }
+        }
+    </script>
+}

@@ -1,34 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Manpower in QA Vertical";
+﻿@model IBS.Models.ManpowerDetailModel
+@{
+    ViewData["Title"] = "Manpower in QA Vertical Detail";
 }
+
 <div class="list-inner">
     <div class="tast-list">
-        <h2>Manpower in QA Vertical</h2>
+        <h2>Manpower in QA Vertical Detail</h2>
     </div>
     <div class="list-btn">
-        <a asp-area="" asp-controller="ManPowerQA" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New</a>
+        <a asp-area="" asp-controller="ManPowerQA" asp-action="ManageDetail" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New</a>
     </div>
 </div>
+
 <div class="task-listinput">
     <div class="accordion-body">
         <div class="task-inner row">
             <div class="col-md-3">
                 <div class="input-search">
-                    <label for="Region">Region</label>
-                    @*<input type="text" class="input" id="Region" />*@
-                    @Html.DropDownList("Region", Common.GetRegionType(), new { @id="Region" })
+                    <label for="Reference">Working</label>
+                    @Html.DropDownListFor(model => model.Working, new SelectList(IBS.Models.Common.GetWorking() , "Value", "Text"), "--Select--")
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="input-search">
-                    <label for="EmpName">Employee Name</label>
-                    <input type="text" class="input" id="EmpName" />
+                    <label for="Reference">Staff</label>
+                    @Html.DropDownListFor(model => model.Staff, new SelectList(IBS.Models.Common.GetStaff() , "Value", "Text"), "--Select--")
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="input-search">
-                    <label for="EmpNo">Employee No</label>
-                    <input type="text" class="input" id="EmpNo" />
+                    <label for="Reference">Place of posting</label>
+                    <input type="text" class="input" asp-for="PlacePosting">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-search">
+                    <label for="Reference">Project Name</label>
+                    @Html.DropDownListFor(model => model.ProjectName, new SelectList(IBS.Models.Common.GetProjectName() , "Value", "Text"), "--Select--")
                 </div>
             </div>
             <div class="col-md-3">
@@ -45,9 +53,10 @@
                 <table id="dtList" class="table-responsive">
                     <thead>
                         <tr>
-                            <th>Region</th>
-                            <th>Employee Name</th>
-                            <th>Employee No</th>
+                            <th>Working</th>
+                            <th>Staff</th>
+                            <th>Place of Posting</th>
+                            <th>Project Name</th>
                             <th class="actionsTd">Action</th>
                         </tr>
                     </thead>
@@ -86,7 +95,7 @@
                 paging: true,// Paging Setups
                 searching: true,// Searching Setups
                 ajax: {// Ajax Filter
-                    url: "@Url.Action("LoadTable")",
+                    url: "@Url.Action("LoadTableDetail")",
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -99,14 +108,15 @@
                     }
                 },
                 columns: [// Columns Setups
-                    { data: "Region" },
-                    { data: "EmpName" },
-                    { data: "EmpNo" },
+                    { data: "Working" },
+                    { data: "Staff" },
+                    { data: "PlacePosting" },
+                    { data: "PerojectName" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.ID;
-                            var editUrl = '@Url.Action("Manage", "ManPowerQA")/' + id;
+                            var editUrl = '@Url.Action("ManageDetail", "ManPowerQA")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             //html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
@@ -121,7 +131,7 @@
         function CLearControls() {
             $("#Region").val("");
             $("#EmpName").val("");
-            $("#EmpNo").val(""); 
+            $("#EmpNo").val("");
 
             InitializeDatatable();
         }
@@ -133,3 +143,4 @@
         }
     </script>
 }
+

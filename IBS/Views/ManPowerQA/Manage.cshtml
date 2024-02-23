@@ -19,7 +19,7 @@
 
 <section id="tab-1" class="@clsView">
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="ManPowerQA" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmContract">
+        <form role="form" asp-controller="ManPowerQA" asp-action="Manage" id="frmManpower">
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-3 mb-3">
@@ -47,11 +47,11 @@
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Cadre</label>
                         @Html.DropDownListFor(model => model.Cadre, Common.GetRegionType(), new { })
-                        <span asp-validation-for="Cadre" class="text-danger"></span>
+                        @*<span asp-validation-for="Cadre" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Discipline</label>
-                        @Html.DropDownListFor(model => model.Discp, new SelectList(IBS.Models.Common.IEDepartmentlist() , "Value", "Text"), "--Select--", new { @class = "", @onchange = "BindCluster();" })
+                        @Html.DropDownListFor(model => model.Discp, new SelectList(IBS.Models.Common.IEDepartmentlist() , "Value", "Text"), "--Select--")
                         <span asp-validation-for="Discp" class="text-danger"></span>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -62,24 +62,24 @@
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Date of Birth</label>
                         <input type="text" class="input datepicker" asp-for="Dob" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="Dob" class="text-danger"></span>
+                        @*<span asp-validation-for="Dob" class="text-danger"></span>*@
                     </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Date of Joining in RITES</label>
                         <input type="text" class="input datepicker" asp-for="RitesDt" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="RitesDt" class="text-danger"></span>
+                        @*<span asp-validation-for="RitesDt" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Date of Joining in RIO</label>
                         <input type="text" class="input datepicker" asp-for="RioDt" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="RioDt" class="text-danger"></span>
+                        @*<span asp-validation-for="RioDt" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Date of Repatriation /Retirement/Term Completion</label>
                         <input type="text" class="input datepicker" asp-for="DrrtDt" placeholder="DD/MM/YYYY">
-                        <span asp-validation-for="DrrtDt" class="text-danger"></span>
+                        @*<span asp-validation-for="DrrtDt" class="text-danger"></span>*@
                     </div>
                 </div>
                 <div class="savenext-btn">
@@ -89,5 +89,18 @@
         </form>
     </div>
 </section>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        function BtnSave() {            
+            if ($("#frmManpower").valid()) {
+                $("#frmManpower").submit();
+            }
+        }
+    </script>
+}
 
 
