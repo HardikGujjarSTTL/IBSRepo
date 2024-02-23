@@ -15,6 +15,11 @@
         public DateTime? RioDt { get; set; }
         public DateTime? DrrtDt { get; set; }
 
+        public string Working { get; set; }
+        public string Staff { get; set; }
+        public string PlacePosting { get; set; }
+        public string ProjectName { get; set; }
+
         public virtual int UserID { get; set; }
         public virtual string UserName { get; set; }
     }

@@ -66,20 +66,71 @@
                     </div>
                 </div>
                 <div class="row my-0">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label for="Reference">Date of Joining in RITES</label>
                         <input type="text" class="input datepicker" asp-for="RitesDt" placeholder="DD/MM/YYYY">
                         @*<span asp-validation-for="RitesDt" class="text-danger"></span>*@
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label for="Reference">Date of Joining in RIO</label>
                         <input type="text" class="input datepicker" asp-for="RioDt" placeholder="DD/MM/YYYY">
                         @*<span asp-validation-for="RioDt" class="text-danger"></span>*@
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="Reference">Date of Repatriation /Retirement/Term Completion</label>
-                        <input type="text" class="input datepicker" asp-for="DrrtDt" placeholder="DD/MM/YYYY">
+                        <input type="text" class="input datepicker" asp-for="DrrtDt" placeholder="DD/MM/YYYY" width="10%">
                         @*<span asp-validation-for="DrrtDt" class="text-danger"></span>*@
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="heading3"><span class="fa fa-plus"></span> Add Manpower Detail</h3>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Working</label>
+                        @Html.DropDownListFor(model => model.Working, new SelectList(IBS.Models.Common.GetWorking() , "Value", "Text"), "--Select--")
+                        <span asp-validation-for="Working" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Staff</label>
+                        @Html.DropDownListFor(model => model.Staff, new SelectList(IBS.Models.Common.GetStaff() , "Value", "Text"), "--Select--")
+                        <span asp-validation-for="Staff" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Place of posting</label>
+                        <input type="text" class="input" asp-for="PlacePosting">
+                        <span asp-validation-for="PlacePosting" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Project Name</label>
+                        @Html.DropDownListFor(model => model.ProjectName, new SelectList(IBS.Models.Common.GetProjectName() , "Value", "Text"), "--Select--")
+                        <span asp-validation-for="ProjectName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <section class="table-section">
+                            <div class="task-listinput">
+                                <div class="dash-table">
+                                    <table id="dtCluster" class="table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Working</th>
+                                                <th>Staff</th>
+                                                <th>Place of Posting</th>
+                                                <th>Project Name</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
                 <div class="savenext-btn">
