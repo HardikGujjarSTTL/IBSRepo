@@ -812,7 +812,7 @@
 
             }
             if (actiontype == "M") {
-                // $('input[type=radio][name=ConsigneeGST]').change();
+                
                 
                 if ($("#SelectRadio").val() == "rdbBPO") {
                     $("#ConsigneeGST_N").prop("checked", true);
@@ -832,6 +832,7 @@
                     $("#BillNo").text("Update Bill");
                     ShowHideMsgNew(true, "The bill has been generated for this IC Vide Bill No : " + $("#BillNo").val());
                 }
+                $('input[type=radio][name=ConsigneeGST]').change();
                 // $("#btnSave").hide();
             }
             if (actiontype == "D") {
