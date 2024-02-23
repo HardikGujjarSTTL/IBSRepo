@@ -3,12 +3,12 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="list-innerf">
-    <div class="tast-list">
+<div class="list-inner pe-4 ps-4">
+    <div class="tast-list my-0">
         <h2 class="alignLeft">Admin Dashboard</h2>
     </div>
-    <div class="list-btn" style="width:16%;">
-        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class="formBtn viewall-btn" ,@onChange = "OnChangeRegion();"})
+    <div class="list-btn">
+        <div class="wd50per"> @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @onChange = "OnChangeRegion();"})</div>
     </div>
     @*<div class="list-btn">
     <a asp-area="" asp-controller="ContractEntry" asp-action="Manage" class="formBtn Permission_Add"><span class="fa fa-plus"></span> Add New Contract</a>
