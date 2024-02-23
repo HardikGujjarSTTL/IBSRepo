@@ -811,7 +811,16 @@
 
             }
             if (actiontype == "M") {
-                $('input[type=radio][name=ConsigneeGST]').change();
+                // $('input[type=radio][name=ConsigneeGST]').change();
+                
+                if ($("#SelectRadio").val() == "rdbBPO") {
+                    $("#ConsigneeGST_N").prop("checked", true);
+                }
+                else
+                {
+                    $("#ConsigneeGST_Y").prop("checked", true);
+                }
+
                 $("#IcTypeId").prop('disabled', false);
                 InitializeDatatable();
 

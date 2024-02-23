@@ -77,6 +77,8 @@ public partial class T20Ic
 
     public decimal? Isdeleted { get; set; }
 
+    public string? GstinType { get; set; }
+
     public virtual T22Bill? BillNoNavigation { get; set; }
 
     public virtual T12BillPayingOfficer? BpoCdNavigation { get; set; }

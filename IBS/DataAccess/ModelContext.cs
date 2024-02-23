@@ -6737,9 +6737,9 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Nos)
                 .HasColumnType("NUMBER")
                 .HasColumnName("NOS");
-            entity.Property(e => e.ProdId)
+            entity.Property(e => e.ProjId)
                 .HasPrecision(6)
-                .HasColumnName("PROD_ID");
+                .HasColumnName("PROJ_ID");
             entity.Property(e => e.Sanctionedstrength)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -14498,6 +14498,10 @@ public partial class ModelContext : DbContext
                 .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("FULL_PART");
+            entity.Property(e => e.GstinType)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("GSTIN_TYPE");
             entity.Property(e => e.IcDt)
                 .ValueGeneratedOnAdd()
                 .HasColumnType("DATE")
@@ -14699,6 +14703,10 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("FULL_PART");
+            entity.Property(e => e.GstinType)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("GSTIN_TYPE");
             entity.Property(e => e.IcDt)
                 .HasColumnType("DATE")
                 .HasColumnName("IC_DT");

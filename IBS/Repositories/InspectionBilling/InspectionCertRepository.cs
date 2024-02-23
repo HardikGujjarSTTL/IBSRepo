@@ -920,6 +920,7 @@ namespace IBS.Repositories.InspectionBilling
                     model.IrfcFunded = GetDetails.C.IrfcFunded;
 
                     model.GstinNo = GetDetails.C.RecipientGstinNo;
+                    model.SelectRadio = Convert.ToString(GetDetails.C.GstinType);
 
                     string myYear1 = "", myMonth1 = "", myDay1 = "";
                     if (model.CertDt != null)
@@ -1471,6 +1472,7 @@ namespace IBS.Repositories.InspectionBilling
                         GetCall.AccGroup = model.AccGroup;
                         GetCall.IrfcFunded = model.IrfcFunded;
                         GetCall.IrfcBpoCd = model.IrfcBpo;
+                        GetCall.GstinType = model.SelectRadio;
 
                         context.SaveChanges();
                         msg = model.Caseno;

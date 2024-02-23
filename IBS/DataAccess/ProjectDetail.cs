@@ -7,7 +7,7 @@ public partial class ProjectDetail
 {
     public int Id { get; set; }
 
-    public int ProdId { get; set; }
+    public int ProjId { get; set; }
 
     public string? Sanctionedstrength { get; set; }
 
