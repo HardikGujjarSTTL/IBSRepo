@@ -114,15 +114,8 @@
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
-            var Bkno = $("#Bkno").val();
-            var Setno = $("#Setno").val();
-            if ((Bkno == "" || Bkno == null) && (Setno == "" || Setno == null)) {
-                $("#btnAddNew").show();
-            }
-            else {
-                $("#btnAddNew").hide();
-            }
-
+            // var Bkno = $("#Bkno").val();
+            // var Setno = $("#Setno").val();
             if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB" || $("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
                 $(".BookSet").hide();
                 if ($("#CancellationStatus").val() == "1") {
@@ -135,7 +128,15 @@
                     $("#btnAddNew").show();
                 }
             }
-
+            const urlParams = new URLSearchParams(window.location.search);
+            const Bkno = urlParams.get('Bkno');
+            const Setno = urlParams.get('Setno');
+            if (Bkno != null && Setno != null) {
+                $("#btnAddNew").hide();
+            }
+            else {
+                $("#btnAddNew").show();
+            }
             // $("#Callrecvdt").datepicker({
             //     changeMonth: true,
             //     changeYear: true,

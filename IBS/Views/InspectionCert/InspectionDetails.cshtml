@@ -705,7 +705,7 @@
             $("#DtInspDesire").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
             $("#CallDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
             $("#ICSubmitDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
-
+            
             $('#OuterDivOrBody').delegate('#chkABill', 'change', function () {
                 if (this.checked) {
                     $("#chkABill").val('A');
@@ -780,6 +780,7 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
+            
             $("#ActionType").val(actiontype);
             if (actiontype == "A") {
                 $("#IcTypeId").val("1");
