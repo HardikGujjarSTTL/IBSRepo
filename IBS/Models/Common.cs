@@ -2543,6 +2543,45 @@ namespace IBS.Models
             return dropDownDTOs;
         }
 
+        public static List<SelectListItem> GetManufacturarSearch(string VendCd)
+        {
+            List<SelectListItem> model = new List<SelectListItem>();
+            if (VendCd != "" || VendCd != null)
+            {
+                if (IsNumeric(VendCd))
+                {
+                    ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+                    List<SelectListItem> dropList = new List<SelectListItem>();
+                    dropList = (from a in ModelContext.ViewGetvendors
+                                where a.VendCd == Convert.ToInt32(VendCd) && a.VendName != null
+                                select
+                           new SelectListItem
+                           {
+                               Text = Convert.ToString(a.VendName),
+                               Value = Convert.ToString(a.VendCd),
+                           }).ToList();
+                    if (dropList.Count > 0)
+                    {
+                        model.AddRange(dropList);
+                    }
+                }
+                else
+                {
+                    ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                    OracleParameter[] par = new OracleParameter[2];
+                    par[0] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, VendCd != "" ? VendCd : DBNull.Value, ParameterDirection.Input);
+                    par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                    var ds = DataAccessDB.GetDataSet("GET_VENDOR_DETAILSForDropDown", par, 1);
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                        model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+                    }
+                }
+            }
+            return model;
+        }
+
         public static List<SelectListItem> GetVendor_City(int VendCd)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());

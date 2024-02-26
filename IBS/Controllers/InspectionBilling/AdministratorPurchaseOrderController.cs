@@ -195,11 +195,11 @@ namespace IBS.Controllers.InspectionBilling
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult GetVendors(int id = 0)
+        public IActionResult GetVendors(string id)
         {
             try
             {
-                List<SelectListItem> agencyClient = Common.GetVendor(id);
+                List<SelectListItem> agencyClient = Common.GetManufacturarSearch(id);
                 foreach (var item in agencyClient.Where(x => x.Value == Convert.ToString(id)).ToList())
                 {
                     if (item.Value == Convert.ToString(id))
