@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Drawing;
+
 //using System.Net;
 //using System.Net.Mail;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -57,7 +59,7 @@ namespace IBS.Repositories.Vendor
             return model;
         }
 
-        public VenderCallRegisterModel FindByID(string ActionType, string CaseNo, DateTime? CallRecvDt, int CallSno, string FOS, string UserName)
+        public VenderCallRegisterModel FindByID(string ActionType, string CaseNo, DateTime? CallRecvDt, int CallSno, string FOS, string UserName, string Region)
         {
             VenderCallRegisterModel model = new();
             //string CallRDt = Convert.ToDateTime(CallRecvDt).ToString("dd-MM-yyyy");
@@ -67,7 +69,8 @@ namespace IBS.Repositories.Vendor
             {
                 T17CallRegister user = context.T17CallRegisters.Where(X => X.CaseNo == CaseNo && X.CallRecvDt == Convert.ToDateTime(CallRecvDt)).FirstOrDefault();
 
-                var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date).Count();
+                //var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date).Count();
+                var count = context.T17CallRegisters.Where(x => x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date && x.RegionCode == Convert.ToString(Region)).Count();
 
                 model.CallSno = count + 1;
 
@@ -1271,11 +1274,11 @@ namespace IBS.Repositories.Vendor
                                 {
                                     //var altIe = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIe).FirstOrDefault();
                                     var altIe = (from t09 in context.T09Ies
-                                                         join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
-                                                         from t48 in t48Group.DefaultIfEmpty()
-                                                         where t09.IeCd == ieCode
-                                                         && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
-                                                         select new { t09.AltIe }).FirstOrDefault().AltIe;
+                                                 join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                 from t48 in t48Group.DefaultIfEmpty()
+                                                 where t09.IeCd == ieCode
+                                                 && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                 select new { t09.AltIe }).FirstOrDefault().AltIe;
                                     if (altIe != null)
                                     {
                                         int Alt_ieCode = Convert.ToInt32(altIe);
@@ -1295,11 +1298,11 @@ namespace IBS.Repositories.Vendor
                                             int countcalls123 = callStatusCount1;
                                             //var ieCallMarking1 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode).Select(ie => ie.IeCallMarking).FirstOrDefault();
                                             var ieCallMarking1 = (from t09 in context.T09Ies
-                                                                 join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
-                                                                 from t48 in t48Group.DefaultIfEmpty()
-                                                                 where t09.IeCd == ieCode
-                                                                 && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
-                                                                 select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
+                                                                  join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                  from t48 in t48Group.DefaultIfEmpty()
+                                                                  where t09.IeCd == ieCode
+                                                                  && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                  select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
 
                                             if (Alt_ieCode == 0)
                                             {
@@ -1329,11 +1332,11 @@ namespace IBS.Repositories.Vendor
                                                     {
                                                         //var altIeTwo = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeTwo).FirstOrDefault();
                                                         var altIeTwo = (from t09 in context.T09Ies
-                                                                              join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
-                                                                              from t48 in t48Group.DefaultIfEmpty()
-                                                                              where t09.IeCd == ieCode
-                                                                              && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
-                                                                              select new { t09.AltIeTwo }).FirstOrDefault().AltIeTwo;
+                                                                        join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                        from t48 in t48Group.DefaultIfEmpty()
+                                                                        where t09.IeCd == ieCode
+                                                                        && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                        select new { t09.AltIeTwo }).FirstOrDefault().AltIeTwo;
                                                         if (altIeTwo != null)
                                                         {
                                                             //    strval = 0;
@@ -1357,11 +1360,11 @@ namespace IBS.Repositories.Vendor
                                                                 int countcalls1234 = callStatusCount2;
                                                                 //var ieCallMarking2 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_TWO).Select(ie => ie.IeCallMarking).FirstOrDefault();
                                                                 var ieCallMarking2 = (from t09 in context.T09Ies
-                                                                                join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
-                                                                                from t48 in t48Group.DefaultIfEmpty()
-                                                                                where t09.IeCd == Alt_ieCode_TWO
-                                                                                && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
-                                                                                select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
+                                                                                      join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                                      from t48 in t48Group.DefaultIfEmpty()
+                                                                                      where t09.IeCd == Alt_ieCode_TWO
+                                                                                      && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                                      select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
                                                                 if (Convert.ToInt32(Alt_ieCode_TWO) == 0)
                                                                 {
                                                                     strval = 0;
@@ -1390,11 +1393,11 @@ namespace IBS.Repositories.Vendor
                                                                         {
                                                                             //var altIeThree = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeThree).FirstOrDefault();
                                                                             var altIeThree = (from t09 in context.T09Ies
-                                                                                                  join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
-                                                                                                  from t48 in t48Group.DefaultIfEmpty()
-                                                                                                  where t09.IeCd == ieCode
-                                                                                                  && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
-                                                                                                  select new { t09.AltIeThree }).FirstOrDefault().AltIeThree;
+                                                                                              join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                                              from t48 in t48Group.DefaultIfEmpty()
+                                                                                              where t09.IeCd == ieCode
+                                                                                              && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                                              select new { t09.AltIeThree }).FirstOrDefault().AltIeThree;
                                                                             if (altIeThree != null)
                                                                             {
                                                                                 int Alt_ieCode_THREE = Convert.ToInt32(altIeThree);
@@ -1414,11 +1417,11 @@ namespace IBS.Repositories.Vendor
                                                                                     int countcalls1233 = callStatusCount3;
                                                                                     //var ieCallMarking3 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_THREE).Select(ie => ie.IeCallMarking).FirstOrDefault();
                                                                                     var ieCallMarking3 = (from t09 in context.T09Ies
-                                                                                                      join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
-                                                                                                      from t48 in t48Group.DefaultIfEmpty()
-                                                                                                      where t09.IeCd == Alt_ieCode_THREE
-                                                                                                      && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
-                                                                                                      select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
+                                                                                                          join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                                                          from t48 in t48Group.DefaultIfEmpty()
+                                                                                                          where t09.IeCd == Alt_ieCode_THREE
+                                                                                                          && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                                                          select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
                                                                                     if (Alt_ieCode_THREE == 0)
                                                                                     {
                                                                                         strval = 0;

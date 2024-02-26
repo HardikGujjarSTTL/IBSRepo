@@ -302,7 +302,8 @@ namespace IBS.Repositories.InspectionBilling
                 //var maxCallSno = context.T17CallRegisters
                 //    .Where(call => call.CallRecvDt == CallRecvDt && call.RegionCode == Region)
                 //    .Max(call => (int?)call.CallSno) ?? 0;
-                int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt) && x.RegionCode == Region).Count();
+                //int cmdCL = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == Convert.ToDateTime(CallRecvDt) && x.RegionCode == Region).Count();
+                int cmdCL = context.T17CallRegisters.Where(x => x.CallRecvDt == Convert.ToDateTime(CallRecvDt) && x.RegionCode == Region).Count();
 
                 var callSno = cmdCL + 1;
                 model.CallSno = Convert.ToInt32(callSno);

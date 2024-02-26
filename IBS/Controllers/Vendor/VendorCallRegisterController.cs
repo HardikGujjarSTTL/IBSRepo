@@ -2,6 +2,7 @@
 using IBS.Interfaces.Vendor;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace IBS.Controllers.Vendor
 {
@@ -26,7 +27,7 @@ namespace IBS.Controllers.Vendor
 
             if (model.CDAY == "1")
             {
-                model.CDATE = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
+                model.CDATE = DateTime.Now.ToString("dd/MM/yyyy");
             }
             if (model.CaseNo == null || model.CallRecvDt == null)
             {
@@ -68,7 +69,7 @@ namespace IBS.Controllers.Vendor
             model.RegionCode = CaseNo.Substring(0, 1);
             if (CaseNo != null && CallRecvDt != null && FOS != null)
             {
-                model = venderRepository.FindByID(ActionType, CaseNo, Convert.ToDateTime(CallRecvDt), CallSno, FOS, UserName.Trim());
+                model = venderRepository.FindByID(ActionType, CaseNo, Convert.ToDateTime(CallRecvDt), CallSno, FOS, UserName.Trim(), CaseNo.Substring(0, 1));
             }
 
             return View(model);
