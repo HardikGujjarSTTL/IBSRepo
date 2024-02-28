@@ -13,9 +13,7 @@ public partial class T117ManpowerDetail
 
     public string? PlacePosting { get; set; }
 
-    public string? ProjectName { get; set; }
-
-    public string? UserId { get; set; }
+    public int? ProjectName { get; set; }
 
     public int? Createdby { get; set; }
 
@@ -26,4 +24,6 @@ public partial class T117ManpowerDetail
     public DateTime? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public int? Manpowerid { get; set; }
 }

@@ -12007,7 +12007,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<T117ManpowerDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("SYS_C0012753");
+            entity.HasKey(e => e.Id).HasName("T117_MANPOWER_DETAIL_PK");
 
             entity.ToTable("T117_MANPOWER_DETAIL");
 
@@ -12023,13 +12023,15 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
+            entity.Property(e => e.Manpowerid)
+                .HasPrecision(6)
+                .HasColumnName("MANPOWERID");
             entity.Property(e => e.PlacePosting)
-                .HasMaxLength(5)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("PLACE_POSTING");
             entity.Property(e => e.ProjectName)
-                .HasMaxLength(5)
-                .IsUnicode(false)
+                .HasPrecision(6)
                 .HasColumnName("PROJECT_NAME");
             entity.Property(e => e.Staff)
                 .HasMaxLength(20)
@@ -12041,11 +12043,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Updateddate)
                 .HasColumnType("DATE")
                 .HasColumnName("UPDATEDDATE");
-            entity.Property(e => e.UserId)
-                .HasMaxLength(8)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("USER_ID");
             entity.Property(e => e.Working)
                 .HasMaxLength(200)
                 .IsUnicode(false)

@@ -172,5 +172,24 @@ namespace IBS.Helper
                 httpContextAccessor.HttpContext.Session.SetString("sessionPO_AmendmentsModel", JsonSerializer.Serialize(value));
             }
         }
+        public List<ManpowerDetailModel> lstManpowerDetailModel
+        {
+            get
+            {
+                string IECluster = httpContextAccessor.HttpContext.Session.GetString("sessionManpowerDetailModel");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(IECluster))
+                {
+                    List<ManpowerDetailModel> ManpowerDetails = JsonSerializer.Deserialize<List<ManpowerDetailModel>>(IECluster);
+
+                    if (ManpowerDetails != null)
+                        return ManpowerDetails;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionManpowerDetailModel", JsonSerializer.Serialize(value));
+            }
+        }
     }
 }

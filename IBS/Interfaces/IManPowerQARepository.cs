@@ -10,6 +10,8 @@ namespace IBS.Interfaces
 
         ManpowerDetailModel DetailFindByID(int id);
         int SaveDetails(ManpowerDetailModel model);
-        DTResult<ManpowerDetailModel> GetDetailList(DTParameters dtParameters);
+        public DTResult<ManpowerDetailModel> GetManpowerDetailList(DTParameters dtParameters, List<ManpowerDetailModel> ClusterModels);
+        int DeleteManpower(int ID, int UserID);
+        int DeleteManpowerDetail(int DetailID, int ManpowerID);
     }
 }

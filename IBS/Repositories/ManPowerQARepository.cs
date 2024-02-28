@@ -91,12 +91,31 @@ namespace IBS.Repositories
                          RioDt = a.RioDt,
                          DrrtDt = a.DrrtDt
                      }).FirstOrDefault();
+            if (model != null)
+            {
+                List<ManpowerDetailModel> clst = (from T117 in context.T117ManpowerDetails
+                                                  where T117.Manpowerid == model.ID
+                                                  select new
+                                                  ManpowerDetailModel
+                                                  {
+                                                      DetailID = Convert.ToInt32(T117.Id),
+                                                      ManpowerID = Convert.ToInt32(T117.Manpowerid),
+                                                      Working = T117.Working,
+                                                      WorkingText = T117.Working == "S" ? "SBU" : T117.Working == "H" ? "Head" : T117.Working == "C" ? "C.M" : T117.Working == "I" ? "I.E" : T117.Working == "D" ? "DFO" : T117.Working == "O" ? "Other" : "",
+                                                      Staff = T117.Staff,
+                                                      StaffText = T117.Staff == "T" ? "Technical" : T117.Staff == "N" ? "Non Technical" : "",
+                                                      PlacePosting = T117.PlacePosting,
+                                                      ProjectName = T117.ProjectName,
+                                                      ProjectNameText =(from f in context.ProjectMasters where f.Id == T117.ProjectName select f.Projectname).FirstOrDefault()
+                                                  }).ToList();
+                model.lstManpowerDetailModel = clst;
+            }
             return model;
         }
 
         public int SaveMaster(ManpowerModel model)
         {
-            int res = 0;            
+            int res = 0;
 
             if (model.ID == 0)
             {
@@ -115,14 +134,15 @@ namespace IBS.Repositories
                 obj.UserId = model.UserName;
                 obj.Createdby = model.UserID;
                 obj.Createddate = DateTime.Now;
+                obj.Isdeleted = Convert.ToByte(false);
                 context.T116ManpowerMasters.Add(obj);
                 context.SaveChanges();
                 res = obj.Id;
             }
             else
             {
-                var data = context.T116ManpowerMasters.Find(model.ID);  
-                if(data != null)
+                var data = context.T116ManpowerMasters.Find(model.ID);
+                if (data != null)
                 {
                     data.Region = model.Region;
                     data.EmpName = model.EmpName; ;
@@ -138,8 +158,35 @@ namespace IBS.Repositories
                     data.UserId = model.UserName;
                     data.Updatedby = model.UserID;
                     data.Updateddate = DateTime.Now;
+                    data.Isdeleted = Convert.ToByte(false);
                     context.SaveChanges();
                     res = model.ID;
+                }
+            }
+
+            var t117ManpowerDetails = (from T117 in context.T117ManpowerDetails where T117.Manpowerid == model.ID select T117).ToList();
+            if (t117ManpowerDetails.Count > 0 && t117ManpowerDetails != null)
+            {
+                context.T117ManpowerDetails.RemoveRange(t117ManpowerDetails);
+                context.SaveChanges();
+            }
+            if (model.lstManpowerDetailModel != null)
+            {
+                foreach (var item in model.lstManpowerDetailModel)
+                {
+                    T117ManpowerDetail objAdd = new T117ManpowerDetail();
+                    {
+                        objAdd.Manpowerid = res;
+                        objAdd.Working = item.Working;
+                        objAdd.Staff = item.Staff;
+                        objAdd.PlacePosting = item.PlacePosting;
+                        objAdd.ProjectName = item.ProjectName;
+                        objAdd.Createdby = model.UserID;
+                        objAdd.Createddate = DateTime.Now;
+                        objAdd.Isdeleted = Convert.ToByte(false);
+                    }
+                    context.T117ManpowerDetails.Add(objAdd);
+                    context.SaveChanges();
                 }
             }
             return res;
@@ -152,7 +199,7 @@ namespace IBS.Repositories
                      where a.Id == id && (a.Isdeleted == 0 || a.Isdeleted == null)
                      select new ManpowerDetailModel
                      {
-                         ID = a.Id,
+                         DetailID = a.Id,
                          Working = a.Working,
                          Staff = a.Staff,
                          PlacePosting = a.PlacePosting,
@@ -164,92 +211,123 @@ namespace IBS.Repositories
         public int SaveDetails(ManpowerDetailModel model)
         {
             int res = 0;
-
-            if (model.ID == 0)
+            if (model.DetailID == 0)
             {
-                T117ManpowerDetail obj = new T117ManpowerDetail();
-                obj.Working = model.Working;
-                obj.Staff = model.Staff; ;
-                obj.PlacePosting = model.PlacePosting;
-                obj.ProjectName = model.ProjectName;                
-                obj.UserId = model.UserName;
-                obj.Createdby = model.UserID;
-                obj.Createddate = DateTime.Now;
-                context.T117ManpowerDetails.Add(obj);
+                T117ManpowerDetail objAdd = new T117ManpowerDetail();
+                objAdd.Manpowerid = model.ManpowerID;
+                objAdd.Working = model.Working;
+                objAdd.Staff = model.Staff;
+                objAdd.PlacePosting = model.PlacePosting;
+                objAdd.ProjectName = model.ProjectName;
+                objAdd.Createdby = model.UserID;
+                objAdd.Createddate = DateTime.Now;
+                objAdd.Isdeleted = Convert.ToByte(false);
+                context.T117ManpowerDetails.Add(objAdd);
                 context.SaveChanges();
-                res = obj.Id;
+                res = objAdd.Id;
             }
             else
             {
-                var data = context.T117ManpowerDetails.Find(model.ID);
+                var data = context.T117ManpowerDetails.Find(model.DetailID);
                 if (data != null)
                 {
                     data.Working = model.Working;
                     data.Staff = model.Staff; ;
                     data.PlacePosting = model.PlacePosting;
                     data.ProjectName = model.ProjectName;
-                    data.UserId = model.UserName;
                     data.Updatedby = model.UserID;
                     data.Updateddate = DateTime.Now;
                     context.SaveChanges();
-                    res = model.ID;
+                    res = data.Id;
                 }
             }
             return res;
         }
 
-        public DTResult<ManpowerDetailModel> GetDetailList(DTParameters dtParameters)
+        public DTResult<ManpowerDetailModel> GetManpowerDetailList(DTParameters dtParameters, List<ManpowerDetailModel> manpowerDetailModels)
         {
             DTResult<ManpowerDetailModel> dTResult = new() { draw = 0 };
             IQueryable<ManpowerDetailModel>? query = null;
-
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
-            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
+            if (dtParameters.Order != null)
             {
+                // in this example we just default sort on the 1st column
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "EmpName";
+
+                if (orderCriteria == "")
+                {
+                    orderCriteria = "DetailID";
+                }
                 orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
             }
             else
             {
-                orderCriteria = "EmpName";
+                // if we have an empty search then just order the results by Id ascending
+                orderCriteria = "DetailID";
                 orderAscendingDirection = true;
             }
 
-            string Working = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Working"]) ? Convert.ToString(dtParameters.AdditionalValues["Working"]) : null;
-            string Staff = !string.IsNullOrEmpty(dtParameters.AdditionalValues["Staff"]) ? Convert.ToString(dtParameters.AdditionalValues["Staff"]) : null;
-            string PlacePosting = !string.IsNullOrEmpty(dtParameters.AdditionalValues["PlacePosting"]) ? Convert.ToString(dtParameters.AdditionalValues["PlacePosting"]) : null;
-            string ProjectName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ProjectName"]) ? Convert.ToString(dtParameters.AdditionalValues["ProjectName"]) : null;
+            query = (from u in manpowerDetailModels.OrderBy(x => x.DetailID)
+                     select new ManpowerDetailModel
+                     {
+                         DetailID = u.DetailID,
+                         ManpowerID = Convert.ToInt32(u.ManpowerID),
+                         Working = u.Working,
+                         WorkingText = u.WorkingText,
+                         Staff = u.Staff,
+                         StaffText = u.StaffText,
+                         PlacePosting = u.PlacePosting,
+                         ProjectName = u.ProjectName,
+                         ProjectNameText = u.ProjectNameText
+                     }).AsQueryable();
 
-            query = from a in context.T117ManpowerDetails
-                    join b in context.ProjectMasters on Convert.ToInt32(a.ProjectName) equals b.Id
-                    where (Working == null || a.Working == Working)
-                    && (Staff == null || a.Staff.ToLower().Contains(Staff))
-                    && (PlacePosting == null || a.PlacePosting.ToLower().Contains(PlacePosting))
-                    && (ProjectName == null || a.ProjectName == ProjectName)
-                    && (b.Isdeleted == 0 || b.Isdeleted == null)
-                    select new ManpowerDetailModel
-                    {
-                        ID = a.Id,
-                        Working = a.Working == "S" ? "SBU" : a.Working == "H" ? "Head" : a.Working == "C" ? "C.M" : a.Working == "I" ? "I.E" : a.Working == "D" ? "DFO" : a.Working == "O" ?  "Other": "",
-                        Staff = a.Staff == "T" ? "Technical" : a.Staff == "N" ? "Non Technical": "",
-                        PlacePosting = a.PlacePosting,
-                        ProjectName = b.Projectname
-                    };
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.Working).ToLower().Contains(searchBy.ToLower()) || w.Staff.ToLower().Contains(searchBy.ToLower()));
+                query = query.Where(w => w.Working.ToLower().Contains(searchBy.ToLower())
+                );
 
             dTResult.recordsFiltered = query.Count();
-            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+
+        }
+
+
+
+        public int DeleteManpower(int ID, int UserID)
+        {
+            int res = 0;
+            var t116ManpowerMasters = (from T116 in context.T116ManpowerMasters where T116.Id == ID select T116).FirstOrDefault();
+            if (t116ManpowerMasters != null)
+            {
+                t116ManpowerMasters.Isdeleted = Convert.ToByte(true);
+                t116ManpowerMasters.Updatedby = UserID;
+                t116ManpowerMasters.Updateddate = DateTime.Now;
+                context.SaveChanges();
+                res = t116ManpowerMasters.Id;
+            }
+            return res;
+        }
+
+        public int DeleteManpowerDetail(int DetailID, int ManpowerID)
+        {
+            int res = 0;
+            var t117ManpowerDetails = (from T117 in context.T117ManpowerDetails where T117.Id == DetailID && T117.Manpowerid == ManpowerID select T117).FirstOrDefault();
+            if (t117ManpowerDetails != null)
+            {
+                context.T117ManpowerDetails.RemoveRange(t117ManpowerDetails);
+                context.SaveChanges();
+                res = t117ManpowerDetails.Id;
+            }
+            return res;
         }
     }
 }
