@@ -232,7 +232,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadDTotalCallListing([FromBody] DTParameters dtParameters)
         {
-            DTResult<AdminCountListing> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters);
+            DTResult<AdminCountListing> dTResult = dashboardRepository.GetDataListTotalCallListing(dtParameters, Region);
             return Json(dTResult);
         }
 

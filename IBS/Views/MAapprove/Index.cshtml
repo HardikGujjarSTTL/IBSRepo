@@ -18,6 +18,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Action</th>
                             <th>Case Number</th>
                             <th>PO No.</th>
                             <th>PO Date</th>
@@ -30,7 +31,7 @@
                             <th>View MA</th>
                             <th>Status</th>
                             <th>Source</th>
-                            <th>Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -84,6 +85,21 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            var MaNo = data.MaNo1;
+                            var MaDtc = data.MaDtc;
+                            var MaSno = data.MaSno;
+
+                            var encryptMaNo = data.encryptMaNo;
+                            var editUrl = '@Url.Action("Manage", "MAapprove")?CaseNo=' + CaseNo + "&MaNo=" + encryptMaNo + "&MaDtc=" + MaDtc + "&MaSno=" + MaSno;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     { data: "CaseNo" },
                     { data: "PoNo" },
                     {
@@ -95,7 +111,7 @@
                             return data;
                         }
                     },
-                    { data: "MaNo" },
+                    { data: "MaNo1" },
                     {
                         data: "MaDt",
                         render: function (data, type, row) {
@@ -112,19 +128,7 @@
                     { data: "MADoc" },
                     { data: "MaStatus" },
                     { data: "PoSrc" },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var CaseNo = data.CaseNo;
-                            var MaNo = data.MaNo;
-                            var MaDtc = data.MaDtc;
-                            var MaSno = data.MaSno;
-                            var editUrl = '@Url.Action("Manage", "MAapprove")?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDtc=" + MaDtc + "&MaSno=" + MaSno;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
+                    
                     //{ data: "MaStatus" },
                 ],
                 "order": [[0, "asc"]],

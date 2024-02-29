@@ -19,7 +19,7 @@
         <a asp-action="Index" asp-controller="MAapprove" class="formBtn viewall-btn">View List</a>
     </div>
         <input type="hidden" asp-for="CaseNo" />
-        <input type="hidden" asp-for="MaNo" />
+        @* <input type="hidden" asp-for="MaNo" /> *@
         <input type="hidden" asp-for="MaDtc" />
         <input type="hidden" asp-for="MaSno" />
     </div>
@@ -73,8 +73,8 @@
 
             <div class="col-md-3 mb-3">
                 <label for="Reference">MA No.</label>
-                <input type="text" class="input" asp-for="MaNo" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
-                <span asp-validation-for="MaNo" class="text-danger"></span>
+                <input type="text" class="input" asp-for="MaNo1" maxlength="100" style="text-transform: uppercase;" readonly="readonly">
+                <span asp-validation-for="MaNo1" class="text-danger"></span>
             </div>
 
             <div class="col-md-3 mb-3">
