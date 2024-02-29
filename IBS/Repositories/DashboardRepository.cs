@@ -1356,7 +1356,7 @@ namespace IBS.Repositories
             return dTResult;
         }
 
-        public DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters)
+        public DTResult<AdminCountListing> GetDataListTotalCallListing(DTParameters dtParameters,string RegionCode)
         {
             DTResult<AdminCountListing> dTResult = new() { draw = 0 };
             IQueryable<AdminCountListing>? query = null;
@@ -1403,7 +1403,7 @@ namespace IBS.Repositories
             {
                 query = from l in context.ViewGetCallRegCancellations
                         where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
-                            && (Region == "All" || (Region != "All" && l.RegionCode == Region))
+                            && (Region == "All" || (Region != "All" && l.RegionCode == RegionCode))
                         orderby l.CaseNo, l.CallRecvDt
                         select new AdminCountListing
                         {
@@ -1425,7 +1425,7 @@ namespace IBS.Repositories
             {
                 query = from l in context.ViewGetCallRegCancellations
                         where (l.CallRecvDt >= Convert.ToDateTime(FromDate) && l.CallRecvDt <= Convert.ToDateTime(ToDate))
-                            && (Region == "All" || (Region != "All" && l.RegionCode == Region))
+                            && (Region == "All" || (Region != "All" && l.RegionCode == RegionCode))
                             && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new AdminCountListing
@@ -1448,7 +1448,7 @@ namespace IBS.Repositories
             else if (ActionType == "M" || ActionType == "U" || ActionType == "S")
             {
                 query = from l in context.ViewGetCallRegCancellations
-                        where (Region == "All" || (Region != "All" && l.RegionCode == Region)) && l.CStatus == ActionType
+                        where (Region == "All" || (Region != "All" && l.RegionCode == RegionCode)) && l.CStatus == ActionType
                         orderby l.CaseNo, l.CallRecvDt
                         select new AdminCountListing
                         {

@@ -40,7 +40,7 @@ namespace IBS.Repositories
             else
             {
                 model.CaseNo = GetValuePO[0].v.CaseNo;
-                model.MaNo = GetValuePO[0].v.MaNo;
+                model.MaNo1 = GetValuePO[0].v.MaNo;
                 model.MaDt = GetValuePO[0].v.MaDt;
                 model.MaSno = GetValuePO[0].d.MaSno;
                 model.PoNo = GetValuePO[0].v.PoNo;
@@ -100,7 +100,7 @@ namespace IBS.Repositories
                         CaseNo = v.CaseNo,
                         PoNo = v.PoNo,
                         PoDt = v.PoDt,
-                        MaNo = v.MaNo,
+                        MaNo1 = v.MaNo,
                         MaDt = v.MaDt,
                         RlyNonrly = v.RlyNonrly,
                         RlyCd = v.RlyNonrly.Equals("R") ? "Railway(" + v.RlyCd + ")" : v.RlyNonrly.Equals("P") ? "Private(" + v.RlyCd + ")" : v.RlyNonrly.Equals("S") ? "State Government(" + v.RlyCd + ")" : v.RlyNonrly.Equals("F") ? "Foreign Railways(" + v.RlyCd + ")" : v.RlyNonrly.Equals("U") ? "PSU(" + v.RlyCd + ")" : v.RlyNonrly,
@@ -113,6 +113,7 @@ namespace IBS.Repositories
                         PoSrc = v.PoSrc.Equals("V") ? "Vendor" : v.PoSrc.Equals("C") ? "Client" : v.PoSrc,
                         MaDtc = Convert.ToDateTime(v.MaDt).ToString("ddMMyyyy"),
                         MaSno = d.MaSno,
+                        encryptMaNo = Common.EncryptQueryString(d.MaNo),
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -134,7 +135,7 @@ namespace IBS.Repositories
         public int DetailsUpdate(MAapproveModel model)
         {
             int Id = 0;
-            var GetValue = context.VendPoMaDetails.Find(model.CaseNo, model.MaNo, model.MaDt, model.MaSno);
+            var GetValue = context.VendPoMaDetails.Find(model.CaseNo, model.MaNo1, model.MaDt, model.MaSno);
 
             #region save
             if (GetValue == null)

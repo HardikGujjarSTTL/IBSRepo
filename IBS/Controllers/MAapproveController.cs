@@ -34,7 +34,7 @@ namespace IBS.Controllers
         public IActionResult Manage(string CaseNo, string MaNo, string MaDtc, byte MaSno)
         {
             MAapproveModel model = new();
-
+            MaNo = Common.DecryptQueryString(MaNo);
             if (CaseNo != null)
             {
                 model = maapproveRepository.FindByID(CaseNo, MaNo, MaDtc, MaSno);
@@ -52,7 +52,7 @@ namespace IBS.Controllers
             {
                 string msg = "Inserted Successfully.";
 
-                if (model.CaseNo != null && model.MaNo != null && model.MaDt != null && model.MaSno > 0)
+                if (model.CaseNo != null && model.MaNo1 != null && model.MaDt != null && model.MaSno > 0)
                 {
                     msg = "Updated Successfully.";
                     model.ApprovedBy = Convert.ToString(UserId);
