@@ -158,7 +158,10 @@ namespace IBS.Repositories
                 immsRitesPoHdr.RlyCd = model.RLY_CD;
                 immsRitesPoHdr.Remarks = model.REMARKS;
                 immsRitesPoHdr.UserId = model.UserId;
-                immsRitesPoHdr.PoId = Convert.ToDecimal(model.POI_CD);
+                if (model.POI_CD != null && model.POI_CD != "")
+                {
+                    immsRitesPoHdr.PoId = Convert.ToDecimal(model.POI_CD);
+                }
                 immsRitesPoHdr.VendCd = Convert.ToInt32(model.VEND_CD);
                 immsRitesPoHdr.BpoCd = model.BPO_CD;
                 immsRitesPoHdr.Datetime = DateTime.Now;

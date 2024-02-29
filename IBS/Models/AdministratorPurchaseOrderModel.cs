@@ -106,5 +106,8 @@ namespace IBS.Models
         public string PO_YR { get; set; }
         public string PO_DOC { get; set; }
         public string PO_DOC1 { get; set; }
+        public bool IsFileExist { get; set; }
+        public bool IsPO_DOC { get; set; }
+        public bool IsPO_DOC1 { get; set; }
     }
 }

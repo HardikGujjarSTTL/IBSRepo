@@ -35,7 +35,7 @@ namespace IBS.Repositories
                               }
                   ).ToList();
 
-            if (GetValuePO == null)
+            if (GetValuePO == null || GetValuePO.Count == 0)
                 throw new Exception("Record Not found");
             else
             {

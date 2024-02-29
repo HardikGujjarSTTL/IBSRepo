@@ -22,11 +22,11 @@ namespace IBS.Models
         public string VENDOR { get; set; }
         public string IMMS_RLY_SHORTNAME { get; set; }
         public string REGION_CODE { get; set; }
-        public string REMARKS { get; set; }
+        public string? REMARKS { get; set; }
         public string BPO_CD { get; set; }
         public string IMMS_BPO_CD { get; set; }
         public string BPO { get; set; }
-        public string POI_CD { get; set; }
+        public string? POI_CD { get; set; }
         public string PO_YR { get; set; }
         public string MFG { get; set; }
         public string RAILWAY { get; set; }
