@@ -11,10 +11,12 @@ namespace IBS.Repositories.Inspection_Billing
     public class AdministratorPurchaseOrderRepository : IAdministratorPurchaseOrderRepository
     {
         private readonly ModelContext context;
+        private readonly IWebHostEnvironment env;
 
-        public AdministratorPurchaseOrderRepository(ModelContext context)
+        public AdministratorPurchaseOrderRepository(ModelContext context, IWebHostEnvironment _environment)
         {
             this.context = context;
+            env = _environment;
         }
         public AdministratorPurchaseOrderModel FindByID(string CaseNo)
         {
@@ -119,10 +121,35 @@ namespace IBS.Repositories.Inspection_Billing
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<AdministratorPurchaseOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                if (list.Count > 0)
+                {
+                    foreach (var item in list)
+                    {
+                        string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
+                        string fpath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
+                        if (!File.Exists(fpath) && !File.Exists(fpath1))
+                        {
+                            item.IsFileExist = false;
+                        }
+                        else if (File.Exists(fpath))
+                        {
+                            item.IsFileExist = true;
+                            item.IsPO_DOC = true;
+                            item.IsPO_DOC1 = false;
+                        }
+                        else if (File.Exists(fpath1))
+                        {
+                            item.IsFileExist = true;
+                            item.IsPO_DOC = false;
+                            item.IsPO_DOC1 = true;
+                        }
+                    }
+                }
             }
             int recordsTotal = 0;
             if (ds != null && ds.Tables[1].Rows.Count > 0)
             {
+
                 recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
             }
             query = list.AsQueryable();

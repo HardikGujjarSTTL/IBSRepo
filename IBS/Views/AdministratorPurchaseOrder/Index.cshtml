@@ -41,8 +41,8 @@
 
                 </ul>
             </div>
-            </div>
-            <div class="row my-0">
+        </div>
+        <div class="row my-0">
             <div class="col-md-3 mb-3">
                 @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode("R"), "Value", "Text"), "--Select--")
             </div>
@@ -97,7 +97,7 @@
                             <th>Purchaser Name</th>
                             <th>Inspection By/PO Cancelled</th>
                             <th>View PO</th>
-                            <th>View PO</th>
+                            @* <th>View PO</th> *@
                         </tr>
                     </thead>
                     <tbody>
@@ -109,7 +109,7 @@
 </div>
 <div id="EditPODateModal" class="modal" tabindex="-1" role="dialog">
 </div>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -187,7 +187,7 @@
                             return html;
                         }
                     },
-                    
+
                     { data: "CASE_NO" },
                     { data: "PO_NO" },
                     { data: "PO_DT" },
@@ -196,18 +196,29 @@
                     { data: "VEND_NAME" },
                     { data: "CONSIGNEE_S_NAME" },
                     { data: "INSPECTING_AGENCY" },
-                    { data: "PO_DOC" },
+                    // { data: "PO_DOC" },
                     //{ data: "PO_DOC1" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
+                            var PO_DOC = data.PO_DOC;
                             var PO_DOC1 = data.PO_DOC1;
-                            var html = "<a target='_blank' class='aTag' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO))/" + PO_DOC1 + "' Id='DocUpload_" + PO_DOC1 + "'>Download PO</a> "
-                            html += '</div>';
+                            var IsFileExist = data.IsFileExist;
+                            var IsPO_DOC = data.IsPO_DOC;
+                            var IsPO_DOC1 = data.IsPO_DOC1;
+                            if (IsFileExist == false ) {
+                                var html = "<a target='_blank' class='aTag' style='color: red;'>No DOC</a> ";
+                            }
+                            else if (IsFileExist == true && IsPO_DOC == true) {
+                                var html = "<a target='_blank' class='aTag' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO))/" + PO_DOC + "' Id='DocUpload_" + PO_DOC + "'>Download PO</a> ";
+                            }
+                            else if (IsFileExist == true && IsPO_DOC1 == true) {
+                                var html = "<a target='_blank' class='aTag' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO))/" + PO_DOC1 + "' Id='DocUpload_" + PO_DOC1 + "'>Download PO</a> ";
+                            }
                             return html;
                         }
                     },
-                    
+
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {

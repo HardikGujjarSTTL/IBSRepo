@@ -3235,3 +3235,24 @@ CREATE TABLE T117_MANPOWER_DETAIL (
 );
 
 ----------------------------------------------------- Start ManPower Form -----------------------------------------------------
+
+-------------- 29Feb2024--------------
+
+create or replace FUNCTION GET_FINANCIAL_YEAR_START_DATE
+RETURN DATE 
+IS
+  v_start_date DATE;
+BEGIN
+  SELECT 
+      CASE 
+        WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'MM')) >= 4 
+        THEN TO_DATE('01-04-' || TO_CHAR(SYSDATE, 'YYYY'), 'DD-MM-YYYY') 
+        --ELSE TO_DATE('01-04-' || TO_CHAR(SYSDATE - INTERVAL '1' YEAR, 'YYYY'), 'DD-MM-YYYY') 
+        ELSE TO_DATE('01-04-' || TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYY'), 'DD-MM-YYYY')
+      END
+  INTO v_start_date
+  FROM dual;
+    --v_start_date := TO_DATE('01/04/2020', 'DD-MM-YYYY');
+  RETURN v_start_date;
+END;
+

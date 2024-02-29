@@ -2639,7 +2639,10 @@ namespace IBS.Models
                 dropList = (from v in ModelContext.T05Vendors
                             join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
                             where v.VendCityCd == c.CityCd && v.VendName != null
-                            && v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                            && (v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                            || v.VendAdd1.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                            || c.Location.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                            || c.City.Trim().ToUpper().StartsWith(VENDOR.ToUpper() ))
                             orderby v.VendName
                             select
                        new SelectListItem

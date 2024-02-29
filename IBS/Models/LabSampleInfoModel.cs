@@ -18,7 +18,7 @@ namespace IBS.Models
 
         public string LikelyDt { get; set; }
         public string Status { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public string PaymentSlip { get; set; }
         public string PaymentStatus { get; set; }
         public IFormFile UploadLab { get; set; }

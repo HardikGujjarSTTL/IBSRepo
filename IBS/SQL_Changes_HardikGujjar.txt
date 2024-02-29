@@ -5521,3 +5521,77 @@ END;
 
 ALTER TABLE t79_central_qoinsp
 add Grade VARCHAR2(30 BYTE);
+
+-------------- 29Feb2024--------------
+
+create or replace PROCEDURE SP_Get_DEO_CRIS_PurchesOrderData (
+    p_POKey IN VARCHAR2,
+    p_RlyCode IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        RITES_CASE_NO,
+        IMMS_POKEY,
+        IMMS_RLY_CD,
+        nvl(RLY_CD,(Select nvl(RLY_CD,'XX') RLY_CD from T91_RAILWAYS WHERE IMMS_RLY_CD=p_RlyCode)) RLY_CD,
+        PURCHASER_CD AS PURCHASER_CD,
+        IMMS_PURCHASER_CD,
+        IMMS_PURCHASER_DETAIL,
+        STOCK_NONSTOCK,
+        CASE
+        WHEN INSPECTING_AGENCY= 'RITES' THEN 'R'
+        WHEN INSPECTING_AGENCY= 'Consignee' THEN 'C'
+        WHEN INSPECTING_AGENCY= 'PO Cancelled' THEN 'X'
+        WHEN INSPECTING_AGENCY= 'PO Suspended For Inspection' THEN 'S'
+        ELSE '' END AS INSPECTING_AGENCY,
+        PO_OR_LETTER,
+        PO_NO,
+        TO_CHAR(PO_DT, 'dd/mm/yyyy') AS PO_DT,
+        L5NO_PO,
+        VEND_CD AS VEND_CD,
+        IMMS_VENDOR_CD,
+        IMMS_VENDOR_NAME || ',' || IMMS_VENDOR_DETAIL AS VENDOR,
+        IMMS_RLY_SHORTNAME,
+        REGION_CODE AS REGION_CODE,
+        REMARKS,
+        BPO_CD AS BPO_CD,
+        IMMS_BPO_CD,
+        IMMS_BPO_NAME AS BPO,
+        POI_CD,
+        TO_CHAR(PO_DT, 'YYYY') AS PO_YR,
+        IMMS_POI_NAME || ',' || IMMS_POI_DETAIL AS MFG,
+        (select RAILWAY from T91_RAILWAYS where RLY_CD= (Select nvl(RLY_CD,'XX') RLY_CD from T91_RAILWAYS WHERE IMMS_RLY_CD=p_RlyCode)) As RAILWAY,
+        SYSDATE AS RecvDt
+    FROM IMMS_RITES_PO_HDR
+    WHERE IMMS_POKEY = p_POKey AND IMMS_RLY_CD = p_RlyCode;
+END;
+
+--------
+create or replace PROCEDURE GET_VENDOR_DETAILSForDropDown (
+    p_vend_cd IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT V.VEND_CD as Value,
+           (TRIM(V.VEND_NAME) || '/' || TRIM(V.VEND_ADD1) || '/' || NVL2(C.LOCATION, C.LOCATION || ' / ' || C.CITY, C.CITY)) AS Text
+    FROM T05_VENDOR V
+    JOIN T03_CITY C ON V.VEND_CITY_CD = C.CITY_CD
+    WHERE V.VEND_NAME IS NOT NULL
+    AND (
+        (TRIM(V.VEND_CD) = p_vend_cd OR p_vend_cd IS NULL)
+        OR 
+        LOWER(V.VEND_NAME) LIKE '%' || LOWER(p_vend_cd) || '%'
+        OR
+        LOWER(V.VEND_ADD1) LIKE '%' || LOWER(p_vend_cd) || '%'
+        OR
+        LOWER(C.LOCATION) LIKE '%' || LOWER(p_vend_cd) || '%'
+        OR
+        LOWER(C.CITY) LIKE '%' || LOWER(p_vend_cd) || '%'
+    )
+    ORDER BY VEND_NAME;
+END;
