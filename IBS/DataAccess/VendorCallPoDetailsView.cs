@@ -24,4 +24,6 @@ public partial class VendorCallPoDetailsView
     public DateTime? RecvDt { get; set; }
 
     public int? PoiCd { get; set; }
+
+    public DateTime? DelvDt { get; set; }
 }

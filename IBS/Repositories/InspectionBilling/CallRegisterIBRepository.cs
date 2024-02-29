@@ -431,6 +431,7 @@ namespace IBS.Repositories.InspectionBilling
                 model.Rly = GetView.Rly;
                 model.RlyNonrly = GetView.RlyNonrly;
                 model.MfgCd = Convert.ToInt32(GetView.PoiCd);
+                model.DelvDt = GetView.DelvDt;
             }
 
             var MfgDetails = context.ViewGetmanufvends.Where(x => x.VendCd == Convert.ToInt32(GetView.PoiCd)).FirstOrDefault();

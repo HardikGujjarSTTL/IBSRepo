@@ -24678,6 +24678,9 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
+            entity.Property(e => e.DelvDt)
+                .HasColumnType("DATE")
+                .HasColumnName("DELV_DT");
             entity.Property(e => e.L5noPo)
                 .HasMaxLength(5)
                 .IsUnicode(false)

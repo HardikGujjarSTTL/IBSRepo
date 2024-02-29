@@ -2710,8 +2710,7 @@ namespace IBS.Models
                                              //join t48 in ModelContext.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd
                                              join t48 in ModelContext.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
                                              from t48 in t48Group.DefaultIfEmpty()
-                                             where t99.RegionCode == GetRegionCode && t09.IeStatus == null
-                                             //&& t48.NiWorkDt != CallRecvDt && t48.NiWorkCd != "L"
+                                             where t99.RegionCode == GetRegionCode && (t09.IeStatus == null || t09.IeStatus == "W")
                                              && (t48.NiWorkDt == null || (t48.NiWorkDt != CallRecvDt && t48.NiWorkDt < CallRecvDt))
                                              orderby t99.ClusterName, t09.IeName
 
@@ -2719,27 +2718,7 @@ namespace IBS.Models
                                              {
                                                  Text = t99.ClusterName + " (" + t09.IeName + ")",
                                                  Value = Convert.ToString(t99.ClusterCode)
-                                                 //}).ToList();
                                              }).Distinct().ToList();
-
-            //var query = (from t99 in dbContext.T99_Cluster_Master
-            //             join t101 in dbContext.T101_IE_CLUSTER on t99.CLUSTER_CODE equals t101.CLUSTER_CODE
-            //             join t09 in dbContext.T09_IE on t101.IE_CODE equals t09.IE_CD
-            //             join t48 in dbContext.T48_NI_IE_WORK_PLAN on t09.IE_CD equals t48.IE_CD into t48Group
-            //             from t48 in t48Group.DefaultIfEmpty()
-            //             where t99.REGION_CODE == "N" &&
-            //                   t09.IE_STATUS == null &&
-            //                   (t48.NI_WORK_DT == null || (t48.NI_WORK_DT != DateTime.Today && t48.NI_WORK_DT < DateTime.Today))
-            //             orderby t99.CLUSTER_NAME, t09.IE_NAME
-            //             select new
-            //             {
-            //                 Text = t99.CLUSTER_NAME + " (" + t09.IE_NAME + ")",
-            //                 Value = t99.CLUSTER_CODE.ToString()
-            //             }).Distinct();
-
-            //// Execute the query and retrieve the results
-            //var results = query.ToList();
-
 
             return contacts.OrderBy(x => x.Text).ToList();
         }
