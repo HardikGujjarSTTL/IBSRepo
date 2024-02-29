@@ -4375,6 +4375,12 @@ namespace IBS.Repositories.InspectionBilling
                 model.CumQtyPrevPassed = CallDetails.CumQtyPrevPassed;
                 model.QtyToInsp = CallDetails.QtyToInsp;
             }
+            else
+            {
+                model.CumQtyPrevOffered = 0;
+                model.CumQtyPrevPassed = 0;
+                model.QtyToInsp = 0;
+            }
             return model;
         }
 

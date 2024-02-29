@@ -114,6 +114,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Action</th>
                             <th>Status</th>
                             <th>Item Desc</th>
                             <th>Consignee</th>
@@ -124,7 +125,7 @@
                             <th>Qty Passed</th>
                             <th>Qty Rejected</th>
                             <th>Qty Due</th>
-                            <th>Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -228,16 +229,6 @@
                     //    }
                     //},
                     { data: "ItemSrNoPo" },
-                    { data: "Status" },
-                    { data: "ItemDescPo" },
-                    { data: "Consignee" },
-                    { data: "QtyOrdered" },
-                    { data: "CumQtyPrevOffered" },
-                    { data: "CumQtyPrevPassed" },
-                    { data: "QtyToInsp" },
-                    { data: "QtyPassed" },
-                    { data: "QtyRejected" },
-                    { data: "QtyDue" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
@@ -248,9 +239,20 @@
                             return html;
                         }
                     },
+                    { data: "Status" },
+                    { data: "ItemDescPo" },
+                    { data: "Consignee" },
+                    { data: "QtyOrdered" },
+                    { data: "CumQtyPrevOffered" },
+                    { data: "CumQtyPrevPassed" },
+                    { data: "QtyToInsp" },
+                    { data: "QtyPassed" },
+                    { data: "QtyRejected" },
+                    { data: "QtyDue" },
+                    
 
                 ],
-                "order": [[1, "asc"]]
+                "order": [[2, "asc"]]
             });
         }
 

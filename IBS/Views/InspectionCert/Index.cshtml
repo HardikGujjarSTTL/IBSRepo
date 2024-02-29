@@ -17,7 +17,7 @@
             <input type="hidden" asp-for="Callstatus" />
             <input type="hidden" asp-for="CallCancelStatus" />
             <input type="hidden" asp-for="CancellationStatus" />
-            
+
             <div class="row my-0">
                 <div class="col-md-3 mb-3">
                     <div class="reference">
@@ -116,6 +116,7 @@
         $(document).ready(function () {
             // var Bkno = $("#Bkno").val();
             // var Setno = $("#Setno").val();
+            debugger
             if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB" || $("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
                 $(".BookSet").hide();
                 if ($("#CancellationStatus").val() == "1") {
@@ -137,6 +138,7 @@
             else {
                 $("#btnAddNew").show();
             }
+
             // $("#Callrecvdt").datepicker({
             //     changeMonth: true,
             //     changeYear: true,
@@ -447,7 +449,7 @@
             else {
                 window.location.href = '@Url.Action("Returned_Bills_BPO_Change_Form", "InspectionCert")' + '?CaseNo=' + Caseno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
             }
-            
+
         });
     </script>
 }

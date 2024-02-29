@@ -64,6 +64,7 @@
     <script type="text/javascript">
         $(function () {
             // Get the current date
+            debugger
             var FromDate = GetFinalcialStartDate();
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", FromDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
@@ -101,6 +102,9 @@
         });
 
         function InitializeDatatable(type) {
+            const urlParams = new URLSearchParams(window.location.search);
+            type = urlParams.get('Type');
+
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var Status = type;
