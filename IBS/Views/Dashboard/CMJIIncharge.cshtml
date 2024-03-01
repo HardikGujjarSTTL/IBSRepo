@@ -606,7 +606,7 @@
 
         function OnChangeRegion() {
             var Region = $("#Region").val();
-            var url = '@Url.Action("CMJIIncharge", "Dashboard")?Region=' + Region;
+            var url = '@Url.Action("CMJIIncharge", "Dashboard")?Regions=' + Region;
             $(".overlayLoader").show();
             window.location.href = url;
         }

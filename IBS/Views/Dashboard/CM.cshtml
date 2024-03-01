@@ -8,6 +8,9 @@
     <h2 class="alignLeft">
         CM/Call Desk Incharge Dashboard
     </h2>
+    <div class="list-btn" style="width:16%;">
+        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class = "formBtn viewall-btn", @onChange = "OnChangeRegion();" })
+    </div>
 </div>
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
@@ -58,7 +61,7 @@
                     </div>
                 </a>
             </div>
-        
+
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a asp-area="" asp-controller="Dashboard" asp-action="AwaitingForCaseNo">
                     <div class="dashboard-box das4Client">
@@ -170,3 +173,14 @@
         <a class="viewall" href="@Url.Action("Dashboard_CMGeneral_ViewAll_List", "Dashboard")">View All</a>
     </div>
 </section>
+
+@section scripts {
+    <script>
+        function OnChangeRegion() {
+            var Region = $("#Region").val();
+            var url = '@Url.Action("CMDAR", "Dashboard")?Regions=' + Region;
+            $(".overlayLoader").show();
+            window.location.href = url;
+        }
+    </script>
+}

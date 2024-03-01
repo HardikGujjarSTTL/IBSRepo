@@ -102,9 +102,9 @@ namespace IBS.Controllers
         }
 
         #region CM
-        public IActionResult CM()
+        public IActionResult CM(string Regions)
         {
-            var Region_Code = !string.IsNullOrEmpty(Region) ? Region : SessionHelper.UserModelDTO.Region;
+            var Region_Code = !string.IsNullOrEmpty(Regions) ? Regions : SessionHelper.UserModelDTO.Region;
             DashboardModel model = dashboardRepository.GetCMDashBoardCount(SessionHelper.UserModelDTO.CoCd, Region_Code);
             model.Region = Region_Code;
             return View(model);
@@ -128,31 +128,32 @@ namespace IBS.Controllers
             return View();
         }
 
-        public IActionResult CMDAR()
+        public IActionResult CMDAR(string Regions)
         {
-            var Region_Code = !string.IsNullOrEmpty(Region) ? Region : SessionHelper.UserModelDTO.Region;
+            var Region_Code = !string.IsNullOrEmpty(Regions) ? Regions : SessionHelper.UserModelDTO.Region;
             DashboardModel model = dashboardRepository.GetCMDARDashBoard(SessionHelper.UserModelDTO.CoCd, Region_Code);
             model.Region = Region_Code;
             return View(model);
         }
 
-        public IActionResult CMDFO()
+        public IActionResult CMDFO(string Regions)
         {
-            DashboardModel model = dashboardRepository.GetCMDFODashBoard(SessionHelper.UserModelDTO.CoCd);
+            var Region_Code = !string.IsNullOrEmpty(Regions) ? Regions : SessionHelper.UserModelDTO.Region;
+            DashboardModel model = dashboardRepository.GetCMDFODashBoard(SessionHelper.UserModelDTO.CoCd, Region_Code);
             return View(model);
         }
 
-        public IActionResult CMJIIncharge(string Region)
+        public IActionResult CMJIIncharge(string Regions)
         {
-            var Region_Code = !string.IsNullOrEmpty(Region) ? Region : SessionHelper.UserModelDTO.Region;
+            var Region_Code = !string.IsNullOrEmpty(Regions) ? Regions : SessionHelper.UserModelDTO.Region;
             DashboardModel model = dashboardRepository.GetCMJIDDashBoard(SessionHelper.UserModelDTO.CoCd, Region_Code);
             model.Region = Region_Code;
             return View(model);
         }
 
-        public IActionResult CMGeneral()
+        public IActionResult CMGeneral(string Regions)
         {
-            var Region_Code = !string.IsNullOrEmpty(Region) ? Region : SessionHelper.UserModelDTO.Region;
+            var Region_Code = !string.IsNullOrEmpty(Regions) ? Regions : SessionHelper.UserModelDTO.Region;
             DashboardModel model = dashboardRepository.GetCMGeneralDashBoard(SessionHelper.UserModelDTO.CoCd, Region_Code);
             model.Region = Region_Code;
             return View(model);

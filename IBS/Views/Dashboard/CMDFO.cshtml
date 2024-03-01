@@ -1,56 +1,59 @@
 ﻿@model DashboardModel
 @{
-    var Years = Model.lstLastThreeYearSectorBilling.Select(x => x.YEAR).Distinct().ToList();    
+    var Years = Model.lstLastThreeYearSectorBilling.Select(x => x.YEAR).Distinct().ToList();
 }
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">CM/DFO Dashboard </h2>
+    <div class="list-btn" style="width:16%;">
+        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class = "formBtn viewall-btn", @onChange = "OnChangeRegion();" })
+    </div>
 </div>
 <div class="admindashboard-section">
     <div class="admindashboard-wrap cmDash">
         <div class="row ie-dashboard">
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "OSA" })">
-                <div class="dashboard-box das1Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalOutstandingAmount</div>
-                            <div class="total-inner">
-                                Total Outstanding<br />
-                                Amount
+                    <div class="dashboard-box das1Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalOutstandingAmount</div>
+                                <div class="total-inner">
+                                    Total Outstanding<br />
+                                    Amount
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/total-outstanding-amount-icon.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/total-outstanding-amount-icon.svg" alt="Inspection Requests"> </div>
-                </div>
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "SA" })">
-                <div class="dashboard-box das2Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.SuspenseAmount</div>
+                    <div class="dashboard-box das2Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.SuspenseAmount</div>
+                            </div>
+                            <div class="total-inner"> Suspense<br /> Amount </div>
                         </div>
-                        <div class="total-inner"> Suspense<br /> Amount </div>
+                        <div class="total-icons"><img src="~/images/suspense-amount-icon.svg" alt="Inspection Assigned"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/suspense-amount-icon.svg" alt="Inspection Assigned"> </div>
-                </div>
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "OB" })">
-                <div class="dashboard-box das3Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.NoOfOutstandingBillCount</div>
+                    <div class="dashboard-box das3Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.NoOfOutstandingBillCount</div>
+                            </div>
+                            <div class="total-inner">
+                                No. of <br />
+                                Outstanding bills
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            No. of <br />
-                            Outstanding bills
-                        </div>
+                        <div class="total-icons"><img src="~/images/no-of-bills-icon.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/no-of-bills-icon.svg" alt="Inspection Completed"> </div>
-                </div>
                 </a>
             </div>
             @*<div class="col-md-6 col-lg-4 col-xxl-4">
@@ -67,53 +70,53 @@
             <div class="total-icons"><img src="~/images/pending-invoice-for-finalization-icon.svg" alt="Inspection Pending"> </div>
             </div>
             </div>*@
-       
+
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "TOTI" })">
-                <div class="dashboard-box das5Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.TotalInvoiceCount</div>
+                    <div class="dashboard-box das5Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.TotalInvoiceCount</div>
+                            </div>
+                            <div class="total-inner">
+                                No. of <br />
+                                Total Invoices
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            No. of <br />
-                            Total Invoices
-                        </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-5.svg" alt="Inspection Pending"> </div>
-                </div>
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "FI" })">
-                <div class="dashboard-box das6Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.FinalizedInvoiceCount</div>
-                            <div class="total-inner">
-                                No. of <br />
-                                Finalized Invoices
+                    <div class="dashboard-box das6Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.FinalizedInvoiceCount</div>
+                                <div class="total-inner">
+                                    No. of <br />
+                                    Finalized Invoices
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
                 </a>
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="totalcall" href="@Url.Action("CMDFO_List", "Dashboard", new { Type = "PIF" })">
-                <div class="dashboard-box das7Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.PendingInvoiceFinalizeCount</div>
-                            <div class="total-inner">
-                                Pending Invoices<br />
-                                for Finalization
+                    <div class="dashboard-box das7Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.PendingInvoiceFinalizeCount</div>
+                                <div class="total-inner">
+                                    Pending Invoices<br />
+                                    for Finalization
+                                </div>
                             </div>
                         </div>
+                        <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/dash-icon-1.svg" alt="Inspection Requests"> </div>
-                </div>
                 </a>
             </div>
         </div>
@@ -338,7 +341,7 @@
         </table>
     </div>
 </section>
-@section scripts{
+@section scripts {
     <script>
         Highcharts.chart('region-wise-pie', {
             chart: {
@@ -381,7 +384,7 @@
             series: [{
                 //name: 'Brands',
                 colorByPoint: true,
-                data: @Html.Raw(Model.CurrYearSectorBillingSummary),                
+                data: @Html.Raw(Model.CurrYearSectorBillingSummary),
             }]
         });
 
@@ -425,15 +428,15 @@
                 {
                     name: '@Years[2]', //2021
                     data: @Html.Raw(Model.LastYearSectorBillingSummary3)
-                },
+                        },
                 {
                     name: '@Years[1]', //2022
                     data: @Html.Raw(Model.LastYearSectorBillingSummary2)
-                },
+                        },
                 {
                     name: '@Years[0]', //2023
                     data: @Html.Raw(Model.LastYearSectorBillingSummary1)
-                }
+                        }
             ]
             //series: [
             //    {
@@ -450,5 +453,11 @@
             //    }
             //]
         });
+        function OnChangeRegion() {
+            var Region = $("#Region").val();
+            var url = '@Url.Action("CMDFO", "Dashboard")?Regions=' + Region;
+            $(".overlayLoader").show();
+            window.location.href = url;
+        }
     </script>
 }

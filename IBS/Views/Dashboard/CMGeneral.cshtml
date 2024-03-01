@@ -2,6 +2,9 @@
 
 <div class="dashHeader justify-content-between">
     <h2 class="alignLeft">CM General Dashboard</h2>
+    <div class="list-btn" style="width:16%;">
+        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class = "formBtn viewall-btn", @onChange = "OnChangeRegion();" })
+    </div>
 </div>
 <section class="table-section">
     <div class="table-title">
@@ -61,3 +64,14 @@
         <a class="viewall" href="@Url.Action("Dashboard_CMGeneral_ViewAll_List", "Dashboard")">View All</a>
     </div>
 </section>
+
+@section scripts {
+    <script>
+        function OnChangeRegion() {
+            var Region = $("#Region").val();
+            var url = '@Url.Action("CMGeneral", "Dashboard")?Regions=' + Region;
+            $(".overlayLoader").show();
+            window.location.href = url;
+        }
+    </script>
+}

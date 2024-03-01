@@ -2673,18 +2673,19 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DashboardModel GetCMDFODashBoard(int CO_CD)
+        public DashboardModel GetCMDFODashBoard(int CO_CD, string Region)
         {
             DashboardModel model = new DashboardModel();
 
-            OracleParameter[] par = new OracleParameter[7];
+            OracleParameter[] par = new OracleParameter[8];
             par[0] = new OracleParameter("P_CO_CD", OracleDbType.Varchar2, Convert.ToString(CO_CD), ParameterDirection.Input);
-            par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-            par[2] = new OracleParameter("P_RESULT_BILLING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
-            par[3] = new OracleParameter("P_RESULT_OUTSTANDING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
-            par[4] = new OracleParameter("P_RESULT_BULLING_COMPARISON", OracleDbType.RefCursor, ParameterDirection.Output);
-            par[5] = new OracleParameter("P_RESULT_SECTOR_BILLING", OracleDbType.RefCursor, ParameterDirection.Output);
-            par[6] = new OracleParameter("P_RESULT_SECTOR_BILLING_CURRENT_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[3] = new OracleParameter("P_RESULT_BILLING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[4] = new OracleParameter("P_RESULT_OUTSTANDING_CLIENT", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("P_RESULT_BULLING_COMPARISON", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[6] = new OracleParameter("P_RESULT_SECTOR_BILLING", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[7] = new OracleParameter("P_RESULT_SECTOR_BILLING_CURRENT_YEAR_WISE", OracleDbType.RefCursor, ParameterDirection.Output);
 
             DataSet ds = DataAccessDB.GetDataSet("GET_CM_DFO_DASHBOARD", par);
 
