@@ -140,6 +140,7 @@ namespace IBS.Controllers
         {
             var Region_Code = !string.IsNullOrEmpty(Regions) ? Regions : SessionHelper.UserModelDTO.Region;
             DashboardModel model = dashboardRepository.GetCMDFODashBoard(SessionHelper.UserModelDTO.CoCd, Region_Code);
+            model.Region = Region_Code;
             return View(model);
         }
 

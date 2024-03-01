@@ -178,7 +178,7 @@
     <script>
         function OnChangeRegion() {
             var Region = $("#Region").val();
-            var url = '@Url.Action("CMDAR", "Dashboard")?Regions=' + Region;
+            var url = '@Url.Action("CM", "Dashboard")?Regions=' + Region;
             $(".overlayLoader").show();
             window.location.href = url;
         }
