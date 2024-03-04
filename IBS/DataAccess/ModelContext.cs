@@ -6729,11 +6729,20 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Id)
                 .HasPrecision(6)
                 .HasColumnName("ID");
+            entity.Property(e => e.Createdby)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDBY");
+            entity.Property(e => e.Createddate)
+                .HasPrecision(6)
+                .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Department)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("DEPARTMENT");
+            entity.Property(e => e.Isdeleted)
+                .HasPrecision(2)
+                .HasColumnName("ISDELETED");
             entity.Property(e => e.Nos)
                 .HasColumnType("NUMBER")
                 .HasColumnName("NOS");
@@ -6745,6 +6754,12 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("SANCTIONEDSTRENGTH");
+            entity.Property(e => e.Updatedby)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDBY");
+            entity.Property(e => e.Updateddate)
+                .HasPrecision(6)
+                .HasColumnName("UPDATEDDATE");
         });
 
         modelBuilder.Entity<ProjectMaster>(entity =>
@@ -6760,7 +6775,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("COMPLETIONDATE");
             entity.Property(e => e.Createdby)
-                .HasColumnType("NUMBER(38)")
+                .HasPrecision(6)
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
@@ -6778,7 +6793,7 @@ public partial class ModelContext : DbContext
                 .HasColumnType("DATE")
                 .HasColumnName("STARTDATE");
             entity.Property(e => e.Updatedby)
-                .HasColumnType("NUMBER(38)")
+                .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")

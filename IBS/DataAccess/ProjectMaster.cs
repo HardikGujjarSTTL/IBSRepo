@@ -15,11 +15,11 @@ public partial class ProjectMaster
 
     public byte? Isdeleted { get; set; }
 
-    public decimal? Createdby { get; set; }
+    public int? Createdby { get; set; }
 
     public DateTimeOffset? Createddate { get; set; }
 
-    public decimal? Updatedby { get; set; }
+    public int? Updatedby { get; set; }
 
     public DateTimeOffset? Updateddate { get; set; }
 

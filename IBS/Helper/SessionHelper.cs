@@ -93,14 +93,14 @@ namespace IBS.Helper
             }
         }
 
-        public List<ProjectDetails> lstProjectDetails
+        public List<ProjectDetailsModel> lstProjectDetails
         {
             get
             {
                 string ProjectDetails = httpContextAccessor.HttpContext.Session.GetString("sessionProductDetailsModel");
                 if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(ProjectDetails))
                 {
-                    List<ProjectDetails> ProjectDetailsModels = JsonSerializer.Deserialize<List<ProjectDetails>>(ProjectDetails);
+                    List<ProjectDetailsModel> ProjectDetailsModels = JsonSerializer.Deserialize<List<ProjectDetailsModel>>(ProjectDetails);
 
                     if (ProjectDetailsModels != null)
                         return ProjectDetailsModels;

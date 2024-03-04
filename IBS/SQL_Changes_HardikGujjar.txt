@@ -5697,7 +5697,7 @@ BEGIN
                     AND t22.bill_no = t26.bill_no (+)
                     AND ( ( t12.bpo_type = 'R' AND NOT ( nvl(t22.bill_amount, 0) BETWEEN 0 AND 100 ) ) OR ( t12.bpo_type <> 'R' ) )
                     and SUBSTR(T22.BILL_NO, 1, 1) not in ( 'O', 'T', 'X', 'F', 'D','R' )
-                    --AND t22.bill_dt BETWEEN P_FROMDATE AND P_TODATE
+                    AND t22.bill_dt BETWEEN P_FROMDATE AND P_TODATE
                     --AND t22.bill_dt BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
                     AND (P_REGION = 'All' OR (P_REGION <> 'All' AND SUBSTR(t22.case_no,1,1) = P_REGION))
             GROUP BY t22.bill_no,
@@ -5722,8 +5722,8 @@ BEGIN
         FROM T25_RV_DETAILS T25
         JOIN T24_RV T24 ON T24.VCHR_NO = T25.VCHR_NO
         WHERE 
-        --T24.VCHR_DT BETWEEN P_FROMDATE AND P_TODATE
-        (P_REGION = 'All' OR (P_REGION <> 'All' AND SUBSTR(T25.VCHR_NO,1,1) = P_REGION))
+        T24.VCHR_DT BETWEEN P_FROMDATE AND P_TODATE
+        AND (P_REGION = 'All' OR (P_REGION <> 'All' AND SUBSTR(T25.VCHR_NO,1,1) = P_REGION))
         UNION     
         SELECT  '' bill_no,
                 0 amount_outstanding,
@@ -5731,9 +5731,9 @@ BEGIN
                 SUM(CASE WHEN T22.BILL_FINALISED  = 'Y' THEN 1 ELSE 0 END) FINALIZED_INVOICE,
                 SUM(CASE WHEN (T22.BILL_FINALISED  <> 'Y' AND T22.BILL_FINALISED IS NULL) THEN 1 ELSE 0 END) PENDING_FINALIZED_INVOICE
         FROM T22_BILL T22 
-        --WHERE T22.BILL_DT BETWEEN P_FROMDATE and P_TODATE
+        WHERE T22.BILL_DT BETWEEN P_FROMDATE and P_TODATE
         --WHERE T22.BILL_DT BETWEEN TO_DATE(P_FROMDATE, 'DD/MM/YYYY') AND TO_DATE(P_TODATE, 'DD/MM/YYYY')
-        WHERE (P_REGION = 'All' OR (P_REGION <> 'All' AND SUBSTR(T22.CASE_NO,1,1) = P_REGION))
+        AND (P_REGION = 'All' OR (P_REGION <> 'All' AND SUBSTR(T22.CASE_NO,1,1) = P_REGION))
     ) A;
     
     -- Get Top 10 Billing Clients (Current Financial year)

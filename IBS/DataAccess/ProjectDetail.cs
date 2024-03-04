@@ -14,4 +14,14 @@ public partial class ProjectDetail
     public string? Department { get; set; }
 
     public decimal? Nos { get; set; }
+
+    public byte? Isdeleted { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTime? Createddate { get; set; }
+
+    public int? Updatedby { get; set; }
+
+    public DateTime? Updateddate { get; set; }
 }

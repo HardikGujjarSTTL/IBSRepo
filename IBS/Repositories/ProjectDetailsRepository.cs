@@ -2,6 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using Microsoft.CodeAnalysis;
 
 namespace IBS.Repositories
 {
@@ -14,10 +15,85 @@ namespace IBS.Repositories
             this.context = context;
         }
 
-        public DTResult<ProjectDetails> GetProductDetailsList(DTParameters dtParameters, List<ProjectDetails> ProductDetailsModels)
+        public DTResult<ProjectModel> GetMasterList(DTParameters dtParameters)
         {
-            DTResult<ProjectDetails> dTResult = new() { draw = 0 };
-            IQueryable<ProjectDetails>? query = null;
+            DTResult<ProjectModel> dTResult = new() { draw = 0 };
+            IQueryable<ProjectModel>? query = null;
+
+            var searchBy = dtParameters.Search?.Value;
+            var orderCriteria = string.Empty;
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null && dtParameters.Order.Length > 0)
+            {
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+                if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "ProjectName";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                orderCriteria = "ProjectName";
+                orderAscendingDirection = true;
+            }
+
+            query = from a in context.ProjectMasters
+                    where (a.Isdeleted == 0 || a.Isdeleted == null)
+                    select new ProjectModel
+                    {
+                        Proj_ID = a.Id,
+                        ProjectName = a.Projectname,
+                        StartDate = a.Startdate,
+                        CompletionDate = a.Completiondate
+                    };
+            dTResult.recordsTotal = query.Count();
+
+            if (!string.IsNullOrEmpty(searchBy))
+                query = query.Where(w => Convert.ToString(w.ProjectName).ToLower().Contains(searchBy.ToLower()));
+
+            dTResult.recordsFiltered = query.Count();
+            if (dtParameters.Length == -1) dtParameters.Length = query.Count();
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            dTResult.draw = dtParameters.Draw;
+
+            return dTResult;
+        }
+
+        public ProjectModel FindByID(int id)
+        {
+            ProjectModel model = new ProjectModel();
+            model = (from a in context.ProjectMasters
+                     where a.Id == id && (a.Isdeleted == 0 || a.Isdeleted == null)
+                     select new ProjectModel
+                     {
+                         Proj_ID = a.Id,
+                         ProjectName = a.Projectname,
+                         StartDate = a.Startdate,
+                         CompletionDate = a.Completiondate
+                     }).FirstOrDefault();
+            if (model != null)
+            {
+                List<ProjectDetailsModel> clst = (from T117 in context.ProjectDetails
+                                                  where T117.ProjId == model.Proj_ID
+                                                  select new
+                                                  ProjectDetailsModel
+                                                  {
+                                                      DetailID = Convert.ToInt32(T117.Id),
+                                                      ProjId = Convert.ToInt32(T117.ProjId),
+                                                      Sanctionedstrength=T117.Sanctionedstrength,
+                                                      SanctionedstrengthText = T117.Sanctionedstrength == "R" ? "Regular" : T117.Department == "C" ? "Contract" : T117.Department == "T" ? "Through MPA" : "",
+                                                      Department = T117.Department,
+                                                      DepartmentText = T117.Department == "M" ? "Mechanical" : T117.Department == "E" ? "Electrical" : T117.Department == "C" ? "Civil" : T117.Department == "A" ? "M & C" : T117.Department == "O" ? "Others" : "",
+                                                      Nos = T117.Nos,
+                                                  }).ToList();
+                model.lstProjectDetails = clst;
+            }
+            return model;
+        }
+
+        public DTResult<ProjectDetailsModel> GetProjectDetailsList(DTParameters dtParameters, List<ProjectDetailsModel> ProductDetailsModels)
+        {
+            DTResult<ProjectDetailsModel> dTResult = new() { draw = 0 };
+            IQueryable<ProjectDetailsModel>? query = null;
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
@@ -40,20 +116,22 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            query = (from u in ProductDetailsModels.OrderBy(x => x.SancStrength)
-                     select new ProjectDetails
+            query = (from u in ProductDetailsModels.OrderBy(x => x.Sanctionedstrength)
+                     select new ProjectDetailsModel
                      {
-                         In_ID = u.In_ID,
-                         Numbers = Convert.ToInt32(u.Numbers),
-                         Disc = EnumUtility<Enums.DiscDepartment>.GetDescriptionByKey(u.Disc),
-                         SancStrength = EnumUtility<Enums.SanctionedStrength>.GetDescriptionByKey(u.SancStrength),
+                         DetailID = u.DetailID,
+                         Nos = Convert.ToInt32(u.Nos),
+                         Department = u.Department,
+                         DepartmentText = u.DepartmentText,
+                         Sanctionedstrength = u.Sanctionedstrength,
+                         SanctionedstrengthText = u.SanctionedstrengthText,
                          //Disc = u.Disc == "M" ? "Mechanical" : u.Disc == "E" ? "Electrical" : u.Disc == "C" ? "Civil" : u.Disc == "A" ? "M & C" : u.Disc == "O" ? "Others" : "",
                      }).AsQueryable();
 
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => w.Disc.ToLower().Contains(searchBy.ToLower())
+                query = query.Where(w => w.Department.ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -66,7 +144,7 @@ namespace IBS.Repositories
 
         }
 
-        public int SaveProductDetailsList(ProjectDetails model, List<ProjectDetails> ProductDetailsModels)
+        public int SaveProject(ProjectModel model)
         {
             int ProjID = 0;
             int ProjectID = 0;
@@ -104,22 +182,89 @@ namespace IBS.Repositories
             #endregion
 
             #region Project Details
-
-            foreach (var item in ProductDetailsModels)
+            var projectDetails = (from T117 in context.ProjectDetails where T117.ProjId == model.Proj_ID select T117).ToList();
+            if (projectDetails.Count > 0 && projectDetails != null)
             {
-                int ProjDID = context.ProjectDetails.Any() ? context.ProjectDetails.Max(x => x.Id) + 1 : 1;
-                ProjectDetail obj = new ProjectDetail();
-                obj.Id = ProjDID;
-                obj.ProjId = ProjectID;
-                obj.Sanctionedstrength = item.SancStrength;
-                obj.Department = item.Disc;
-                obj.Nos = item.Numbers;
-                context.ProjectDetails.Add(obj);
+                context.ProjectDetails.RemoveRange(projectDetails);
                 context.SaveChanges();
             }
+            if (model.lstProjectDetails != null)
+            {
+                foreach (var item in model.lstProjectDetails)
+                {
+                    ProjectDetail objAdd = new ProjectDetail();
+                    {
+                        objAdd.ProjId = ProjectID;
+                        objAdd.Sanctionedstrength = item.Sanctionedstrength;
+                        objAdd.Department = item.Department;
+                        objAdd.Nos = item.Nos;
+                        objAdd.Isdeleted = Convert.ToByte(false);
+                        objAdd.Createdby = model.Createdby;
+                        objAdd.Createddate = DateTime.Now;
+                    }
+                    context.ProjectDetails.Add(objAdd);
+                    context.SaveChanges();
+                }
+            }
             #endregion
-
             return ProjectID;
+        }
+
+        public int DeleteProject(int ID, int UserID)
+        {
+            int res = 0;
+            var projectMasters = (from T116 in context.ProjectMasters where T116.Id == ID select T116).FirstOrDefault();
+            if (projectMasters != null)
+            {
+                projectMasters.Isdeleted = Convert.ToByte(true);
+                projectMasters.Updatedby = UserID;
+                projectMasters.Updateddate = DateTime.Now;
+                context.SaveChanges();
+                res = projectMasters.Id;
+            }
+            return res;
+        }
+
+        public int SaveDetails(ProjectDetailsModel model)
+        {
+            int res = 0;
+            if (model.DetailID == 0)
+            {
+                ProjectDetail objAdd = new ProjectDetail();
+                objAdd.ProjId = model.ProjId;
+                objAdd.Sanctionedstrength = model.Sanctionedstrength;
+                objAdd.Department = model.Department;
+                objAdd.Nos = model.Nos;
+                context.ProjectDetails.Add(objAdd);
+                context.SaveChanges();
+                res = objAdd.Id;
+            }
+            else
+            {
+                var data = context.ProjectDetails.Find(model.DetailID);
+                if (data != null)
+                {
+                    data.Sanctionedstrength = model.Sanctionedstrength;
+                    data.Department = model.Department; ;
+                    data.Nos = model.Nos;
+                    context.SaveChanges();
+                    res = data.Id;
+                }
+            }
+            return res;
+        }
+
+        public int DeleteProjectDetails(int DetailID, int ProjectID)
+        {
+            int res = 0;
+            var projectDetails = (from T117 in context.ProjectDetails where T117.Id == DetailID && T117.ProjId == ProjectID select T117).FirstOrDefault();
+            if (projectDetails != null)
+            {
+                context.ProjectDetails.RemoveRange(projectDetails);
+                context.SaveChanges();
+                res = projectDetails.Id;
+            }
+            return res;
         }
     }
 }
