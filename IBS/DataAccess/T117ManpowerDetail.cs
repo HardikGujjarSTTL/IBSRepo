@@ -26,4 +26,10 @@ public partial class T117ManpowerDetail
     public byte? Isdeleted { get; set; }
 
     public int? Manpowerid { get; set; }
+
+    public string? Nameofcluster { get; set; }
+
+    public DateTime? Fromdate { get; set; }
+
+    public DateTime? Todate { get; set; }
 }

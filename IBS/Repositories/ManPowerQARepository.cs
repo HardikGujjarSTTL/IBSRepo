@@ -106,7 +106,10 @@ namespace IBS.Repositories
                                                       StaffText = T117.Staff == "T" ? "Technical" : T117.Staff == "N" ? "Non Technical" : "",
                                                       PlacePosting = T117.PlacePosting,
                                                       ProjectName = T117.ProjectName,
-                                                      ProjectNameText =(from f in context.ProjectMasters where f.Id == T117.ProjectName select f.Projectname).FirstOrDefault()
+                                                      ProjectNameText = (from f in context.ProjectMasters where f.Id == T117.ProjectName select f.Projectname).FirstOrDefault(),
+                                                      Nameofcluster = T117.Nameofcluster,
+                                                      Fromdate = T117.Fromdate,
+                                                      Todate = T117.Todate,
                                                   }).ToList();
                 model.lstManpowerDetailModel = clst;
             }
@@ -184,6 +187,9 @@ namespace IBS.Repositories
                         objAdd.Createdby = model.UserID;
                         objAdd.Createddate = DateTime.Now;
                         objAdd.Isdeleted = Convert.ToByte(false);
+                        objAdd.Nameofcluster = item.Nameofcluster;
+                        objAdd.Fromdate = item.Fromdate;
+                        objAdd.Todate = item.Todate;
                     }
                     context.T117ManpowerDetails.Add(objAdd);
                     context.SaveChanges();
@@ -203,7 +209,10 @@ namespace IBS.Repositories
                          Working = a.Working,
                          Staff = a.Staff,
                          PlacePosting = a.PlacePosting,
-                         ProjectName = a.ProjectName
+                         ProjectName = a.ProjectName,
+                         Nameofcluster = a.Nameofcluster,
+                         Fromdate = a.Fromdate,
+                         Todate = a.Todate,
                      }).FirstOrDefault();
             return model;
         }
@@ -222,6 +231,9 @@ namespace IBS.Repositories
                 objAdd.Createdby = model.UserID;
                 objAdd.Createddate = DateTime.Now;
                 objAdd.Isdeleted = Convert.ToByte(false);
+                objAdd.Nameofcluster = model.Nameofcluster;
+                objAdd.Fromdate = model.Fromdate;
+                objAdd.Todate = model.Todate;
                 context.T117ManpowerDetails.Add(objAdd);
                 context.SaveChanges();
                 res = objAdd.Id;
@@ -235,6 +247,9 @@ namespace IBS.Repositories
                     data.Staff = model.Staff; ;
                     data.PlacePosting = model.PlacePosting;
                     data.ProjectName = model.ProjectName;
+                    data.Nameofcluster = model.Nameofcluster;
+                    data.Fromdate = model.Fromdate;
+                    data.Todate = model.Todate;
                     data.Updatedby = model.UserID;
                     data.Updateddate = DateTime.Now;
                     context.SaveChanges();
@@ -281,7 +296,10 @@ namespace IBS.Repositories
                          StaffText = u.StaffText,
                          PlacePosting = u.PlacePosting,
                          ProjectName = u.ProjectName,
-                         ProjectNameText = u.ProjectNameText
+                         ProjectNameText = u.ProjectNameText,
+                         Nameofcluster = u.Nameofcluster,
+                         Fromdate = u.Fromdate,
+                         Todate = u.Todate,
                      }).AsQueryable();
 
             dTResult.recordsTotal = query.Count();
@@ -297,10 +315,7 @@ namespace IBS.Repositories
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
-
         }
-
-
 
         public int DeleteManpower(int ID, int UserID)
         {

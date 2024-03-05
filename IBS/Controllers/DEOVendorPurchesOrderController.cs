@@ -43,7 +43,8 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<DEOVendorPurchesOrderModel> dTResult = deovendorpurchesRepository.GetDataList(dtParameters, GetRegionCode);
+            string RootHostName = HttpContext.Request.Host.Value;
+            DTResult<DEOVendorPurchesOrderModel> dTResult = deovendorpurchesRepository.GetDataList(dtParameters, GetRegionCode, RootHostName);
             return Json(dTResult);
         }
 

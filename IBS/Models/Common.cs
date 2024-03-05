@@ -4333,7 +4333,7 @@ namespace IBS.Models
         {
             using ModelContext context = new(DbContextHelper.GetDbContextOptions());
             return (from c in context.T09Ies
-                    where c.IeStatus == null && c.IeRegion == RegionCode
+                    where (c.IeStatus == null || c.IeStatus == "W") && c.IeRegion == RegionCode
                     select new SelectListItem
                     {
                         Value = c.IeCd.ToString(),

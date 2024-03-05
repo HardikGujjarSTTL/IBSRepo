@@ -11,13 +11,17 @@ namespace IBS.Repositories
     public class DEOVendorPurchesOrderRepository : IDEOVendorPurchesOrderRepository
     {
         private readonly ModelContext context;
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration _configuration;
 
-        public DEOVendorPurchesOrderRepository(ModelContext context)
+        public DEOVendorPurchesOrderRepository(ModelContext context, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             this.context = context;
+            env = _environment;
+            _configuration = configuration;
         }
 
-        public DTResult<DEOVendorPurchesOrderModel> GetDataList(DTParameters dtParameters, string GetRegionCode)
+        public DTResult<DEOVendorPurchesOrderModel> GetDataList(DTParameters dtParameters, string GetRegionCode, string RootHostName)
         {
 
             DTResult<DEOVendorPurchesOrderModel> dTResult = new() { draw = 0 };
@@ -76,7 +80,27 @@ namespace IBS.Repositories
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<DEOVendorPurchesOrderModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
+                if (list.Count > 0)
+                {
+                    string HostUrl = _configuration.GetSection("AppSettings")["SiteUrl"];
+                    if (RootHostName.Contains("14.143.90.241"))
+                    {
+                        HostUrl = HostUrl.Replace("192.168.0.101", "14.143.90.241");
+                    }
+                    foreach (var item in list)
+                    {
+                        string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO) + "/" + item.CaseNo.Trim().ToString()+ ".pdf";
+                        if (!File.Exists(fpath))
+                        {
+                            item.IsFileExist = false;
+                        }
+                        else 
+                        {
+                            item.IsFileExist = true;
+                            item.File = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.VendorPO) + "/" + item.CaseNo.Trim().ToString() + ".pdf";
+                        }
+                    }
+                }
             }
             int recordsTotal = 0;
             if (ds != null && ds.Tables[1].Rows.Count > 0)

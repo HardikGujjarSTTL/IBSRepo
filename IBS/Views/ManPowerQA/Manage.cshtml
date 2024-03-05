@@ -111,6 +111,25 @@
                         @Html.DropDownListFor(model => model.ProjectName, new SelectList(IBS.Models.Common.GetProjectName(), "Value", "Text"), "--Select--")
                         <span class="text-danger" id="spnProjectName"></span>
                     </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">
+                            Name of cluster
+                        </label>
+                        <input type="text" class="input" asp-for="Nameofcluster">
+                        <span class="text-danger" id="spnNameofcluster"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">From Date</label>
+                        <input type="text" class="input datepicker" asp-for="Fromdate" placeholder="DD/MM/YYYY">
+                        <span class="text-danger" id="spnFromdate"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">To Date</label>
+                        <input type="text" class="input datepicker" asp-for="Todate" placeholder="DD/MM/YYYY">
+                        <span class="text-danger" id="spnTodate"></span>
+                    </div>
                     <div class="col-md-2 mb-3 btnAlign">
                         <button type="button" id="AddManpowerDetail" class="formBtn"><span class="fa fa-plus"></span> Add</button>
                     </div>
@@ -204,7 +223,19 @@
                 IsValid = false;
             }
             if ($("#PlacePosting").val() == "") {
-                $("#spnPlacePosting").html("Please select Place of posting.");
+                $("#spnPlacePosting").html("Please enter Place of posting.");
+                IsValid = false;
+            }
+            if ($("#Nameofcluster").val() == "") {
+                $("#spnNameofcluster").html("Please enter Name of cluster.");
+                IsValid = false;
+            }
+            if ($("#Fromdate").val() == "") {
+                $("#spnFromdate").html("Please select From date.");
+                IsValid = false;
+            }
+            if ($("#Todate").val() == "") {
+                $("#spnTodate").html("Please select To date.");
                 IsValid = false;
             }
             return IsValid;
@@ -216,7 +247,7 @@
 
             var ProjectNameText = '';
             if ($("#ProjectName").val() != '') {
-                $("#ProjectName option:selected").text();
+                ProjectNameText = $("#ProjectName option:selected").text();
             }
             var formData = {
                 ManpowerID: $("#ID").val(),
@@ -227,7 +258,10 @@
                 StaffText: $("#Staff option:selected").text(),
                 PlacePosting: $("#PlacePosting").val(),
                 ProjectName: $("#ProjectName").val(),
-                ProjectNameText: ProjectNameText
+                ProjectNameText: ProjectNameText,
+                Nameofcluster: $("#Nameofcluster").val(),
+                Fromdate: $("#Fromdate").val(),
+                Todate: $("#Todate").val()
             }
             $.post("@Url.Action("SaveManpowerDetail", "ManPowerQA")", { model: formData }, function (response) {
                 ShowHideMsgNew(response.status, response.responseText);
@@ -331,6 +365,9 @@
             $('#Staff').val("");
             $("#PlacePosting").val("");
             $('#ProjectName').val("");
+            $("#PlacePosting").val("");
+            $("#Fromdate").val("");
+            $("#Todate").val("");
         }
 
     </script>

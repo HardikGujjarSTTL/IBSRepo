@@ -12035,12 +12035,19 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
                 .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Fromdate)
+                .HasColumnType("DATE")
+                .HasColumnName("FROMDATE");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.Manpowerid)
                 .HasPrecision(6)
                 .HasColumnName("MANPOWERID");
+            entity.Property(e => e.Nameofcluster)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("NAMEOFCLUSTER");
             entity.Property(e => e.PlacePosting)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -12052,6 +12059,9 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("STAFF");
+            entity.Property(e => e.Todate)
+                .HasColumnType("DATE")
+                .HasColumnName("TODATE");
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
                 .HasColumnName("UPDATEDBY");

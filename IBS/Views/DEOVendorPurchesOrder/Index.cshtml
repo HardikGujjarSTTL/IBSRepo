@@ -61,7 +61,7 @@
 <div id="EditCaseNoModal" class="modal" tabindex="-1" role="dialog">
 </div>
 
-@section scripts{
+@section scripts {
 
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -81,7 +81,7 @@
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-               // scrollX: true,
+                // scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
@@ -141,7 +141,7 @@
                             return html;
                         }
                     },
-                    
+
                     { data: "CaseNo" },
                     { data: "PoNo" },
                     {
@@ -177,12 +177,17 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
-                            var html = "<a target='_blank' class='commonBtn gridBtn' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.VendorPO))/" + CaseNo.trim() + ".PDF' Id='DocUpload_" + CaseNo + "'>Download PO <span class='fa fa-download'></span></a> "
-                            html += '</div>';
+                            var IsFileExist = data.IsFileExist;
+                            var File = data.File;
+                            if (IsFileExist == false) {
+                                var html = "<a target='_blank' class='aTag' style='color: red;'>No DOC</a> ";
+                            }
+                            else if (IsFileExist == true) {
+                                var html = "<a target='_blank' class='commonBtn gridBtn' href='" + File + "' Id='DocUpload_" + CaseNo + "'>Download PO <span class='fa fa-download'></span></a> ";
+                            }
                             return html;
                         }
                     },
-                    
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {
@@ -233,10 +238,9 @@
                     }
                 });
             }
-            else
-            {
+            else {
                 ShowHideMsgNew(false, "PLEASE ENTER 9 CHARACTERS CASE NUMBER!!!");
             }
         }
     </script>
-    }
+}

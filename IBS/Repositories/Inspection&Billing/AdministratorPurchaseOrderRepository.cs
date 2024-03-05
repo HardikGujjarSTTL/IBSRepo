@@ -12,11 +12,13 @@ namespace IBS.Repositories.Inspection_Billing
     {
         private readonly ModelContext context;
         private readonly IWebHostEnvironment env;
+        private readonly IConfiguration _configuration;
 
-        public AdministratorPurchaseOrderRepository(ModelContext context, IWebHostEnvironment _environment)
+        public AdministratorPurchaseOrderRepository(ModelContext context, IWebHostEnvironment _environment, IConfiguration configuration)
         {
             this.context = context;
             env = _environment;
+            _configuration = configuration;
         }
         public AdministratorPurchaseOrderModel FindByID(string CaseNo)
         {
@@ -60,7 +62,7 @@ namespace IBS.Repositories.Inspection_Billing
                 return model;
             }
         }
-        public DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters, string region_code)
+        public DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters, string region_code, string RootHostName)
         {
 
             DTResult<AdministratorPurchaseOrderListModel> dTResult = new() { draw = 0 };
@@ -123,6 +125,11 @@ namespace IBS.Repositories.Inspection_Billing
                 list = JsonConvert.DeserializeObject<List<AdministratorPurchaseOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 if (list.Count > 0)
                 {
+                    string HostUrl = _configuration.GetSection("AppSettings")["SiteUrl"];
+                    if (RootHostName.Contains("14.143.90.241"))
+                    {
+                        HostUrl = HostUrl.Replace("192.168.0.101", "14.143.90.241");
+                    }
                     foreach (var item in list)
                     {
                         string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
@@ -136,12 +143,14 @@ namespace IBS.Repositories.Inspection_Billing
                             item.IsFileExist = true;
                             item.IsPO_DOC = true;
                             item.IsPO_DOC1 = false;
+                            item.PO_DOC = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
                         }
                         else if (File.Exists(fpath1))
                         {
                             item.IsFileExist = true;
                             item.IsPO_DOC = false;
                             item.IsPO_DOC1 = true;
+                            item.PO_DOC1 = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
                         }
                     }
                 }

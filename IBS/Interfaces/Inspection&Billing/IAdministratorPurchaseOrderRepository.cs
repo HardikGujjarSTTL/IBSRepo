@@ -5,7 +5,7 @@ namespace IBS.Interfaces.Inspection_Billing
     public interface IAdministratorPurchaseOrderRepository
     {
         public AdministratorPurchaseOrderModel FindByID(string CaseNo);
-        DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters, string region_code);
+        DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters, string region_code,string RootHostName);
         bool Remove(string CaseNo, int UserID);
 
         PO_MasterModel alreadyExistT80_PO_MASTER(AdministratorPurchaseOrderModel model);

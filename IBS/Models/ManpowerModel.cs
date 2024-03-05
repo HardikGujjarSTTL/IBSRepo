@@ -1,4 +1,6 @@
-﻿namespace IBS.Models
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+
+namespace IBS.Models
 {
     public class ManpowerModel
     {
@@ -22,6 +24,11 @@
 
         public virtual int UserID { get; set; }
         public virtual string UserName { get; set; }
+        public string? Nameofcluster { get; set; }
+        public DateTime? Fromdate { get; set; }
+        public DateTime? Todate { get; set; }
+        public string? TotalPeriodinYearsAndMonths { get; set; }
+        public string? NoOfCallsDuringThePeriod { get; set; }
         public List<ManpowerDetailModel> lstManpowerDetailModel { get; set; }
     }
 
@@ -37,5 +44,8 @@
         public int? ProjectName { get; set; }
         public string ProjectNameText { get; set; }
         public int? UserID { get; set; }
+        public string? Nameofcluster { get; set; }
+        public DateTime? Fromdate { get; set; }
+        public DateTime? Todate { get; set; }
     }
 }

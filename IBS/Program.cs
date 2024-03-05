@@ -11,6 +11,7 @@ using IBS.Interfaces.InspectionBilling;
 using IBS.Interfaces.Reports;
 using IBS.Interfaces.Reports.Billing;
 using IBS.Interfaces.Reports.ConsigneeComplaintReports;
+using IBS.Interfaces.Reports.ManPower;
 using IBS.Interfaces.Reports.OtherReports;
 using IBS.Interfaces.Reports.RealisationPayment;
 using IBS.Interfaces.Transaction;
@@ -22,6 +23,7 @@ using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
 using IBS.Repositories.Reports.ConsigneeComplaintReports;
+using IBS.Repositories.Reports.ManPower;
 using IBS.Repositories.Reports.OtherReports;
 using IBS.Repositories.Reports.RealisationPayment;
 using IBS.Repositories.Transaction;
@@ -268,6 +270,7 @@ builder.Services.AddScoped<ChatHub>();
 
 // SignalR Configuration
 //builder.Services.AddSignalR();
+builder.Services.AddScoped<IManpowerMasterDataReportRepository, ManpowerMasterDataReportRepository>();
 builder.Services.AddSignalR(e =>
 {
     e.MaximumReceiveMessageSize = 102400000;

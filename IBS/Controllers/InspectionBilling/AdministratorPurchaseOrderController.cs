@@ -38,8 +38,9 @@ namespace IBS.Controllers.InspectionBilling
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
+            string RootHostName = HttpContext.Request.Host.Value;
             string region_code = Convert.ToString(IBS.Helper.SessionHelper.UserModelDTO.Region);
-            DTResult<AdministratorPurchaseOrderListModel> dTResult = pIAdministratorPurchaseOrderRepository.GetPOMasterList(dtParameters, region_code);
+            DTResult<AdministratorPurchaseOrderListModel> dTResult = pIAdministratorPurchaseOrderRepository.GetPOMasterList(dtParameters, region_code, RootHostName);
             return Json(dTResult);
         }
 
