@@ -148,7 +148,7 @@ namespace IBS.Repositories
                 if (data != null)
                 {
                     data.Region = model.Region;
-                    data.EmpName = model.EmpName; ;
+                    data.EmpName = model.EmpName;
                     data.EmpNo = model.EmpNo;
                     data.Desig = model.Desig;
                     data.Cadre = model.Cadre;

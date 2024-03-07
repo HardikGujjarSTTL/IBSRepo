@@ -63,33 +63,25 @@ namespace IBS.Controllers
             try
             {
                 string msg = "";
-                if (model.Proj_ID == 0)
+                model.Createdby = UserId;
+                model.UpdatedBy = UserId;
+                List<ProjectDetailsModel> lstProjectDetails = new List<ProjectDetailsModel>();
+                if (objSessionHelper.lstProjectDetails != null)
                 {
-                    model.Createdby = UserId;
-                    model.UpdatedBy = UserId;
-                    List<ProjectDetailsModel> lstProjectDetails = new List<ProjectDetailsModel>();
-                    if (objSessionHelper.lstProjectDetails != null)
-                    {
-                        model.lstProjectDetails = objSessionHelper.lstProjectDetails;
-                    }
-                    int i = projectDetailsRepository.SaveProject(model);
-                    if (i > 0)
-                    {
-                        if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
-                        {
-                            int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.DetailsOfSanctionedFile };
-                            List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                            DocumentHelper.SaveFiles(Convert.ToString(i), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.DetailsOfSanctionedFile), env, iDocument, string.Empty, Convert.ToString(i), DocumentIds);
-                        }
-                    }
-                    msg = "Record Added Successfully.";
+                    model.lstProjectDetails = objSessionHelper.lstProjectDetails;
                 }
-                else
+                int i = projectDetailsRepository.SaveProject(model);
+                if (i > 0)
                 {
-                    int i = projectDetailsRepository.SaveProject(model);
-                    msg = "Record Updated Successfully.";
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    {
+                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.DetailsOfSanctionedFile };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        DocumentHelper.SaveFiles(Convert.ToString(i), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.DetailsOfSanctionedFile), env, iDocument, string.Empty, Convert.ToString(i), DocumentIds);
+                    }
                 }
-                    
+                msg = "Record Added Successfully.";
+
                 return Json(new { status = true, responseText = msg });
             }
             catch (Exception ex)

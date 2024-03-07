@@ -1,6 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Interfaces.Reports.ManPower;
 using IBS.Models;
+using Newtonsoft.Json;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace IBS.Repositories.Reports.ManPower
 {
@@ -83,6 +88,53 @@ namespace IBS.Repositories.Reports.ManPower
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
+        }
+
+        public ProjectModel FindByID(int id)
+        {
+            ProjectModel model = new ProjectModel();
+            model = (from a in context.ProjectMasters
+                     where a.Id == id && (a.Isdeleted == 0 || a.Isdeleted == null)
+                     select new ProjectModel
+                     {
+                         Proj_ID = a.Id,
+                         ProjectName = a.Projectname,
+                         StartDate = a.Startdate,
+                         CompletionDate = a.Completiondate
+                     }).FirstOrDefault();
+            if (model != null)
+            {
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_PROJ_ID", OracleDbType.Int32, model.Proj_ID, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                var ds = DataAccessDB.GetDataSet("SP_GET_ProjectDetailsReport", par, 2);
+                List<ProjectDetailsReport> list = new();
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    list = JsonConvert.DeserializeObject<List<ProjectDetailsReport>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
+                model.lstprojectDetailsReports= list;
+
+                var query = (from a in context.T116ManpowerMasters
+                             join d in context.T117ManpowerDetails on a.Id equals d.Manpowerid
+                             join rd in context.T07RitesDesigs on Convert.ToInt32(a.Desig) equals rd.RDesigCd into rdJoin
+                             from rd in rdJoin.DefaultIfEmpty()
+                             where d.ProjectName == model.Proj_ID
+                             select new ManpowerModel
+                             {
+                                 ID = a.Id,
+                                 Region = a.Region == "N" ? "North" : a.Region == "S" ? "South" : a.Region == "W" ? "West" : a.Region == "E" ? "East" : a.Region == "C" ? "Central" : "",
+                                 EmpName = a.EmpName,
+                                 EmpNo = a.EmpNo,
+                                 Discp = a.Discp == "M" ? "Mechanical" : a.Discp == "E" ? "Electrical" : a.Discp == "C" ? "Civil" : a.Discp == "L" ? "Metallurgy" : a.Discp == "T" ? "Textiles" : a.Discp == "P" ? "Power Engineering" : "",
+                                 Status = a.Status,
+                                 Desig = rd.RDesignation,
+                             }).ToList();
+                model.lstManpowerModels = query;
+            }
+            return model;
         }
     }
 }

@@ -1,0 +1,124 @@
+﻿@model IBS.Models.ProjectModel
+
+@if (Model != null)
+{
+    <div class="task-inner row">
+        <div class="col-md-3">
+            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Details_Of_Sanctioned_File" />
+        </div>
+        <div class="col-md-3">
+            <label for="Reference">Start Date</label>
+            <input type="text" class="input" asp-for="StartDate" readonly />
+        </div>
+        <div class="col-md-3">
+            <label for="Reference">Completion Date</label>
+            <input type="text" class="input" asp-for="CompletionDate" readonly />
+        </div>
+    </div>
+    <div class="task-inner row">
+        <table class="borderTable">
+            <thead>
+                <tr>
+                    <th>Sanctioned strength (nos.)</th>
+                    <th>Mech.</th>
+                    <th>Elect</th>
+                    <th>Civil</th>
+                    <th>M&C</th>
+                    <th>Others</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.lstprojectDetailsReports != null && Model.lstprojectDetailsReports.Any())
+                {
+                    foreach (var item in Model.lstprojectDetailsReports)
+                    {
+                        <tr>
+                            <td align="center">@item.Sanctioned_Strength</td>
+                            <td align="center">@item.Mech</td>
+                            <td align="left">@item.Elect</td>
+                            <td align="left">@item.Civil</td>
+                            <td align="left">@item.M_C</td>
+                            <td align="left">@item.Others</td>
+                            <td align="left">@item.Total</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" align="center">No record found</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="list-inner">
+        <div class="tast-list">
+            <h3>Details of staff deployed in the Project</h3>
+        </div>
+    </div>
+
+    <div class="task-inner row">
+        <table class="borderTable">
+            <thead>
+                <tr>
+                    <th>
+                        Sl. No.
+                    </th>
+                    <th>
+                        Name of the Employee (S/Shri)
+                    </th>
+                    <th>
+                        Emp. No.
+                    </th>
+                    <th>
+                        Designation
+                    </th>
+                    <th>
+                        Cadre
+                    </th>
+                    <th>
+                        Discipline
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.lstManpowerModels != null && Model.lstManpowerModels.Any())
+                {
+                    int i = 0;
+                    foreach (var item in Model.lstManpowerModels)
+                    {
+                        <tr>
+                            <td align="center">@(++i)</td>
+                            <td align="center">@item.EmpName</td>
+                            <td align="left">@item.EmpNo</td>
+                            <td align="left">@item.Desig</td>
+                            <td align="left">@item.Region</td>
+                            <td align="left">@item.Discp</td>
+                            <td align="left">@item.Status</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" align="center">No record found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div style="text-align:center;">
+        No record found
+    </div>
+}
+

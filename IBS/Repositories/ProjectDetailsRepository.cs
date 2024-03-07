@@ -80,7 +80,7 @@ namespace IBS.Repositories
                                                       DetailID = Convert.ToInt32(T117.Id),
                                                       ProjId = Convert.ToInt32(T117.ProjId),
                                                       Sanctionedstrength=T117.Sanctionedstrength,
-                                                      SanctionedstrengthText = T117.Sanctionedstrength == "R" ? "Regular" : T117.Department == "C" ? "Contract" : T117.Department == "T" ? "Through MPA" : "",
+                                                      SanctionedstrengthText = T117.Sanctionedstrength == "R" ? "Regular" : T117.Sanctionedstrength == "C" ? "Contract" : T117.Sanctionedstrength == "T" ? "Through MPA" : "",
                                                       Department = T117.Department,
                                                       DepartmentText = T117.Department == "M" ? "Mechanical" : T117.Department == "E" ? "Electrical" : T117.Department == "C" ? "Civil" : T117.Department == "A" ? "M & C" : T117.Department == "O" ? "Others" : "",
                                                       Nos = T117.Nos,

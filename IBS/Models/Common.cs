@@ -4061,7 +4061,7 @@ namespace IBS.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> IE = (from a in ModelContext.T09Ies
                                        orderby a.IeName
-                                       where a.IeRegion == RegionCode && a.IeStatus == null
+                                       where a.IeRegion == RegionCode && (a.IeStatus == null || a.IeStatus == "W")
                                        select
                                   new SelectListItem
                                   {

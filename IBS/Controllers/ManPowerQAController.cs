@@ -55,29 +55,19 @@ namespace IBS.Controllers
             try
             {
                 string msg = "";
-                if (model.ID == 0)
+                model.UserID = UserId;
+                model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
+                if (objSessionHelper.lstManpowerDetailModel != null)
                 {
-                    model.UserID = UserId;
-                    model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
-                    if (objSessionHelper.lstManpowerDetailModel != null)
-                    {
-                        model.lstManpowerDetailModel = objSessionHelper.lstManpowerDetailModel;
-                    }
-                    var res = manPowerQARepository.SaveMaster(model);
-                    if (res < 0)
-                    {
-                        msg = "Record already exists !!";
-                        return View(model);
-                    }
-                    msg = "Record Added Successfully.";
+                    model.lstManpowerDetailModel = objSessionHelper.lstManpowerDetailModel;
                 }
-                else
+                var res = manPowerQARepository.SaveMaster(model);
+                if (res < 0)
                 {
-                    model.UserID = UserId;
-                    model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
-                    manPowerQARepository.SaveMaster(model);
-                    msg = "Record Updated Successfully.";
+                    msg = "Record already exists !!";
+                    return View(model);
                 }
+                msg = "Record Added Successfully.";
                 return Json(new { status = true, responseText = msg });
             }
             catch (Exception ex)

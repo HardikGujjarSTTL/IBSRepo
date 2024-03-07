@@ -20,7 +20,7 @@
 <section id="tab-1" class="@clsView">
     <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ManPowerQA" asp-action="ManPowerSave" data-ajax-method="post" data-ajax-complete="completed" id="frmManpower">
-            <input type="hidden" value="@Model.ID" id="ID" />
+            <input type="hidden" value="@Model.ID" id="ID" name="ID" />
             <input type="hidden" value="0" id="DetailID" />
             <div class="accordion-body">
                 <div class="row my-0">

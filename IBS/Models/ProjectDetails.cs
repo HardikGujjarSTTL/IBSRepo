@@ -35,6 +35,10 @@ namespace IBS.Models
         public DateTime UpdatedDate { get; set; }
 
         public List<ProjectDetailsModel> lstProjectDetails { get; set; }
+
+        public List<ProjectDetailsReport> lstprojectDetailsReports { get; set; }
+
+        public List<ManpowerModel> lstManpowerModels { get; set; }
     }
 
     public class ProjectDetailsModel
@@ -50,5 +54,16 @@ namespace IBS.Models
         public string? DepartmentText { get; set; }
 
         public decimal? Nos { get; set; }
+    }
+
+    public class ProjectDetailsReport
+    {
+        public string Sanctioned_Strength { get; set; }
+        public int Mech { get; set; }
+        public int Elect { get; set; }
+        public int Civil { get; set; }
+        public int M_C { get; set; }
+        public int Others { get; set; }
+        public int Total { get; set; }
     }
 }

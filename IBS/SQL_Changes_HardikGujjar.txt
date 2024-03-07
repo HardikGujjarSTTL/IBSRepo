@@ -6040,3 +6040,48 @@ BEGIN
 END;
 
 -------------
+
+
+create or replace PROCEDURE SP_GET_ProjectDetailsReport (
+    p_PROJ_ID NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR
+) AS
+
+BEGIN
+
+    OPEN p_result_cursor FOR
+    SELECT 
+    s.Sanctioned_Strength,
+    CAST(COALESCE(SUM(CASE WHEN p.DEPARTMENT = 'M' THEN p.NOS ELSE 0 END), 0) AS NUMBER(6, 0)) AS Mech,
+    CAST(COALESCE(SUM(CASE WHEN p.DEPARTMENT = 'E' THEN p.NOS ELSE 0 END), 0) AS NUMBER(6, 0)) AS Elect,
+    CAST(COALESCE(SUM(CASE WHEN p.DEPARTMENT = 'C' THEN p.NOS ELSE 0 END), 0) AS NUMBER(6, 0)) AS Civil,
+    CAST(COALESCE(SUM(CASE WHEN p.DEPARTMENT = 'A' THEN p.NOS ELSE 0 END), 0) AS NUMBER(6, 0)) AS M_C,
+    CAST(COALESCE(SUM(CASE WHEN p.DEPARTMENT = 'O' THEN p.NOS ELSE 0 END), 0) AS NUMBER(6, 0)) AS Others,
+    CAST(COALESCE(SUM(p.NOS), 0) AS NUMBER(6, 0)) AS Total
+FROM 
+    (SELECT 'Regular' AS Sanctioned_Strength FROM DUAL
+     UNION ALL
+     SELECT 'Contract' AS Sanctioned_Strength FROM DUAL
+     UNION ALL
+     SELECT 'Through MPA' AS Sanctioned_Strength FROM DUAL) s
+LEFT JOIN 
+    project_details p ON p.SANCTIONEDSTRENGTH = CASE 
+                                                     WHEN s.Sanctioned_Strength = 'Regular' THEN 'R'
+                                                     WHEN s.Sanctioned_Strength = 'Contract' THEN 'C'
+                                                     WHEN s.Sanctioned_Strength = 'Through MPA' THEN 'T'
+                                                 END
+                    AND p.PROJ_ID = p_PROJ_ID
+GROUP BY 
+    s.Sanctioned_Strength
+ORDER BY 
+    CASE 
+        WHEN s.Sanctioned_Strength = 'Regular' THEN 1
+        WHEN s.Sanctioned_Strength = 'Contract' THEN 2
+        WHEN s.Sanctioned_Strength = 'Through MPA' THEN 3
+        ELSE 4
+    END;
+
+END SP_GET_ProjectDetailsReport;
+
+-------------------
+
