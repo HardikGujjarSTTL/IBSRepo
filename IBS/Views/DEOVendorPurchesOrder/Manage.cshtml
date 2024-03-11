@@ -355,6 +355,7 @@
         }
 
         function FillPurchaserCd(ids) {
+            
             var txtSPur = $("#txtSPur").val();
             $.ajax({
                 url: '@Url.Action("GetPurchaserCd", "DEOVendorPurchesOrder")?consignee=' + txtSPur,

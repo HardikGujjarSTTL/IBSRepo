@@ -6085,3 +6085,280 @@ END SP_GET_ProjectDetailsReport;
 
 -------------------
 
+CREATE OR REPLACE PROCEDURE SP_INSERT_POHDR_FROMAPI (
+    P_RLY IN VARCHAR2,
+    P_POKEY IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+    v_PoId NUMBER;
+BEGIN
+    SELECT NVL(MAX(PO_ID), 0) + 1 INTO v_PoId FROM IMMS_RITES_PO_HDR;
+
+    INSERT INTO IMMS_RITES_PO_HDR (PO_ID, IMMS_RLY_CD, IMMS_POKEY)
+    VALUES (v_PoId, P_RLY, P_POKEY);
+
+    OPEN p_Result FOR
+    SELECT PO_ID FROM IMMS_RITES_PO_HDR WHERE IMMS_RLY_CD = P_RLY AND IMMS_POKEY = P_POKEY AND ROWNUM = 1;
+END;
+
+-----------------------
+
+create or replace PROCEDURE SP_INSERT_POHDRDETAIL_FROMAPI (
+    P_RLY IN VARCHAR2,
+    P_CASE_NO IN VARCHAR2,
+    P_PL_NO IN VARCHAR2,
+    P_ITEM_SRNO IN VARCHAR2,
+    P_ITEM_DESC IN VARCHAR2,
+    P_CONSIGNEE_CD IN VARCHAR2,
+    P_IMMS_CONSIGNEE_CD IN VARCHAR2,
+    P_IMMS_CONSIGNEE_NAME IN VARCHAR2,
+    P_CONSIGNEE_DETAIL IN VARCHAR2,
+    P_QTY IN VARCHAR2,
+    P_QTY_CANCELLED IN VARCHAR2,
+    P_RATE IN VARCHAR2,
+    P_UOM_CD IN VARCHAR2,
+    P_UOM IN VARCHAR2,
+    P_BASIC_VALUE IN VARCHAR2,
+    P_SALES_TAX_PER IN VARCHAR2,
+    P_SALES_TAX IN VARCHAR2,
+    P_EXCISE_TYPE IN VARCHAR2,
+    P_EXCISE_PER IN VARCHAR2,
+    P_DISCOUNT_TYPE IN VARCHAR2,
+    P_DISCOUNT_PER IN VARCHAR2,
+    P_DISCOUNT IN VARCHAR2,
+    P_OT_CHARGE_TYPE IN VARCHAR2,
+    P_OT_CHARGE_PER IN VARCHAR2,
+    P_OTHER_CHARGES IN VARCHAR2,
+    P_VALUE IN VARCHAR2,
+    P_DELV_DT IN DATE,
+    P_EXT_DELV_DT IN DATE,
+    P_USER_ID IN VARCHAR2,
+    P_DATETIME IN DATE,
+    P_ALLOCATION IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+    v_OID NUMBER;
+BEGIN
+    SELECT NVL(MAX(OID), 0) + 1 INTO v_OID FROM IMMS_RITES_PO_DETAIL;
+
+    INSERT INTO IMMS_RITES_PO_DETAIL (OID, IMMS_RLY_CD, IMMS_POKEY, PL_NO, ITEM_SRNO, ITEM_DESC, CONSIGNEE_CD, IMMS_CONSIGNEE_CD, IMMS_CONSIGNEE_NAME, IMMS_CONSIGNEE_DETAIL, QTY, RATE, UOM_CD, BASIC_VALUE, SALES_TAX_PER, SALES_TAX, EXCISE_TYPE, EXCISE_PER, DISCOUNT_TYPE, DISCOUNT_PER, DISCOUNT, OT_CHARGE_TYPE, OT_CHARGE_PER, OT_CHARGES, VALUE, DELV_DT, EXT_DELV_DT, USER_ID, DATETIME, ALLOCATION)
+    VALUES (v_OID, P_RLY, P_CASE_NO, P_PL_NO, P_ITEM_SRNO, P_ITEM_DESC, P_CONSIGNEE_CD, P_IMMS_CONSIGNEE_CD, P_IMMS_CONSIGNEE_NAME, P_CONSIGNEE_DETAIL, P_QTY, P_RATE, P_UOM_CD, P_BASIC_VALUE, P_SALES_TAX_PER, P_SALES_TAX, P_EXCISE_TYPE, P_EXCISE_PER, P_DISCOUNT_TYPE, P_DISCOUNT_PER, P_DISCOUNT, P_OT_CHARGE_TYPE, P_OT_CHARGE_PER, P_OTHER_CHARGES, P_VALUE, P_DELV_DT, P_EXT_DELV_DT, P_USER_ID, P_DATETIME, P_ALLOCATION);
+
+    OPEN p_Result FOR
+    SELECT OID FROM IMMS_RITES_PO_DETAIL WHERE IMMS_RLY_CD = P_RLY AND IMMS_POKEY = P_CASE_NO AND ROWNUM = 1;
+END;
+
+-----------------
+
+create or replace PROCEDURE SP_INSERT_MMP_POMA_HDR_FROMAPI (
+    P_RLY IN VARCHAR2,
+    P_MAKEY IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+    v_PoId NUMBER;
+BEGIN
+
+    INSERT INTO MMP_POMA_HDR ( RLY, MAKEY)
+    VALUES (P_RLY, P_MAKEY);
+
+    OPEN p_Result FOR
+    SELECT P_RLY FROM MMP_POMA_HDR WHERE RLY = P_RLY AND MAKEY = P_MAKEY AND ROWNUM = 1;
+END;
+
+-------------------
+create or replace PROCEDURE SP_INSERT_MMP_POMA_HDR_DETAIL_FROMAPI (
+    P_RLY IN VARCHAR2,
+    P_MAKEY IN VARCHAR2,
+    P_SLNO IN VARCHAR2,
+    P_MA_FLD IN VARCHAR2,
+    P_MA_FLD_DESCR IN VARCHAR2,
+    P_OLD_VALUE IN VARCHAR2,
+    P_NEW_VALUE IN VARCHAR2,
+    P_NEW_VALUE_IND IN VARCHAR2,
+    P_NEW_VALUE_FLAG IN VARCHAR2,
+    P_PL_NO IN VARCHAR2,
+    P_PO_SR IN VARCHAR2,
+    P_EXP_SR IN VARCHAR2,
+    P_EXP_CODE IN VARCHAR2,
+    P_COND_SLNO IN VARCHAR2,
+    P_COND_NO IN VARCHAR2,
+    P_COND_CODE IN VARCHAR2,
+    P_STATUS IN VARCHAR2,
+    P_MA_SR_NO IN VARCHAR2,
+    P_ORIG_DP IN DATE,
+    P_PAYMENT_YEAR IN VARCHAR2,
+    P_NEW_POSR_DATA IN VARCHAR2,
+    P_REF_PONO IN VARCHAR2,
+    P_CONSIGNEE_RLY IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+    v_OID NUMBER;
+BEGIN
+    INSERT INTO MMP_POMA_DTL (
+        rly,makey,slno,ma_fld,ma_fld_descr,old_value,
+        new_value,new_value_ind,new_value_flag,pl_no,po_sr,
+        exp_sr,exp_code,cond_slno,cond_no,cond_code,status,
+        ma_sr_no,orig_dp,payment_year
+    )
+    VALUES (
+        P_RLY,P_MAKEY,P_SLNO,P_MA_FLD,P_MA_FLD_DESCR,P_OLD_VALUE,
+        P_NEW_VALUE,P_NEW_VALUE_IND,P_NEW_VALUE_FLAG,P_PL_NO,P_PO_SR,
+        P_EXP_SR,P_EXP_CODE,P_COND_SLNO,P_COND_NO,P_COND_CODE,P_STATUS,
+        P_MA_SR_NO,P_ORIG_DP,P_PAYMENT_YEAR
+    );
+
+    OPEN p_Result FOR
+    SELECT P_RLY FROM MMP_POMA_DTL WHERE RLY = P_RLY AND MAKEY = P_MAKEY AND ROWNUM = 1;
+END;
+
+
+-----------
+
+create or replace PROCEDURE SP_GET_POMASTERLIST_For_Vendor (
+    p_VendCd IN NUMBER,
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on the given criteria
+    SELECT COUNT(*) INTO total_records
+    FROM T80_PO_MASTER m
+         JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+         LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+         LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+    WHERE m.VEND_CD = p_VendCd
+        AND (m.Isdeleted is null OR m.Isdeleted =0) 
+      AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+      AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER('%' || p_PO_NO || '%'))
+      AND (p_PO_DT IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_PO_DT);
+
+    -- Return total records count
+    OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+
+    -- Retrieve paginated data
+    OPEN p_result_cursor FOR
+        SELECT * FROM (
+            SELECT m.CASE_NO as CaseNo,
+                   m.PO_NO as PoNo,
+                   m.PO_DT AS PoDt,
+                   (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government',
+                           'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+                   m.REAL_CASE_NO as RealCaseNo,
+                   (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+                   (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                    NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') ||
+                    TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+                   m.REMARKS as Remarks,
+                   m.RLY_NONRLY as RlyNonrly,
+                   m.RLY_CD AS MainrlyCd,
+                   m.RLY_CD AS RlyCds,
+                   ROW_NUMBER() OVER (ORDER BY m.DATETIME DESC NULLS LAST, m.Createddate DESC NULLS LAST) AS rnum
+            FROM T80_PO_MASTER m
+                 JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+                 LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+                 LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+            WHERE m.VEND_CD = p_VendCd
+              AND (m.Isdeleted is null OR m.Isdeleted =0)   
+              AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+              AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+              AND (p_PO_DT IS NULL OR TO_CHAR(m.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+            --ORDER BY m.CASE_NO ASC
+            ORDER BY m.DATETIME DESC NULLS LAST, m.Createddate DESC NULLS LAST
+        ) t
+        WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+        
+END SP_GET_POMASTERLIST_For_Vendor;
+
+--------------
+create or replace PROCEDURE SP_GET_DEO_VENDOR_PURCHASE_ORDERS (
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_region_code VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    SELECT COUNT(*) INTO total_records
+    FROM
+        T80_PO_MASTER p
+        JOIN T05_VENDOR v ON p.VEND_CD = v.VEND_CD
+        LEFT JOIN T03_CITY c ON v.VEND_CITY_CD = c.CITY_CD 
+    WHERE
+        (p.Isdeleted = 0 OR p.Isdeleted IS NULL)
+        AND p.real_case_no IS NULL
+        AND (p_CASE_NO IS NULL OR TRIM(p.CASE_NO) = TRIM(p_CASE_NO))
+        AND (p_PO_NO IS NULL OR UPPER(TRIM(p.PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+        AND (p_PO_DT IS NULL OR TO_CHAR(p.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+        AND p.region_code = p_region_code;
+
+    OPEN p_result_records FOR
+    SELECT total_records as total_records FROM DUAL;
+
+    OPEN p_result_cursor FOR
+    SELECT * FROM (
+    SELECT
+        --ROWNUM rnum,
+        ROW_NUMBER() OVER (ORDER BY p.DATETIME DESC NULLS LAST, p.Createddate DESC NULLS LAST) AS rnum,
+        p.CASE_NO CaseNo,
+        p.PURCHASER_CD PurchaserCd,
+        p.STOCK_NONSTOCK StockNonstock,
+        CASE
+            WHEN p.RLY_NONRLY = 'R' THEN 'Railway'
+            WHEN p.RLY_NONRLY = 'P' THEN 'Private'
+            WHEN p.RLY_NONRLY = 'S' THEN 'State Government'
+            WHEN p.RLY_NONRLY = 'F' THEN 'Foreign Railways'
+            WHEN p.RLY_NONRLY = 'U' THEN 'PSU'
+            ELSE p.RLY_NONRLY
+        END AS RlyNonrly,
+        p.PO_OR_LETTER PoOrLetter,
+        p.PO_NO PoNo,
+        p.PO_DT PoDt,
+        p.RECV_DT RecvDt,
+        p.VEND_CD VendCd,
+        p.RLY_CD RlyCd,
+        p.REGION_CODE RegionCode,
+        p.USER_ID UserId,
+        p.DATETIME Datetime,
+        p.REMARKS Remarks,
+        p.POI_CD PoiCd,
+        p.ISDELETED Isdeleted,
+        p.CREATEDDATE Createddate,
+        p.updateddate Updateddate,
+        v.vend_name VendName,
+        p.real_case_no RealCaseNo
+    FROM
+        T80_PO_MASTER p
+        JOIN T05_VENDOR v ON p.VEND_CD = v.VEND_CD
+        LEFT JOIN T03_CITY c ON v.VEND_CITY_CD = c.CITY_CD 
+    WHERE
+        (p.Isdeleted = 0 OR p.Isdeleted IS NULL)
+        AND p.real_case_no IS NULL
+        AND (p_CASE_NO IS NULL OR TRIM(p.CASE_NO) = TRIM(p_CASE_NO))
+        AND (p_PO_NO IS NULL OR UPPER(TRIM(p.PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+        AND (p_PO_DT IS NULL OR TO_CHAR(p.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+        AND p.region_code = p_region_code
+    --ORDER BY p.CASE_NO ASC
+    ORDER BY p.DATETIME DESC NULLS LAST, p.Createddate DESC NULLS LAST
+    )
+    WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+
+END SP_GET_DEO_VENDOR_PURCHASE_ORDERS;
+
+------------------
+
