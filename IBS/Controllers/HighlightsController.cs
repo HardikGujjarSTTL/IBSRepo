@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -35,15 +34,15 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<HighlightsModel> dTResult = highlightsRepository.GetHighlightsList(dtParameters,GetRegionCode);
+            DTResult<HighlightsModel> dTResult = highlightsRepository.GetHighlightsList(dtParameters, GetRegionCode);
             return Json(dTResult);
         }
         [Authorization("Highlights", "Index", "delete")]
-        public IActionResult Delete(string _highDt,string RegionCode)
+        public IActionResult Delete(string _highDt, string RegionCode)
         {
             try
             {
-                if(highlightsRepository.Remove(_highDt, GetRegionCode, UserId))
+                if (highlightsRepository.Remove(_highDt, GetRegionCode, UserId))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();
@@ -71,7 +70,7 @@ namespace IBS.Controllers
                     model.Updatedby = UserId;
                 }
                 model.Createdby = UserId;
-                model.User_Id =Convert.ToString(UserId);
+                model.User_Id = Convert.ToString(UserId);
                 model.Region_Code = GetRegionCode;
                 var i = highlightsRepository.HighlightsDetailsInsertUpdate(model);
                 if (i != null)

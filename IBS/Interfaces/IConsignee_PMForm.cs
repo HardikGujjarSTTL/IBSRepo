@@ -2,7 +2,7 @@
 
 namespace IBS.Interfaces
 {
-    public interface IConsignee_PMForm 
+    public interface IConsignee_PMForm
     {
         public ConsigneePurchaseModel FindByID(int ConsigneeCd);
         DTResult<ConsigneePurchaseModel> GetConsignee_PMFormList(DTParameters dtParameters);

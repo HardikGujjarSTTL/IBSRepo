@@ -1,9 +1,6 @@
 ﻿using IBS.Filters;
-using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Transaction;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -68,7 +65,7 @@ namespace IBS.Controllers
         {
             try
             {
-                model.UserId = USER_ID.Substring(0, 8);
+                model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                 if (centralItemMasterRepository.CheckAlreadyExist(model))
                 {
                     AlertAlreadyExist("Record already exist.");

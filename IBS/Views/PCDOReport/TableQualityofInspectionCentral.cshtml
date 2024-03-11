@@ -123,8 +123,8 @@
                 per_acc60 = 0;
                 per_rej60 = 0;
             }
-            tg_allacc=tg_allacc+tg_acc52+tg_acc60;
-            tg_allrej=tg_allrej+tg_rej52+tg_rej60;
+            @* tg_allacc=tg_allacc+tg_acc52+tg_acc60;
+            tg_allrej=tg_allrej+tg_rej52+tg_rej60; *@
             <tr>
                 <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>(%)</font></b></td>
                 <td width='15%' valign='top' align='center'><b><font size='1' face='Verdana'>@per_acc52</font></b></td>
@@ -199,8 +199,8 @@
             }
             <tr>
                 <td width='18%' valign='top' align='center' colspan='2'><b><font size='1' face='Verdana'>Month Total(MT)</font></b></td>
-                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>"+@tg1+"</font></b></td>
-                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>"+@tg2+"</font></b></td>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg1</font></b></td>
+                <td width='30%' valign='top' align='center'><b><font size='1' face='Verdana'>@tg2</font></b></td>
             </tr>
             @if ((tg1 + tg2) != 0)
             {

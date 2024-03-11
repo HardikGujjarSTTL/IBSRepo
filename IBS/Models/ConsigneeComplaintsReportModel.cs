@@ -50,6 +50,13 @@
         public string COMPLAINTSCASESPATH { get; set; } //=> "/COMPLAINTS_CASES/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
         public string COMPLAINTSREPORTPATH { get; set; } //=> "/COMPLAINTS_REPORT/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
 
+        public bool IsRejectionMemoTif { get; set; }  // REJECTIONMEMOPATH=> "/REJECTION_MEMO/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
+        public bool IsRejectionMemoPdf { get; set; }
+        public bool IsComplainCaseTif { get; set; } //COMPLAINTSCASESPATH=> "/COMPLAINTS_CASES/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
+        public bool IsComplainCasePdf { get; set; }
+        public bool IsComplainReportTif { get; set; } //COMPLAINTSREPORTPATH=> "/COMPLAINTS_REPORT/" + CASE_NO + "-" + BK_NO + "-" + SET_NO;
+        public bool IsComplainReportPdf { get; set; }
+
     }
 
     public class ConsigneeReportsModel

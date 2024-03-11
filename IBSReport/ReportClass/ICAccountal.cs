@@ -71,7 +71,7 @@ namespace IBSReports.ReportClass
                 cmd.Parameters.Add("IN_DATE_TO", OracleDbType.Char, ToDate, ParameterDirection.Input);
                 cmd.Parameters.Add("IN_YES_NO", OracleDbType.Char, lstYesNo, ParameterDirection.Input);
 
-                if (rdbGIE == "true")
+                if (rdbGIE == "ParticularIE")
                 {
                     cmd.Parameters.Add("IN_IE_CD", OracleDbType.Char, lstIE, ParameterDirection.Input);
                 }

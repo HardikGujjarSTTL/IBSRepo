@@ -10,6 +10,7 @@
     else if (ReportType == "SummNR") ReportTitle = "SUMMARY OF ONLINE PAYMENT IN NR";
     else if (ReportType == "LabInv") ReportTitle = "LAB INVOICE REPORT";
     else if (ReportType == "LabInfo") ReportTitle = "LAB SAMPLE INFO DETAILS";
+    else if (ReportType == "Barcode") ReportTitle = "BARCODE SUMMARY REPORT";
 
     ViewData["Title"] = ReportTitle;
 }
@@ -260,6 +261,14 @@
                 </div>
             
         </div>
+    <div class="task-inner report7" style="display: none">
+        
+        <div class="savenext-btn btnAlign">
+            <button type="button" class="save-btn active" onclick="ViewReport7();">Submit</button>
+            <button type="button" class="reset-btn" onclick="ClearControls();">Clear</button>
+        </div>
+
+    </div>
     </div>
 
 @section scripts{
@@ -548,6 +557,24 @@
             else if ('@ReportType' == 'LabInfo') {
                 $(".report6").css("display", "");
             }
+            else if ('@ReportType' == 'Barcode') {
+                $(".report7").css("display", "");
+                function formatDate(date) {
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+
+                    return (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year;
+                }
+                var today = new Date();
+                $('#dtfrom').val(formatDate(today));
+                $('#dtto').val(formatDate(today));
+                $('.datepicker').datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            }
         });
 
         function ViewReport1() {
@@ -799,6 +826,42 @@
 
             var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
             //var url = '@Url.Action("Manage", "LabReports")?' + formData;
+            window.open(url, '_blank');
+        }
+        function ViewReport7() {
+
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+            var IsValid = true;
+
+            if ($("#dtfrom").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if ($("#dtfrom").val() != "" && IsValidDate($("#dtfrom").val()) == false) {
+                $("#spnErrorFromDate").html("Invalid date format.");
+                IsValid = false;
+            }
+            if ($("#dtto").val() != "" && IsValidDate($("#dtto").val()) == false) {
+                $("#spnErrorToDate").html("Invalid date format.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var ReportType = '@ReportType';
+            var wFrmDtO = $("#dtfrom").val();
+            var wToDt = $("#dtto").val();
+            
+            let myObject = { ReportType, wFrmDtO, wToDt };
+
+            var url = '@Url.Action("Manage", "LabReports")?' + $.param(myObject);
+            
             window.open(url, '_blank');
         }
     </script>

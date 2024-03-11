@@ -1,21 +1,12 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
+using IBS.Interfaces.WebsitePages;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
-using System.Globalization;
-using System.Net.Mail;
-using System.Net;
-using System.Numerics;
-using IBS.Interfaces.WebsitePages;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories.WebsitePages
 {
@@ -23,11 +14,13 @@ namespace IBS.Repositories.WebsitePages
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public OnlineComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public OnlineComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
 
         public string GetItems(string ItemSno, string bkno, string setno, string InspRegionDropdown)
@@ -59,53 +52,53 @@ namespace IBS.Repositories.WebsitePages
             //    string uploadedFileName = Guid.NewGuid().ToString() + Path.GetExtension(complaintFile.FileName);
             //    string filePath = Path.Combine(uploadsPath, uploadedFileName);
 
-                //using (var stream = new FileStream(filePath, FileMode.Create))
-                //{
-                //    complaintFile.CopyTo(stream);
-                //}
+            //using (var stream = new FileStream(filePath, FileMode.Create))
+            //{
+            //    complaintFile.CopyTo(stream);
+            //}
 
-                DataTable dt = new DataTable();
+            DataTable dt = new DataTable();
 
-                OracleParameter[] par = new OracleParameter[2];
-                par[0] = new OracleParameter("IN_TEMP_COMPLAINT_DT", OracleDbType.Varchar2, DateTime.Now, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("IN_TEMP_COMPLAINT_DT", OracleDbType.Varchar2, DateTime.Now, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                var ds = DataAccessDB.GetDataSet("GENERATE_TEMP_COMPLAINT_NO", par, 1);
-                dt = ds.Tables[0];
+            var ds = DataAccessDB.GetDataSet("GENERATE_TEMP_COMPLAINT_NO", par, 1);
+            dt = ds.Tables[0];
 
-                DataRow firstRow = dt.Rows[0];
-                string Compid = firstRow["w_compid"].ToString().Trim();
+            DataRow firstRow = dt.Rows[0];
+            string Compid = firstRow["w_compid"].ToString().Trim();
 
-                complaint = new TempOnlineComplaint
-                {
-                    TempComplaintId = Compid,
-                    TempComplaintDt = DateTime.Now,
-                    //RejMemoDt = onlineComplaints.RejMemodate,
-                    ConsigneeName = onlineComplaints.Name,
-                    ConsigneeDesig = onlineComplaints.Designation,
-                    ConsigneeEmail = onlineComplaints.Email,
-                    ConsigneeMobile = onlineComplaints.MobileNO,
-                    BkNo = onlineComplaints.BKNo,
-                    SetNo = onlineComplaints.SetNo,
-                    InspRegion = onlineComplaints.InspRegion,
-                    RejMemoNo = onlineComplaints.RejMemono,
-                    ItemSrnoPo = onlineComplaints.ItemSrnoPo,
-                    ItemDesc = onlineComplaints.ITEM_DESC_PO,
-                    QtyOffered = onlineComplaints.QtyperIC,
-                    QtyRejected = onlineComplaints.QtyRejected,
-                    UomCd = onlineComplaints.UomCd,
-                    Rate = onlineComplaints.Rate,
-                    //RejectionValue = onlineComplaints.RejectionValue,
-                    RejectionValue = (onlineComplaints.Rate * onlineComplaints.QtyRejected),
-                    RejectionReason = onlineComplaints.RejectionReason,
-                    Remarks = onlineComplaints.Remarks,
-                    CaseNo = onlineComplaints.CaseNo,
-                    VendCd = onlineComplaints.VendCd,
-                    ConsigneeCd = onlineComplaints.ConsigneeCd,
-                    IeCd = onlineComplaints.IE_CD,
-                    CoCd = onlineComplaints.CoCd,
-                };
-                SendEmail(onlineComplaints);
+            complaint = new TempOnlineComplaint
+            {
+                TempComplaintId = Compid,
+                TempComplaintDt = DateTime.Now,
+                RejMemoDt = onlineComplaints.RejMemodate,
+                ConsigneeName = onlineComplaints.Name,
+                ConsigneeDesig = onlineComplaints.Designation,
+                ConsigneeEmail = onlineComplaints.Email,
+                ConsigneeMobile = onlineComplaints.MobileNO,
+                BkNo = onlineComplaints.BKNo,
+                SetNo = onlineComplaints.SetNo,
+                InspRegion = onlineComplaints.InspRegion,
+                RejMemoNo = onlineComplaints.RejMemono,
+                ItemSrnoPo = onlineComplaints.ItemSrnoPo,
+                ItemDesc = onlineComplaints.ITEM_DESC_PO,
+                QtyOffered = onlineComplaints.QtyperIC,
+                QtyRejected = onlineComplaints.QtyRejected,
+                UomCd = onlineComplaints.UomCd,
+                Rate = onlineComplaints.Rate,
+                //RejectionValue = onlineComplaints.RejectionValue,
+                RejectionValue = (onlineComplaints.Rate * onlineComplaints.QtyRejected),
+                RejectionReason = onlineComplaints.RejectionReason,
+                Remarks = onlineComplaints.Remarks,
+                CaseNo = onlineComplaints.CaseNo,
+                VendCd = onlineComplaints.VendCd,
+                ConsigneeCd = onlineComplaints.ConsigneeCd,
+                IeCd = onlineComplaints.IE_CD,
+                CoCd = onlineComplaints.CoCd,
+            };
+            SendEmail(onlineComplaints);
 
             //}
             //else
@@ -178,7 +171,11 @@ namespace IBS.Repositories.WebsitePages
             SendMailModel.Message = mail_body;
             try
             {
-                bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+                bool isSend = false;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    isSend = pSendMailRepository.SendMail(SendMailModel, null);
+                }
             }
             catch (Exception ex)
             {

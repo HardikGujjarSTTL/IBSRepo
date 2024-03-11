@@ -14,7 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="center">BD Efforts</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -64,24 +64,24 @@
             </ul>
             <table class="borderTable">
                 <tr>
-                    <th width="20%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
                     <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Name of Rites Officer S/Shri</font></b></th>
                     <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Organisation visited</font></b></th>
                     <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Name of Officer visited S/Shri</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Feedback from Client</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Overall outcome of the visit</font></b></th>
+                    <th width="26%" valign="top" align="center"><b><font size="1" face="Verdana">Feedback from Client</font></b></th>
+                    <th width="23%" valign="top" align="center"><b><font size="1" face="Verdana">Overall outcome of the visit</font></b></th>
                 </tr>
                 @if (Model != null && Model.Count > 0)
                 {
                     foreach (var item in Model.Where(x => x.region_cd == region_cd))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.sn</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Rites_officer</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Organisation_visited</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.Detail_visit</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.highlights</font></b></td>
-                            <td width="15%" valign="top" align="center"><b><font size="1" face="Verdana">@item.overall_outcome</font></b></td>
+                            <td valign="top" align="center"><b><font size="1" face="Verdana">@item.sn</font></b></td>
+                            <td valign="top" align="left"><b><font size="1" face="Verdana">@item.Rites_officer</font></b></td>
+                            <td valign="top" align="left"><b><font size="1" face="Verdana">@item.Organisation_visited</font></b></td>
+                            <td valign="top" align="left"><b><font size="1" face="Verdana">@item.Detail_visit</font></b></td>
+                            <td valign="top" align="left"><b><font size="1" face="Verdana">@item.highlights</font></b></td>
+                            <td valign="top" align="left"><b><font size="1" face="Verdana">@item.overall_outcome</font></b></td>
                         </tr>
                     }
                 }

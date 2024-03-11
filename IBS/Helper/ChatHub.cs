@@ -1,0 +1,160 @@
+﻿using IBS.Interfaces.Hub;
+using IBS.Models;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.JSInterop;
+using NuGet.Protocol.Plugins;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IBS.Helper
+{
+    public class ChatHub : Hub
+    {
+        private readonly IChatRepository _chathub;
+        private readonly IWebHostEnvironment _env;
+
+        public ChatHub(IChatRepository chathub, IWebHostEnvironment env)
+        {
+            _chathub = chathub;
+            _env = env;
+        }
+
+        public async Task OnConnectedAsync(string SenderId)
+        {
+            foreach (var item in Common.ConnectedUsers.Where(kvp => kvp.Value == SenderId).ToList())
+            {
+                Common.ConnectedUsers.Remove(item.Key);
+            }
+
+            Common.ConnectedUsers.Add(Context.ConnectionId, SenderId);
+        }
+
+        public async Task SendMessage(string SenderId, string ReceiverId, string Message, int MsgType, IEnumerable<ImageData> images)
+        {
+            string FileDisplayName = null, Field_ID = null, Extension = null, FileSize = null;
+            byte[] buffer = new byte[] { };
+
+            var arrRecvId = string.IsNullOrEmpty(ReceiverId) ? new List<string>() : ReceiverId.Split(",").ToList();
+            if (arrRecvId.Count() > 0)
+            {
+                foreach (var recvID in arrRecvId)
+                {
+                    ChatMessage model = new ChatMessage();
+                    model.msg_send_ID = SenderId;
+                    model.msg_recv_ID = recvID;
+                    model.message = Message;
+                    model.Msg_Date = DateTime.Now;
+
+                    foreach (var item in images ?? Enumerable.Empty<ImageData>())
+                    {
+                        var tokens = item.Image.Split(',');
+                        if (tokens.Length > 1)
+                        {
+                            buffer = Convert.FromBase64String(tokens[1]);
+                            if (images != null)
+                            {
+                                Guid newGuid = Guid.NewGuid();
+                                model.RelativePath = "../ReadWriteData/CHAT_FILES";
+                                model.Field_ID = newGuid.ToString() + Path.GetExtension(item.FileName);
+                                model.Extension = Path.GetExtension(item.FileName);
+                                model.FileDisplayName = item.FileName;
+                                model.FileSize = item.FileSize;
+                                FileDisplayName = item.FileName;
+                                Field_ID = model.Field_ID;
+                                Extension = Path.GetExtension(item.FileName);
+                                FileSize = item.FileSize;
+                            }
+                        }
+                    }
+
+                    var Msg_Date = model.Msg_Date.ToString("hh:mm tt");
+                    try
+                    {
+                        var res = _chathub.ChatMessageSave(model);
+
+                        if (res > 0)
+                        {
+                            if (images != null)
+                            {
+                                var path = _env.WebRootPath + "/ReadWriteData/CHAT_FILES";
+                                if (!Directory.Exists(path))
+                                {
+                                    Directory.CreateDirectory(path);
+                                }
+                                path = Path.Combine(path, model.Field_ID);
+                                SaveByteArrayToFileWithBinaryWriter(buffer, path);
+                            }
+                        }
+
+                        var myKey = Common.ConnectedUsers.Where(x => x.Value == recvID || x.Value == SenderId).ToList();
+
+                        if (res > 0)
+                        {
+                            foreach (var k in myKey)
+                            {
+                                var lstChat = _chathub.GetMessageList(Convert.ToInt32(SenderId), Convert.ToInt32(recvID)).lstMsg;
+                                var CurrDateCount = lstChat.Where(x => x.Msg_Date.Date == DateTime.Now.Date).Count();
+                                await Clients.Clients(k.Key).SendAsync("ReceiveMessage", recvID, Message, MsgType, Msg_Date, Field_ID, FileDisplayName, FileSize, Extension, CurrDateCount, res);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var k in myKey)
+                            {
+                                await Clients.Clients(k.Key).SendAsync("ReceiveMessage", "", "", MsgType, "", "", "", "", "", 0, res);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        var myKey = Common.ConnectedUsers.Where(x => x.Value == recvID || x.Value == SenderId).ToList();
+
+                        foreach (var k in myKey)
+                        {
+                            await Clients.Clients(k.Key).SendAsync("ReceiveMessage", "", "", MsgType, "", "", "", "", "", 0, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void SaveByteArrayToFileWithBinaryWriter(byte[] data, string filePath)
+        {
+            using var writer = new BinaryWriter(File.OpenWrite(filePath));
+            writer.Write(data);
+        }
+
+        public async Task DeleteMessage(string SenderId, string ReceiverId, int DeletedId)
+        {
+            string DeleteDate = "", DeleteFileName = "";
+            var result = _chathub.ChatMessageDelete(DeletedId, ref DeleteDate, ref DeleteFileName);
+            var myKey = Common.ConnectedUsers.Where(x => x.Value == ReceiverId || x.Value == SenderId).ToList();
+            if (result > 0)
+            {
+                if (!string.IsNullOrEmpty(DeleteFileName))
+                {
+                    var path = _env.WebRootPath + "/ReadWriteData/CHAT_FILES";
+                    path = Path.Combine(path, DeleteFileName);
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                }
+
+                foreach (var k in myKey)
+                {
+                    var lstChat = _chathub.GetMessageList(Convert.ToInt32(SenderId), Convert.ToInt32(ReceiverId)).lstMsg;
+                    var CurrDateCount = lstChat.Where(x => x.Msg_Date.Date == DateTime.Now.Date).Count();
+                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", ReceiverId, DeletedId, CurrDateCount, result, DeleteDate);
+                }
+            }
+            else
+            {
+                foreach (var k in myKey)
+                {
+                    await Clients.Clients(k.Key).SendAsync("ReceiveDeleteMessage", "", DeletedId, 0, result, "");
+                }
+            }
+        }
+    }
+}

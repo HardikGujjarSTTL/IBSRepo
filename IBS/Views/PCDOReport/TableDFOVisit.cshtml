@@ -14,7 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="center">DFO Visit</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -58,13 +58,13 @@
             </ul>
             <table class="borderTable">
                 <tr>
-                    <th width="2%" valign="top" align="center"><b><font size='1' face="Verdana">S.No.</font></b></th>
-                    <th width="10%" valign="top" align="center"><b><font size='1' face="Verdana">Date of Visit</font></b></th>
-                    <th width="25%" valign="top" align="center"><b><font size='1' face="Verdana">Details of Officers Contacted (with Organization)</font></b></th>
-                    <th width="10%" valign="top" align="center"><b><font size='1' face="Verdana">Name of RITES Officer</font></b></th>
-                    <th width="28%" valign="top" align="center"><b><font size='1' face="Verdana">Amount O/s with the client/ Zonal Railway(all regions)</font></b></th>
-                    <th width="28%" valign="top" align="center"><b><font size='1' face="Verdana">Feedback from Client</font></b></th>
-                    <th width="25%" valign="top" align="center"><b><font size='1' face="Verdana">Overall Outcome of the Visit</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size='1' face="Verdana">S.No.</font></b></th>
+                    <th width="6%" valign="top" align="center"><b><font size='1' face="Verdana">Date of Visit</font></b></th>
+                    <th width="14%" valign="top" align="center"><b><font size='1' face="Verdana">Details of Officers Contacted (with Organization)</font></b></th>
+                    <th width="14%" valign="top" align="center"><b><font size='1' face="Verdana">Name of RITES Officer</font></b></th>
+                    <th width="11%" valign="top" align="center"><b><font size='1' face="Verdana">Amount O/s with the client/ Zonal Railway(all regions)</font></b></th>
+                    <th width="27%" valign="top" align="center"><b><font size='1' face="Verdana">Feedback from Client</font></b></th>
+                    <th width="21%" valign="top" align="center"><b><font size='1' face="Verdana">Overall Outcome of the Visit</font></b></th>
                 </tr>
                 @{
                     int count = 1;
@@ -74,13 +74,13 @@
                     foreach (var item in Model.Where(x => x.region_cd == region_cd))
                     {
                         <tr>
-                            <td width="2%" valign="top" align="left"><font size="1" face="Verdana">@count</font></td>
-                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.Visit_dt</font></td>
-                            <td width="25%" valign="top" align="left"><font size="1" face="Verdana">@item.Detail_visit</font></td>
-                            <td width="10%" valign="top" align="left"><font size="1" face="Verdana">@item.Rites_officer</font></td>
-                            <td width="28%" valign="top" align="left"><font size="1" face="Verdana">@item.out_amt</font></td>
-                            <td width="25%" valign="top" align="left"><font size="1" face="Verdana">@item.highlights</font></td>
-                            <td width="25%" valign="top" align="left"><font size="1" face="Verdana">@item.overall_outcome</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@count</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.Visit_dt</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.Detail_visit</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.Rites_officer</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.out_amt</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.highlights</font></td>
+                            <td valign="top" align="left"><font size="1" face="Verdana">@item.overall_outcome</font></td>
                         </tr>
                         count = count + 1;
                     }

@@ -5,30 +5,30 @@
 }
 
 <div class="loginForm">
-    <h2 class="heading1 bold">Login</h2>
+    <h2 class="heading1 bold" id="login">Login</h2>
     <form role="form" asp-controller="Home" asp-action="Login" id="frmLogin">
 
         <div class="row">
             <div class="col-md-12">
-                <label for="email">User Name</label>
+                <label for="UserName">User Name</label>
                 <input type="text" class="input" asp-for="UserName" maxlength="50" placeholder="User Name" autocomplete="off" autofocus />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12" id="eyeShowHide">
-                <label for="password">Password</label>
+                <label for="Password">Password</label>
                 <div class="inputIcon">
                     <input type="password" asp-for="Password" class="input" data-toggle="password" autocomplete="off" placeholder="••••••••">
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    @* <span asp-validation-for="Password" class="text-danger"></span> *@
+                    <i class="fa fa-eye" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="divUserType">
             <div class="col-md-12">
                 <div class="reference">
-                    <label for="Caseno">User Type</label>
+                    <label for="UserType">User Type</label>
                     @Html.DropDownListFor(model => model.UserType, new SelectList(IBS.Models.Common.GetUserTypeLogin(), "Value", "Text"), "--Select--", new { onchange = "UserTypeChange()" })
                     <span asp-validation-for="UserType" id="valUserType" class="text-danger"></span>
                 </div>
@@ -50,9 +50,9 @@
                 <button type="button" class="btn btnGreen" onclick="Loginsubmit()">Login</button>
             </div>
         </div>
-        <div class="row m-0">
-            <div class="col-md-12 text-center"><p class="m-0 dividerLine">Don't have an account? <a class="registerLink" href="#">Register Now</a></p></div>
-        </div>
+        @*<div class="row m-0">
+        <div class="col-md-12 text-center"><p class="m-0 dividerLine">Don't have an account? <a class="registerLink" href="#">Register Now</a></p></div>
+        </div>*@
 
     </form>
 </div>
@@ -74,6 +74,25 @@
                     $('#eyeShowHide i').addClass("fa-eye-slash");
                 }
             });
+
+            if ($("#UserType").val() != "") {
+                $("#divUserType").hide();
+                if ($("#UserType").val() == "USERS") {
+                    $("#login").html("User Login");
+                }
+                else if ($("#UserType").val() == "VENDOR"){
+                    $("#login").html("Vendor Login");
+                }
+                else if ($("#UserType").val() == "IE") {
+                    $("#login").html("IE Login")
+                }
+                else if ($("#UserType").val() == "CLIENT_LOGIN") {
+                    $("#login").html("Client Login")
+                }
+                else if ($("#UserType").val() == "LO_LOGIN") {
+                    $("#login").html("Liaisoning Officer Login")
+                }
+            }
         });
 
         $(document).keypress(function (e) {

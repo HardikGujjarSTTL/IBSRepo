@@ -1,32 +1,37 @@
 ﻿@model IBS.Models.SummaryCrisRlyPaymentModel
+<style>
+    /*.borderTable td:nth-child(3) {
+        line-break: anywhere;
+    }*/
+</style>
 <div>
     <h3 class="center">CRIS PAYMENT DETAILS FOR THE PERIOD : <span class="orangeText"> @Model.Display_FromDate </span> To <span class="orangeText">@Model.Display_ToDate (Report Sorted on Vendor)</span> <br /> @Model.Region</h3>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">RLY</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">AU DESC</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Bill No.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Bill Dt.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Recv Dt.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Invoice No.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC No.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IC Date</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Bill Amount</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">CO6_No.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">CO6_Date</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Passed Amt</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Deducted Amt</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Net Amount</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Book Dt</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Return Dt</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Return Reason</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">CO7 No.</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">CO7 Dt</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">Payment Dt</font></b></th>
-                    <th width="1%" valign="top" align="center"><b><font size="1" face="Verdana">IBS Cleared Amt</font></b></th>                    
+                    <th valign="top" align="center"><b>S.No.</b></th>
+                    <th valign="top" align="center"><b>RLY</b></th>
+                    <th valign="top" align="center"><b>AU DESC</b></th>
+                    <th valign="top" align="center"><b>Bill No.</b></th>
+                    <th valign="top" align="center"><b>Bill Dt.</b></th>
+                    <th valign="top" align="center"><b>Recv Dt.</b></th>
+                    <th valign="top" align="center"><b>Invoice No.</b></th>
+                    <th valign="top" align="center"><b>IC No.</b></th>
+                    <th valign="top" align="center"><b>IC Date</b></th>
+                    <th valign="top" align="center"><b>Bill Amount</b></th>
+                    <th valign="top" align="center"><b>CO6 No.</b></th>
+                    <th valign="top" align="center"><b>CO6 Date</b></th>
+                    <th valign="top" align="center"><b>Passed Amt</b></th>
+                    <th valign="top" align="center"><b>Deducted Amt</b></th>
+                    <th valign="top" align="center"><b>Net Amount</b></th>
+                    <th valign="top" align="center"><b>Book Dt</b></th>
+                    <th valign="top" align="center"><b>Return Dt</b></th>
+                    <th valign="top" align="center"><b>Return Reason</b></th>
+                    <th valign="top" align="center"><b>CO7 No.</b></th>
+                    <th valign="top" align="center"><b>CO7 Dt</b></th>
+                    <th valign="top" align="center"><b>Payment Dt</b></th>
+                    <th valign="top" align="center"><b>IBS Cleared Amt</b></th>
                 </tr>
                 @if (Model != null && Model.lstCrisRlyDetailed != null && Model.lstCrisRlyDetailed.Count > 0)
                 {
@@ -35,39 +40,39 @@
                     {
                         SrNo = SrNo + 1;
                         <tr>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.AU_DESC</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.INVOICEDATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.RECV_DATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.INVOICENO</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_NO</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.IC_DT</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@Math.Round(item.AMOUNT,0)</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO6_NO</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO6_DATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PASSED_AMT</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.DEDUCTED_AMT</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@Math.Round(item.NET_AMT,0)</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.BOOKDATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.RETURN_DATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.RETURN_REASON</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO7_NO</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.CO7_DATE</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@item.PAYMENT_DT</font></td>
-                            <td width="1%" valign="top" align="center"><font size="1" face="Verdana">@Math.Round(Convert.ToDecimal(item.IBS_AMT_CLEARED),0)</font></td>
+                            <td  valign="top" align="center">@SrNo</td>
+                            <td  valign="top" align="center">@item.BPO_RLY</td>
+                            <td  valign="top" align="center">@item.AU_DESC</td>
+                            <td  valign="top" align="center">@item.BILL_NO</td>
+                            <td  valign="top" align="center">@item.INVOICEDATE</td>
+                            <td  valign="top" align="center">@item.RECV_DATE</td>
+                            <td  valign="top" align="center">@item.INVOICENO</td>
+                            <td  valign="top" align="center">@item.IC_NO</td>
+                            <td  valign="top" align="center">@item.IC_DT</td>
+                            <td  valign="top" align="center">@Math.Round(item.AMOUNT,0)</td>
+                            <td  valign="top" align="center">@item.CO6_NO</td>
+                            <td  valign="top" align="center">@item.CO6_DATE</td>
+                            <td  valign="top" align="center">@item.PASSED_AMT</td>
+                            <td  valign="top" align="center">@item.DEDUCTED_AMT</td>
+                            <td  valign="top" align="center">@Math.Round(item.NET_AMT,0)</td>
+                            <td  valign="top" align="center">@item.BOOKDATE</td>
+                            <td  valign="top" align="center">@item.RETURN_DATE</td>
+                            <td  valign="top" align="center">@item.RETURN_REASON</td>
+                            <td  valign="top" align="center">@item.CO7_NO</td>
+                            <td  valign="top" align="center">@item.CO7_DATE</td>
+                            <td  valign="top" align="center">@item.PAYMENT_DT</td>
+                            <td  valign="top" align="center">@Math.Round(Convert.ToDecimal(item.IBS_AMT_CLEARED),0)</td>
                         </tr>
                     }
                     <tr class="reportTotal">
-                        <td width="15%" valign="top" align="right" colspan="9"><font size="1" face="Verdana"><b>Total</b></font></td>
-                        <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(x.AMOUNT,0))</b></font></td>
-                        <td width="15%" valign="top" align="right" colspan="2"><font size="1" face="Verdana"><b></b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => x.PASSED_AMT)</b></font></td>
-                        <td width="6%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => x.DEDUCTED_AMT)</b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(x.NET_AMT,0))</b></font></td>
-                        <td width="15%" valign="top" align="right" colspan="6"><font size="1" face="Verdana"><b></b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(Convert.ToDecimal(x.IBS_AMT_CLEARED),0))</b></font></td>
+                        <td valign="top" align="right" colspan="9"><b>Total</b></td>
+                        <td valign="top" align="right"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(x.AMOUNT,0))</b></td>
+                        <td valign="top" align="right" colspan="2"><b></b></td>
+                        <td valign="top" align="right"><b>@Model.lstCrisRlyDetailed.Sum(x => x.PASSED_AMT)</b></td>
+                        <td valign="top" align="right"><b>@Model.lstCrisRlyDetailed.Sum(x => x.DEDUCTED_AMT)</b></td>
+                        <td valign="top" align="right"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(x.NET_AMT,0))</b></td>
+                        <td valign="top" align="right" colspan="6"><b></b></td>
+                        <td valign="top" align="right"><b>@Model.lstCrisRlyDetailed.Sum(x => Math.Round(Convert.ToDecimal(x.IBS_AMT_CLEARED),0))</b></td>
                     </tr>
                 }
                 else

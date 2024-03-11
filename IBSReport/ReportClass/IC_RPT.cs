@@ -57,8 +57,12 @@ namespace IBSReports.ReportClass
                 }
                 else
                 {
-                    rd.Load(HttpContext.Current.Server.MapPath("~/Reports/InspectionCertificateNew.rpt"));
                     dsCustom = funInspectionCertificate(caseNo, callSNo, recvDtRpt, Consignee_CD, Region);
+                    //if (Convert.ToString(dsCustom.Tables["Command"].Rows[0]["FINAL_OR_STAGE"]) == "S")
+                    //    rd.Load(HttpContext.Current.Server.MapPath("~/Reports/InspectionCertificateNewStage.rpt"));
+                    //else
+                    rd.Load(HttpContext.Current.Server.MapPath("~/Reports/InspectionCertificateNew.rpt"));
+
                 }
 
                 rd.SetDataSource(dsCustom);
@@ -219,11 +223,11 @@ namespace IBSReports.ReportClass
                 //doc.Save(HttpContext.Current.Server.MapPath("IC_XML/" + fname + ".xml"));
                 //RegisterStartupScript("abc", "<script language=JavaScript> abc('" + aa + "','" + fname + "'); </script>");
             }
-            catch
+            catch (Exception ex)
             {
 
             }
-            
+
             return rd;
         }
 
@@ -438,7 +442,7 @@ namespace IBSReports.ReportClass
                 " CASE WHEN CONSGN_CALL_STATUS = 'Z' THEN NVL(ICI.CUM_QTY_PREV_PASSED,0) ELSE CASE WHEN CONSGN_CALL_STATUS = 'A' THEN NVL(CDT.CUM_QTY_PREV_PASSED,0) ELSE NVL(CDT.CUM_QTY_PREV_PASSED,0) END END AS CUM_QTY_PREV_PASSED,  CASE WHEN CONSGN_CALL_STATUS = 'Z' THEN NVL(ICI.QTY_TO_INSP,0) ELSE CASE WHEN CONSGN_CALL_STATUS = 'A' THEN NVL(CDT.QTY_TO_INSP,0) ELSE NVL(CDT.QTY_TO_INSP,0) END END AS QTY_TO_INSP, CASE WHEN CONSGN_CALL_STATUS = 'Z' THEN NVL(ICI.QTY_PASSED,0) ELSE CASE WHEN CONSGN_CALL_STATUS = 'A' " +
                 " THEN NVL(CDT.QTY_PASSED,0) ELSE NVL(CDT.QTY_PASSED,0) END END AS QTY_PASSED,   CASE WHEN CONSGN_CALL_STATUS = 'Z' THEN NVL(ICI.QTY_REJECTED,0) ELSE CASE WHEN CONSGN_CALL_STATUS = 'A' THEN NVL(CDT.QTY_REJECTED,0) ELSE NVL(CDT.QTY_REJECTED,0) END END AS QTY_REJECTED,  CASE WHEN CONSGN_CALL_STATUS = 'Z' THEN NVL(ICI.QTY_DUE,0) ELSE CASE WHEN CONSGN_CALL_STATUS = 'A' THEN NVL(CDT.QTY_DUE,0) ELSE NVL(CDT.QTY_DUE,0)END END AS QTY_DUE, CASE WHEN CONSGN_CALL_STATUS = 'Z' THEN ICI.HOLOGRAM ELSE CASE WHEN CONSGN_CALL_STATUS = 'A' THEN ICI.HOLOGRAM ELSE ICI.HOLOGRAM " +
                 " END END AS HOLOGRAM, ICI.NUM_VISITS, PRM.VISIT_DATES, BOF.BPO_NAME, BOF.BPO_ORGN, BCT.City, NVL(CLR.HOLOGRAM, '    ')  AS HOLOGRAMORG, NVL(ICI.REMARK, ' ') AS REMARK, CLR.DT_INSP_DESIRE, to_char(CLR.DT_INSP_DESIRE, 'dd/mm/yyyy')DT_INSP_DESIRE_conv, NVL(ICI.ITEM_REMARK, 'NO REMARK') AS ITEM_REMARK, substr(ICI.AMENDMENT_1, 0, 99) AS AMENDMENT_1, substr(ICI.AMENDMENT_1, 100, 20) AS AMENDMENTDT_1, substr(ICI.AMENDMENT_2, 0, 99) AS AMENDMENT_2, substr(ICI.AMENDMENT_2, 100, 20) AS AMENDMENTDT_2, substr(ICI.AMENDMENT_3, 0, 99) AS AMENDMENT_3, substr(ICI.AMENDMENT_3, 100, 20) AS AMENDMENTDT_3, substr(ICI.AMENDMENT_4, 0, 99) AS AMENDMENT_4, substr(ICI.AMENDMENT_4, 100, 20) " +
-                " AS AMENDMENTDT_4, ICI.BK_NO, ICI.SET_NO, ICI.VISITS_DATES, ICI.IE_STAMP_IMAGE, ICI.IE_STAMP_IMAGE1, TO_CHAR(ICI.LAB_TST_RECT_DT,'dd/mm/yyyy') LAB_TST_RECT_DT,ICI.PASSED_INST_NO, NVL(CONSIGNEE_DTL, '') AS CONSIGNEE_DTL, NVL(BPO_DTL, '') AS BPO_DTL, NVL(PUR_DTL, '') AS PUR_DTL, NVL(PUR_AUT_DTL, '') AS PUR_AUT_DTL, NVL(OFF_INST_NO_DTL, '') AS OFF_INST_NO_DTL, NVL(UNIT_DTL, '') AS UNIT_DTL  ,TO_CHAR(ICI.DATETIME,'dd/mm/yyyy') DATETIME,ICI.CONSGN_CALL_STATUS FROM RPT_PRM_Inspection_Certificate PRM INNER JOIN  T17_Call_Register CLR ON CLR.CASE_NO = PRM.CASE_NO AND CLR.Call_Recv_dt = PRM.CALL_RECV_DT AND " +
+                " AS AMENDMENTDT_4, ICI.BK_NO, ICI.SET_NO, ICI.VISITS_DATES, ICI.IE_STAMP_IMAGE, ICI.IE_STAMP_IMAGE1, TO_CHAR(ICI.LAB_TST_RECT_DT,'dd/mm/yyyy') LAB_TST_RECT_DT,ICI.PASSED_INST_NO, NVL(CONSIGNEE_DTL, '') AS CONSIGNEE_DTL, NVL(BPO_DTL, '') AS BPO_DTL, NVL(PUR_DTL, '') AS PUR_DTL, NVL(PUR_AUT_DTL, '') AS PUR_AUT_DTL, NVL(OFF_INST_NO_DTL, '') AS OFF_INST_NO_DTL, NVL(UNIT_DTL, '') AS UNIT_DTL  ,TO_CHAR(ICI.DATETIME,'dd/mm/yyyy') DATETIME,ICI.CONSGN_CALL_STATUS,CLR.FINAL_OR_STAGE FROM RPT_PRM_Inspection_Certificate PRM INNER JOIN  T17_Call_Register CLR ON CLR.CASE_NO = PRM.CASE_NO AND CLR.Call_Recv_dt = PRM.CALL_RECV_DT AND " +
                 " CLR.Call_SNO = PRM.Call_SNO INNER JOIN T18_Call_Details CDT ON CLR.CASE_NO = CDT.CASE_NO AND CLR.Call_Recv_dt = CDT.Call_Recv_dt AND CLR.Call_SNO = CDT.Call_SNO INNER JOIN T13_PO_Master POM ON CLR.CASE_NO = POM.CASE_NO LEFT OUTER JOIN T15_PO_DETAIL POD ON CLR.CASE_NO = POD.CASE_NO AND CDT.ITEM_SRNO_PO = POD.ITEM_SRNO LEFT OUTER JOIN T04_UOM UOM ON POD.UOM_CD = UOM.UOM_CD LEFT OUTER JOIN " +
                 " T09_IE TIE ON CLR.IE_CD = TIE.IE_CD LEFT OUTER JOIN T05_Vendor VND ON POM.Vend_Cd = VND.Vend_Cd LEFT OUTER JOIN   T03_City VCT ON VND.Vend_City_Cd = VCT.City_Cd LEFT OUTER JOIN T05_Vendor MFG ON CLR.MFG_CD = MFG.Vend_Cd LEFT OUTER JOIN  T03_City MCT ON MFG.Vend_City_Cd = MCT.City_Cd LEFT OUTER JOIN T14_PO_BPO BPO ON CLR.CASE_NO = BPO.CASE_NO AND CDT.CONSIGNEE_CD = BPO.CONSIGNEE_CD LEFT OUTER  " +
                 " JOIN T12_BILL_PAYING_OFFICER BOF ON BPO.BPO_CD = BOF.BPO_CD LEFT OUTER JOIN  T03_City BCT ON BOF.BPO_City_Cd = BCT.City_Cd LEFT OUTER JOIN  T06_Consignee CON ON BPO.CONSIGNEE_CD = CON.CONSIGNEE_CD LEFT OUTER JOIN T03_City CCT ON CON.CONSIGNEE_CITY = CCT.City_Cd LEFT OUTER JOIN  T06_Consignee PUR ON POM.PURCHASER_CD = PUR.CONSIGNEE_CD LEFT OUTER JOIN T03_City PCT ON PUR.CONSIGNEE_CITY = PCT.City_Cd INNER JOIN " +
@@ -526,6 +530,7 @@ namespace IBSReports.ReportClass
             dt.Columns.Add("pRegion", typeof(string));
             dt.Columns.Add("Call_Recv_dt_conv", typeof(string));
             dt.Columns.Add("DT_INSP_DESIRE_conv", typeof(string));
+            dt.Columns.Add("FINAL_OR_STAGE", typeof(string));
             dt.TableName = "Command";
             while (readerB.Read())
             {
@@ -604,6 +609,7 @@ namespace IBSReports.ReportClass
                 dr["pRegion"] = pregion;
                 dr["Call_Recv_dt_conv"] = Convert.ToString(readerB["Call_Recv_dt_conv"]);
                 dr["DT_INSP_DESIRE_conv"] = Convert.ToString(readerB["DT_INSP_DESIRE_conv"]);
+                dr["FINAL_OR_STAGE"] = Convert.ToString(readerB["FINAL_OR_STAGE"]);
                 dt.Rows.Add(dr);
             }
             dsReports.Tables.Add(dt);

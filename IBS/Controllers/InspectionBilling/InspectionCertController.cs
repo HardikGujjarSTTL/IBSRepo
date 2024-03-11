@@ -1,16 +1,11 @@
-﻿using IBS.Interfaces.InspectionBilling;
+﻿using IBS.Helper;
+using IBS.Helpers;
 using IBS.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using IBS.Interfaces.InspectionBilling;
 using IBS.Models;
 using IBS.Repositories.Vendor;
-using IBS.Repositories;
-using System.Dynamic;
-using IBS.Helper;
-using IBS.Filters;
-using IBS.Helpers;
-using IBS.Repositories.Administration;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using IBS.DataAccess;
 
 namespace IBS.Controllers.InspectionBilling
 {
@@ -31,12 +26,12 @@ namespace IBS.Controllers.InspectionBilling
             _config = configuration;
         }
 
-        public IActionResult Index(string CaseNo, DateTime? CallRecvDt, int CallSno, string Bkno, string Setno)
+        public IActionResult Index(string CaseNo, DateTime? _CallRecvDt, int CallSno, string Bkno, string Setno)
         {
             InspectionCertModel model = new();
-            if (CaseNo != "" && CallRecvDt != null && CallSno > 0)
+            if (CaseNo != "" && _CallRecvDt != null && CallSno > 0)
             {
-                model = inpsRepository.FindByID(CaseNo, CallRecvDt, CallSno, Bkno, Setno, GetRegionCode);
+                model = inpsRepository.FindByID(CaseNo, _CallRecvDt, CallSno, Bkno, Setno, GetRegionCode);
             }
             return View(model);
         }
@@ -143,39 +138,50 @@ namespace IBS.Controllers.InspectionBilling
                 string i = "";
                 string msg = "Save Successfully.";
 
-                if (Region == "N")
+                if(model.Callstatus == "C" || model.Callstatus == "CB")
                 {
-                    string mess = "";
                     if (model.CallDt == null)
                     {
                         model.CallDt = model.Callrecvdt;
                     }
-                    int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
-                    int ICdtLinspdiff = CheckDateDiff(Convert.ToString(model.CertDt), Convert.ToString(model.LastInspDt), 3);
-                    if (FinspCdtdiff == 1)
-                    {
-                        mess = "First Inspection Date - Call Date is greater then 7 Days!!!";
-                        //AlertDanger(mess);
-                        return Json(new { status = false, responseText = mess, Id = i });
-                    }
-                    if (ICdtLinspdiff == 1)
-                    {
-                        if (mess == "")
-                        {
-                            mess = "IC Date - Last Inspection Date is greater then 3 Days!!!";
-                        }
-                        else
-                        {
-                            mess = mess + " & IC Date - Last Inspection Date is greater then 3 Days!!!";
-                        }
-                        //AlertDanger(mess);
-                        return Json(new { status = false, responseText = mess, Id = i });
-                    }
-
                 }
+                else
+                {
+                    if (Region == "N")
+                    {
+                        string mess = "";
+                        if (model.CallDt == null)
+                        {
+                            model.CallDt = model.Callrecvdt;
+                        }
+                        int FinspCdtdiff = CheckDateDiff(Convert.ToString(model.FirstInspDt), Convert.ToString(model.CallDt), 7);
+                        int ICdtLinspdiff = CheckDateDiff(Convert.ToString(model.CertDt), Convert.ToString(model.LastInspDt), 3);
+                        if (FinspCdtdiff == 1)
+                        {
+                            mess = "First Inspection Date - Call Date is greater then 7 Days!!!";
+                            //AlertDanger(mess);
+                            return Json(new { status = false, responseText = mess, Id = i });
+                        }
+                        if (ICdtLinspdiff == 1)
+                        {
+                            if (mess == "")
+                            {
+                                mess = "IC Date - Last Inspection Date is greater then 3 Days!!!";
+                            }
+                            else
+                            {
+                                mess = mess + " & IC Date - Last Inspection Date is greater then 3 Days!!!";
+                            }
+                            //AlertDanger(mess);
+                            return Json(new { status = false, responseText = mess, Id = i });
+                        }
+                    }
+                }
+
                 if (model.Caseno != null && model.Callrecvdt != null && model.Callsno > 0)
                 {
-                    model.UserId = Convert.ToString(UserId);
+                    //model.UserId = Convert.ToString(UserId);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Createdby = UserName;
                     i = inpsRepository.InspectionCertSave(model, Region);
                 }
@@ -204,7 +210,8 @@ namespace IBS.Controllers.InspectionBilling
                 string str = "";
                 if (model.BillNo != null && model.BillDt != null)
                 {
-                    model.UserId = UserName;
+                    //model.UserId = UserName;
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Createdby = UserName;
                     str = inpsRepository.ReturnBillSubmit(model, Region);
                 }
@@ -261,7 +268,15 @@ namespace IBS.Controllers.InspectionBilling
                 int idt = dt1.CompareTo(DateTime.Now.Date.ToString("dd/MM/yyyy"));
 
                 model.Regioncode = Region;
-                int fyr = inpsRepository.financial_year_check(model);
+                int fyr = 0;
+                if(model.Callstatus != "R")
+                {
+                    fyr = inpsRepository.financial_year_check(model);
+                }
+                else
+                {
+                    fyr = 0;
+                }
                 if (fyr == 1)
                 {
                     msg = "Bill must be generated within the same financial year in which IC was Issued!!!" + ". \\n(ie. Certificate Date & Bill Date shoud be in same financial year)";
@@ -276,7 +291,8 @@ namespace IBS.Controllers.InspectionBilling
                 }
                 else
                 {
-                    model.UserId = Convert.ToString(UserId);
+                    //model.UserId = Convert.ToString(UserId);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
 
                     i = inpsRepository.BillUpdate(model, Region);
                     msg = "Update Successfully.";
@@ -380,7 +396,8 @@ namespace IBS.Controllers.InspectionBilling
                 }
                 else
                 {
-                    model.UserId = Convert.ToString(UserId);
+                    //model.UserId = Convert.ToString(UserId);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     i = inpsRepository.BillDateUpdate(model, Region);
                 }
                 if (i == "1")
@@ -451,14 +468,14 @@ namespace IBS.Controllers.InspectionBilling
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult PopUp(string BillNo)
+        public IActionResult PopUp(string BillNo, string CaseNo, DateTime CallRecvDt, int CallSno)
         {
             try
             {
                 ICPopUpModel model = new ICPopUpModel();
                 if (BillNo != null)
                 {
-                    model = inpsRepository.FindByBillDetails(BillNo, Region);
+                    model = inpsRepository.FindByBillDetails(BillNo, CaseNo, CallRecvDt, CallSno, Region);
                 }
                 return PartialView("_PopUp", model);
             }
@@ -483,7 +500,7 @@ namespace IBS.Controllers.InspectionBilling
                     {
                         int[] DocumentIds = { (int)Enums.DocumentCategory.ICDocument };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection);
-                        DocumentHelper.SaveFiles(BillNo, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICDocument), env, iDocument, string.Empty, BillNo + ".pdf", DocumentIds);
+                        DocumentHelper.SaveFiles(BillNo, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ICDocument), env, iDocument, string.Empty, BillNo, DocumentIds);
 
                         msg = "The file has been uploaded.";
                         string i = inpsRepository.DocUpdate(BillNo, Convert.ToString(UserId));
@@ -562,7 +579,8 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.Caseno != null && model.Bkno != null && model.Setno != null && model.ConsigneeCd > 0)
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    //model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Regioncode = Region;
                     inpsRepository.SaveChangeConsignee(model);
                     if (model.UpdateStatus == "1")
@@ -604,7 +622,8 @@ namespace IBS.Controllers.InspectionBilling
                 if (model.Caseno != null && model.Bkno != null && model.Setno != null && model.BillNo != null)
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    //model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     model.Regioncode = Region;
                     inpsRepository.SaveReturned_Bills_Changes(model);
                     if (model.UpdateStatus == "1")
@@ -624,6 +643,25 @@ namespace IBS.Controllers.InspectionBilling
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionCert", "ChangeConsignee", 1, GetIPAddress());
             }
             return View(model);
+        }
+
+        public IActionResult GetTaxTypeList(string StateCode)
+        {
+            if (StateCode == "7")
+            {
+                return Json(Common.GetTaxType_GST_07());
+            }
+            else
+            {
+                return Json(Common.GetTaxType_GST_O());
+            }
+
+        }
+
+        public IActionResult LocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue)
+        {
+            InspectionCertModel model = inpsRepository.GetLocalOutstation(CaseNo, DesireDt, CallSno, selectedValue);
+            return Json(model);
         }
     }
 }

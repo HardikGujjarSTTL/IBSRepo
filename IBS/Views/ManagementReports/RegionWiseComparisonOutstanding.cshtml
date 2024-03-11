@@ -4,7 +4,7 @@
     string currDate = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
 }
 
-<div>
+<div style="margin-left:5px;margin-right:5px;">
     <h3 class="center">Region & Client Wise Comparison of Outstanding (for the Billing Period <span class="orangeText"> 01/04/2008 to @Model.Display_FromDate </span> and Cleared Till Date) & Suspense Till Date ---- Status as on : <span class="orangeText">@currDate </span></h3>
 
     @if (Model.Outstanding == "2")
@@ -16,8 +16,8 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="15%" valign="top" align="center"><font size="1" face="Verdana">Abbreviated Name of Railway/Client</font></th>
-                    <th width="15%" valign="top" align="center"><font size="1" face="Verdana">Railway/Client</font></th>
+                    <th width="7%" valign="top" align="center"><font size="1" face="Verdana">Abbreviated Name of Railway/Client</font></th>
+                    <th width="7%" valign="top" align="center"><font size="1" face="Verdana">Railway/Client</font></th>
                     <th width="7%" valign="top" align="right"><font size="1" face="Verdana">NR Outstanding</font></th>
                     <th width="7%" valign="top" align="right"><font size="1" face="Verdana">NR Suspense</font></th>
                     <th width="7%" valign="top" align="right"><font size="1" face="Verdana">WR Outstanding</font></th>
@@ -41,36 +41,36 @@
                     @foreach (var item in Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R"))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td width="30%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
+                            <td valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
                         </tr>
                     }
                     <tr class="reportTotal">
-                        <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.NR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.WR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.ER_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.SR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.NR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.WR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.ER_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.SR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "R").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
 
                     @* BPO_TYPE ==> U *@
@@ -82,36 +82,36 @@
                     @foreach (var item in Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U"))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td width="30%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
+                            <td valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
                         </tr>
                     }
                     <tr class="reportTotal">
-                        <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.NR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.WR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.ER_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.SR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.NR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.WR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.ER_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.SR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "U").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
 
                     @* BPO_TYPE ==> P *@
@@ -123,36 +123,36 @@
                     @foreach (var item in Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P"))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td width="30%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
+                            <td valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
                         </tr>
                     }
                     <tr class="reportTotal">
-                        <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.NR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.WR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.ER_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.SR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.NR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.WR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.ER_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.SR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "P").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
 
                     @* BPO_TYPE ==> F *@
@@ -164,36 +164,36 @@
                     @foreach (var item in Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F"))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td width="30%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
+                            <td valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
                         </tr>
                     }
                     <tr class="reportTotal">
-                        <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.NR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.WR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.ER_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.SR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.NR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.WR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.ER_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.SR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "F").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
 
                     @* BPO_TYPE ==> S *@
@@ -205,36 +205,36 @@
                     @foreach (var item in Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S"))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td width="30%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
+                            <td valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
                         </tr>
                     }
                     <tr class="reportTotal">
-                        <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.NR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.WR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.ER_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.SR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.NR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.WR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.ER_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.SR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == "S").Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
 
                     @* BPO_TYPE ==>  *@
@@ -246,54 +246,54 @@
                     @foreach (var item in Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null))
                     {
                         <tr>
-                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
-                            <td width="30%" valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
-                            <td width="11%" valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
+                            <td valign="top" align="Left"><font size="1" face="Verdana">@item.BPO_RLY</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.BPO_ORGN</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.NR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_NR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.WR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_WR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.ER_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_ER</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.SR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_SR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.CR_OUTSTANDING</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@item.TOT_SUSPENSE_CR</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.NR_OUTSTANDING + item.WR_OUTSTANDING + item.ER_OUTSTANDING + item.SR_OUTSTANDING + item.CR_OUTSTANDING)</font></td>
+                            <td valign="top" align="right"><font size="1" face="Verdana">@(item.TOT_SUSPENSE_NR + item.TOT_SUSPENSE_WR + item.TOT_SUSPENSE_ER + item.TOT_SUSPENSE_SR + item.TOT_SUSPENSE_CR)</font></td>
                         </tr>
                     }
                     <tr class="reportTotal">
-                        <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.NR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.WR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.ER_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.SR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Total For @BPO_TYPE :</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.NR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.WR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.ER_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.SR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Where(x => x.BPO_TYPE_CD == null).Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
 
                     @* Grand Totals ==>  *@
 
                     <tr class="reportTotal">
-                        <td width="45%" valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Grand Totals :</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.NR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.WR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.ER_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.SR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
-                        <td width="11%" valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="center" colspan="2"><b><font size="1" face="Verdana">Grand Totals :</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.NR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_NR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.WR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_WR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.ER_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_ER)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.SR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_SR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_CR)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.NR_OUTSTANDING + x.WR_OUTSTANDING + x.ER_OUTSTANDING + x.SR_OUTSTANDING + x.CR_OUTSTANDING)</font></b></td>
+                        <td valign="top" align="right"><b><font size="1" face="Verdana">@Model.lsttRWCOList.Sum(x => x.TOT_SUSPENSE_NR + x.TOT_SUSPENSE_WR + x.TOT_SUSPENSE_ER + x.TOT_SUSPENSE_SR + x.TOT_SUSPENSE_CR)</font></b></td>
                     </tr>
 
                 }

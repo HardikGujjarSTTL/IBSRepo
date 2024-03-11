@@ -297,6 +297,7 @@
                 $("#dvNotRailways12").css("display", "none");
             }
             if ('@Model' != null) {
+                
                 if ('@Model.VendCd' != null && '@Model.VendCd' != '') {
                     $("#txtVend").val('@Model.VendCd');
                     LoadVendor();
@@ -327,7 +328,9 @@
             });
 
             if ('@Model.CaseNo' != null && '@Model.CaseNo' != '') {
-                FillPurchaserCdForEdit('@Model.PurchaserCd');
+                if ('@Model.PurchaserCd' != null && '@Model.PurchaserCd' != "") {
+                    FillPurchaserCdForEdit('@Model.PurchaserCd');
+                }
                 fill_manufacturer('@Model.PoiCd');
             }
         });
@@ -383,7 +386,8 @@
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             if (res.status) {
-                window.location.href = '@Url.Action("Index", "AdministratorPurchaseOrder")';
+                //window.location.href = '@Url.Action("Index", "AdministratorPurchaseOrder")';
+                window.location.href = '@Url.Action("Manage", "AdministratorPurchaseOrder")?CaseNo=' + res.CaseNo;
             }
 
         };
@@ -572,7 +576,7 @@
         function GetManufVEND(id) {
             var VendCd = $("#VendCd").val();
             $.ajax({
-                url: '@Url.Action("GetManufVEND", "AdministratorPurchaseOrder")?id=' + VendCd,
+                url: '@Url.Action("GetManufVEND", "AdministratorPurchaseOrder")?id=' + id,
                 type: 'GET',
                 cache: false,
                 data: '{}',
@@ -694,5 +698,11 @@
                 }
             });
         }
+
+        $('#PoNo').keyup(function () {
+            var inputValue = $('#PoNo').val();
+            var lastFiveDigits = inputValue.slice(-5);
+            $('#L5noPo').val(lastFiveDigits);
+        });
     </script>
 }

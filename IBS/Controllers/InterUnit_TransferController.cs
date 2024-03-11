@@ -31,7 +31,7 @@ namespace IBS.Controllers
             {
                 AlertDanger(data.ErrorMsg);
                 return RedirectToAction("Index");
-                
+
             }
             else
             {
@@ -88,6 +88,7 @@ namespace IBS.Controllers
                 else if (model.ACC_CD == "3066") { model.ACC_DESC = "Central"; }
                 else if (model.ACC_CD == "9999") { model.ACC_DESC = "Bill Adjustment of Old System"; }
                 else if (model.ACC_CD == "9998") { model.ACC_DESC = "Miscelleanous Adjustments"; }
+                else if (model.ACC_CD == "9979") { model.ACC_DESC = "Refund"; }
                 if (string.IsNullOrEmpty(model.ACTION))
                 {
                     var res = objSessionHelper.lstInterUnitTransferRegionModel.Where(x => x.ACC_CD == model.ACC_CD).FirstOrDefault();

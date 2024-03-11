@@ -17,9 +17,25 @@
                 <div class="col-md-4 mb-3">
                     <label for="BillNo">Total Material Value :  <span style="color:red;">@Model.TMValue</span></label>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="BillNo">Inspection Fee :  <span style="color:red;">@Model.TIFee</span></label>
-                </div>
+                @if(Model.Callstatus == "CB")
+                {
+                    <div class="col-md-4 mb-3">
+                        <label for="BillNo">Cancellation Charges :  <span style="color:red;">@Model.BillAmount</span></label>
+                    </div>
+                }
+                else if (Model.Callstatus == "RB")
+                {
+                    <div class="col-md-4 mb-3">
+                        <label for="BillNo">Rejection Charges :  <span style="color:red;">@Model.BillAmount</span></label>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4 mb-3">
+                        <label for="BillNo">Inspection Fee :  <span style="color:red;">@Model.TIFee</span></label>
+                    </div>
+                }
+
             </div>
         </div>
         <div class="modal-footer">

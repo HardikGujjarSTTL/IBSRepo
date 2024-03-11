@@ -1,0 +1,150 @@
+﻿@model IBS.Models.BillRaisedModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Billing Report";
+}
+<html>
+<head>
+    <title>Credit Note Invoices Summary</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Back" id="btnBack" style="display:none;" />
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer">
+        <h3 class="center">Credit Note For : <span class="orangeText">@Convert.ToDateTime(@Model.CnoteFromDt).ToString("dd/MM/yyyy") - @Convert.ToDateTime(@Model.CnoteToDt).ToString("dd/MM/yyyy") </span> @Model.Region</h3>
+        <table id="dtList" class="borderTable" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+                <tr>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CASE NO.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CREDIT NOTE BILL NO.</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CREDIT NOTE BILL DT</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CREDIT NOTE BILL AMT</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CREDIT NOTE AMT CLEARED</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BILL NO</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BILL DT</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">BILL AMT</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">AMT CLEARED</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">CNOTE AMT</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstCNoteInvoice.Count > 0)
+                {
+                    int Srno = 1;
+                    @foreach (var item in Model.lstCNoteInvoice)
+                    {
+                        <tr>
+                            <td width="5%" valign="top" align="center"><font size="1" face="Verdana">@Srno</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CR_BILL_NO</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CR_BILL_DT</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CR_BILL_AMOUNT</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CR_BILL_AMT_CLEARED</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_NO</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_DT</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_AMOUNT</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.BILL_AMT_CLEARED</font></td>
+                            <td width="10%" valign="top" align="center"><font size="1" face="Verdana">@item.CNTOTE_AMOUNT</font></td>
+                        </tr>
+                        Srno += 1;
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script>
+    var fileName = '';
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const actiontype = urlParams.get('ActionType');
+    });
+    $(document).ready(function () {
+        fileName = "BillingClinetReport_1";
+    });
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnBack").click(function () {
+        var url = '@Url.Action("Index", "Dashboard")';
+        window.location.href = url;
+    });
+
+    $("#btnExportToExcel").click(function () {
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "BillingReports")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { ReportType: 'CNoteInvoiceReport' },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
+
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+
+</script>

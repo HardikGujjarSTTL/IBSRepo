@@ -1,7 +1,9 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Administration;
+using IBS.Interfaces.Hub;
 using IBS.Interfaces.IE;
 
 using IBS.Interfaces.Inspection_Billing;
@@ -15,7 +17,7 @@ using IBS.Interfaces.Transaction;
 using IBS.Interfaces.Vendor;
 using IBS.Interfaces.WebsitePages;
 using IBS.Repositories;
-
+using IBS.Repositories.Hub;
 using IBS.Repositories.Inspection_Billing;
 using IBS.Repositories.InspectionBilling;
 using IBS.Repositories.Reports;
@@ -27,6 +29,7 @@ using IBS.Repositories.Vendor;
 using IBS.Repositories.WebsitePages;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
 using System.Globalization;
 using System.Text.Json.Serialization;
@@ -85,6 +88,7 @@ builder.Services.AddScoped<IVendorCallsMarkedForSpecificPORepository, IBS.Reposi
 builder.Services.AddScoped<IVendorPOMARepository, IBS.Repositories.Vendor.VendorPOMARepository>();
 //builder.Services.AddScoped<IOnlineComplaintsRepository, IBS.Repositories.OnlineComplaintsRepository>();
 builder.Services.AddScoped<IOnlineComplaintsRepository, OnlineComplaintsRepository>();
+builder.Services.AddScoped<IOnlinePaymentGatewayRepository, OnlinePaymentGatewayRepository>();
 builder.Services.AddScoped<IFeedbackSuggestionRepository, FeedbackSuggestionRepository>();
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IDailyWorkPlanRepository, IBS.Repositories.IE.DailyWorkPlanRepository>();
@@ -103,6 +107,9 @@ builder.Services.AddScoped<ISupplementaryBillRepository, IBS.Repositories.Inspec
 
 builder.Services.AddScoped<IBillRegisterRepository, IBS.Repositories.Reports.BillRegisterRepository>();
 builder.Services.AddScoped<IBillRaisedRepository, IBS.Repositories.Reports.Billing.BillRaisedRepository>();
+builder.Services.AddScoped<IFinanceReportsRepository, IBS.Repositories.Reports.FinanceReportsRepository>();
+
+builder.Services.AddScoped<IMultipleFileUploadRepository, MultipleFileUploadRepository>();
 
 builder.Services.AddScoped<IBillCheckPostingRepository, BillCheckPostingRepository>();
 
@@ -148,17 +155,17 @@ builder.Services.AddScoped<IHologramAccountalRepository, HologramAccountalReposi
 builder.Services.AddScoped<IIC_ReceiptRepository, IC_ReceiptRepository>();
 builder.Services.AddScoped<ICallMarkedOnlineRepository, CallMarkedOnlineRepository>();
 #endregion
-builder.Services.AddScoped<ICityRepository,CityRepository>();
-builder.Services.AddScoped<I_ICBooksetFormRepository,ICBooksetFormRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<I_ICBooksetFormRepository, ICBooksetFormRepository>();
 builder.Services.AddScoped<IVendorClusterRepository, VendorClusterRepository>();
 builder.Services.AddScoped<IHologramSearchForm, HologramSearchForm>();
-builder.Services.AddScoped<I_IE_MaximumCallLimitForm,IE_MaximumCallLimitForm>();
-builder.Services.AddScoped<IMasterItemsPLFormRepository,MasterItemsPLFormRepository>();
-builder.Services.AddScoped<ICentralRejectionStatusRepository,CentralRejectionStatusRepository>();
-builder.Services.AddScoped<ICheckPostingFormRepository,CheckPostingFormRepository>();
-builder.Services.AddScoped<ISearchPaymentsRepository,SearchPaymentRepository>();
-builder.Services.AddScoped<IEFTEntryRepository,EFTEntryRepository>();
-builder.Services.AddScoped<IInterUnit_TransferRepository,InterUnit_TransferRepository>();
+builder.Services.AddScoped<I_IE_MaximumCallLimitForm, IE_MaximumCallLimitForm>();
+builder.Services.AddScoped<IMasterItemsPLFormRepository, MasterItemsPLFormRepository>();
+builder.Services.AddScoped<ICentralRejectionStatusRepository, CentralRejectionStatusRepository>();
+builder.Services.AddScoped<ICheckPostingFormRepository, CheckPostingFormRepository>();
+builder.Services.AddScoped<ISearchPaymentsRepository, SearchPaymentRepository>();
+builder.Services.AddScoped<IEFTEntryRepository, EFTEntryRepository>();
+builder.Services.AddScoped<IInterUnit_TransferRepository, InterUnit_TransferRepository>();
 builder.Services.AddScoped<IUnregisteredCallsRepository, UnregisteredCallsRepository>();
 builder.Services.AddScoped<IInspectionFeeBillRepository, InspectionFeeBillRepository>();
 builder.Services.AddScoped<ITDSEntryRepository, TDSEntryRepository>();
@@ -175,8 +182,8 @@ builder.Services.AddScoped<IDailyIEWiseCallsRepository, DailyIEWiseCallsReposito
 builder.Services.AddScoped<IWriteOffEntryRepository, WriteOffEntryRepository>();
 builder.Services.AddScoped<IPrint_Bank_Statement_VoucherRepository, Print_Bank_Statement_VoucherRepository>();
 builder.Services.AddScoped<IClientRailwayRepository, IBS.Repositories.ClientRailwayRepository>();
-
-
+builder.Services.AddScoped<IAllGeneratedBillsRepository, IBS.Repositories.AllGeneratedBillsRepository>();
+builder.Services.AddScoped<ILabInvoiceRepository, IBS.Repositories.LabInvoiceRepository>();
 
 
 
@@ -251,6 +258,19 @@ builder.Services.AddScoped<IBPOWiseOutstandingBillsRepository, BPOWiseOutRReposi
 
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<ISAPIntegrationRepository, SAPIntegrationRepository>();
+builder.Services.AddScoped<IHolidayMasterRepository, HolidayMasterRepository>();
+
+// SignalR Class and Configuration
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+builder.Services.AddScoped<ChatHub>();
+
+// SignalR Configuration
+//builder.Services.AddSignalR();
+builder.Services.AddSignalR(e =>
+{
+    e.MaximumReceiveMessageSize = 102400000;
+});
+
 
 var app = builder.Build();
 
@@ -261,6 +281,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 var supportedCultures = new[]
 {
@@ -283,8 +304,13 @@ app.UseRouting();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// SignalR Configuration
+app.MapHub<ChatHub>("/chatHub");
+
 app.Run();
+

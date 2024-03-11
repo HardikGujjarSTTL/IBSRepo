@@ -2,10 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models.Reports;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Reports
 {
@@ -42,7 +41,7 @@ namespace IBS.Controllers.Reports
             if (ReportType == "ICStatus") model.ReportTitle = "IC ACCOUNTAL STATEMENT";
             return View("Manage", model);
         }
-        
+
         public IActionResult ICStatusAll(DateTime FromDate, DateTime ToDate, string IE_CD)
         {
             AllICStatusModel model = monthlyReportsRepository.GetAllICStatus(FromDate, ToDate, IE_CD, Region);
@@ -67,7 +66,7 @@ namespace IBS.Controllers.Reports
                 AllICStatusModel model = GlobalDeclaration.AllICStatus;
                 htmlContent = await this.RenderViewToStringAsync("/Views/MonthlyReports/ICStatusAll.cshtml", model);
             }
-            else if(ReportType == "ReInspectionICs")
+            else if (ReportType == "ReInspectionICs")
             {
                 ReInspectionICsModel model = GlobalDeclaration.ReInspectionICs;
                 htmlContent = await this.RenderViewToStringAsync("/Views/MonthlyReports/ReInspectionICs.cshtml", model);

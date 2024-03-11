@@ -1,0 +1,715 @@
+﻿@model IBS.Models.ChatMessage
+
+@{
+    //Layout = "";
+    ViewData["Title"] = "Mobile Chat";
+
+    string SenderId = ViewBag.SenderId <= 0 ? "" : Convert.ToString(ViewBag.SenderId);
+    string ReceiverId = Model.msg_recv_ID == "0" ? "" : Convert.ToString(Model.msg_recv_ID);
+    string SiteUrl = Model.HostUrl;
+}
+<style type="text/css">
+    #header, #sidebar, .navBtn, #footer {
+        display: none !important;
+    }
+
+    main.pb-3 {
+        padding-bottom: 0 !important;
+    }
+
+    .accordion-body {
+        margin-bottom: 0 !important;
+    }
+
+    .chatArea {
+        height: calc(100vh - 0px);
+    }
+
+
+
+    .chatUserHeader ul li {
+        justify-content: space-between;
+    }
+
+    /*Start User DropDown CSS*/
+    .customCheckSelect {
+        max-width: 350px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .checkBoxGroup {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .checkBoxGroup li {
+            margin: 5px 0;
+        }
+
+            .checkBoxGroup li label {
+                margin: 0;
+                padding: 0;
+            }
+
+    .selectAllCheck, .selectAllCheck1 {
+        border: 1px solid #d1d1d1;
+        padding: 8px;
+        border-radius: 5px;
+        width: 100%;
+        height: 42px;
+        position: relative;
+        box-sizing: border-box;
+        background: #fff;
+    }
+
+    .downarrow {
+        border: 6px solid rgba(0, 0, 0, 0);
+        border-top-color: rgba(0, 0, 0, 0);
+        border-top-color: #999;
+        height: 1px;
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        transform: translate(-50%, -50%);
+    }
+
+    .check {
+        display: none;
+    }
+
+    .filterCheckbox {
+        display: none;
+        background: #fff;
+        border: 1px solid #d1d1d1;
+        padding: 10px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        max-height: 300px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        position: absolute;
+        max-width: inherit;
+        width: auto;
+        z-index: 10;
+    }
+
+    #myInput {
+        border: 1px solid #d1d1d1;
+        padding: 5px;
+        border-radius: 5px;
+        height: 30px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .valueCheck {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        white-space: nowrap;
+        display: block;
+        padding-right: 15px;
+        box-sizing: border-box;
+    }
+
+    .adminInnerContent {
+        padding: 0 !important;
+    }
+
+    .accordion-body.chatArea {
+        padding: 5px !important
+    }
+    /*End User DropDown CSS*/
+</style>
+<input type="hidden" id="hdnBase64String" value="" />
+<input type="hidden" id="hdnFileName" value="" />
+<input type="hidden" id="hdnFileSize" value="" />
+<div class="task-listinput">
+    <form role="form" id="frmChatMessage">
+        <div class="accordion-body chatArea">
+            <div class="filterToggle">
+                User Input <span class="fa fa-chevron-up"></span>
+            </div>
+            <div class="chatTopFilter">
+                <div class="row my-0">
+                    <div class="col-md-2 mb-2">
+                        <label for="Reference">Users Type</label>
+                        <div class="userNormalSelect">@Html.DropDownList("dpUserType", new SelectList(Common.GetUserTypeForUsers(), "Value", "Text"), "--Select--", new { @onChange = "FillUsers()" })</div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="Reference">Users</label>
+                        @*<div class="userMultiSelect">@Html.DropDownList("dpUser", new MultiSelectList(Common.GetUserMaster("","0"), "Value", "Text"), new { multiple = "multiple" })</div>*@
+                        <div class="customCheckSelect">
+                            <div class="selectAllCheck" id="selectAllCheck">
+                                <input type="hidden" id="hdnUser" />
+                                <span class="valueCheck">--Select--</span>
+                                <span class="downarrow"></span>
+                            </div>
+                            <div class="filterCheckbox">
+                                <input id="myInput" type="text" />
+                                <ul class="checkBoxGroup">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="Reference">Message</label>
+                        <input type="text" id="txtMessage" />
+                    </div>
+                    <div class="col-md-2 attachChatBtnAlign">
+                        <div class="topUploadCustom">
+                            <div class="upload-btn-wrapper submitChatBtn">
+                                <button><span class="fa fa-paperclip"></span></button>
+                                <input type="file" id="fileupload" class="fileUploadNormal" multiple>
+                            </div>
+                        </div>
+
+                        <div class="savenext-btn" style="margin-top:28px; margin-left:10px;">
+                            <button type="button" class="save-btn active" id="btnSave" onclick="SendMessage(1);"><span class="fa fa-paper-plane"></span></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="divFile"></div>
+            <div class="chatBox">
+                <div class="chatBoxHeader">
+                    <h2>Message </h2>
+                    <div class="userShowHideChat"><span class="fa fa-users"></span></div>
+                </div>
+                <div class="messageBody">
+                    <div class="chatBoxBody chatLeftBoxBody">
+                    </div>
+                    <div class="userChatBox">
+                        <div class="chatUserHeader">
+                            <ul>
+                                <li class="userList">
+                                    <div class="headerUserName">
+                                        <div class="chatBoxIcon chatBoxIconBg1 clsShortName"></div>
+                                        <div class="chatBoxInfo">
+                                            <h4 class="clsName"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="backToUser">
+                                        <span class="fa fa-arrow-left"></span> Back
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chatBoxBody chatRightBoxBody">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<link href="~/css/chat.css" rel="stylesheet" />
+<script src="~/js/signalr.min.js"></script>
+
+<link href="~/lib/bootstrap-multiselect/css/bootstrap-multiselect.css" rel="stylesheet" />
+<script src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.min.js"></script>
+
+<script type="text/javascript">
+
+    var connection = new signalR.HubConnectionBuilder().withUrl('@SiteUrl' + "/chatHub").build();
+    var SenderId = "@SenderId";
+    var ReceiverId = "@ReceiverId";
+    var Cnt = 0;
+    var byteArray = [];
+    var base64String = "";
+    var arrchkVal = [];
+
+
+    $(document).ready(function () {
+
+        
+
+        $("#sidebar").hide();
+        $("#header").hide();
+        $(".navBtn").hide();
+        $("#footer").hide();
+        $(".contentContainer").css("margin-left", "0");
+
+        GetUserReceiverList();
+        GetChatMessageList(ReceiverId);
+
+        //$('#dpUser').multiselect({
+        //    includeSelectAllOption: true,
+        //    enableFiltering: true,
+        //    includeFilterClearBtn: true,
+        //    enableCaseInsensitiveFiltering: true,
+        //    maxHeight: 350,
+        //});
+
+        $(document).ajaxSend(function () {
+            $(".overlayLoader").hide();
+        });
+
+        if ($(window).width() < 767) {
+
+            $(".filterToggle").click(function (e) {
+                e.preventDefault();
+                $(this).toggleClass("show");
+                if ($(".chatTopFilter").is(":visible")) {
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
+                    $(".chatTopFilter").slideUp();
+                    $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
+                }
+                else {
+                    $(".chatLeftBoxBody, .chatBox .messageBody").slideUp();
+                    $(".chatTopFilter").slideDown();
+                }
+            });
+
+            $(".chatLeftBoxBody").click(function (e) {
+                e.preventDefault();
+                $(".userChatBox").show();
+                $(".chatRightBoxBody").show();
+                $(this).hide();
+                $(".chatUserHeader").show();
+            });
+
+            $(".backToUser").click(function (e) {
+                $(".chatUserHeader").hide();
+                $(".userChatBox, .chatRightBoxBody").hide();
+                $(".chatRightBoxBody").hide();
+                $(".chatLeftBoxBody").show();
+            });
+
+
+            $(".userShowHideChat").click(function (e) {
+                e.preventDefault();
+                $(".chatLeftBoxBody, .chatBox .messageBody").slideDown();
+                $(".filterToggle").toggleClass("show");
+                if ($(".chatTopFilter").is(":visible")) {
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
+                    $(".chatTopFilter").slideUp();
+                    $(".chatLeftBoxBody").show();
+                }
+                else if ($(".chatLeftBoxBody").is(":visible") && $(".chatRightBoxBody").is(":visible")) {
+                    $(".chatLeftBoxBody").hide();
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
+                    $(".chatTopFilter").slideDown();
+                }
+                else if ($(".chatLeftBoxBody").is(":visible") && !$(".chatRightBoxBody").is(":visible")) {
+                    $(".chatLeftBoxBody").hide();
+                    $(".chatRightBoxBody").hide();
+                    $(".chatTopFilter").slideDown();
+                }
+                else if (!$(".chatLeftBoxBody").is(":visible") && $(".chatRightBoxBody").is(":visible")) {
+                    $(".chatLeftBoxBody").hide();
+                    $(".chatRightBoxBody").hide();
+                    $(".chatUserHeader").hide();
+                    $(".chatTopFilter").slideDown();
+                }
+            });
+        }
+    });
+
+    $('#fileupload').change(function (e) {
+        handleFile('fileupload');
+    });
+
+    function GetUserReceiverList() {
+        $.ajax({
+            url: '@Url.Action("ChatUserReceiver", "MobileChat")?SenderId=' + SenderId,
+            type: 'POST',
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function (response) {
+           // debugger
+            if (response != null) {
+                $(".chatLeftBoxBody").html("");
+                $(".chatLeftBoxBody").html(response);
+                $(".userList").removeClass("active");
+                //$("#li" + ReceiverId).addClass("active");
+                $(".clsShortName").html($(".SN_" + ReceiverId).html());
+                $(".clsName").html($(".N_" + ReceiverId).html());
+            }
+        });
+    }
+
+    function GetChatMessageList(recvid) {
+       // debugger
+        ReceiverId = recvid;
+        if (ReceiverId != "") {
+            var arrRecvID = ReceiverId.split(",");
+            for (var i = 0; i < arrRecvID.length; i++) {
+                $.ajax({
+                    url: '@Url.Action("ChatMessageHistory", "MobileChat")?SenderId=' + SenderId + '&ReceiverId=' + arrRecvID[i],//ReceiverId,
+                    type: 'POST',
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                }).done(function (response) {
+                    if (response != null) {
+                        $(".chatRightBoxBody").html("");
+                        $(".chatRightBoxBody").html(response);
+                        //$(".userList").removeClass("active");
+                        //$("#li" + ReceiverId).addClass("active");
+
+                        //if ((arrRecvID.length - 1) == i) {
+                        //    $(".userList").removeClass("active");
+                        //    $("#li" + arrRecvID[i]).addClass("active");
+                        //}
+                        $(".chatBoxBody").scrollTop($(".chatBodyText").height());
+
+                        Cnt = parseInt($("#hdnCurrDtCount").val());
+                        $(".clsShortName").html($(".SN_" + recvid).html());
+                        $(".clsName").html($(".N_" + recvid).html());
+                    }
+                });
+            }
+        }
+    }
+
+    function SendMessage(type) {
+        var Message = "";
+
+        if (type == 1) {
+            ReceiverId = $("#hdnUser").val();//$("#dpUser").val().join(",");
+            Message = $("#txtMessage").val();
+
+            // validation
+            if (ReceiverId == "" && Message == "") {
+                return;
+            }
+            else if (ReceiverId != "" && Message == "") {
+                return;
+            }
+        }
+        else if (type == 2) {
+            Message = $("#txtMsg").val();
+
+            if (ReceiverId == "" && Message == "" && $(".fileUploadFileName").html() == "") {
+                return;
+            }
+            else if (ReceiverId != "" && (Message == "" || $(".fileUploadFileName").html() != "")) {
+            }
+            else if (ReceiverId != "" && (Message == "" || $(".fileUploadFileName").html() == "")) {
+                return;
+            }
+        }
+
+        var imagesJson = null;
+
+        if ($("#hdnBase64String").val() != "" && $("#hdnFileName").val() != "") {
+            imagesJson = [
+                { image: $("#hdnBase64String").val(), filename: $("#hdnFileName").val(), filesize: $("#hdnFileSize").val() },
+            ];
+        }
+        connection.invoke("SendMessage", SenderId, ReceiverId, Message, type, imagesJson);
+
+        if (type == 1) { $("#txtMessage").val(""); }
+        else if (type == 2) { $("#txtMsg").val(""); }
+
+        $("#hdnBase64String").val("");
+        $("#hdnFileName").val("");
+        $("#hdnFileSize").val("");
+    }
+
+    connection.start().then(function () {
+        connection.invoke("OnConnectedAsync", SenderId);
+    });
+
+    connection.on("ReceiveMessage", function (recvID, Message, MsgType, Msg_Date, File_Field_ID, FileDisplayName, FileSize, Extension, CurrDateCnt, ResultID, clsDate) {
+        if (MsgType == 1) {
+            //window.location.href = "@Url.Action("Index", "MobileChat")?SenderID=" + SenderId;
+            GetUserReceiverList();
+            GetChatMessageList(ReceiverId);
+            ClearValues();
+        }
+        else {
+            var FilePath = "../ReadWriteData/CHAT_FILES/";
+            if (File_Field_ID != "" && File_Field_ID != null) { FilePath = FilePath + File_Field_ID }
+            var element = "";
+            var clsDel = "clsDel_" + ResultID;
+            if (CurrDateCnt == 1) {
+                var clsDate = "clsDate_" + "@DateTime.Now.ToString("ddMMMMyyyy")"
+                element += '<li class="' + clsDate + '"><div class="messageDate"><span>' + "@DateTime.Now.ToString("dd MMMM yyyy")" + '</span></div></li>'
+                $(".chatBodyText").append(element);
+            }
+            element = "";
+            //Sender Side
+            if (SenderId != recvID) {
+                if (File_Field_ID != "" && File_Field_ID != null) {
+                    element += '<li class="sendTextHolder ' + clsDel + '" id="' + ResultID + '" >' +
+                        '<div class="sendText" >' +
+                        '<div class="deleteSelect">' +
+                        '<div class="deleteSelectTriggerNew"><span class="fa fa-chevron-down" ></span></div>' +
+                        '<div class="fileUploadDelete">' +
+                        '<ul class="editDeleteFile" >' +
+                        '<li onclick="DeleteMessage(' + ResultID + ')" > <a href="#" > <span class="fa fa-trash" > </span> Delete</a > </li>' +
+                        '</ul>' +
+                        '</div>' +
+                        '</div>' +
+
+                        '<div class="box-body">' +
+                        '<div class="attachment-block">';
+                    if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
+                    } else {
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
+                    }
+                    element += '<div class="attachment-pushed">' +
+                        '<span class="attachment-heading"><i class="fa fa-image"> ' + FileDisplayName + '</i></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="fileDownload">' +
+                        '<div>' +
+                        '<a id="btnDownload" href="' + FilePath + '" download="' + FileDisplayName + '" style="margin-right:5px;"><i class="fa fa fa-download"></i> Download</a>' +
+                       // '<a id="ShowModelImg" href="' + FilePath + '" class="chatImagePopup" target="_blank"><i class="fa fa-camera"></i> View</a>' +
+                        '</div>' +
+                        '<span class="chatFileSize">File Size : ' + FileSize + '</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<span class="timeStamp">' + Msg_Date + '</span>' +
+                        '</div></li>';
+                }
+                if (Message != "" && Message != null) {
+                    element += '<li class="sendTextHolder ' + clsDel + '" id="' + ResultID + '">' +
+                        '<div class="sendText" >' +
+                        '<div class="deleteSelect">' +
+                        '<div class="deleteSelectTriggerNew"><span class="fa fa-chevron-down" > </span></div>' +
+                        '<div class="fileUploadDelete" >' +
+                        '<ul class="editDeleteFile" >' +
+                        '<li onclick="DeleteMessage(' + ResultID + ')" > <a href="#" > <span class="fa fa-trash" > </span> Delete</a > </li>' +
+                        '</ul>' +
+                        '</div>' +
+                        '</div>' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
+                }
+                $(".chatBodyText").append(element);
+                $(".chatBoxBody").scrollTop($(".chatBodyText").height());
+                $("#txtMsg").focus();
+            }
+
+            //Receiver Side
+            if (SenderId == recvID) {
+                if (File_Field_ID != "" && File_Field_ID != null) {
+                    element += '<li class="reciveTextHolder ' + clsDel + '" id="' + ResultID + '"> <div class="recieveText" >' +
+                        '<div class="box-body">' +
+                        '<div class="attachment-block">';
+                    if (Extension == ".jpg" || Extension == ".jpeg" || Extension == ".png") {
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="' + FilePath + '" alt="Attachment Image"></a>';
+                    } else {
+                        element += '<a href="' + FilePath + '" class="chatImagePopup" target="_blank"><img id="imgC" style="width:100px;" class="attachment-img" src="../images/file-icon.png" alt="Attachment Image"></a>';
+                    }
+                    element += '<div class="attachment-pushed">' +
+                        '<span class="attachment-heading"><i class="fa fa-image"> ' + FileDisplayName + '</i></span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="fileDownload">' +
+                        '<div>' +
+                        '<a id="btnDownload" href="' + FilePath + '" download="' + FileDisplayName + '" style="margin-right:5px;"><i class="fa fa fa-download"></i> Download</a> ' +
+                       // '<a id="ShowModelImg" href="' + FilePath + '" class="chatImagePopup" target="_blank"><i class="fa fa-camera"></i> View</a>' +
+                        '</div>' +
+                        '<span class="chatFileSize">File Size : ' + FileSize + '</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<span class="timeStamp">' + Msg_Date + '</span>' +
+                        '</div></li>';
+                }
+                if (Message != "" && Message != null) {
+                    element += '<li class="reciveTextHolder ' + clsDel + '" id="' + ResultID + '"> <div class="recieveText" >' + Message + '<span class="timeStamp">' + Msg_Date + '</span></div></li>';
+                }
+                $(".chatBodyText").append(element);
+                $(".chatBoxBody").scrollTop($(".chatBodyText").height());
+                $("#txtMsg").focus();
+            }
+
+            $(".fileUploadedInfo").hide();
+
+            if ($(".deleteSelectTriggerNew").length) {
+                $(".deleteSelectTriggerNew").unbind().click(function () {
+                    if ($(".fileUploadDelete").is(":visible")) {
+                        $(this).next().slideUp();
+
+                    } else {
+                        $(this).next().slideDown();
+                        return false;
+                    }
+                });
+            }
+        }
+    });
+
+    $('#txtMessage').keypress(function (e) {
+        if (e.keyCode == 13) {  // detect the enter key
+            e.preventDefault();
+            SendMessage(1);
+        }
+    });
+
+    async function handleFile(fileId) {
+        const fileInput = document.getElementById(fileId);
+        const file = fileInput.files[0];
+
+        var fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+        var sizeinbytes = file.size;
+        fSize = sizeinbytes; i = 0; while (fSize > 900) { fSize /= 1024; i++; }
+        var FileSize = (Math.round(fSize * 100) / 100) + ' ' + fSExt[i];
+
+        if (file) {
+            const base64String = await readAsDataURL(file);
+            $("#hdnBase64String").val(base64String);
+            $("#hdnFileName").val(file.name);
+            $("#hdnFileSize").val(FileSize);
+
+            // Preview File Upload
+            $("#FileSize").html(FileSize);
+            $(".fileUploadFileName").html(file.name);
+            $(".fileUploadedInfo").show();
+        }
+        else {
+            $("#hdnBase64String").val("");
+            $("#hdnFileName").val("");
+            $("#hdnFileSize").val("");
+
+            // Preview File Upload
+            $("#FileSize").html("");
+            $(".fileUploadFileName").html("");
+            $(".fileUploadedInfo").hide();
+        }
+    }
+
+    function readAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                //resolve(event.target.result.split(',')[1]);
+                resolve(event.target.result);
+            };
+
+            reader.onerror = function (error) {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function DeleteMessage(Id) {
+        connection.invoke("DeleteMessage", SenderId, ReceiverId, Id);
+    }
+
+    connection.on("ReceiveDeleteMessage", function (ReceiverId, DeletedId, CurrDateCnt, Result, DeleteDate) {
+        if (Result > 0) {
+            $(".clsDel_" + DeletedId).remove();
+            if (CurrDateCnt == 0) {
+                $("." + DeleteDate).remove();
+            }
+            $(".chatBoxBody").scrollTop($(".chatBodyText").height());
+        }
+    });
+
+    function FillUsers(id) {
+        var _drpUserType = $("#dpUserType option:selected").text();
+        var _drpUserTypeId = $("#dpUserType option:selected").val();
+        $.get("@Url.Action("GetUsersByUserType", "MobileChat")", { type: _drpUserType, id: _drpUserTypeId }, function (response) {
+
+            if (response != null) {
+                var html = "";
+                //$("#dpUser").empty();
+                //$.each(response, function (ind, val) {
+                //    $("#dpUser").append($('<option></option>').val(val.Value).html(val.Text));
+                //});
+                //$("#dpUser").multiselect('rebuild');
+
+                arrchkVal = [];
+                $(".valueCheck").html("--Select--");
+                $("#hdnUser").val("");
+                $(".checkBoxGroup").empty();
+                $(".checkBoxGroup").append("<li><input class='checkAll' name='checkAll' type='checkbox' value='All' /> <label>Select All</label></li>")
+                $.each(response, function (ind, val) {
+                    //$("#dpUser").append($('<option></option>').val(val.Value).html(val.Text));
+                    var text = val.Text == null ? "" : val.Text;
+                    html = "<li><input name='chk' type='checkbox' value='" + val.Value + '#' + text + "' text='" + text + "' /> <label>" + text + "</label></li>"
+                    $(".checkBoxGroup").append(html);
+                });
+                LoadUserDropdown();
+            }
+        });
+    }
+
+    function LoadUserDropdown() {
+        $(".selectAllCheck").unbind().click(function (e) {
+            e.preventDefault();
+            if ($('.filterCheckbox').css("display") == "block") {
+                $('.filterCheckbox').slideUp();
+            } else {
+                $('.filterCheckbox').slideDown();
+            }
+        });
+
+        $(document).bind('mousedown touchstart', function (e) {
+            if ($(e.target).closest('.filterCheckbox').length === 0) {
+                $('.filterCheckbox').slideUp();
+            }
+        });
+
+        $("#myInput").on("keyup", function (e) {
+            var value = $(this).val().toLowerCase();
+            $(".checkBoxGroup li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $('input[name="chk"]').unbind().change(function (e) {
+            if (this.value != "All") {
+                if (this.checked) {
+                    arrchkVal.push({ "id": this.value.split("#")[0], "value": this.value.split("#")[1] });
+                    $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                    $("#hdnUser").val(arrchkVal.map((temp) => temp["id"]).join(","));
+                }
+                else {
+                    $('input[class="checkAll"]').prop('checked', false);
+                    var index = arrchkVal.map((temp) => temp["id"]).indexOf(this.value.split("#")[0])
+                    if (index > -1) { // only splice array when item is found
+                        arrchkVal.splice(index, 1); // 2nd parameter means remove one item only
+                    }
+                    $('input[name="check"]').removeAttr('checked');
+                    $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                    $("#hdnUser").val(arrchkVal.map((temp) => temp["id"]).join(","));
+                }
+            }
+        });
+
+        $('input[class="checkAll"]').unbind().change(function (e) {
+            $(this).removeAttr('checked');
+            $("input:checkbox").prop('checked', $(this).prop("checked"));
+            if (this.checked) {
+                arrchkVal = [];
+                $('input[name="chk"]').removeAttr('checked');
+                $('input[name="chk"]').each(function () {
+                    $(this).attr('checked', 'checked');
+                    arrchkVal.push({ "id": this.value.split("#")[0], "value": this.value.split("#")[1] });
+                });
+                $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                $("#hdnUser").val(arrchkVal.map((temp) => temp["id"]).join(","));
+            } else {
+                $('input[name="chk"]').removeAttr('checked');
+                arrchkVal = [];
+                $(".valueCheck").html(arrchkVal.map((temp) => temp["value"]).join(","));
+                $(".valueCheck").html("--Select--");
+                $("#hdnUser").val("");
+            }
+        });
+    }
+
+    function ClearValues() {
+        $("#dpUserType").val("");
+        $("#hdnUser").val("");
+        $(".valueCheck").html("--Select--");
+        $("#txtMessage").val("");
+        arrchkVal = [];
+    }
+</script>

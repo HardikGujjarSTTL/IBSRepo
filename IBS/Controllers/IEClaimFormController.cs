@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -14,7 +13,7 @@ namespace IBS.Controllers
             ieclaimrepository = _ieclaimrepository;
         }
 
-        [Authorization("IEClaimForm", "Manage", "view")]
+        [Authorization("IEClaimForm", "Index", "view")]
 
         public IActionResult Manage(string CLAIM_NO, string ACTION, decimal ID)
         {
@@ -28,7 +27,7 @@ namespace IBS.Controllers
         }
 
 
-        [Authorization("IEClaimForm", "Insert_IE", "edit")]
+        [Authorization("IEClaimForm", "Index", "edit")]
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -85,19 +84,19 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
         [HttpPost]
-        public IActionResult Payment_Save(string CLAIM_NO ,string VCHR_NO , string VCHR_DT)
+        public IActionResult Payment_Save(string CLAIM_NO, string VCHR_NO, string VCHR_DT)
         {
 
             string msg = "";
             try
             {
-                string i = ieclaimrepository.Payment_Save(CLAIM_NO , VCHR_NO , VCHR_DT);
-                if(i != null || i!= "")
+                string i = ieclaimrepository.Payment_Save(CLAIM_NO, VCHR_NO, VCHR_DT);
+                if (i != null || i != "")
                 {
                     msg = "Payment Details Saved";
                 }
                 else
-                {   
+                {
                     msg = "Something went wrong";
                 }
             }
@@ -105,7 +104,7 @@ namespace IBS.Controllers
             {
 
             }
-            return Json(new { status = false , responseText = msg });
+            return Json(new { status = false, responseText = msg });
         }
 
         [Authorization("IEClaimForm", "Index", "view")]

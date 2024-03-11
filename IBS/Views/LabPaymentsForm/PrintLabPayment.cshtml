@@ -1,58 +1,183 @@
-﻿
-@*<form data-ajax="true" asp-antiforgery="true" asp-controller="LaboratoryMaster" asp-action="LabDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmLabDetails">*@
+﻿@model IBS.Models.LabPaymentFormModel
 
+<style>
+    
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
 
-    <div id="print">
-    <div class="task-listinput">
-        <div class="accordion-body">
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Voucher No.</label>
-                    <input type="text" class="input" id="lblvno" readonly="readonly">
+    .accordion-body {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+    }
 
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Dated:</label>
-                    <input type="text" class="input" id="dtdt" readonly="readonly">
+    .my-0 {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">CHQ No.</label>
-                    <input type="text" class="input" id="lblcno" readonly="readonly">
+    .mb-3 {
+        margin-bottom: 15px;
+    }
 
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Dated:</label>
-                    <input type="text" class="input" id="lbldt" readonly="readonly">
+    label {
+        font-weight: bold;
+    }
 
-                </div>
+    .col-md-4,
+    .col-md-2,
+    .col-md-6 {
+        margin-bottom: 15px;
+    }
+
+    .input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    
+    .row .col-md-4 {
+        flex: 0 0 calc(33.333% - 10px); 
+        max-width: calc(33.333% - 10px); 
+        margin-right: 10px; 
+    }
+
+        .row .col-md-4:last-child {
+            margin-right: 0;
+        }
+
+    .row.my-0 {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto; 
+    }
+
+    .col-md-4 {
+        flex: 0 0 auto; 
+        width: auto; 
+        margin-right: 10px; 
+    }
+
+        .col-md-4:last-child {
+            margin-right: 0; 
+        }
+   
+</style>
+<h3 class="center">LAB PAYMENT VOUCHER <span class="orangeText"> (@ViewBag.Region) </span></h3>
+
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Voucher No.</label>
+                <input type="text" class="input" id="lblvno" asp-for="PaymentID" readonly="readonly">
             </div>
-            <div class="row my-0">
-                
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Bank:</label>
-                    <input type="text" class="input" id="lblbnk" readonly="readonly">
-
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label for="Reference">Amount:</label>
-                    <input type="text" class="input" id="lblamt" readonly="readonly">
-
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="Reference">Laboratory:</label>
-                    <input type="text" class="input" id="lbllab" readonly="readonly">
-
-                </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Dated:</label>
+                <input type="text" class="input" id="dtdt" asp-for="PaymentDt"  readonly="readonly">
             </div>
-            <div class="row my-0">
-               
-                
+            <div class="col-md-4 mb-3">
+                <label for="Reference">CHQ No.</label>
+                <input type="text" class="input" id="lblcno" asp-for="CHQ_NO" readonly="readonly">
             </div>
-
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Dated:</label>
+                <input type="text" class="input" id="lbldt" asp-for="PaymentDt" readonly="readonly">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Bank:</label>
+                <input type="text" class="input" id="lblbnk" asp-for="Bank" readonly="readonly">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Amount:</label>
+                <input type="text" class="input" id="lblamt" asp-for="Amount" readonly="readonly">
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-4 mb-3">
+                <label for="Reference">Laboratory:</label>
+                <input type="text" class="input" id="lbllab" asp-for="Lab" readonly="readonly">
+            </div>
         </div>
     </div>
-<section class="table-section">
+</div>
+
+<div class="tableOuter">
+    <table class="borderTable" cellpadding="0" cellspacing="0">
+        <tbody>
+            <tr>
+
+                <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Account Code</font></b></th>
+                <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sub Code</font></b></th>
+                <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">SBU Code</font></b></th>
+                <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Project Code</font></b></th>
+                <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Sample Register No.</font></b></th>
+                <th width="25%" valign="top" align="center"><b><font sizw="1" face="Verdana">Amount</font></b></th>
+                
+            </tr>
+            @if (Model != null && Model.lstPrint != null && Model.lstPrint.Count > 0)
+            {
+                
+                @foreach (var item in Model.lstPrint)
+                {
+
+                    <tr>
+                        <td width="25%" valign="top" align="right">
+                            <font size="1" face="Verdana">
+                                @item.AccountCd
+                            </font>
+                        </td>
+                        <td width="25%" valign="top" align="right">
+                            <font size="1" face="Verdana">
+                                @item.SubCd
+                            </font>
+                        </td>
+                        <td width="25%" valign="top" align="right">
+                            <font size="1" face="Verdana">
+                                @item.SBUCd
+                            </font>
+                        </td>
+                        <td width="25%" valign="top" align="right">
+                            <font size="1" face="Verdana">
+                                @item.ProjectCd
+                            </font>
+                        </td>
+                        <td width="25%" valign="top" align="right">
+                            <font size="1" face="Verdana">
+                                @item.SAMPLE_REG_NO
+                            </font>
+                        </td>
+                        <td width="25%" valign="top" align="right">
+                            <font size="1" face="Verdana">
+                                @item.Amount
+                            </font>
+                        </td>
+                        
+                    </tr>
+                }
+
+                
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="noRecordGrid">No records found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@* <section class="table-section">
     <div class="task-listinput">
         <div class="dash-table">
             <table id="printlab" class="table-responsive">
@@ -71,50 +196,21 @@
             </table>
         </div>
     </div>
-</section>
-</div>
-@* <table border="1" width="100%">
-    <tbody>
-        <tr>
-            <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Account Code</font></td>
-            <td width="20%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Sub Code</font></td>
-            <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">SBU Code</font></td>
-            <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Project Code</font></td>
-            <td width="15%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Sample Reg No</font></td>
-            <td width="10%" valign="top" style="padding: 10px; border: 1px solid #b0c4de;"><font size="1" face="Verdana">Amount</font></td>
-        </tr>
-        <tr>
-            <td width="5%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label>642</label></td>
-            <td width="35%" valign="top" align="left" style="padding: 10px; border: 1px solid #b0c4de;"> <label></label></td>
-            <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label>20</label></td>
-            <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label></label></td>
-            <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label id="lblregno"></label></td>
-            <td width="10%" valign="top" align="right" style="padding: 10px; border: 1px solid #b0c4de;"> <label id="lbliamt"></label></td>
-        </tr>
+</section> *@
 
-
-    </tbody>
-</table> *@
-@* <div class="savenext-btn">
-    <button type="button" class="save-btn active" onclick="printPage();">Print</button>
-    <button type="button" class="save-btn active" onclick="cancel();">Cancel</button>
-
-</div> *@
-
-@*</form>*@
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(function () {
             $(".datepicker").datepicker({
-                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+                dateFormat: "mm/dd/yy" 
             });
 
             var pyid = '@ViewBag.PaymentID';
 
-            Print(pyid);
-            InitializeDatatable(pyid);
+           // Print(pyid);
+           // InitializeDatatable(pyid);
         });
         function InitializeDatatable(pyid) {
 

@@ -34,20 +34,22 @@ namespace IBS.Interfaces.InspectionBilling
 
         public InspectionCertModel FindByItemID(string CaseNo, DateTime CallRecvDt, int CallSno, int ItemSrnoPo, string Region);
 
-        string UpdateCallDetails(InspectionCertModel model,int ItemSrnoPo, string CaseNo, DateTime CallRecvDt, int CallSno);
+        string UpdateCallDetails(InspectionCertModel model, int ItemSrnoPo, string CaseNo, DateTime CallRecvDt, int CallSno);
 
-        public ICPopUpModel FindByBillDetails(string BillNo, string Region);
+        public ICPopUpModel FindByBillDetails(string BillNo, string CaseNo, DateTime CallRecvDt, int CallSno, string Region);
 
         public string DocUpdate(string BillNo, string UserId);
 
         public InspectionCertModel FindByCallMaterialReadiness(string CaseNo, DateTime CallRecvDt, int CallSno, string Region);
 
-        public InspectionCertModel GetChangeConsigneeDetails(string CaseNo, string Bkno, string Setno,string ActionType, string Region);
+        public InspectionCertModel GetChangeConsigneeDetails(string CaseNo, string Bkno, string Setno, string ActionType, string Region);
 
         public int SaveChangeConsignee(InspectionCertModel model);
 
         public InspectionCertModel GetReturned_Bills_ChangesDetails(string CaseNo, string Bkno, string Setno, string ActionType, string Region);
 
         public int SaveReturned_Bills_Changes(InspectionCertModel model);
+
+        public InspectionCertModel GetLocalOutstation(string CaseNo, DateTime? DesireDt, int CallSno, string selectedValue);
     }
 }

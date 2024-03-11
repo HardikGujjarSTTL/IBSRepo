@@ -1,9 +1,7 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers
 {
@@ -72,14 +70,14 @@ namespace IBS.Controllers
                 if (model.ConsigneeCd == 0)
                 {
                     model.Createdby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     consigneePurchaseRepository.SaveDetails(model);
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     consigneePurchaseRepository.SaveDetails(model);
                     AlertAddSuccess("Record Updated Successfully.");
                 }
@@ -106,7 +104,7 @@ namespace IBS.Controllers
             }
             return Json(state);
         }
-        
+
         [HttpPost]
         [Authorization("ConsigneePurchase", "Index", "delete")]
         public IActionResult Delete(int id)

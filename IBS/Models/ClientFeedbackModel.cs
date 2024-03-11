@@ -9,7 +9,7 @@ namespace IBS.Models
         [Required]
         public string? OffName { get; set; }
         [Required]
-        public decimal? Mobile { get; set; }
+        public string? Mobile { get; set; }
         [Required]
         public string? Email { get; set; }
         [Required]

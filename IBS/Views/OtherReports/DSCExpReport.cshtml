@@ -1,0 +1,53 @@
+﻿@model IBS.Models.Reports.OtherReportsModel
+<div>
+    @if (Model.DSC_Monthrdo == "true")
+    {
+        <h3 class="center">@Model.Region, RITES Ltd. <br />Summary of IEs DSC Expiring During the Month @Model.DSCMonthText - @Model.DSCYear</h3>
+    }
+    else
+    {
+        <h3 class="center">@Model.Region, RITES Ltd. <br />Summary of IEs DSC Expiring in the Period @Model.DSCMonthText - @Model.DSCYear To @Model.DSCToMonthText - @Model.DSCToYear</h3>
+    }
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
+                    <th width="18%" valign="top" align="center"><b><font size="1" face="Verdana">Name</font></b></th>
+                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">Department</font></b></th>
+                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">Emp No.</font></b></th>
+                    <th width="12%" valign="top" align="center"><b><font size="1" face="Verdana">Designation</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Mobile</font></b></th>
+                    <th width="18%" valign="top" align="center"><b><font size="1" face="Verdana">Email</font></b></th>
+                    <th width="10%" valign="top" align="center"><b><font size="1" face="Verdana">Expiry Date</font></b></th>
+                </tr>
+                @if (Model != null && Model.lstDSCExpModel != null && Model.lstDSCExpModel.Count > 0)
+                {
+                    var SrNo = 0;
+                    @foreach (var item in Model.lstDSCExpModel)
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
+                            <td valign="top" align="Left"><font size="1" face="Verdana">@item.IE_Name</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.IE_Department</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.IE_Emp_No</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.R_Desgination</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.IE_Phone_No</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.IE_Email</font></td>
+                            <td valign="top" align="center"><font size="1" face="Verdana">@item.ExpiryDate</font></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="noRecordGrid">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

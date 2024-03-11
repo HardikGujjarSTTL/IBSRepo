@@ -1,9 +1,8 @@
 ﻿using IBS.Interfaces;
-using PuppeteerSharp.Media;
-using PuppeteerSharp;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
-using IBS.Repositories;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers
 {
@@ -45,20 +44,20 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult Manage(string ReportType , string frmDate , string toDate , string WiseRadio , string IeStatus , int Days , string includeNSIC , string pendingCallsOnly, string PO_NO , string PO_DT , string RLY_NONRLY , string RLY_CD , string wSortkEy)
+        public IActionResult Manage(string ReportType, string frmDate, string toDate, string WiseRadio, string IeStatus, int Days, string includeNSIC, string pendingCallsOnly, string PO_NO, string PO_DT, string RLY_NONRLY, string RLY_CD, string wSortkEy)
         {
-            if(ReportType != "IeVendorWise" && ReportType != "OverdueCalls" && ReportType != "ApprovalReport" && ReportType != "CallMarked")
+            if (ReportType != "IeVendorWise" && ReportType != "OverdueCalls" && ReportType != "ApprovalReport" && ReportType != "CallMarked")
             {
                 ReportType = "SpecificPO";
-            }    
+            }
 
-            Statement_IeVendorWiseModel model = new() {ReportType = ReportType , FromDate = frmDate , ToDate = toDate , WiseRadio = WiseRadio , IeStatus = IeStatus , Days = Days , includeNSIC = includeNSIC , pendingCallsOnly = pendingCallsOnly , PO_NO  = PO_NO , PO_DT  = Convert.ToDateTime(PO_DT), RLY_NONRLY = RLY_NONRLY , RLY_CD = RLY_CD , wSortkEy = wSortkEy };
+            Statement_IeVendorWiseModel model = new() { ReportType = ReportType, FromDate = frmDate, ToDate = toDate, WiseRadio = WiseRadio, IeStatus = IeStatus, Days = Days, includeNSIC = includeNSIC, pendingCallsOnly = pendingCallsOnly, PO_NO = PO_NO, PO_DT = Convert.ToDateTime(PO_DT), RLY_NONRLY = RLY_NONRLY, RLY_CD = RLY_CD, wSortkEy = wSortkEy };
             if (ReportType == "IeVendorWise") model.ReportTitle = "STATEMENT OF IE AND VENDOR WISE CALLS CANCELLED";
             else if (ReportType == "OverdueCalls") model.ReportTitle = "STATEMENT OF OVERDUE CALLS";
             else if (ReportType == "ApprovalReport") model.ReportTitle = "CALL CANCELLATION APPROVAL REPORT ";
             else if (ReportType == "SpecificPO") model.ReportTitle = "Call Detail For Specific PO";
             else if (ReportType == "CallMarked") model.ReportTitle = "Call Marked Period Wise";
-           
+
             return View(model);
         }
         public IActionResult Statement_IeVendorWise(string ReportType, string frmDate, string toDate)
@@ -79,12 +78,12 @@ namespace IBS.Controllers
             { ViewBag.Region = "CENTRAL REGION"; }
 
 
-            Statement_IeVendorWiseModel model = CallsReportRepository.Statement_IeVendorWise(ReportType,frmDate,toDate,Region);
+            Statement_IeVendorWiseModel model = CallsReportRepository.Statement_IeVendorWise(ReportType, frmDate, toDate, Region);
 
             return PartialView(model);
         }
 
-        public IActionResult Statement_OverdueCalls(string ReportType ,string WiseRadio, string IeStatus, int Days, string includeNSIC, string pendingCallsOnly)
+        public IActionResult Statement_OverdueCalls(string ReportType, string WiseRadio, string IeStatus, int Days, string includeNSIC, string pendingCallsOnly)
         {
             ViewBag.OnDate = DateTime.Now;
             string Region = GetRegionCode;
@@ -100,7 +99,7 @@ namespace IBS.Controllers
             { ViewBag.Region = "CENTRAL REGION"; }
 
 
-            Statement_IeVendorWiseModel model = CallsReportRepository.Statement_OverdueCalls(ReportType, WiseRadio, IeStatus, Days , includeNSIC , pendingCallsOnly, Region);
+            Statement_IeVendorWiseModel model = CallsReportRepository.Statement_OverdueCalls(ReportType, WiseRadio, IeStatus, Days, includeNSIC, pendingCallsOnly, Region);
 
             return PartialView(model);
         }
@@ -127,9 +126,9 @@ namespace IBS.Controllers
             return PartialView(model);
         }
 
-        public IActionResult Statement_SpecificPO(string ReportType, string PO_NO , string PO_DT , string RLY_NONRLY , string RLY_CD)
+        public IActionResult Statement_SpecificPO(string ReportType, string PO_NO, string PO_DT, string RLY_NONRLY, string RLY_CD)
         {
-            
+
             //string Region = GetRegionCode;
             //if (Region == "N")
             //{ ViewBag.Region = "NORTHERN REGION"; }
@@ -143,16 +142,16 @@ namespace IBS.Controllers
             //{ ViewBag.Region = "CENTRAL REGION"; }
 
 
-            Statement_IeVendorWiseModel model = CallsReportRepository.Statement_SpecificPO(ReportType, PO_NO, PO_DT , RLY_NONRLY , RLY_CD);
+            Statement_IeVendorWiseModel model = CallsReportRepository.Statement_SpecificPO(ReportType, PO_NO, PO_DT, RLY_NONRLY, RLY_CD);
 
             return PartialView(model);
         }
-        public IActionResult Statement_CallMarked(string ReportType, string frmDate, string toDate , string wSortkEy)
+        public IActionResult Statement_CallMarked(string ReportType, string frmDate, string toDate, string wSortkEy)
         {
 
             ViewBag.Frm = frmDate;
             ViewBag.To = toDate;
-            if(wSortkEy == "V")
+            if (wSortkEy == "V")
             {
                 ViewBag.Sort = "VENDOR";
             }
@@ -202,7 +201,7 @@ namespace IBS.Controllers
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = true,
-                Format = PaperFormat.Letter,
+                Format = PaperFormat.A3,
                 PrintBackground = true
             });
 

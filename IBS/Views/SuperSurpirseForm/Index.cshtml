@@ -14,19 +14,22 @@
     <div class="accordion-body">
         <div class="row d-flex align-items-end my-0">
             <div class="col-md-3">
+                <i class="text-danger">*</i>
                 <label for="PropertyId">Case No.</label>
                 <input type="text" id="txtcno" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnError1"></span>
             </div>
             <div class="col-md-3">
+                <i class="text-danger">*</i>
                 <label for="PropertyId">Call Date</label>
                 <input type="text" class="input datepicker" id="dtcdate" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnError2"></span>
             </div>
             <div class="col-md-3">
+                <i class="text-danger">*</i>
                 <label for="PropertyId">Call SNo.</label>
                 <input type="text" id="txtcsno" />
-                <span class="text-danger"></span>
+                <span class="text-danger field-validation-error" id="spnError3"></span>
             </div>
             <div class="col-md-3">
                 <div class="savenext-btn">
@@ -68,6 +71,23 @@
             //InitializeDatatable();
         });
         function show() {
+            $("#spnError1").html("");
+            $("#spnError2").html("");
+            $("#spnError3").html("");
+            var IsValid = true;
+            if ($("#txtcno").val() == "") {
+                $("#spnError1").html("The Case No field is required.");
+                IsValid = false;
+            }
+            if ($("#dtcdate").val() == "") {
+                $("#spnError2").html("The Call Date field is required.");
+                IsValid = false;
+            }
+            if ($("#txtcsno").val() == "") {
+                $("#spnError3").html("The Call SNo field is required.");
+                IsValid = false;
+            }
+            if (!IsValid) return;
             var CaseNo = $("#txtcno").val();
             var CallDate = $("#dtcdate").val();
             var CallSNo = $("#txtcsno").val();

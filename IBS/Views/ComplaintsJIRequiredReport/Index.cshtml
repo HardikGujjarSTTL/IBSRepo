@@ -225,13 +225,14 @@
             $("#vendortxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        url: "@Url.Action("GetVendorData", "Search")",
+                        //url: "/Search/GetVendorData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                                return { text: item.VEND_NAME, value: item.VEND_NAME };
                             }))
                         }
                     })
@@ -242,13 +243,14 @@
             $("#consigneetxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Search/GetConsigneeData",
+                        url: "@Url.Action("GetConsigneeData", "Search")",
+                        //url: "/Search/GetConsigneeData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.CONSIGNEE, value: item.CONSIGNEE };
+                                return { text: item.CONSIGNEE, value: item.CONSIGNEE };
                             }))
                         }
                     })

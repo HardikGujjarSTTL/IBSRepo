@@ -1,0 +1,139 @@
+﻿@model IBS.Models.BillRaisedModel
+
+@{
+    Layout = null;
+    string ReportType = (Model != null ? Model.ReportType : "");
+    string ReportTitle = (Model != null ? Model.ReportTitle : "");
+    ViewData["Title"] = ReportTitle;
+}
+
+<html>
+<head>
+    <title>@ReportTitle</title>
+</head>
+<body>
+    <p align="right">
+        <input type="button" class="commonBtn" value="Print" id="btnPrint" />
+        <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
+        <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
+    </p>
+    <div id="dvReportViewer"></div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<link href="~/css/report.css" rel="stylesheet" />
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/js/html2pdf.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+
+<script type="text/javascript">
+
+    var fileName = '';
+
+    $(function () {
+        if ('@ReportType' == 'RlyBills') {
+            loadRailwayOnlineReport();
+            fileName = 'RailwayOnlineReport';
+        }
+        else if ('@ReportType' == 'RBNRS') {
+            loadBillsNotCrisReport();
+            fileName = "BillsNotCrisReport";
+        }
+    });
+
+    function loadRailwayOnlineReport() {
+        let myObject = { ClientType: '@Model.ClientType', rdoSummary: '@Model.rdoSummary', BpoRly: '@Model.BpoRly', rdoBpo: '@Model.rdoBpo', FromMn: '@Model.FromMn', FromYr: '@Model.FromYr', FromDt: '@Model.FromDt', ToDt: '@Model.ToDt', ActionType: '@Model.ActionType', chkRegion: '@Model.chkRegion' };
+        //$.param(myObject);
+
+
+        $("#dvReportViewer").load("@Url.Action("RailwayOnlineReport_Partial","BillingReports")", myObject, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    function loadBillsNotCrisReport() {
+        let myObject = { FromDate: '@Model.FromDate', ToDate: '@Model.ToDate', chkRegion: '@Model.chkRegion', ClientType: '@Model.ClientType', lstAU: '@Model.lstAU', actiontype: '@Model.actiontype', rdbPRly: '@Model.rdbPRly', rdbPAU: '@Model.rdbPAU' };
+
+        $("#dvReportViewer").load("@Url.Action("BillsNotCrisReport_Partial","BillingReports")", myObject, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
+
+    $("#btnPrint").click(function () {
+        generatePdf(true);
+    });
+
+    $("#btnExportToPdf").click(function () {
+        generatePdf(false);
+    });
+
+    $("#btnExportToExcel").click(function () {
+        var html = $('#dvReportViewer').html();
+        html = html.replaceAll('class="borderTable"', 'border="1"');
+
+        let file = new Blob([html], { type: "application/vnd.ms-excel" });
+        let url = URL.createObjectURL(file);
+        let a = $("<a />", {
+            href: url,
+            download: getExportFileName(fileName) + ".xls"
+        }).appendTo("body").get(0).click();
+        e.preventDefault();
+    });
+
+    function generatePdf(isPrint) {
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "BillingReports")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { ReportType: '@ReportType' },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
+
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
+    }
+
+    $(document).ajaxSend(function () {
+        $(".overlayLoader").show();
+    });
+
+    $(document).ajaxComplete(function () {
+        $(".overlayLoader").hide();
+    });
+
+</script>
+

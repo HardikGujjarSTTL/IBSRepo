@@ -1,5 +1,8 @@
 ﻿@model IBS.Models.Reports.VendorFeedbackReportModel
-
+<style>
+    .borderTable th:nth-child(1){ width:3%;}
+    .borderTable th:nth-child(3), .borderTable th:nth-child(4){ width:4.5%;}
+</style>
 <div>
     <h3 class="center">@Model.Regions</h3>
     <h3 class="heading3">Vendor Feedback Details</h3>
@@ -7,20 +10,20 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">S.No.</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
-                    <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Region</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Period(YYYYMM)</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Promptness of RITES Regional Office in attending to P.O. & Call Registration</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Response of Call Desk in attending to Telephonic enquiries.</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Response of Inspecting Engineer for conducting inspection, timely attention and provision of advance intimation</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Behaviour of Inspecting Engineer with firm's representative during inspection and promptness in issue of inspection certificate</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Response of Controlling Managers to Firm's queries.</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">RITES Lab response time.</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Quality of Information available on RITES QA Division website ritesinsp.com</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Promptness of RITES Finance Department in correction with Invoices/Bills/Receipts etc.</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Your overall experience with RITES QA Division, will you recommend others for RITES inspection.</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Suggestions for improvement in service.</font></b></th>
+                    <th valign="top" align="center"><b>S.No.</b></th>
+                    <th valign="top" align="center"><b>Vendor</b></th>
+                    <th valign="top" align="center"><b>Region</b></th>
+                    <th valign="top" align="center"><b>Period(YYYYMM)</b></th>
+                    <th valign="top" align="center"><b>Promptness of RITES Regional Office in attending to P.O. & Call Registration</b></th>
+                    <th valign="top" align="center"><b>Response of Call Desk in attending to Telephonic enquiries.</b></th>
+                    <th valign="top" align="center"><b>Response of Inspecting Engineer for conducting inspection, timely attention and provision of advance intimation</b></th>
+                    <th valign="top" align="center"><b>Behaviour of Inspecting Engineer with firm's representative during inspection and promptness in issue of inspection certificate</b></th>
+                    <th valign="top" align="center"><b>Response of Controlling Managers to Firm's queries.</b></th>
+                    <th valign="top" align="center"><b>RITES Lab response time.</b></th>
+                    <th valign="top" align="center"><b>Quality of Information available on RITES QA Division website ritesinsp.com</b></th>
+                    <th valign="top" align="center"><b>Promptness of RITES Finance Department in correction with Invoices/Bills/Receipts etc.</b></th>
+                    <th valign="top" align="center"><b>Your overall experience with RITES QA Division, will you recommend others for RITES inspection.</b></th>
+                    <th valign="top" align="center"><b>Suggestions for improvement in service.</b></th>
                 </tr>
                 @if (Model != null && Model.lstVendorFeedbackReport != null && Model.lstVendorFeedbackReport.Count > 0)
                 {
@@ -38,34 +41,34 @@
                         toFIELD_7 = toFIELD_7 + item.FIELD_7;
                         toFIELD_8 = toFIELD_8 + item.FIELD_8;
                         <tr>
-                            <td width="4%" valign="top" align="center"><font size="1" face="Verdana">@SrNo</font></td>
-                            <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Vendor</font></td>
-                            <td width="15%" valign="top" align="center"><font size="1" face="Verdana">@item.Region</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.MTHYR_PERIOD</font></td>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_1</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_2</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_3</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_4</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_5</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_6</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_7</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_8</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_9</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.FIELD_10</font></td>
+                            <td valign="top" align="center">@SrNo</td>
+                            <td valign="top" align="Left">@item.Vendor</td>
+                            <td valign="top" align="center">@item.Region</td>
+                            <td valign="top" align="center">@item.MTHYR_PERIOD</td>
+                            <td valign="top" align="center">@item.FIELD_1</td>
+                            <td valign="top" align="center">@item.FIELD_2</td>
+                            <td valign="top" align="center">@item.FIELD_3</td>
+                            <td valign="top" align="center">@item.FIELD_4</td>
+                            <td valign="top" align="center">@item.FIELD_5</td>
+                            <td valign="top" align="center">@item.FIELD_6</td>
+                            <td valign="top" align="center">@item.FIELD_7</td>
+                            <td valign="top" align="center">@item.FIELD_8</td>
+                            <td valign="top" align="center">@item.FIELD_9</td>
+                            <td valign="top" align="center">@item.FIELD_10</td>
                         </tr>
                     }
                     <tr>
-                        <td width="15%" valign="top" align="Left" colspan="2"><font size="1" face="Verdana"><b>Totals</b></font></td>
-                        <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b></b></font></td>
-                        <td width="7%" valign="top" align="right"><font size="1" face="Verdana"><b></b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_1</b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_2</b></font></td>
-                        <td width="6%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_3</b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_4</b></font></td>
-                        <td width="10%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_5</b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_6</b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_7</b></font></td>
-                        <td width="8%" valign="top" align="right"><font size="1" face="Verdana"><b>@toFIELD_8</b></font></td>
+                        <td valign="top" align="Left" colspan="2"><b>Totals</b></td>
+                        <td valign="top" align="right"><b></b></td>
+                        <td valign="top" align="right"><b></b></td>
+                        <td valign="top" align="right"><b>@toFIELD_1</b></td>
+                        <td valign="top" align="right"><b>@toFIELD_2</b></td>
+                        <td valign="top" align="right"><b>@toFIELD_3</b></td>
+                        <td valign="top" align="right"><b>@toFIELD_4</b></td>
+                        <td valign="top" align="right"><b>@toFIELD_5</b></td>
+                        <td valign="top" align="right"><b>@toFIELD_6</b></td>
+                        <td valign="top" align="right"><b>@toFIELD_7</b></td>
+                        <td valign="top" align="right"><b>@toFIELD_8</b></td>
                     </tr>
                 }
             </tbody>

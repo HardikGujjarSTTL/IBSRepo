@@ -27,7 +27,7 @@
         <table id="dtList" class="borderTable" cellpadding="0" cellspacing="0" width="100%">
             <tbody>
                 <tr>
-                    <th width="2%" valign="top" align="center"><b><font size="1" face="Verdana">Sr. No.</font></b></th>
+                    <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Sr. No.</font></b></th>
                     <th width="10%" valign="top" align="left"><b><font size="1" face="Verdana">Sector</font></b></th>
                     <th width="8%" valign="top" align="right"><b><font size="1" face="Verdana">Insp Fee</font></b></th>
                     <th width="8%" valign="top" align="right"><b><font size="1" face="Verdana">Service Tax</font></b></th>
@@ -106,6 +106,11 @@
             </tbody>
         </table>
     </div>
+    <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
 </body>
 </html>
 <link href="~/css/report.css" rel="stylesheet" />
@@ -158,34 +163,43 @@
     });
 
     function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
-
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "BillingReports")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { ReportType: "BillingSectorReport" },
+            xhrFields: {
+                responseType: 'blob'
             },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
 
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        setTimeout(function () {
-            element.style.width = "100%";
-        }, 1000);
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
     }
 
 </script>

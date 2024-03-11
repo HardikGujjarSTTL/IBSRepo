@@ -7,9 +7,9 @@ public partial class NonRlyClient
 {
     public int Id { get; set; }
 
-    public string? Clientname { get; set; }
+    public string Clientname { get; set; } = null!;
 
-    public string? Shortcode { get; set; }
+    public string Shortcode { get; set; } = null!;
 
     public string? Contactname { get; set; }
 
@@ -29,5 +29,5 @@ public partial class NonRlyClient
 
     public int? Isdeleted { get; set; }
 
-    public string? Orgntype { get; set; }
+    public string Orgntype { get; set; } = null!;
 }

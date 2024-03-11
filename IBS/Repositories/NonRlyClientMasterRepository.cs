@@ -4,7 +4,6 @@ using IBS.Interfaces;
 using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -30,7 +29,7 @@ namespace IBS.Repositories
                 {
                     if (context.NonRlyClients.Any())
                     {
-                        maxID = context.NonRlyClients.Max(x => x.Id) + 1;
+                        maxID = context.NonRlyClients.Max(x => Convert.ToInt32(x.Id)) + 1;
                     }
                     else
                     {
@@ -102,7 +101,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string clientname = "", ShortCode="";
+            string clientname = "", ShortCode = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["clientname"]))
             {
                 clientname = Convert.ToString(dtParameters.AdditionalValues["clientname"]);
@@ -115,11 +114,15 @@ namespace IBS.Repositories
             DataTable dt = new DataTable();
             DataSet ds;
 
-            OracleParameter[] par = new OracleParameter[3];
+            OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("p_clientname", OracleDbType.Varchar2, clientname, ParameterDirection.Input);
             par[1] = new OracleParameter("p_shortcode", OracleDbType.Varchar2, ShortCode, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
-            ds = DataAccessDB.GetDataSet("GetNonClientInfo", par, 1);
+            par[2] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            ds = DataAccessDB.GetDataSet("GetNonClientInfo", par, 2);
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -139,18 +142,16 @@ namespace IBS.Repositories
 
                 query = list.AsQueryable();
 
-                dTResult.recordsTotal = ds.Tables[0].Rows.Count;
-
-                if (!string.IsNullOrEmpty(searchBy))
-                    query = query.Where(w => Convert.ToString(w.ClientName).ToLower().Contains(searchBy.ToLower())
-                    || Convert.ToString(w.ShortCode).ToLower().Contains(searchBy.ToLower())
-                    );
-
-                dTResult.recordsFiltered = query.Count();
-
-                dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+                int recordsTotal = 0;
+                if (ds != null && ds.Tables[1].Rows.Count > 0)
+                {
+                    recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+                }
+                dTResult.recordsTotal = recordsTotal;
+                dTResult.recordsFiltered = recordsTotal;
+                dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
                 dTResult.draw = dtParameters.Draw;
+                return dTResult;
 
             }
             else
@@ -163,7 +164,8 @@ namespace IBS.Repositories
         public Clientmaster FindNonClientByID(int ID)
         {
             Clientmaster model = new();
-            NonRlyClient client = context.NonRlyClients.Find(ID);
+            //NonRlyClient client = context.NonRlyClients.Find(ID);
+            NonRlyClient client = context.NonRlyClients.Where(x => x.Id == ID).FirstOrDefault();
 
             if (client == null)
                 throw new Exception("Client Not found");

@@ -43,6 +43,18 @@ namespace IBS.Models
 
         public decimal? BILL_AMOUNT { get; set; }
 
+        public decimal? BILL_AMT_CLEARED { get; set; }
+
+        public string? CNTOTE_AMOUNT { get; set; }
+
+        public string CR_BILL_NO { get; set; }
+
+        public string CR_BILL_DT { get; set; }
+
+        public decimal? CR_BILL_AMOUNT { get; set; }
+
+        public decimal? CR_BILL_AMT_CLEARED { get; set; }
+
         public decimal? NO_OF_BILLS { get; set; }
 
         public List<BillRaisedListModel> lstBill { get; set; }
@@ -158,6 +170,28 @@ namespace IBS.Models
         public string FilePath1 { get; set; }
         public string FilePath2 { get; set; }
         public string FilePath3 { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CnoteFromDt { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CnoteToDt { get; set; }
+
+        public List<CNoteInvoiceModel> lstCNoteInvoice { get; set; }
+
+        public string ReportType { get; set; }
+        public string ReportTitle { get; set; }
+
+        public string rdoSummary { get; set; }
+        public string rdoBpo { get; set; }
+
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+        public string rdbPRly { get; set; }
+        public string rdbPAU { get; set; }
+        public string actiontype { get; set; }
 
     }
 
@@ -312,5 +346,28 @@ namespace IBS.Models
         public string AU { get; set; }
 
         public string FilePath { get; set; }
+    }
+
+    public class CNoteInvoiceModel
+    {
+        public string CASE_NO { get; set; }
+
+        public string BILL_NO { get; set; }
+
+        public string BILL_DT { get; set; }
+
+        public decimal? BILL_AMOUNT { get; set; }
+
+        public decimal? BILL_AMT_CLEARED { get; set; }
+
+        public string? CNTOTE_AMOUNT { get; set; }
+
+        public string CR_BILL_NO { get; set; }
+
+        public string CR_BILL_DT { get; set; }
+
+        public decimal? CR_BILL_AMOUNT { get; set; }
+
+        public decimal? CR_BILL_AMT_CLEARED { get; set; }
     }
 }

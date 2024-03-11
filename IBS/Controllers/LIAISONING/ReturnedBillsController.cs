@@ -1,13 +1,8 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
 //using CrystalDecisions.Shared;
-using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -22,7 +17,7 @@ namespace IBS.Controllers
             ReturnedBillsRepository = _ReturnedBillsRepository;
             _webHostEnvironment = webHostEnvironment;
         }
-        
+
 
         public IActionResult ReturnedBills()
         {
@@ -37,7 +32,7 @@ namespace IBS.Controllers
             DTResult<ReturnedBillsModel> dTResult = ReturnedBillsRepository.GetReturnedBills(dtParameters, OrgType, Org);
             return Json(dTResult);
         }
-        
+
 
     }
 }

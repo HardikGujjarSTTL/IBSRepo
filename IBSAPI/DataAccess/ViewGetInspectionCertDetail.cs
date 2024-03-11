@@ -28,4 +28,6 @@ public partial class ViewGetInspectionCertDetail
     public string? Regioncode { get; set; }
 
     public string? Callstatus { get; set; }
+
+    public string? Callcancelstatus { get; set; }
 }

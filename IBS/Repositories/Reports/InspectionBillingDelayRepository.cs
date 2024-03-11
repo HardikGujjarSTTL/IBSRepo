@@ -1,13 +1,9 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
-using System.Linq;
 
 namespace IBS.Repositories.Reports
 {

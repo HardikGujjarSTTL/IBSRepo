@@ -1,0 +1,170 @@
+﻿@model labInvoicelst
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Generate Invoice</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" id="FromDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" maxlength="100" id="ToDt" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Region</label>
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.InspRegion() , "Value", "Text"),"--Select--",new {@id="InspRegion"})
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mb-4 text-center">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="BtnSubmit()">Generate PDF</button>
+                    <button type="button" class="save-btn active" onclick="BtnList()">Get List</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dvReportViewer"></div>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        var Cnt = 0;
+        var xmlLength = 0;
+
+        function BtnSubmit() {
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            var Region = $("#InspRegion").val();
+            if (!Validation()) {
+                ShowHideMsgNew(false, "All fields are mendatory.");
+                return;
+            }
+            $(".overlayLoader1").show();
+            $.ajax({
+                url: '@Url.Action("GetLabInvoiceList", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
+                type: "POST",
+                contentType: false,
+                success: function (response) {
+                    if (response.status == 1) {
+                        var listXml = response.list;
+                        xmlLength = listXml.length;
+                        for (i = 0; i < listXml.length; i++) {
+                            var data = listXml[i];
+                            $.post("@Url.Action("GeneratePDF", "LabInvoice")", { "model": data }, function (exeResponse) {
+                                if (exeResponse.status = 1) {
+                                    DigitalSign(exeResponse.xmlDetail, exeResponse.InvoiceNo, exeResponse.InvoiceBillNo);
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        ShowHideMsgNew(false, "No Data Found");
+                        $(".overlayLoader1").hide();
+                    }
+                },
+                error: function (error) {
+                    //console.log(error);
+                }
+            }).done(function (result) {
+            });
+        }
+
+        function DigitalSign(xmldata, InvoiceNo, InvoiceBillNo) {
+            $.ajax({
+                url: "http://127.0.0.1:1620",
+                type: 'POST',
+                data: { response: xmldata },
+                success: function (exeResponse) {
+                    var status = $(exeResponse).find("status").text();
+                    var pdf = $(exeResponse).find("data").text();
+                    Cnt = Cnt + 1;
+                    if (status == "ok") {
+                        pdf = $(exeResponse).find("data").text();
+                        $.post("@Url.Action("UploadSignedPdf1", "LabInvoice")", { "base64SignedPdf": pdf, "InvoiceNo": InvoiceNo, "InvoiceBillNo": InvoiceBillNo }, function (exeResponse) {
+                            if (Cnt == xmlLength) {
+                                $(".overlayLoader1").hide();
+                                ShowHideMsg("success", "Digital signed successfully!!");
+                            }
+                        });
+                    }
+                    else {
+                        if (Cnt == xmlLength) {
+                            $(".overlayLoader1").hide();
+                            ShowHideMsg("error", "Digital signed unsuccessfully!!");
+                        }
+                        //console.log("PDF = " + pdf);
+                        //console.log("Bill_No = " + Bill_No);
+                        //console.log("===========FAIL=============");
+                    }
+                },
+            });
+        }
+
+        function Validation() {
+            var type = false;
+            if ($("#FromDt").val() && $("#ToDt").val() && $("#InspRegion").val()) {
+                type = true;
+            }
+            return type;
+        }
+
+        function downloadPDF(pdf) {
+            const linkSource = `data:application/pdf;base64,${pdf}`;
+            const downloadLink = document.createElement("a");
+            const fileName = "Ditital_Sign_Report.pdf";
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+            downloadLink.click();
+        }
+
+        function BtnList(){
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            var Region = $("#InspRegion").val();
+            if (!Validation()) {
+                ShowHideMsgNew(false, "All fields are mendatory.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("LabInvoiceList", "LabInvoice")?FromDate=' + FromDate + '&ToDate=' + ToDate + '&Region=' + Region,
+                type: "POST",
+                contentType: false,
+                success: function (response) {
+                    $("#dvReportViewer").empty();
+                    $("#dvReportViewer").html(response);
+                },
+                error: function (error) {
+                    //console.log(error);
+                }
+            }).done(function (result) {
+            });
+        }
+
+    </script>
+}

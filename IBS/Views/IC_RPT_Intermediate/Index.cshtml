@@ -23,6 +23,7 @@
         <a href="@gobackUrl" class="formBtn viewall-btn">Back</a>
     </div>
 </div>
+
 <div class="@clsView">
     <form role="form" asp-controller="InterUnit_Transfer" asp-action="DetailSave" id="frmInterUnitTransfer">
         <input type="hidden" asp-for="Region">
@@ -117,11 +118,11 @@
             <div class="row my-3">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Consignee</label>
-                    @Html.DropDownListFor(Model => Model.CONSIGNEE_CD, new SelectList(IBS.Models.Common.BindConsignee(Model.CASE_NO, Model.Display_Call_Recv_dt, Model.Call_SNO) , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.CONSIGNEE_CD, new SelectList(IBS.Models.Common.BindConsignee(Model.CASE_NO, Model.Display_Call_Recv_dt, Model.Call_SNO), "Value", "Text"))
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Items</label>
-                    @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(new List<SelectListItem>() , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(Model => Model.ITEM_SRNO_PO, new SelectList(new List<SelectListItem>(), "Value", "Text"), "--Select--")
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="Reference">BK No.</label>
@@ -136,7 +137,7 @@
             <div class="row my-3 clsMan_type">
                 <div class="col-md-3 mb-3">
                     <label for="Reference">Consignee Manufacture Type : </label>
-                    @Html.DropDownListFor(Model => Model.MAN_TYPE, new SelectList(IBS.Models.Common.GetConsignneManufacturingType() , "Value", "Text"))
+                    @Html.DropDownListFor(Model => Model.MAN_TYPE, new SelectList(IBS.Models.Common.GetConsignneManufacturingType(), "Value", "Text"))
                 </div>
             </div>
 
@@ -253,7 +254,7 @@
             <div class="row my-0">
                 <div class="col-md-3 mb-3 clsLAB_RE">
                     <label for="Reference">Case Lab report receipt Date</label>
-                    <input type="text" class="input datepicker" asp-for="LAB_TST_RECT_DT" id="txtLabReceDate" placeholder="(DD/MM/YYYY)" />
+                    <input type="text" class="input datepicker" asp-for="LAB_TST_RECT_DT" placeholder="DD/MM/YYYY" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="Reference" id="lblPassIns">Passed instt. Note</label>
@@ -289,8 +290,8 @@
                 <div class="col-md-10 mb-3">
                     <label for="Reference">IE Stamp</label>
                     <div style="display:flex;">
-                        <div class="col-md-5 mb-3" style="margin-right:25px;">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))</div>
-                        <div class="col-md-5 mb-3">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL2, new SelectList(IBS.Models.Common.BindIEStamps() , "Value", "Text"))</div>
+                        <div class="col-md-5 mb-3" style="margin-right:25px;">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL, new SelectList(IBS.Models.Common.BindIEStamps(), "Value", "Text"))</div>
+                        <div class="col-md-5 mb-3">@Html.DropDownListFor(model => model.IE_STAMPS_DETAIL2, new SelectList(IBS.Models.Common.BindIEStamps(), "Value", "Text"))</div>
                     </div>
                 </div>
             </div>
@@ -306,7 +307,7 @@
     </form>
 </div>
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
@@ -385,8 +386,10 @@
         });
 
         function Download() {
+
             $('#BK_NO').prop('disabled', true);
             $('#SET_NO').prop('disabled', true);
+
             var CaseNO = $("#lblCASE_NO").html();
             var Call_Recv_Dt = $("#lblCall_Recv_dt").html();
             var CallSNo = $("#lblCall_SNO").html();
@@ -394,16 +397,15 @@
             var Region = $("#Region").val();
             var BkNo = $('#BK_NO').val();
             var SetNo = $('#SET_NO').val();
-            var QueryString = "?RptFlag=8" +
-                "&CaseNO=" + encodeURIComponent(CaseNO) +
-                "&Call_Recv_Dt=" + encodeURIComponent(Call_Recv_Dt) +
-                "&CallSNo=" + encodeURIComponent(CallSNo) +
-                "&Consignee_CD=" + encodeURIComponent(Consignee_CD) +
-                "&Region=" + encodeURIComponent(Region) +
-                "&BkNo=" + encodeURIComponent(BkNo) +
-                "&SetNo=" + encodeURIComponent(SetNo);
 
-            window.open('@ReportUrl' + QueryString);
+            $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
+                if (response.IsDigitalSignatureConfig){
+                    abc(response.responseText, "test.pdf");
+                }
+                else{
+                    downloadPDF(response.responseText);
+                }
+            });
         }
 
         function lstman() {
@@ -847,7 +849,7 @@
                     if (Consignee_Cd == Flag_Consignee) {
                         setItemVal();
                     }
-                    else{
+                    else {
                         $("#BK_NO").val("");
                         $("#SET_NO").val("");
                     }
@@ -902,26 +904,19 @@
         }
 
         function abc(xmldata, xmlfilename) {
-            //alert(xmldata);
-            //var xml=encodeURI(xmldata);
-            //alert(xml);
-
             var xml = xmldata;
+
             $.post("http://127.0.0.1:1620", { "response": xml }, function (exeResponse) {
-                //alert("IN function");
                 var status = $(exeResponse).find("status").text();
-
                 if (status == "failed") {
-
+                    alert($(exeResponse).find("error").text());
                 }
                 else {
-                    var Url = "@Url.Action("PKIDATA","IC_RPT_Intermediate")"; // "/RBS/PKIDATA.aspx";
-                    $.post(Url, { "file": exeResponse, "filename": xmlfilename }, function (res) {
-                        window.location.href = "@Url.Action("Index","IC_RPT_Intermediate")?filename=" + res; //"/RBS/IC_RPT_Intermediate.aspx?filename=" + res;
-                    });
+                    var pdf = $(exeResponse).find("data").text();
+                    downloadPDF(pdf);
                 }
             }).fail(function (xhr, textStatus, errorThrown) {
-                window.location.href = "@Url.Action("Index","IC_RPT_Intermediate")?filename=" + xmlfilename;
+                window.location.href = "@Url.Action("Index", "IC_RPT_Intermediate")?filename=" + xmlfilename;
             });
         }
 
@@ -996,6 +991,38 @@
                 event.returnValue = false;
             }
             return false;
+        }
+
+        function DigitalSignatureStatus(EmailId) {
+
+            return 0;
+        }
+
+        function getDigitalSignedDoc(EmailId, base64String) {
+            var model = {
+                EmailId: EmailId,
+                PDFDocument: base64String,
+                PageNo: 1,
+                IsMultipleSign: false,
+                IsLeft: false,
+                X1: 450,
+                Y1: 50,
+                X2: 580,
+                Y2: 110
+            };
+
+            $.post('http://localhost:9090/api/Home', model, function (response) {
+                downloadPDF(response.PDFDocument);
+            });
+        }
+
+        function downloadPDF(pdf) {
+            const linkSource = `data:application/pdf;base64,${pdf}`;
+            const downloadLink = document.createElement("a");
+            const fileName = "IC_Report.pdf";
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+            downloadLink.click();
         }
 
     </script>

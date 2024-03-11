@@ -1,10 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Connections.Features;
-using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.Xml.Linq;
 
 namespace IBS.Repositories
 {
@@ -209,7 +205,7 @@ namespace IBS.Repositories
                     obj.AltIeThree = model.AltIeThree;
                     obj.ContAltIe = model.ContAltIe;
                     obj.IeCallMarking = model.IeCallMarking;
-                    obj.IePwd = "Rites123";
+                    obj.IePwd = "WPg3mg2hKkFI3zwp72u8SA==";
                     obj.UserId = model.UserId;
                     obj.Datetime = DateTime.Now.Date;
                     obj.CallMarkingStoppingDt = model.CallMarkingStoppingDt;
@@ -251,7 +247,7 @@ namespace IBS.Repositories
                     IE.IeType = model.IeType;
                     IE.IeRegion = model.IeRegion;
                     IE.IeJoinDt = model.IeJoinDt;
-                    IE.IePwd = "Rites123";
+                    IE.IePwd = "WPg3mg2hKkFI3zwp72u8SA==";
                     IE.UserId = model.UserId;
                     IE.Datetime = DateTime.Now.Date;
                     IE.IeEmail = model.IeEmail;
@@ -412,7 +408,7 @@ namespace IBS.Repositories
                 User.EmpNo = Convert.ToString(model.IeEmpNo);
                 User.Region = model.IeRegion;
                 //User.Password = Convert.ToString(model.IeEmpNo);
-                User.Password = "Rites123";
+                User.Password = "WPg3mg2hKkFI3zwp72u8SA==";
                 User.Createdby = model.UserId;
                 User.Createddate = DateTime.Now.Date;
                 User.Isdeleted = 0;
@@ -435,7 +431,7 @@ namespace IBS.Repositories
                 //UserDetails.Migtype = "I";
                 //UserDetails.Mobile = model.IePhoneNo;
 
-                UserDetails.Password = "Rites123";
+                UserDetails.Password = "WPg3mg2hKkFI3zwp72u8SA==";
                 context.SaveChanges();
             }
         }

@@ -2,12 +2,6 @@
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -83,7 +77,7 @@ namespace IBS.Repositories
                             VCHR_DT = t24.VchrDt,
                             BANK_CD = t24.BankCd,
                             BANK_NAME = t94.FmisBankCd.ToString().PadLeft(4, '0') + "-" + t94.BankName,
-                            
+
                         }).ToList();
 
             query = lstQuery.AsQueryable();
@@ -401,7 +395,7 @@ namespace IBS.Repositories
 
                             GeneralFile gnrFile = context.GeneralFiles.Where(x => x.VchrNoT25 == model.VCHR_NO && x.SnoT25 == item.ID && x.PostingStatus == null).FirstOrDefault();
 
-                            if(gnrFile != null)
+                            if (gnrFile != null)
                             {
                                 gnrFile.AccCode = Convert.ToInt32(wAcc_Cd);
                                 gnrFile.PartyName = GetBankName(item.BANK_CD) + " || " + Common.ConvertDateFormat(item.CHQ_DT);

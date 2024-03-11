@@ -132,130 +132,141 @@
         }
 </style> *@
 <h2>@ViewData["Title"]</h2>
-<div class="list-inner">
-    <div class="tast-list">
-        <h2>LAB SAMPLE INFORMATION DETAIL</h2>
-    </div>
-    <div>
-        <a asp-action="LabSampleInfo" asp-controller="VendorLabSampleForm" class="formBtn viewall-btn">View List</a>
-    </div>
-</div>
-<section class="@clsView">
-    <div class="task-listinput">
-        <div class="accordion-body">
-            <div class="row my-0">
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Case No.</label>
-                    <input type="text" class="input" readonly="readonly" id="lblcno">
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="Reference">Call Date & Sno</label>
-                    <input type="text" class="input" readonly="readonly" id="lblCallDT">
-
-                </div>
-                <div class="col-md-4 mb-3" style="margin-top:auto;">
-
-                    <input type="text" class="input" readonly="readonly" id="lblCallSno">
-                </div>
+<div id="tab-1">
+    <form data-ajax="true" asp-antiforgery="true" asp-controller="VendorLabSampleForm" asp-action="SaveDataDetails" data-ajax-method="post" data-ajax-complete="completed" id="frmDetails">
+        <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
+        <div class="list-inner">
+            <div class="tast-list">
+                <h2>LAB SAMPLE INFORMATION DETAIL</h2>
             </div>
-            <div class="row my-0">
-                <div class="col-md-8 mb-3">
-                    <label for="Reference">Vendor</label>
-                    <input type="text" class="input" readonly="readonly" id="lblVend">
-                </div>
-                <div class="col-md-4 mb-3" style="margin-top:auto;">
-
-                    <input type="hidden" class="input" readonly="readonly" id="lblVENDCD">
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-8 mb-3">
-                    <label for="Reference">IE</label>
-                    <input type="text" class="input" readonly="readonly" id="lblIE">
-                </div>
-                <div class="col-md-4 mb-3">
-
-                    <input type="hidden" class="input" readonly="readonly" id="lblIECD">
-
-                </div>
-            </div>
-            <div class="row my-0">
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">Net Testing Charges Paid <i class="text-danger">*</i></label>
-                    <input type="text" class="input" id="txttesfee">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">TDS (If Any) <i class="text-danger">*</i></label>
-                    <input type="text" class="input" id="txttdsany">
-
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">UTR NO <i class="text-danger">*</i></label>
-                    <input type="text" class="input" id="txtutrno">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="Reference">UTR Date <i class="text-danger">*</i></label>
-                    <input type="text" class="input datepicker" id="dtutr">
-                </div>
-            </div>
-            <div class="row my-0">
-
-                <div class="col-md-4 mb-3" id="lblfile">
-                    <label for="Reference">Upload Payment Report(In PDF Only)</label>
-                    <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
-
-                </div>
-                <div class="col-md-4 mb-3">
-                    <a id="download" href="javascript:void(0);" style="display:none;"></a>
-                </div>
-                <div class="col-md-4 mb-3" style="margin-left:auto">
-                    <label for="Reference">Payment Status By Finance (RITES)</label>
-                    <input type="text" class="input" id="lblpstatus" readonly="readonly">
-
-                </div>
-            </div>
-            <div id="approval" style="display:none">
-                <div class="row my-0">
-                    <div class="col-md-3 mb-3">
-                        <label for="Reference">Date of Receipt of Sample</label>
-                        <input type="text" class="input" id="dtrecsample" readonly="readonly">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="Reference">Total Testing Fee</label>
-                        <input type="text" class="input" id="txttfee" readonly="readonly">
-
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="Reference">Likely Date of Test Report</label>
-                        <input type="text" class="input" id="dtltestreport" readonly="readonly">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="Reference">Status</label>
-                        <select class="input" id="ddlstatus" disabled>
-                            <option value="S">Sample Received</option>
-                            <option value="C">Lab Report under Compilation</option>
-                            <option value="U">Lab Report Uploaded</option>
-                            <option value="O">Others</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row my-0">
-                    <div class="col-md-8 mb-3">
-                        <label for="Reference">Remarks</label>
-                        <textarea id="txtremarks" rows="4" cols="50" readonly="readonly"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="savenext-btn" style="margin-left:47%;">
-                <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
-                <button type="button" class="save-btn active Permission_EditView" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
+            <div>
+                <a asp-action="LabSampleInfo" asp-controller="VendorLabSampleForm" class="formBtn viewall-btn">View List</a>
             </div>
         </div>
-    </div>
+        <section class="@clsView">
+            <div class="task-listinput">
+                <div class="accordion-body">
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Case No.</label>
+                            <input type="text" class="input" readonly="readonly" id="lblcno" asp-for="CaseNo">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="Reference">Call Date & Sno</label>
+                            <input type="text" class="input" readonly="readonly" id="lblCallDT" asp-for="CallRecDt">
 
-    <br />
-</section>
-@*</form>*@
+                        </div>
+                        <div class="col-md-4 mb-3" style="margin-top:auto;">
+
+                            <input type="text" class="input" readonly="readonly" id="lblCallSno" asp-for="CallSNO">
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-8 mb-3">
+                            <label for="Reference">Vendor</label>
+                            <input type="text" class="input" readonly="readonly" id="lblVend" asp-for="VendorName">
+                        </div>
+                        <div class="col-md-4 mb-3" style="margin-top:auto;">
+
+                            <input type="hidden" class="input" readonly="readonly" id="lblVENDCD" asp-for="Vendor">
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-8 mb-3">
+                            <label for="Reference">IE</label>
+                            <input type="text" class="input" readonly="readonly" id="lblIE" asp-for="IEName">
+                        </div>
+                        <div class="col-md-4 mb-3">
+
+                            <input type="hidden" class="input" readonly="readonly" id="lblIECD" asp-for="IE">
+
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">Net Testing Charges Paid <i class="text-danger">*</i></label>
+                            <input type="text" class="input" id="txttesfee" asp-for="NetTesting">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">TDS (If Any) <i class="text-danger">*</i></label>
+                            <input type="text" class="input" id="txttdsany" asp-for="TDS">
+
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">UTR NO <i class="text-danger">*</i></label>
+                            <input type="text" class="input" id="txtutrno" asp-for="UTRNO">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="Reference">UTR Date <i class="text-danger">*</i></label>
+                            <input type="text" class="input datepicker" id="dtutr" asp-for="UTRDT">
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <div class="col-md-4 mb-3">
+                            <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.LabPaymentUploadDoc" />
+                        </div>
+                       @*  <div class="col-md-4 mb-3" id="lblfile">
+                            <label for="Reference">Upload Payment Report(In PDF Only)</label>
+                            <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
+
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a id="download" href="javascript:void(0);" style="display:none;"></a>
+                        </div> *@
+                        <div class="col-md-4 mb-3" style="margin-left:auto">
+                            <label for="Reference">Payment Status By Finance (RITES)</label>
+                            <input type="text" class="input" id="lblpstatus" readonly="readonly">
+
+                        </div>
+                    </div>
+                    <div id="approval" style="display:none">
+                        <div class="row my-0">
+                            <div class="col-md-3 mb-3">
+                                <label for="Reference">Date of Receipt of Sample</label>
+                                <input type="text" class="input" id="dtrecsample" readonly="readonly" asp-for="DateofRecSample">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="Reference">Total Testing Fee</label>
+                                <input type="text" class="input" id="txttfee" readonly="readonly" asp-for="TotalTFee">
+
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="Reference">Likely Date of Test Report</label>
+                                <input type="text" class="input" id="dtltestreport" readonly="readonly" asp-for="LikelyDt">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="Reference">Status</label>
+                                <select class="input" id="ddlstatus" disabled asp-for="Status">
+                                    <option value="S">Sample Received</option>
+                                    <option value="C">Lab Report under Compilation</option>
+                                    <option value="U">Lab Report Uploaded</option>
+                                    <option value="O">Others</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row my-0">
+                            <div class="col-md-8 mb-3">
+                                <label for="Reference">Remarks</label>
+                                <textarea id="txtremarks" rows="4" cols="50" readonly="readonly" asp-for="Remarks"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" onclick="Save();" id="btnsave">Save</button>
+                        <button type="button" class="save-btn active" onclick="Update();" style="display:none;" id="btnupdate">Update</button>
+                        <a asp-controller="VendorLabSampleForm" asp-action="LabSampleInfo" class="reset-btn">Clear</a>
+                    </div>
+                   @*  <div class="savenext-btn" style="margin-left:47%;">
+                        <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
+                        <button type="button" class="save-btn active Permission_EditView" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
+                    </div> *@
+                </div>
+            </div>
+
+            <br />
+        </section>
+    </form>
+</div>
 @section scripts{
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -361,7 +372,7 @@
             $("#lblpslip").text("Not Uploaded").css("color", "red");
             $("#lblps").text("Not Approved").css("color", "red");
             $(".datepicker").datepicker({
-                dateFormat: "mm/dd/yy" // Set the date format to "dd/mm/yy"
+                dateFormat: "dd/mm/yy"  // Set the date format to "dd/mm/yy"
             });
             var today = new Date();
             //$("#dtregdt").val(today.getFullYear() + '-' + ('0' + (today.getMonth() - 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
@@ -400,7 +411,7 @@
             var url = '@Url.Action("SampleDtlData", "VendorLabSampleForm")';
             $.ajax({
                 //url: '/VendorLabSampleForm/SampleDtlData',
-                url:url,
+                url: url,
                 type: "POST",
                 dataType: "JSON",
                 data: { CaseNo: CaseNo, CallRdt: CallRdt, CallSno: CallSno },
@@ -427,7 +438,7 @@
                         $("#btnsave").css("display", "none");
                         $("#btnupdate").css("display", "");
                         var firstPart = success.PaymentStatus.substring(0, success.PaymentStatus.indexOf(" "));
-                        
+
                         if (success.File != "False") {
                             $("#download").text(success.FileNm);
                             // $("#HyperLink1").val(success.FileNm);
@@ -435,16 +446,16 @@
                             sessionStorage.setItem("link", pdfUrl);
                             $("#download").css("display", "");
                         }
-                     
+
                         if (firstPart == 'APPROVED') {
                             $("#upload").css("display", "none");
-                            
+
                             $("#btnupdate").css("display", "none");
                             if (success.LabelExist != "S") {
-                               $("#lblfile").css("display", "none");
+                                $("#lblfile").css("display", "none");
                                 $("#approval").css("display", "");
                             }
-                            
+
 
                         }
 
@@ -539,7 +550,7 @@
                 processData: false,
                 //contentType: "application/json",
                 //url: "/VendorLabSampleForm/SaveDataDetails",
-                url:url,
+                url: url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
@@ -616,8 +627,8 @@
                 type: 'POST',
                 contentType: false,
                 processData: false,
-               // url: "/VendorLabSampleForm/UpdateDetails",
-               url:url,
+                // url: "/VendorLabSampleForm/UpdateDetails",
+                url: url,
                 dataType: "json",
                 data: formData,
                 success: function (res) {
@@ -657,6 +668,27 @@
             });
 
         }
+
+        function Save() {
+            if ($("#frmDetails").valid()) {
+                if (!SaveSingleDocuments("tab-1")) { return; }
+                $("#frmDetails").submit();
+
+            }
+        }
+        function Update() {
+            if ($("#frmDetails").valid()) {
+                if (!SaveSingleDocuments("tab-1")) { return; }
+                $("#frmDetails").submit();
+
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            //window.location.href = "/AdminUserUploadDoc/UploadDoc";
+            window.location.href = '@Url.Action("LabSampleInfo", "VendorLabSampleForm")';
+        };
     </script>
 }
 

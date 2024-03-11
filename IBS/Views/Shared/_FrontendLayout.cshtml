@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="icon" type="image/x-icon" href="~/frontend/images/favicon.ico">
     <title>RITES Limited, A Government of India Enterprise</title>
     <link href="~/frontend/css/bootstrap.min.css" type="text/css" rel="stylesheet">
@@ -15,6 +16,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="description" content="RITES Limited, A Government of India Enterprise" />
+    @*<link type="text/css" href="~/css/admin-style.css" rel="stylesheet" />*@
+   
     <script type="text/javascript" src="~/frontend/js/modernizr.js"></script>
     <script type="text/javascript" src="~/frontend/js/jquery-min.js"></script>
 
@@ -26,6 +29,27 @@
     <div class="wrapper">
         <header id="header">
             <div class="headerRow">
+                <div class="headerTopStrip">
+                      <div class="container">
+                        <ul class="headerSkipContent">
+                            <li><a tabindex="1" href="#content">Skip to Main Content</a></li>
+                            <li class="fontResize">
+                                <div id="accessControl" class="textResizeWrapper">
+                                    <input type="submit" value="A-" id="font_normal" title="Decrease Font Size" class="fontScaler large">
+                                    <input type="submit" value="A" id="font_large" title="Normal Font Size" class="fontScaler normal">
+                                    <input type="submit" value="A+" id="font_larger" title="Increase Font Size" class="fontScaler largest">
+                                </div>
+                            </li>
+                            <li>
+                                <label><span class="fa fa-language"></span></label>
+                                <select name="Languages" id="languages" title="Select Language" class="">
+                                    <option selected="selected" value="/FHome">English</option>
+                                    <option value="/FHome">हिन्दी</option>
+                                </select>
+                            </li>
+                        </ul>
+                      </div>
+                </div>
                 <div class="container">
                     <div class="logoRow">
                         <div class="row m-0">
@@ -42,8 +66,8 @@
                                 <div class="brandDetail text-center"> <span class="firstTitle">Quality Assurance Division</span> <span class="secondTitle">ISO 9001, 17020, 17065</span> </div>
                             </div>
                             <div class="col-lg-4 col-md-12">
-                                <div class="">
-                                    <ul class="headerSkipContent">
+                                <div class="loginBtnBlock">
+                                   @* <ul class="headerSkipContent">
                                         <li><a tabindex="1" href="#content">Skip to Main Content</a></li>
                                         <li class="fontResize">
                                             <div id="accessControl" class="textResizeWrapper">
@@ -52,16 +76,27 @@
                                                 <input type="submit" value="A+" id="font_larger" title="Increase Font Size" class="fontScaler largest">
                                             </div>
                                         </li>
-                                    </ul>
+                                    </ul>*@
                                     <ul class="rightLinks">
                                         <li class="helpLineNumber">National Helpline Number <span>1800 425 7000 (TOLL FREE)</span> </li>
-                                        <li class="langSelectBoxIn">
+                                       @* <li class="langSelectBoxIn">
                                             <label for="languages" id="languageSelection">Language</label>
                                             <select name="Languages" id="languages" title="Select Language" class="">
                                                 <option selected="selected" value="">English</option>
                                                 <option value="">हिन्दी</option>
                                             </select>
                                             <input type="submit" name="btnSearchLng" value="Go" id="btnSearchLng" class="goButton">
+                                        </li>*@
+                                        <li class="loginBtnHome"><a href="javascript:void(0);" class="loginDropBtn">User Login <span class="fa fa-arrow-circle-down"></span></a>
+                                            <div class="loginDropLinks">
+                                                <ul>
+                                                    <li><a asp-action="Index" asp-controller="Home" asp-route-id="USERS">Users</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home" asp-route-id="VENDOR">Vendor</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home" asp-route-id="IE">Inspection Engineer (IE)</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home" asp-route-id="CLIENT_LOGIN">Client</a></li>
+                                                    <li><a asp-action="Index" asp-controller="Home" asp-route-id="LO_LOGIN">Liaisoning Officer (LO)</a></li>
+                                                </ul>
+                                            </div>    
                                         </li>
                                     </ul>
                                 </div>
@@ -121,16 +156,17 @@
                                                 <li><a asp-action="Index" asp-controller="Home">Download Inspection Invoice</a></li>
                                             </ul>
                                         </li>
-                                        <li><a asp-action="Index" asp-controller="Home">Online Payment Through Gateway</a></li>
+                                        <li><a asp-action="Index" asp-controller="OnlinePaymentGateway">Online Payment Through Gateway</a></li>
                                         <li><a href="~/frontend/pdf/CRCharges.pdf" target="_blank">Cancellation Charges</a></li>
                                         <li><a href="~/frontend/pdf/CRCharges.pdf" target="_blank">Rejection Charges</a></li>
-                                        <li><a href="javascript:void(0);" target="_blank">Lab Charges</a>
+                                        <li>
+                                            <a href="javascript:void(0);" target="_blank">Lab Charges</a>
                                             <ul>
                                                 <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-NR.pdf" target="_blank">Northern Region</a></li>
                                                 <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-WR.pdf" target="_blank">Western Region</a></li>
                                                 <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-SR.pdf" target="_blank">Southern Region</a></li>
                                                 <li><a href="~/frontend/pdf/Average-Lab-Testing-Time-ER.pdf" target="_blank">Eastern Region</a></li>
-                                            </ul>    
+                                            </ul>
                                         </li>
                                         <li><a asp-action="Index" asp-controller="VendorFeedback">Vendor Feedback</a></li>
                                         <li><a href="~/frontend/pdf/BANK-DETAILS.PDF" target="_blank">Bank Details of All Regions</a></li>
@@ -139,26 +175,29 @@
                                     </ul>
                                 </li>
                                 @*<li><a href="#" title="Inspection engineer Interface">Inspection engineer Interface</a></li>*@
-                                <li><a href="#" title="Quick Links">Quick Links</a>
+                                <li>
+                                    <a href="#" title="Quick Links">Quick Links</a>
                                     <ul>
-                                        <li><a asp-action="Index" asp-controller="Home">Client Login</a></li>
+                                       @* <li><a asp-action="Index" asp-controller="Home">Client Login</a></li>
                                         <li><a asp-action="Index" asp-controller="Home">Vendor Login</a></li>
                                         <li><a asp-action="Index" asp-controller="Home">IE Login</a></li>
                                         <li><a asp-action="Index" asp-controller="Home">User Login</a></li>
-                                        <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer Login</a></li>
-                                        <li><a asp-action="Index" asp-controller="Home">Online Payment Through Gateway</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer Login</a></li>*@
+                                        <li><a asp-action="Index" asp-controller="OnlinePaymentGateway">Online Payment Through Gateway</a></li>
                                         <li><a asp-action="Index" asp-controller="FeedbackSuggestion">Feedback & Suggestions</a></li>
                                         <li><a href="https://rites.com/" target="_blank">Online Payment Through Gateway</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="#" title="Miscellaneous">Miscellaneous</a>
+                                <li>
+                                    <a href="#" title="Miscellaneous">Miscellaneous</a>
                                     <ul>
                                         <li><a asp-action="InfoInstructions" asp-controller="Miscellaneous">Info &amp; Instructions</a></li>
                                         <li><a asp-action="PhotoGallery" asp-controller="Miscellaneous">Photo Gallery</a></li>
                                         <li><a asp-action="QaChannelYouTube" asp-controller="Miscellaneous">QA Channel (YouTube)</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="#" title="Contact Us">Contact Us</a>
+                                <li>
+                                    <a href="#" title="Contact Us">Contact Us</a>
                                     <ul>
                                         <li><a asp-action="NorthernRegion" asp-controller="ContactUs">Northern Region</a></li>
                                         <li><a asp-action="WesternRegion" asp-controller="ContactUs">Western Region</a></li>
@@ -168,6 +207,16 @@
                                         <li><a asp-action="ForeignInspection" asp-controller="ContactUs">Foreign Inspection</a></li>
                                     </ul>
                                 </li>
+                                @*<li>
+                                    <a href="#" title="Logins">Logins</a>
+                                    <ul>
+                                        <li><a asp-action="Index" asp-controller="Home">Users</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Vendor</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Inspection Engineer (IE)</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Client</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Liaisoning Officer (LO)</a></li>
+                                    </ul>
+                                </li>*@
                             </ul>
                         </div>
                     </div>
@@ -176,11 +225,11 @@
         </header>
 
         @RenderBody()
-       @* <div class="container">
-            <div class="innerContent">
-                
-                
-            </div>
+        @* <div class="container">
+        <div class="innerContent">
+
+
+        </div>
 
         </div>*@
 
@@ -239,12 +288,12 @@
                                     Regional Offices
                                 </h3>
                                 <ul class="regionalLinks">
-                                    <li><a href="~/ContactUs/NorthernRegion">Northern Region</a></li>
-                                    <li><a href="~/ContactUs/WesternRegion">Western Region</a></li>
-                                    <li><a href="~/ContactUs/SouthernRegion">Southern Region</a></li>
-                                    <li><a href="~/ContactUs/EasternRegion">Eastern Region</a></li>
-                                    <li><a href="~/ContactUs/CentralRegion">Central Region</a></li>
-                                    <li><a href="~/ContactUs/ForeignInspection">Foreign Inspection</a></li>
+                                    <li><a asp-action="NorthernRegion" asp-controller="ContactUs">Northern Region</a></li>
+                                    <li><a asp-action="WesternRegion" asp-controller="ContactUs">Western Region</a></li>
+                                    <li><a asp-action="SouthernRegion" asp-controller="ContactUs">Southern Region</a></li>
+                                    <li><a asp-action="EasternRegion" asp-controller="ContactUs">Eastern Region</a></li>
+                                    <li><a asp-action="CentralRegion" asp-controller="ContactUs">Central Region</a></li>
+                                    <li><a asp-action="ForeignInspection" asp-controller="ContactUs">Foreign Inspection</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -267,6 +316,7 @@
     </div>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/functions.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script type="text/javascript" src="~/frontend/js/bootstrap.min.js"></script>
     <noscript class="displayNone">
@@ -277,6 +327,41 @@
     <script type="text/javascript" src="~/frontend/js/general.js"></script>
     <noscript class="displayNone">
     </noscript>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            if ($(".loginDropBtn").length > 0) {
+            $(".loginDropBtn").click(function(){
+                if ($('.loginDropLinks').css("display") == "block") {
+                    $(this).removeClass('active');
+                    $('.loginDropLinks').slideUp();
+                } else {
+                    $(this).addClass('active');
+                    $('.loginDropLinks').slideDown();
+                }
+                return false;
+            });
+            $(document).bind('mousedown touchstart', function (e) {
+                if ($(e.target).closest('.loginDropLinks').length === 0) {
+                    $('.loginDropBtn').removeClass('active');
+                    $('.loginDropLinks').slideUp();
+                }
+            });
+            }
+            
+            $("#languages").change(function () {
+                var value = $(this).val();
+                location.href = value;
+               alert("Page will be Coming Soon! Have Patience.");
+            });
+        
+        $(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+        });
+        });
+    </script>
 
 </body>
 

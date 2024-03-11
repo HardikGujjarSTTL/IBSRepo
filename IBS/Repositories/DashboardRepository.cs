@@ -2,16 +2,11 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Globalization;
-using System.Security.Cryptography;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -102,15 +97,12 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[7]; //[7];
             par[0] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-
             par[2] = new OracleParameter("P_RESUT_HIGH_PAYMENT", OracleDbType.RefCursor, ParameterDirection.Output);
             par[3] = new OracleParameter("P_RESUT_HIGH_OUTSTANDING", OracleDbType.RefCursor, ParameterDirection.Output);
             par[4] = new OracleParameter("P_RESULT_PENDING_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
             par[5] = new OracleParameter("P_RESULT_JI_CASES", OracleDbType.RefCursor, ParameterDirection.Output);
             par[6] = new OracleParameter("P_RESULT_REGION_CONSINEE_COMPLAINTS", OracleDbType.RefCursor, ParameterDirection.Output);
-
-
-            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par, 6); //6
+            DataSet ds = DataAccessDB.GetDataSet("GET_ADMIN_DASHBOARD_COUNT", par); //6
 
             if (ds != null && ds.Tables.Count > 0)
             {
@@ -222,7 +214,7 @@ namespace IBS.Repositories
                     model.UnderLabTestingCount = Convert.ToInt32(ds.Tables[0].Rows[0]["UNDER_LAB_TESTING"]);
                     model.StillUnderInspectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STILL_UNDER_INSPECTION"]);
                     model.StageRejectionCount = Convert.ToInt32(ds.Tables[0].Rows[0]["STAGE_REJECTION"]);
-                    model.DSCExpiryDateCount = 0;
+                    model.DSCExpiryDateCount = Convert.ToString(ds.Tables[0].Rows[0]["DSC_EXPIRY_DT"]);
                     model.NCIsuedAgainstIECount = Convert.ToInt32(ds.Tables[0].Rows[0]["TOTAL_NO_OF_NC_ISSUE"]);
                     model.OutstandingNCCount = 0;
                     model.NotRecievedCount = Convert.ToInt32(ds.Tables[0].Rows[0]["IC_ISSUE_BUT_NOT_RECEIVE_OFFICE"]);
@@ -1276,7 +1268,7 @@ namespace IBS.Repositories
                             RegionCode = t17.RegionCode,
                         };
             }
-            else if (ActionType == "M" || ActionType == "C" || ActionType == "U" || ActionType == "S" || ActionType == "T")
+            else if (ActionType == "C" || ActionType == "T")  //(ActionType == "M" || ActionType == "C" || ActionType == "U" || ActionType == "S" || ActionType == "T")
             {
                 query = from t17 in context.T17CallRegisters
                         join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
@@ -1298,8 +1290,6 @@ namespace IBS.Repositories
                             PoDt = t13.PoDt,
                             RegionCode = t17.RegionCode,
                         };
-
-
             }
             else if (ActionType == "A")
             {
@@ -1312,6 +1302,29 @@ namespace IBS.Repositories
                               t13.RlyNonrly == OrgnType &&
                               t17.CallRecvDt >= Convert.ToDateTime(FromDate) &&
                               t17.CallRecvDt <= Convert.ToDateTime(ToDate)
+                        select new AdminCountListing
+                        {
+                            CaseNo = t17.CaseNo,
+                            CallRecvDt = t17.CallRecvDt,
+                            CallInstallNo = t17.CallInstallNo,
+                            CallSno = Convert.ToInt16(t17.CallSno),
+                            CallStatus = t17.CallStatus,
+                            CallLetterNo = t17.CallLetterNo,
+                            Remarks = t17.Remarks,
+                            PoNo = t13.PoNo,
+                            PoDt = t13.PoDt,
+                            RegionCode = t17.RegionCode,
+                        };
+            }
+            else if (ActionType == "M" || ActionType == "U" || ActionType == "S")
+            {
+                query = from t17 in context.T17CallRegisters
+                        join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo
+                        where t13.RlyCd == Organisation &&
+                              t13.RlyNonrly == OrgnType &&
+                              //t17.CallRecvDt >= Convert.ToDateTime(FromDate) &&
+                              //t17.CallRecvDt <= Convert.ToDateTime(ToDate) &&
+                              t17.CallStatus == ActionType
                         select new AdminCountListing
                         {
                             CaseNo = t17.CaseNo,
@@ -1729,7 +1742,7 @@ namespace IBS.Repositories
             OracleParameter[] par = new OracleParameter[5];
             par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Varchar2, FromDate, ParameterDirection.Input);
             par[1] = new OracleParameter("P_TODATE", OracleDbType.Varchar2, ToDate, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_VENDCD", OracleDbType.Varchar2, Vend_Cd.Substring(0, 8), ParameterDirection.Input);
+            par[2] = new OracleParameter("P_VENDCD", OracleDbType.Varchar2, Vend_Cd, ParameterDirection.Input);
             par[3] = new OracleParameter("P_STATUS", OracleDbType.Varchar2, Status, ParameterDirection.Input);
             par[4] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
@@ -2740,7 +2753,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
-            string FromDate = "", ToDate = "", ActionType = "";
+            string FromDate = "", ToDate = "";
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
             {
                 FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);

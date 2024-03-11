@@ -26,16 +26,16 @@ namespace IBS.Helper
             TempFilePath = 1,
             [Description("/ReadWriteData/Files/UserRegistration")]
             UserRegistration = 2,
-            [Description("/ReadWriteData/Files/AdminUserUploadDoc")]
+            [Description("/ReadWriteData/Files/Documents")]
             AdminUserUploadDoc = 3,
             [Description("/ReadWriteData/Files/Vendor")]
             Vendor = 4,
-            [Description("/ReadWriteData/Files/VendorDocument")]
+            [Description("/ReadWriteData/Files/Vendor/DOC")]
             VendorDocument = 5,
-            [Description("/ReadWriteData/MA")]
+            [Description("/ReadWriteData/VENDOR/MA")]
             VendorMADocument = 6,
-            [Description("/ReadWriteData/Files/ContractDocument")]
-            ContractDocument = 7,
+            [Description("/ReadWriteData/Files/CONTRACTS")]
+            Contracts = 7,
             [Description("/ReadWriteData/Files/TechnicalReferences")]
             TechnicalReferencesDoc = 8,
             [Description("/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")]
@@ -44,7 +44,7 @@ namespace IBS.Helper
             CallRegistrationDoc = 10,
             [Description("/ReadWriteData/Files/AdministratorPurchaseOrder")]
             AdministratorPurchaseOrder = 13,
-            [Description("/ReadWriteData/Files/Online_Comp_Document")]
+            [Description("/ReadWriteData/Files/Online_Complaints")]
             OnlineComplaints = 11,
             [Description("/ReadWriteData/Files/Complaint_Case")]
             ComplaintCase = 12,
@@ -84,6 +84,12 @@ namespace IBS.Helper
             VendorPO = 29,
             [Description("/ReadWriteData/IC_PHOTOS")]
             ICPHOTOS = 30,
+            [Description("/ReadWriteData/Files/VENDOR_CREATION_BASIS")]
+            VendorCreationBasis = 31,
+            [Description("/ReadWriteData/Files/TECH")]
+            Tech = 32,
+            [Description("/ReadWriteData/LAB/PReciept")]
+            LabPayment = 33,
         }
 
         public enum DocumentCategory : int
@@ -100,6 +106,7 @@ namespace IBS.Helper
             //AdministratorPurchaseOrder =13,
             OnlineComplaints = 11,
             ConsigneeComplaints = 12,
+            UploadRejectionMemo = 33,
             IEFullSignature = 14,
             IEInitials = 15,
             ContractEntryDoc = 16,
@@ -114,6 +121,9 @@ namespace IBS.Helper
             CancellationDocument = 27,
             PurchaseOrderFormCase = 28,
             VendorPO = 29,
+            UploadLab = 31,
+            UploadLabPayment = 32,
+            UploadJIReort = 34,
         }
 
         public enum DocumentCategory_CANRegisrtation : int
@@ -148,6 +158,7 @@ namespace IBS.Helper
             Upload_IC_Annexue1 = 35,
             Upload_IC_Annexue2 = 36,
             Cancellation_Document = 37,
+            OnlineComplaints = 61,
         }
 
         public enum DocumentICCancellation : int
@@ -182,7 +193,11 @@ namespace IBS.Helper
         {
             MasterItemDoc = 10,
         }
-
+        public enum DocumentCategory_LabUploadDoc : int
+        {
+            Upload_Lab_Report = 59,
+            Upload_Payment_Report = 60
+        }
         public static string GetEnumDescription(object enumValue)
         {
             string defDesc = string.Empty;
@@ -573,6 +588,26 @@ namespace IBS.Helper
             Z,
         }
 
+        public enum TaxType_GST_07
+        {
+            [Description("CGST @ 9% & SGST @ 9%")]
+            C,
+            [Description("Fee Inclusive of CGST @ 9% & SGST @ 9%")]
+            Z,
+            [Description("NO GST")]
+            X,
+        }
+
+        public enum TaxType_GST_O
+        {
+            [Description("IGST @ 18%")]
+            I,
+            [Description("Fee Inclusive of IGST @ 18%")]
+            Y,
+            [Description("NO GST")]
+            X,
+        }
+
         public enum Criteria
         {
             [Description("PO Date")]
@@ -644,7 +679,7 @@ namespace IBS.Helper
             [Description("IE Performance")] IE_X,
             [Description("Cluster Wise Performance Report")] CLUSTER_X,
             [Description("IC Submission Report")] ICSUBMIT,
-            [Description("Pending IC's Against Calls where Material has been Sccepted or Rejected")] CALLSWITHOUTIC,
+            [Description("Pending IC's Against Calls where Material has been Accepted or Rejected")] CALLSWITHOUTIC,
             [Description("CO Wise Super Surprise Summary")] SUPSURPSUMM,
             [Description("Overdue/Pending Calls")] PENDING_CALLS,
             [Description("CM and IE wise IC issued but not recieved")] COUNTIC,
@@ -680,7 +715,45 @@ namespace IBS.Helper
             [Description("DEFECT CODE WISE ANALYSIS OF COMPLAINTS")] DCWACOMPS,
             [Description("JI CONSIGNEE COMPLAINTS")] COCOMPJI,
             [Description("Controlling Officer Wise IE")] COWISEIE,
+            [Description("SUMMARY OF IE WISE DSC GETTING EXPIRED DURING THE MONTH/PERIOD")] DSC,
         }
+
+        public enum SAPType
+        {
+            [Description("Multiple BPO")]
+            MultipleBPO,
+            [Description("Selective BPO")]
+            SelectiveBPO,
+            [Description("Consigne Select")]
+            ConsigneSelect,
+        }
+
+        public enum ChargesType
+        {
+            [Description("Customer's Advance")]
+            A,
+            [Description("Call Cancellation Charge")]
+            C,
+            [Description("Rejection Charges")]
+            R,
+            [Description("Lab Charges")]
+            L,
+            [Description("Revalidation Of IC")]
+            V,
+            [Description("Duplicate IC")]
+            D,
+            [Description("NSIC Call Charges")]
+            N,
+        }
+
+        //public enum CreditDebitNote
+        //{
+        //    [Description("Credit Note")]
+        //    C = 9,
+        //    [Description("Debit Zone")]
+        //    D = 10,
+        //}
+
     }
 
     public class EnumUtility<T>
@@ -880,5 +953,28 @@ namespace IBS.Helper
 
         public static IEWorkPlanModel IEWorkPlan { get; set; }
         public static RecieptVoucherModel BankStatement { get; set; }
+        public static OnlinePaymentGateway OnlinePaymentResponse { get; set; }
+        public static InspectionBillingDelayReportModel InspBillDelayList { get; set; }
+        public static OtherReportsModel OtherReportsModelList { get; set; }
+
+        public static CallsMarkedToIEModel CallsMarked { get; set; }
+
+        public static List<AllGeneratedBills> AllGeneratedBillModel { get; set; }
+        public static labInvoicelst LabInvoiceReport { get; set; }
+
+        #region RemitanceReports 
+        public static RemitanceModel Remitance { get; set; }
+        #endregion
+
+        #region Billing Reports
+        public static BillRaisedModel BillRaised { get; set; }
+        #endregion
+
+        #region Realisation Payment
+        public static SummaryOnlinePaymentModel SummaryOnlinePayment { get; set; }
+        public static SummaryCrisRlyPaymentModel SummaryCrisRlyPayment { get; set; }
+        #endregion
+
+        public static ConsigneeComplaintsModel ConsigneeComplaints { get; set; }
     }
 }

@@ -33,7 +33,7 @@ public partial class T20Ic
 
     public string? FullPart { get; set; }
 
-    public int? NoOfInsp { get; set; }
+    public decimal? NoOfInsp { get; set; }
 
     public DateTime? FirstInspDt { get; set; }
 

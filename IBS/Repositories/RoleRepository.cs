@@ -2,11 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace IBS.Repositories
 {
@@ -30,7 +28,7 @@ namespace IBS.Repositories
                 model.RoleId = role.RoleId;
                 model.Rolename = role.Rolename;
                 model.Roledescription = role.Roledescription;
-                model.Issysadmin =Convert.ToBoolean(role.Issysadmin);
+                model.Issysadmin = Convert.ToBoolean(role.Issysadmin);
                 model.Isactive = Convert.ToBoolean(role.Isactive);
                 model.Isdeleted = role.Isdeleted;
                 return model;
@@ -65,7 +63,7 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.Roles
-                    where l.Isdeleted == 0 
+                    where l.Isdeleted == 0
                     select new RoleModel
                     {
                         RoleId = l.RoleId,
@@ -78,7 +76,7 @@ namespace IBS.Repositories
                         Createdby = l.Createdby,
                         Updateddate = l.Updateddate,
                         Updatedby = l.Updatedby,
-                        EncryptedRoleId=Common.EncryptQueryString(l.RoleId.ToString())
+                        EncryptedRoleId = Common.EncryptQueryString(l.RoleId.ToString())
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -189,15 +187,16 @@ namespace IBS.Repositories
             }
             query = from l in context.Userroles
                         //join u in context.T02Users on l.UserId.ToString() equals u.UserId.ToString()
-                    join u in context.UserMasters on l.UserId.ToString() equals u.UserId.ToString()
+                    join u in context.UserMasters on l.UserMasterId.ToString() equals u.Id.ToString()
                     join r in context.Roles on l.RoleId equals r.RoleId
                     where l.Isdeleted == 0 || l.Isdeleted == null
                     select new RoleModel
                     {
                         RoleId = l.RoleId,
                         Rolename = r.Rolename,
+                        MUser_ID = u.UserId,
                         //User_ID = l.UserId,
-                        User_ID =Convert.ToString(l.UserMasterId),
+                        User_ID = Convert.ToString(l.UserMasterId),
                         UserName = u.Name,
                         Id = l.Id
                     };
@@ -207,6 +206,7 @@ namespace IBS.Repositories
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.Rolename).ToLower().Contains(searchBy.ToLower())
                 || Convert.ToString(w.UserName).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.MUser_ID).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -238,7 +238,8 @@ namespace IBS.Repositories
                 int maxID = context.Userroles.Max(x => x.Id) + 1;
                 Userrole obj = new Userrole();
                 obj.Id = maxID;
-                obj.UserId = Convert.ToString(model.User_ID);
+                //obj.UserId = Convert.ToString(model.User_ID);
+                obj.UserMasterId = Convert.ToInt32(model.User_ID);
                 obj.RoleId = Convert.ToInt32(model.RoleId);
                 obj.Isdeleted = Convert.ToByte(false);
                 obj.Createdby = Convert.ToInt32(model.Createdby);
@@ -264,7 +265,7 @@ namespace IBS.Repositories
         public MenuroleMappingModel FindMenuRoleMappingByID(int ID)
         {
             MenuroleMappingModel model = new();
-            Menurolemapping role = context.Menurolemappings.Where(x=>x.Roleid == ID).FirstOrDefault();
+            Menurolemapping role = context.Menurolemappings.Where(x => x.Roleid == ID).FirstOrDefault();
 
             if (role == null)
                 throw new Exception("Menu Role Mapping Not found");

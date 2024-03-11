@@ -21,7 +21,7 @@
 	/*================= Global Variable End =================*/
 
 	//css3 style calling 
-	document.write('<link rel="stylesheet" type="text/css" href="' + cssFolder + 'animate.css">');
+	//document.write('<link rel="stylesheet" type="text/css" href="' + cssFolder + 'animate.css">');
 
 	/*================= On Document Load Start =================*/
 	$(document).ready(function () {
@@ -465,6 +465,25 @@
 			$(this).parent().addClass('mySelected').siblings().removeClass('mySelected');
 		});
 	}*/
+
+	
+	
+	$('.chatImagePopup').magnificPopup({
+			type: 'image',
+			closeOnContentClick: true,
+			closeBtnInside: false,
+			fixedContentPos: true,
+			mainClass: 'mfp-no-margins mfp-with-zoom',
+			image: {
+				verticalFit: true
+			},
+			zoom: {
+				enabled: true,
+				duration: 300
+			}
+	});
+	
+	
 
 
 

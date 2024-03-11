@@ -195,7 +195,7 @@
                         <div class="reference">
                             <label for="Name">Other Charges Type</label>
                             @Html.DropDownListFor(model => model.OtChargeType, new SelectList(IBS.Models.Common.DiscountType(), "Value", "Text"), "--Select--", new { @onChange = "AddRemoveValidation(this.value,'OtChargePer');" })
-                            <span asp-validation-for="OtChargeType" class="text-danger"></span>
+                            @* <span asp-validation-for="OtChargeType" class="text-danger"></span> *@
                         </div>
                     </div>
                     <div class="col-md-2 mb-3">
@@ -226,7 +226,7 @@
                         <div class="reference">
                             <label for="Name">Last Date of Supply</label>
                             <input type="text" class="datetime" asp-for="DelvDt" readonly="readonly" onblur="cpy();">
-                            <span asp-validation-for="DelvDt" class="text-danger"></span>
+                            @* <span asp-validation-for="DelvDt" class="text-danger"></span> *@
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -265,7 +265,9 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
-            $("#UomCd").val(3);
+            if ($("#UomCd").val() == "") {
+                $("#UomCd").val(6);
+            }
             $('#OtChargePer ,#ExcisePer ,#DiscountPer ,#Rate ,#Qty, #SalesTaxPer').on('keyup', function () {
                 var idName = $(this).attr('id');
                 if (idName == "OtChargePer") {

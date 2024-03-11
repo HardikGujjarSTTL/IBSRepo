@@ -1,15 +1,10 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Inspection_Billing
 {

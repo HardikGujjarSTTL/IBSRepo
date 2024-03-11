@@ -1,13 +1,9 @@
-﻿using IBS.Helper;
-using IBS.Interfaces.Reports;
+﻿using IBS.Interfaces.Reports;
 using IBS.Models;
 using IBS.Models.Reports;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
-using Humanizer;
-using System.Collections.Generic;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.Reports
 {
@@ -82,8 +78,8 @@ namespace IBS.Controllers.Reports
                     byear = (byear - 1);
                 }
                 ViewBag.Title = "Highlights upto the month of : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
-                COHighlightMainModel model = pCDOReportController.GetCOHighlightData(CumYrMth, wYrMth,byear.ToString(), dmonth, lstdate, CumYrPast, wYrMth_Past);
-                return View();
+                COHighlightMainModel model = pCDOReportController.GetCOHighlightData(CumYrMth, wYrMth, byear.ToString(), dmonth, lstdate, CumYrPast, wYrMth_Past);
+                return View(model);
             }
             catch (Exception ex)
             {
@@ -98,12 +94,12 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
-        public IActionResult TableHighlight(string p_wYrMth,string Year, string Monthtext)
+        public IActionResult TableHighlight(string p_wYrMth, string Year, string Monthtext)
         {
             try
             {
-                ViewBag.Title = "Highlights for the period : "+ Monthtext +" ,"+ Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy")  +" - "+ DateTime.Now.ToString("hh:mm: tt");
-                List <HighlightReportsModel> model = pCDOReportController.GetHighlightData(p_wYrMth);
+                ViewBag.Title = "Highlights for the period : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                List<HighlightReportsModel> model = pCDOReportController.GetHighlightData(p_wYrMth);
                 return View(model);
             }
             catch (Exception ex)
@@ -119,7 +115,7 @@ namespace IBS.Controllers.Reports
         {
             return View();
         }
-        public IActionResult TableFinancialBilling(string month, string Year,string Monthtext)
+        public IActionResult TableFinancialBilling(string month, string Year, string Monthtext)
         {
             try
             {
@@ -135,7 +131,7 @@ namespace IBS.Controllers.Reports
                 string z = "04";
                 Int64 lst = Convert.ToInt64(month);
                 Int64 lstl = lst + 1;
-                
+
 
                 string wYrMth_Past = Convert.ToString(result) + month;
                 string CumYrPast, wYrMth, CumYrMth;
@@ -299,7 +295,7 @@ namespace IBS.Controllers.Reports
                     byear = (byear - 1);
                 }
 
-                
+
                 ViewBag.Title = "Financial Figure Upto : " + Monthtext + " ," + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 ViewBag.Title1 = "1.5 Outstanding prior to 30.09.2021";
                 ViewBag.sincedate = sincedate;
@@ -476,7 +472,7 @@ namespace IBS.Controllers.Reports
                 string wYrMth, wHdr_YrMth;
                 wYrMth = Year + month;
                 wHdr_YrMth = month + ", " + Year;
-                ViewBag.Title = "Quality of Inspection For The Period : " + Monthtext +", "+ Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ViewBag.Title = "Quality of Inspection For The Period : " + Monthtext + ", " + Year + " ---- Status as on : " + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 List<QualityofInspectionModel> model = pCDOReportController.GetQualityofInspectionData(wYrMth);
                 return View(model);
             }
@@ -756,7 +752,7 @@ namespace IBS.Controllers.Reports
         {
             try
             {
-                string wYrMth, wHdr_YrMth,CumYrMth, bakdate, lstdate, sincedate, todate, priordate;;
+                string wYrMth, wHdr_YrMth, CumYrMth, bakdate, lstdate, sincedate, todate, priordate; ;
                 wYrMth = Year + month;
                 wHdr_YrMth = month + ", " + Year;
                 Int64 result;
@@ -783,7 +779,7 @@ namespace IBS.Controllers.Reports
                     dmonth = (dst + 9);
                     byear = (byear - 1);
                 }
-                ViewBag.Title = "Region wise PCDO Summary Upto : " + Monthtext +", "+ Year + " -- Status as on :" + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
+                ViewBag.Title = "Region wise PCDO Summary Upto : " + Monthtext + ", " + Year + " -- Status as on :" + DateTime.Now.ToString("dd/MM/yyy") + " - " + DateTime.Now.ToString("hh:mm: tt");
                 List<PCDOSummaryModel> model = pCDOReportController.GetPCDOSummaryData(wYrMth, CumYrMth, byear.ToString(), dmonth.ToString());
                 return View(model);
             }
@@ -816,7 +812,7 @@ namespace IBS.Controllers.Reports
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = true,
-                Format = PaperFormat.Letter,
+                Format = PaperFormat.A3,
                 PrintBackground = true
             });
 

@@ -1,8 +1,6 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers

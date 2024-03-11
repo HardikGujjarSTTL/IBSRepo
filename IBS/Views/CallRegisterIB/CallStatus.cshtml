@@ -18,6 +18,14 @@
     <form role="form" asp-controller="CallRegisterIB" asp-action="CallStatus" id="frmCallStatus">
         <input type="hidden" asp-for="ActionType" />
         <input type="hidden" asp-for="IeCd" />
+        <input type="hidden" asp-for="CallLetterDt" />
+
+        <input type="hidden" asp-for="CallCancelChargesStatus" />
+
+
+
+        <input type="hidden" asp-for="CallCancelStatus" />
+
         <div class="accordion-body" style="overflow-x: auto;">
             <table>
                 @*<col style="width: 20%;" />
@@ -146,8 +154,8 @@
                         <td class="center" colspan="5">
                             @*<label style="display:none;" id="linkICPhoto"><a href="@URLICInter">IC Photo Upload</a></label>
                         <label style="display:none;" id="linkICPhotoAR"><a href="@URLICInter">IC Photo Upload Only for Accepted and Rejected!</a></label>
-                        <br>*@
-                            <label class="text-danger">Upload the Photos first in case of Accepted or Rejection, before changing the Call Status.</label>
+                        <br>   *@
+                            <label class="text-danger">Upload the Photos first in case of Accepted, before changing the Call Status.</label>
                         </td>
                     }
                 </tr>
@@ -168,17 +176,19 @@
                 </tr>
                 <tr id="ReasonFIFOdv">
                     <td>
-                        <label for="Reference">Reason For Voilating FIFO : </label>
+                        <label for="Reference">Reason For Violating FIFO : <i class="text-danger">*</i></label>
+                        <span style="color:red;">(Max 400 Chars)</span>
                     </td>
                     <td colspan="4">
                         <textarea rows="4" asp-for="ReasonFIFO" style="color:red;text-transform: uppercase;" id="ReasonFIFO"></textarea>
+                        <span id="spnReasonFIFO" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr id="MatCanvalue">
-                    <td>
-                        <label for="Reference">Material Vlaue: </label>
+                    <td class="MatValue">
+                        <label for="Reference">Material Value: </label>
                     </td>
-                    <td>
+                    <td class="MatValue">
                         <input type="text" class="input" id="MatValue" asp-for="MaterialValue" style="color:red;text-transform: uppercase;" readonly="readonly">
                     </td>
                     <td>
@@ -193,10 +203,10 @@
                         <label for="Reference">BK & Set No : </label>
                     </td>
                     <td>
-                        <input type="text" class="input" id="BkNo" asp-for="BkNo" maxlength="4" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="BkNo" onkeypress="return isNumber(event)" asp-for="BkNo" maxlength="4" style="color:red;text-transform: uppercase;">
                     </td>
                     <td>
-                        <input type="text" class="input" id="SetNo" asp-for="SetNo" maxlength="3" style="color:red;text-transform: uppercase;">
+                        <input type="text" class="input" id="SetNo" onkeypress="return isNumber(event)" asp-for="SetNo" maxlength="3" style="color:red;text-transform: uppercase;">
                     </td>
                 </tr>
                 @if (Model.ActionType != "C")
@@ -236,7 +246,7 @@
                     <input type="hidden" asp-for="CallStatus" />
                     <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
 
-                    <div class="accordion-body" style="overflow-x: auto;">
+                    <div class="accordion-body CallRejected" style="overflow-x: auto;">
                         <div class="row my-0">
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Consignee : </label>
@@ -244,24 +254,23 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Book No : </label>
-                                <input type="text" id="bknoaccpted" maxlength="4">
+                                <input type="text" asp-for="DocBkNo" onkeypress="return isNumber(event)" maxlength="4">
                                 <span asp-validation-for="DocBkNo" class="text-danger"></span>
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="Reference">Set No : </label>
-                                <input type="text" id="setnoaccpted" maxlength="3">
+                                <input type="text" asp-for="DocSetNo" onkeypress="return isNumber(event)" maxlength="3" onchange="DocSetNoChanged()">
                                 <span asp-validation-for="DocSetNo" class="text-danger"></span>
 
                             </div>
                         </div>
-                        <div class="row my-0 ">
+                        <div class="row my-0">
                             <div class="col-md-12 mb-3">
                                 <label class="text-danger"><span style="color:red;"><b>Browse the Images to Upload (* Select Atleast 5 Images)</b></span></label>
                             </div>
                         </div>
                         <div class="row my-0">
-
                             <div class="col-md-6 mb-3">
                                 <partial name="_FileUploader" id="Img1" model="(IBS.Models.FileUploaderDTO)ViewBag.IC_Photos_Upload1" />
                             </div>
@@ -308,6 +317,7 @@
                             <div class="col-md-4 mb-3">
                                 <div class="savenext-btn" style="margin-top:30px;">
                                     <button type="button" class="save-btn active" id="savefiles" onclick="SaveImages();">Save Files</button>
+                                    <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
                                 </div>
                             </div>
                         </div>
@@ -330,6 +340,9 @@
                     <input type="hidden" asp-for="ReasonFIFO" />
                     <input type="hidden" asp-for="MaterialValue" />
                     <input type="hidden" asp-for="CallCancelCharges" />
+                    <input type="hidden" asp-for="RlyNonrly" />
+
+                    <input type="hidden" asp-for="LocalOutstation" />
                     <input type="hidden" asp-for="CallStatusDt" />
                     <input type="hidden" asp-for="Remarkslbl" id="Remarkslbl" />
                     <input type="hidden" name="hdnUploadedDocumentList_tab-2" id="hdnUploadedDocumentList_tab-2" value="" />
@@ -344,50 +357,61 @@
                                 <input asp-for="Hologram" style="color:red;text-transform: uppercase;" id="hologram">
                             </div>
                         </div>
-                        <div class="row my-0 ">
+                        <div class="row my-0 CallRejected">
                             <div class="col-md-12 mb-3">
                                 <label class="text-danger"><span style="color:red;"><b>Browse the Pdf to Upload</b></span></label>
                             </div>
                         </div>
-                        <div class="row my-0 ">
+                        <div class="row my-0 CallRejected">
                             <div class="col-md-6 mb-3">
+                                <span style="color:red;">IC (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.ICPhoto_Dig_Sign" />
                             </div>
                             <div class="col-md-6 mb-3">
+                                <span style="color:red;">TESTPLAN (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Test_Plan" />
                             </div>
                         </div>
                         <div class="row my-0">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 CallRejected">
+                                <span style="color:red;">Annexure-I (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue1" />
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 CallRejected">
+                                <span style="color:red;">Annexure-II (Digitally Signed PDF file Only)</span>
                                 <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_IC_Annexue2" />
                             </div>
                             <div class="col-md-4 mb-3" id="localdrp">
                                 <label for="Reference">Local or Outstation : </label>
                                 @Html.DropDownList("LocalOutstationdrp", new SelectList(IBS.Models.Common.RejectionType(), "Value", "Text"), new { @id = "LocalOutstationdrp" })
                             </div>
-                            <div class="col-md-4 mb-3" id="rejvalue">
+                            <div class="col-md-4 mb-3 rejvalue" id="rejvalue">
                                 <label for="Reference">Rejection Charges (Exclusive of Taxes) : </label>
                                 <input type="text" asp-for="RejectionCharge" maxlength="100">
                             </div>
-                            <div class="col-md-5 mb-4" style="margin-top:30px;">
+                            <div class="col-md-4 mb-3 rejvalue" id="rejvalue">
+                                <label for="Reference">Material Value : </label>
+                                <input type="text" asp-for="RejectMaterialValue" maxlength="100">
+                            </div>
+                            <div class="col-md-5 mb-4 CallRejected" style="margin-top:30px;">
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" id="uploadfile" onclick="UploadFiles();">Upload Files</button>
                                 </div>
                             </div>
-                            <p style="color:red;"><b>Refresh All : * It will delete all the records which are not accepted or rejected!</b></p>
-                            <p style="color:red;"><b>* Click on Accepted/Rejected Button after the Files are uploaded for all the Consignee's</b></p>
+
                         </div>
                         <div class="row my-0">
                             <div class="col-md-12 mb-5" style="align-content:center;">
                                 <div class="savenext-btn">
                                     <button type="button" class="save-btn active" id="AcceptReject" onclick="Accepted();">Accepted</button>
-                                    <button type="button" class="save-btn active" id="RefreshAll" onclick="RefreshAll();">Refresh All</button>
-                                    <button type="button" class="save-btn active" onclick="RedirectViewPrintIC();" id="ViewPrintIC">View Print/IC</button>
-                                    <a asp-controller="CallRegisterIB" asp-action="Index" id="uploadcancel" class="reset-btn">Cancel</a>
+                                    <button type="button" class="save-btn active" id="RefreshAll" onclick="btnRefreshAll();">Refresh All</button>
+                                    <button type="button" class="save-btn" id="uploadcancel" onclick="btnCancel();">Cancel</button>
+
                                 </div>
+                            </div>
+                            <div id="ForARS">
+                                <p style="color:red;"><b>Refresh All : * It will delete all the records which are not accepted or rejected!</b></p>
+                                <p style="color:red;"><b>* Click on Accepted/Rejected Button after the Files are uploaded for all the Consignee's</b></p>
                             </div>
                         </div>
                     </div>
@@ -408,6 +432,7 @@
                     <input type="hidden" asp-for="ConsigneeFirm" />
                     <input type="hidden" asp-for="ReasonFIFO" />
                     <input type="hidden" asp-for="RejectionCharge" />
+                    <input type="hidden" asp-for="RejectMaterialValue" />
                     <input type="hidden" asp-for="MaterialValue" />
                     <input type="hidden" asp-for="CallCancelCharges" />
                     <input type="hidden" asp-for="CallStatusDt" />
@@ -421,16 +446,15 @@
                         </div>
                         <div class="col-md-10 mb-10">
                             <div class="reference">
-                                <label>Reasons For Cancellation:-</label>
+                                <h3 class="heading3">Reasons For Cancellation:-</h3>
+                                @* <label>Reasons For Cancellation:-</label> *@
                                 <div class="custom-control custom-checkbox">
                                     <label class="custom-checkbox">
                                         <input type="checkbox" asp-for="chkItems[0]" class="custom" />
-
                                         <label for="chk_1">01 - Material Not Found</label>
                                     </label>
                                     <label class="custom-checkbox">
                                         <input type="checkbox" asp-for="chkItems[1]" class="custom" />
-
                                         <label for="chk_2">02 - Call letter recieved after expiry of delivery period</label>
                                     </label>
                                     <label class="custom-checkbox">
@@ -512,25 +536,18 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-
-            //var bknoaccpted = $('#bknoaccpted').val();
-            //var setnoaccpted = $('#setnoaccpted').val();
-            //if (bknoaccpted != "" || setnoaccpted!= ""){
-
-            //}else{
-
-            //}
+            $("#ForARS").hide();
             $('#ViewPrintIC').prop('disabled', true);
             $("#ViewPrintIC").css("cursor", "auto");
             $('#accepteddrp').hide();
-            $('#CallCancelChargesdrp').hide();
+            // $('#CallCancelChargesdrp').hide();
             $('#MatCanvalue').hide();
             $('#ReasonFIFOdv').hide();
             $('#accepteuploadddrp').hide();
             $('#bkset').hide();
             $('#LocalOutstationdrp').hide();
             $('#localdrp').hide();
-            $('#rejvalue').hide();
+            $('.rejvalue').hide();
             $('#Remarksval').hide();
             $('#Holograms').hide();
 
@@ -548,17 +565,15 @@
                     type: 'GET',
                     data: { selectedConsigneeCd: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
+                        $('#DocBkNo').val(data.DocBkNo);
+                        $('#DocSetNo').val(data.DocSetNo);
+
                         if (selectedValue == data.Consignee) {
-                            $('#bknoaccpted').val(data.DocBkNo);
-                            $('#setnoaccpted').val(data.DocSetNo);
-                            if ($('#bknoaccpted').val() != "" && $('#setnoaccpted').val() != "") {
+                            if ($('#DocBkNo').val() != "" && $('#DocSetNo').val() != "") {
                                 $('#ViewPrintIC').prop('disabled', false);
                                 $("#ViewPrintIC").css("cursor", "pointer");
                             }
-                        }
-                        else {
-                            $('#bknoaccpted').val("");
-                            $('#setnoaccpted').val("");
+                        } else {
                             $('#ViewPrintIC').prop('disabled', true);
                             $("#ViewPrintIC").css("cursor", "auto");
                         }
@@ -569,6 +584,9 @@
                 });
             });
 
+
+
+
             $('#CallStatusdrp').change(function () {
                 $('#MatCanvalue').hide();
 
@@ -578,6 +596,7 @@
                 var DesireDt = $('#CallRecvDt').val();
 
                 if (selectedValue == "A") {
+                    $(".CallRejected").show();
                     $('#accepteddrp').show();
                     $('#savedetails').hide();
                     $('#bkset').hide();
@@ -585,7 +604,8 @@
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
                     $('#AcceptReject').text('Accepted');
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
+                    $("#ForARS").show();
                     $('#Remarksval').hide();
                     $('#AcceptReject').show();
                     $('#Holograms').hide();
@@ -593,56 +613,54 @@
                     $('#uploadfile').show();
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
+                    $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').show();
+                    $('#ReasonFIFOdv').show();
                     $('#consigneeFirmDropdown').trigger('change');
-                } else if (selectedValue == "R") {
+
+                }
+                else if (selectedValue == "R") {
+
+                    $(".CallRejected").hide();
                     $('#MatValue').show();
                     $('#accepteddrp').show();
                     $('#localdrp').show();
-                    $('#rejvalue').show();
+                    $('.rejvalue').show();
                     $('#savedetails').hide();
                     $('#accepteuploadddrp').show();
                     $('#ReasonFIFOdv').show();
                     $('#AcceptReject').show();
+                    $("#ForARS").show();
                     $('#AcceptReject').text('Rejected');
                     $('#frmcancelled').hide();
                     $('#Remarksval').hide();
                     $('#Holograms').hide();
+                    $('#CallCancelStatusdrp').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#LocalOutstationdrp').show();
                     $('#uploadfile').show();
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
                     $('#uploadcancel').show();
-                    $('#consigneeFirmDropdown').trigger('change');
-                } else if (selectedValue == "G") {
-                    // $('#accepteuploadddrp').show();
-                    // $('#localdrp').hide();
-                    // $('#rejvalue').hide();
-                    // $('#accepteddrp').hide();
-                    // $('#savedetails').show();
-                    // $('#ReasonFIFOdv').show();
-                    // $('#bkset').show();
-                    // $('#Remarksval').hide();
-                    // $('#Holograms').hide();
-                    // $('#CallCancelStatusdrp').hide();
-                    // $('#frmcancelled').hide();
-                    // $('#AcceptReject').hide();
-                    // $('#uploadfile').hide();
-                    // $('#RefreshAll').hide();
-                    // $('#ViewPrintIC').hide();
-                    // $('#uploadcancel').hide();
+                    // $('#consigneeFirmDropdown').trigger('change');
+                    $('#LocalOutstationdrp').trigger('change');
+
+                }
+                else if (selectedValue == "G") {
                     $('#accepteddrp').show();
                     $('#savedetails').hide();
                     $('#bkset').hide();
+                    $("#ForARS").show();
                     $('#CallCancelStatusdrp').hide();
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
                     $('#AcceptReject').show();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#Remarksval').hide();
                     $('#Holograms').hide();
                     $('#frmcancelled').hide();
                     $('#ReasonFIFOdv').show();
+                    $('#CallCancelChargesdrp').hide();
                     $('#uploadfile').show();
                     $('#RefreshAll').show();
                     $('#ViewPrintIC').show();
@@ -650,14 +668,16 @@
 
                     $('#consigneeFirmDropdown').trigger('change');
 
-                } else if (selectedValue == "T") {
+                }
+                else if (selectedValue == "T") {
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').show();
                     $('#Remarksval').hide();
+                    $("#ForARS").hide();
                     $('#Holograms').hide();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
@@ -666,16 +686,20 @@
                     $('#RefreshAll').hide();
                     $('#AcceptReject').hide();
                     $('#ViewPrintIC').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').hide();
-                } else if (selectedValue == "S") {
+                }
+                else if (selectedValue == "S") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
+                    $("#ForARS").hide();
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#Remarksval').show();
+                    $('#CallCancelChargesdrp').hide();
                     $('#Holograms').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
@@ -684,27 +708,31 @@
                     $('#AcceptReject').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
-                } else if (selectedValue == "U") {
+                }
+                else if (selectedValue == "U") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#Remarksval').show();
                     $('#Holograms').show();
+                    $("#ForARS").hide();
                     $('#uploadfile').hide();
                     $('#AcceptReject').hide();
                     $('#RefreshAll').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
-                } else if (selectedValue == "W") {
+                }
+                else if (selectedValue == "W") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
@@ -713,15 +741,18 @@
                     $('#ReasonFIFOdv').show();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#ViewPrintIC').hide();
+                    $("#ForARS").hide();
                     $('#AcceptReject').hide();
                     $('#uploadcancel').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                } else if (selectedValue == "M" || selectedValue == "B") {
+                }
+                else if (selectedValue == "M" || selectedValue == "B") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
@@ -730,15 +761,18 @@
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                     $('#ReasonFIFOdv').show();
+                    $('#CallCancelChargesdrp').hide();
                     $('#AcceptReject').hide();
+                    $("#ForARS").hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#Remarksval').show();
                     $('#Holograms').show();
                     $('#frmcancelled').hide();
-                } else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
+                }
+                else if (selectedValue == "RB" || selectedValue == "PR" || selectedValue == "PRB" || selectedValue == "CB") {
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').show();
                     $('#bkset').hide();
@@ -747,15 +781,24 @@
                     $('#Holograms').hide();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $('#CallCancelChargesdrp').hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
+                    $("#ForARS").hide();
                     $('#AcceptReject').hide();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                } else if (selectedValue == "C") {
+                }
+                else if (selectedValue == "C") {
+                    if ($("#RlyNonrly").val() != "R") {
+                        $(".MatValue").hide();
+                    }
+                    else {
+                        $(".MatValue").show();
+                    }
                     $('#accepteuploadddrp').hide();
                     $('#localdrp').hide();
-                    $('#rejvalue').hide();
+                    $('.rejvalue').hide();
                     $('#accepteddrp').hide();
                     $('#savedetails').hide();
                     $('#bkset').hide();
@@ -763,6 +806,7 @@
                     $('#Remarksval').hide();
                     $('#uploadfile').hide();
                     $('#RefreshAll').hide();
+                    $("#ForARS").hide();
                     $('#ViewPrintIC').hide();
                     $('#uploadcancel').hide();
                     $('#Holograms').hide();
@@ -788,6 +832,7 @@
                     }
                 });
             });
+            debugger
             var CallStatusdrp = $('#CallStatusdrp').val();
 
             if (CallStatusdrp == "C") {
@@ -802,7 +847,27 @@
                 $('#ViewPrintIC').hide();
                 $('#AcceptReject').hide();
                 $('#uploadcancel').hide();
+
+                $('#accepteuploadddrp').hide();
+                $('#savedetails').hide();
+                $('#bkset').hide();
+                $('#frmcancelled').show();
+                $('#CallCancelStatusdrp').show();
+                $('#MatValue').show();
+
+                $('#CallCancelStatusdrp').prop('disabled', true);
+                $('#CallCancelChargesdrp').prop('disabled', true);
+
+                var selectedValue1 = $('#CallCancelStatusdrp').val();
+                if (selectedValue1 == "C") {
+
+                    $('#CallCancelChargesdrp').show();
+                    CallCancelStatus();
+                    CallCancellationChanges();
+                }
+
             } else if (CallStatusdrp == "A") {
+                $(".CallRejected").show();
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
                 $('#savefiles').addClass('disabled-button');
@@ -820,14 +885,17 @@
                 $('#localdrp').hide();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#uploadfile').show();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
                 $('#AcceptReject').text('Accepted');
                 $('#frmcancelled').hide();
                 $('#consigneeFirmDropdown').trigger('change');
+                $('#ReasonFIFOdv').show();
             } else if (CallStatusdrp == "R") {
+                $(".CallRejected").hide();
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
                 $('#AcceptReject').prop('disabled', true);
@@ -835,11 +903,12 @@
                 $('#MatValue').show();
                 $('#accepteddrp').show();
                 $('#localdrp').show();
-                $('#rejvalue').show();
+                $('.rejvalue').show();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
                 $('#accepteuploadddrp').show();
                 $('#savedetails').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#ReasonFIFOdv').show();
                 $('#AcceptReject').text('Rejected');
                 $('#frmcancelled').hide();
@@ -848,7 +917,16 @@
                 $('#RefreshAll').show();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
-                $('#consigneeFirmDropdown').trigger('change');
+                $('#CallCancelStatusdrp').hide();
+
+                $('#LocalOutstationdrp').val($('#LocalOutstation').val());
+                $('#LocalOutstationdrp').prop('disabled', true);
+                $('#RejectionCharge').prop('disabled', true);
+                $('#RejectMaterialValue').prop('disabled', true);
+                RejectionMatrialValue();
+
+                // $('#consigneeFirmDropdown').trigger('change');
+
             } else if (CallStatusdrp == "G") {
 
                 $('#CallStatusdrp').prop('disabled', true);
@@ -868,34 +946,19 @@
                 $('#localdrp').hide();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#uploadfile').show();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').show();
                 $('#uploadcancel').show();
                 $('#AcceptReject').text('Accepted');
                 $('#frmcancelled').hide();
                 $('#consigneeFirmDropdown').trigger('change');
                 $('#ReasonFIFOdv').show();
-                // $('#accepteuploadddrp').show();
-                // $('#localdrp').hide();
-                // $('#rejvalue').hide();
-                // $('#accepteddrp').hide();
-                // $('#savedetails').show();
-                // $('#ReasonFIFOdv').show();
-                // $('#bkset').show();
-                // $('#Remarksval').hide();
-                // $('#Holograms').hide();
-                // $('#CallCancelStatusdrp').hide();
-                // $('#frmcancelled').hide();
-                // $('#AcceptReject').hide();
-                // $('#uploadfile').hide();
-                // $('#RefreshAll').hide();
-                // $('#ViewPrintIC').hide();
-                // $('#uploadcancel').hide();
             } else if (CallStatusdrp == "T") {
                 $('#accepteuploadddrp').show();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').show();
@@ -906,13 +969,18 @@
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
+
+
+
+
             } else if (CallStatusdrp == "S") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -923,13 +991,14 @@
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "U") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -940,13 +1009,14 @@
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#uploadcancel').hide();
                 $('#CallCancelStatusdrp').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "W") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -956,6 +1026,7 @@
                 $('#CallCancelStatusdrp').hide();
                 $('#uploadfile').hide();
                 $('#RefreshAll').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
@@ -963,7 +1034,7 @@
             } else if (CallStatusdrp == "M" || CallStatusdrp == "B") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -976,11 +1047,12 @@
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
+                $('#CallCancelChargesdrp').hide();
                 $('#frmcancelled').hide();
             } else if (CallStatusdrp == "RB" || CallStatusdrp == "PR" || CallStatusdrp == "PRB" || CallStatusdrp == "CB") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
-                $('#rejvalue').hide();
+                $('.rejvalue').hide();
                 $('#accepteddrp').hide();
                 $('#savedetails').show();
                 $('#bkset').hide();
@@ -994,25 +1066,30 @@
                 $('#AcceptReject').hide();
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
-            } else if (CallStatusdrp == "C") {
-                $('#accepteuploadddrp').hide();
-                $('#localdrp').hide();
-                $('#rejvalue').hide();
-                $('#accepteddrp').hide();
-                $('#savedetails').hide();
-                $('#bkset').hide();
-                $('#ReasonFIFOdv').show();
-                $('#frmcancelled').show();
-                $('#Remarksval').hide();
-                $('#Holograms').hide();
-                $('#CallCancelStatusdrp').show();
-                $('#MatValue').show();
-                $('#uploadfile').hide();
-                $('#RefreshAll').hide();
-                $('#AcceptReject').hide();
-                $('#ViewPrintIC').hide();
-                $('#uploadcancel').hide();
+                $('#CallCancelChargesdrp').hide();
             }
+            else if (CallStatusdrp == "C") {
+                // $('#accepteuploadddrp').hide();
+                // $('#localdrp').hide();
+                // $('#rejvalue').hide();
+                // $('#accepteddrp').hide();
+                // $('#savedetails').hide();
+                // $('#bkset').hide();
+                // $('#ReasonFIFOdv').show();
+                // $('#frmcancelled').show();
+                // $('#Remarksval').hide();
+                // $('#Holograms').hide();
+                // $('#CallCancelStatusdrp').show();
+                // $('#MatValue').show();
+                // $('#uploadfile').hide();
+                // $('#RefreshAll').hide();
+                // $('#AcceptReject').hide();
+                // $('#ViewPrintIC').hide();
+                // $('#uploadcancel').hide();
+
+                // $('#CallCancelChargesdrp').show();
+            }
+
             $('#LocalOutstationdrp').change(function () {
                 var selectedValue = $('#LocalOutstationdrp').val();
                 var CaseNo = $('#CaseNo').val();
@@ -1025,6 +1102,7 @@
                     success: function (data) {
                         $('#MatValue').val(data.MaterialValue);
                         $('#RejectionCharge').val(data.RejectionCharge);
+                        $('#RejectMaterialValue').val(data.RejectMaterialValue);
                     },
                     error: function () {
                         alert('Error occurred while retrieving BkNo and SetNo.');
@@ -1032,7 +1110,33 @@
                 });
             });
 
+            function RejectionMatrialValue() {
+                var selectedValue = $('#LocalOutstationdrp').val();
+                var CaseNo = $('#CaseNo').val();
+                var CallSno = $('#CallSno').val();
+                var DesireDt = $('#CallRecvDt').val();
+                $.ajax({
+                    url: '@Url.Action("LocalOutstation", "CallRegisterIB")',
+                    type: 'GET',
+                    data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                    success: function (data) {
+                        $('#RejectMaterialValue').val(data.RejectMaterialValue);
+                    },
+                    error: function () {
+                        alert('Error occurred while retrieving BkNo and SetNo.');
+                    }
+                });
+            }
+
+
+
             $('#CallCancelStatusdrp').change(function () {
+                CallCancelStatus();
+                CallCancellationChanges();
+            });
+
+            function CallCancelStatus() {
+                debugger
                 $('#MatCanvalue').hide();
                 var selectedValue1 = $('#CallCancelStatusdrp').val();
                 var selectedValue = $('#CallStatusdrp').val();
@@ -1042,36 +1146,48 @@
 
                 if (selectedValue1 == "C") {
                     $('#CallCancelChargesdrp').show();
-                } else if (selectedValue1 == "N") {
-                    $('#CallCancelChargesdrp').hide();
-                }
+                    $("#MatCanvalue").show();
 
-                $.ajax({
-                    url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
-                    type: 'GET',
-                    data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
-                    success: function (data) {
-                        if (data.ChkFIFO == "true") {
-                            $('#ReasonFIFOdv').show();
-                        } else if (data.ChkFIFO == "false") {
-                            $('#ReasonFIFOdv').hide();
+                    $.ajax({
+                        url: '@Url.Action("GetRlyDrp", "CallRegisterIB")',
+                        type: 'GET',
+                        data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
+                        success: function (data) {
+                            if (data.ChkFIFO == "true") {
+                                $('#ReasonFIFOdv').show();
+                            } else if (data.ChkFIFO == "false") {
+                                $('#ReasonFIFOdv').hide();
+                            }
+                            var callRlyFirmList = data.CallRlyFirmList;
+                            $('#CallCancelChargesdrp').empty();
+                            for (var i = 0; i < callRlyFirmList.length; i++) {
+                                $('#CallCancelChargesdrp').append($('<option>', {
+                                    value: callRlyFirmList[i].Value,
+                                    text: callRlyFirmList[i].Text
+                                }));
+                            }
+                            $("#CallCancelChargesdrp").val($("#CallCancelChargesStatus").val());
+                            CallCancellationChanges();
+                        },
+                        error: function () {
+                            alert('Error occurred while retrieving BkNo and SetNo.');
                         }
-                        var callRlyFirmList = data.CallRlyFirmList;
-                        for (var i = 0; i < callRlyFirmList.length; i++) {
-                            $('#CallCancelChargesdrp').append($('<option>', {
-                                value: callRlyFirmList[i].Value,
-                                text: callRlyFirmList[i].Text
-                            }));
-                        }
-                    },
-                    error: function () {
-                        alert('Error occurred while retrieving BkNo and SetNo.');
-                    }
-                });
-            });
+                    });
+                }
+                // else if (selectedValue1 == "N") {
+                else {
+                    $('#CallCancelChargesdrp').hide();
+                    $("#MatCanvalue").hide();
+                }
+            }
 
             $('#CallCancelChargesdrp').change(function () {
+                CallCancellationChanges();
+            });
+
+            function CallCancellationChanges() {
                 var selectedValue = $('#CallCancelChargesdrp').val();
+
                 var CaseNo = $('#CaseNo').val();
                 var CallSno = $('#CallSno').val();
                 var DesireDt = $('#CallRecvDt').val();
@@ -1080,7 +1196,7 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
-                        $('#MatCanvalue').show();
+
                         $('#MatValue').val(data.MaterialValue);
                         $('#CanCharges').val(data.CallCancelCharges);
                     },
@@ -1088,17 +1204,43 @@
                         alert('Error occurred while retrieving BkNo and SetNo.');
                     }
                 });
-
-            });
+            }
         });
+
+        function DocSetNoChanged() {
+
+            var CaseNo = $('#CaseNo').val();
+            var CallSno = $('#CallSno').val();
+            var DesireDt = $('#CallRecvDt').val();
+
+            var ConsigneeCd = $('#consigneeFirmDropdown').val();
+            var DocBkNo = $('#DocBkNo').val();
+            var DocSetNo = $('#DocSetNo').val();
+
+            $.ajax({
+                url: '@Url.Action("GetValidBkSet", "CallRegisterIB")',
+                type: 'GET',
+                data: { CaseNo, DesireDt, CallSno, ConsigneeCd, DocBkNo, DocSetNo },
+                success: function (data) {
+                    if (data.AlertMsg != null) {
+                        ShowHideMsgNew(false, "Book Number : " + $('#DocBkNo').val() + " or Set Number : " + $('#DocSetNo').val() + " Already Existing for this Consignee.!!!");
+                        $('#DocSetNo').val(data.DocSetNo);
+                        $('#DocBkNo').val(data.DocBkNo);
+                    }
+                },
+                error: function () {
+                    alert('Error occurred while retrieving BkNo and SetNo.');
+                }
+            });
+        }
 
         function UploadFiles() {
             var formData = new FormData();
 
             SaveSingleDocuments("tab-2");
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
-            var bknoaccpted = $('#bknoaccpted').val();
-            var setnoaccpted = $('#setnoaccpted').val();
+            var bknoaccpted = $('#DocBkNo').val();
+            var setnoaccpted = $('#DocSetNo').val();
 
             if (bknoaccpted != "" && setnoaccpted != "") {
                 var ajaxData = AjaxModel();
@@ -1149,11 +1291,17 @@
             }
 
         }
+
         function Accepted() {
+            if ($("#ReasonFIFO").val() == "") {
+                $("#spnReasonFIFO").html("Reason For Violating FIFO.");
+                return;
+            }
             var formData = AjaxModel();
+
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
-            var bknoaccpted = $('#bknoaccpted').val();
-            var setnoaccpted = $('#setnoaccpted').val();
+            var bknoaccpted = $('#DocBkNo').val();
+            var setnoaccpted = $('#DocSetNo').val();
 
             //if (bknoaccpted != "" || setnoaccpted != "") {
             $.ajax({
@@ -1190,6 +1338,11 @@
         }
 
         function Save() {
+            debugger
+            if ($("#ReasonFIFO").val() == "") {
+                $("#spnReasonFIFO").html("Reason For Violating FIFO.");
+                return;
+            }
 
             var formData = new FormData();
             SaveSingleDocuments("tab-2");
@@ -1199,21 +1352,20 @@
 
             //if (bknoaccpted != "" && setnoaccpted != "") {
             var ajaxData = AjaxModel();
-
+            debugger;
             if (CallStatus == "G" || CallStatus == "T") {
-                var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
-
-                if (fileInput && fileInput.defaultValue && fileInput.defaultValue != null) {
-                    var file = fileInput.defaultValue;
-                    formData.append("UploadeFile", file);
-                }
-
+                //var fileInput = $('#hdnUploadedDocumentList_tab-2')[0];
                 var hiddenInput = $("#hdnUploadedDocumentList_tab-2");
+
                 var uploadedDocuments = hiddenInput.val();
-                if (uploadedDocuments == "" || uploadedDocuments == null) {
-                    alert('Please select all files!');
+
+                var uploadedDocumentsArray = (uploadedDocuments == "" || uploadedDocuments == null) ? [] : JSON.parse(uploadedDocuments);
+
+                if (uploadedDocumentsArray.length < 4) {
+                    alert("Please select all files!");
                     return;
                 }
+
             }
             if (ajaxData) {
                 for (var key in ajaxData) {
@@ -1257,18 +1409,7 @@
                     console.error('Error: ' + textStatus, errorThrown);
                 }
             });
-            //} else {
-            //    alert("BKNO & SetNo Is Required.");
-            //    return;
-            //}
-            //if ($("#ActionType").val() == "C") {
-            //    $("#frmCallStatus").submit();
-            //}
-            //else {
-            //    if ($("#frmCallStatus").valid()) {
-            //        $("#frmCallStatus").submit();
-            //    }
-            //}
+
         }
 
         function SaveImages() {
@@ -1276,8 +1417,8 @@
             var formData = new FormData();
             SaveSingleDocuments("tab-1");
             var consigneeFirmDropdown = $('#consigneeFirmDropdown').val();
-            var bknoaccpted = $('#bknoaccpted').val();
-            var setnoaccpted = $('#setnoaccpted').val();
+            var bknoaccpted = $('#DocBkNo').val();
+            var setnoaccpted = $('#DocSetNo').val();
 
             if ($("#consigneeFirmDropdown").val() == '0') {
                 alert("Please select consignee !");
@@ -1294,48 +1435,48 @@
 
                 if (uploadedDocumentsArray.length >= 5) {
 
-                    if (uploadedDocumentsArray[0].DocName == "IC Image 1" && uploadedDocumentsArray[1].DocName == "IC Image 2" && uploadedDocumentsArray[2].DocName == "IC Image 3" && uploadedDocumentsArray[3].DocName == "IC Image 4" && uploadedDocumentsArray[4].DocName == "IC Image 5") {
-                        var ajaxData = AjaxModel();
+                    //if (uploadedDocumentsArray[0].DocName == "IC Image 1" && uploadedDocumentsArray[1].DocName == "IC Image 2" && uploadedDocumentsArray[2].DocName == "IC Image 3" && uploadedDocumentsArray[3].DocName == "IC Image 4" && uploadedDocumentsArray[4].DocName == "IC Image 5") {
+                    var ajaxData = AjaxModel();
 
-                        if (ajaxData) {
-                            for (var key in ajaxData) {
-                                if (ajaxData.hasOwnProperty(key)) {
-                                    formData.append(key, ajaxData[key]);
-                                }
+                    if (ajaxData) {
+                        for (var key in ajaxData) {
+                            if (ajaxData.hasOwnProperty(key)) {
+                                formData.append(key, ajaxData[key]);
                             }
                         }
-                        var files = $('#hdnUploadedDocumentList_tab-1')[0];
+                    }
+                    var files = $('#hdnUploadedDocumentList_tab-1')[0];
 
 
-                        if (files && files.defaultValue && files.defaultValue != null) {
-                            var files = files.defaultValue;
-                            formData.append("UploadeFile", files);
-                        }
-                        $.ajax({
-                            url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
-                            type: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (response) {
+                    if (files && files.defaultValue && files.defaultValue != null) {
+                        var files = files.defaultValue;
+                        formData.append("UploadeFile", files);
+                    }
+                    $.ajax({
+                        url: '@Url.Action("CallStatusFiles", "CallRegisterIB")',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
 
-                                if (response.Id == 1) {
-                                    ShowHideMsgNew(true, response.responseText);
-                                    $('#consigneeFirmDropdown').trigger('change');
-                                }
-                                else {
-                                    ShowHideMsgNew(false, response.responseText);
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                // Handle error
-                                console.error('Error: ' + textStatus, errorThrown);
+                            if (response.Id == 1) {
+                                ShowHideMsgNew(true, response.responseText);
+                                $('#consigneeFirmDropdown').trigger('change');
                             }
-                        });
-                    }
-                    else {
-                        alert('Please select the first five (5) Images!');
-                    }
+                            else {
+                                ShowHideMsgNew(false, response.responseText);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            // Handle error
+                            console.error('Error: ' + textStatus, errorThrown);
+                        }
+                    });
+                    // }
+                    // else {
+                    //     alert('Please select the first five (5) Images!');
+                    // }
                 } else {
                     alert('Please select the first five (5) Images!');
                 }
@@ -1352,6 +1493,13 @@
             SaveSingleDocuments("tab-3");
 
             var ajaxData = AjaxModel();
+            formData.append("CallCancelCharges", $("#CanCharges").val());
+            formData.append("CallCancelStatus", $("#CallCancelStatusdrp").val());
+            formData.append("CallCancelStatusDesc", $("#CallCancelStatusdrp option:selected").text());
+            formData.append("CallLetterDt", $("#CallLetterDt").val());
+
+            formData.append("CallCancelChargesStatus", $("#CallCancelChargesdrp").val());
+            formData.append("CallCancelAmount", $("#MatValue").val());
 
             if (ajaxData) {
                 for (var key in ajaxData) {
@@ -1366,7 +1514,7 @@
                 var file = fileInput.defaultValue;
                 formData.append("UploadeFile", file);
             } else {
-                alert("Upload File");
+                alert("Please Upload Cancellation Document.");
                 return;
             }
 
@@ -1413,8 +1561,8 @@
             var CallStatus = $('#CallStatusdrp').val();
             var ConsigneeFirm = $('#consigneeFirmDropdown').val();
             var LocalOutstation = $('#LocalOutstationdrp').val();
-            var DocBkNo = $('#bknoaccpted').val();
-            var DocSetNo = $('#setnoaccpted').val();
+            var DocBkNo = $('#DocBkNo').val();
+            var DocSetNo = $('#DocSetNo').val();
             var CaseNo = $('#caseno').val();
             var CallRecvDt = $('#CallRecvDt').val();
             var CallSno = $('#callsnos').val();
@@ -1431,6 +1579,10 @@
             var PoDt = $('#PoDt').val();
             var RejectionCharge = $('#RejectionCharge').val();
             var IeCd = $('#IeCd').val();
+            var CallLetterDt = $("#CallLetterDt").val();
+
+            var CallCancelChargesStatus = $("#CallCancelChargesdrp").val();
+            var CallCancelAmount = $("#MatValue").val();
 
             var formData = {
                 CallStatus: CallStatus,
@@ -1451,7 +1603,10 @@
                 DocBkNo: DocBkNo,
                 DocSetNo: DocSetNo,
                 RejectionCharge: RejectionCharge,
-                IeCd: IeCd
+                IeCd: IeCd,
+                CallCancelCharges: CallCancelCharges,
+                CallLetterDt: CallLetterDt,
+                ReasonFIFO: ReasonFIFO
             };
 
             return formData;
@@ -1491,9 +1646,8 @@
 
         }
 
-        function RefreshAll() {
+        function btnRefreshAll() {
             var formData = AjaxModel();
-
             $.ajax({
                 url: '@Url.Action("RefreshAllDlt", "CallRegisterIB")',
                 type: 'POST',
@@ -1518,6 +1672,14 @@
                     console.error('Error: ' + textStatus, errorThrown);
                 }
             });
+        }
+
+        function btnCancel() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+
+            var url = '@Url.Action("CallsMarkedToIE", "CallsMarkedToIE")?type=' + type;
+            window.location.href = url;
         }
 
     </script>

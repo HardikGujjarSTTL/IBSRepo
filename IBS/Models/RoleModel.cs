@@ -27,5 +27,6 @@
         public string? UserName { get; set; }
         public int Id { get; set; }
         public string UserType { get; set; }
+        public string? MUser_ID { get; set; }
     }
 }

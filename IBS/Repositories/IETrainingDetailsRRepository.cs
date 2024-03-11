@@ -2,17 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -125,7 +117,7 @@ namespace IBS.Repositories
 
         public IETrainingDetailsModel IEFetchData(string Name)
         {
-
+              
             using (var dbContext = context.Database.GetDbConnection())
             {
                 OracleParameter[] par = new OracleParameter[2];
@@ -153,6 +145,54 @@ namespace IBS.Repositories
                         Name = Convert.ToString(row["NAME"]),
 
                     };
+                }
+                else
+                {
+                    int ie = Convert.ToInt32(Name);
+                    var IE = context.T09Ies.Find(ie);
+                    if (IE.IeDepartment == "M")
+                          IE.IeDepartment = "Mechanical";
+                    else if (IE.IeDepartment == "E")
+                        IE.IeDepartment = "Electrical";
+                    else if (IE.IeDepartment == "C")
+                          IE.IeDepartment = "Civil";
+                    else if (IE.IeDepartment == "L")
+                         IE.IeDepartment = "Metallurgy";
+                    else if (IE.IeDepartment == "T")
+                         IE.IeDepartment = "Textiles";
+                    else if (IE.IeDepartment == "P")
+                         IE.IeDepartment = "Power Engineering";
+
+                    if (IE == null)
+                        return model;
+                    else
+                    {
+                        DateTime? ieDob = IE.IeDob;
+                        DateTime? ieDoj = IE.IeJoinDt;
+                        string dob = "";
+                        string doj = "";
+                        if(ieDob ==null && ieDoj == null)
+                        {
+                            dob = "";
+                            doj = "";
+                        }
+                        else if(ieDob != null)
+                        {
+                            dob = ieDob.Value.ToString("dd/MM/yyyy") ?? "";
+                            //doj = ieDoj.Value.ToString("dd/MM/yyyy") ?? "";
+                        }
+                        else if (ieDoj != null)
+                        {
+                            //dob = ieDob.Value.ToString("dd/MM/yyyy") ?? "";
+                            doj = ieDoj.Value.ToString("dd/MM/yyyy") ?? "";
+                        }
+
+                        model.EmpNo = IE.IeEmpNo;
+                        model.DOB = dob;
+                        model.DOJ = doj;
+                        model.Discipline = IE.IeDepartment;
+                        return model;
+                    }
                 }
 
                 return model;
@@ -236,6 +276,9 @@ namespace IBS.Repositories
             {
                 //model.ID = Convert.ToDecimal(user.Id);
                 model.EmpNo = IE.IeEmpNo;
+                model.DOB = IE.IeDob.ToString();
+                model.DOJ = IE.IeJoinDt.ToString();
+                model.Discipline = IE.IeDepartment;
                 return model;
             }
         }
@@ -251,11 +294,23 @@ namespace IBS.Repositories
             IETrainingDetailsModel model = FindByID(ie);
 
             string iec;
-            string Query = "select IE_CD from TRAINEE_EMPLOYEE_MASTER where IE_CD='"+ IETrainingDetailsModel.Name + "'";
+            string Query = "select IE_CD from TRAINEE_EMPLOYEE_MASTER where IE_CD='" + IETrainingDetailsModel.Name + "'";
 
             iec = GetDateString(Query);
-            if(iec == null )
+            if (iec == null)
             {
+                if (IETrainingDetailsModel.Discipline == "Mechanical")
+                    IETrainingDetailsModel.Discipline = "M";
+                else if (IETrainingDetailsModel.Discipline == "Electrical")
+                    IETrainingDetailsModel.Discipline = "E";
+                else if(IETrainingDetailsModel.Discipline == "Civil")
+                    IETrainingDetailsModel.Discipline = "C";
+                else if(IETrainingDetailsModel.Discipline == "Metallurgy")
+                    IETrainingDetailsModel.Discipline = "L";
+                else if(IETrainingDetailsModel.Discipline == "Textiles")
+                    IETrainingDetailsModel.Discipline = "T";
+                else if(IETrainingDetailsModel.Discipline == "Power Engineerin")
+                    IETrainingDetailsModel.Discipline = "P";
                 var trainingDetail = new TraineeEmployeeMaster
                 {
                     IeCd = Convert.ToInt32(IETrainingDetailsModel.Name),
@@ -280,10 +335,11 @@ namespace IBS.Repositories
 
 
                 string CourseId;
+                string CoId;
                 string sqlQuery = "Select lpad(nvl(max(to_number(nvl(substr(COURSE_ID,2,4),0))),0)+1,4,'0')  From TRAINING_COURSE_MASTER where substr(COURSE_ID,1,1)='" + IETrainingDetailsModel.Regin + "'";
 
-                CourseId = GetDateString(sqlQuery);
-
+                CoId = GetDateString(sqlQuery);
+                CourseId = (IETrainingDetailsModel.Regin + CoId);
                 try
                 {
 
@@ -291,7 +347,7 @@ namespace IBS.Repositories
                     par[0] = new OracleParameter("p_course_id", OracleDbType.Varchar2, CourseId, ParameterDirection.Input);
                     par[1] = new OracleParameter("p_training_type", OracleDbType.Varchar2, IETrainingDetailsModel.TrainingType, ParameterDirection.Input);
                     par[2] = new OracleParameter("p_training_field", OracleDbType.Varchar2, IETrainingDetailsModel.TrainingArea, ParameterDirection.Input);
-                    par[3] = new OracleParameter("p_course_name", OracleDbType.Varchar2, IETrainingDetailsModel.course_name, ParameterDirection.Input);
+                    par[3] = new OracleParameter("p_course_name", OracleDbType.Varchar2, IETrainingDetailsModel.CourseNameOther, ParameterDirection.Input);
                     par[4] = new OracleParameter("p_course_institute", OracleDbType.Varchar2, IETrainingDetailsModel.Institue, ParameterDirection.Input);
                     par[5] = new OracleParameter("p_course_dur_fr", OracleDbType.Date, from, ParameterDirection.Input);
                     par[6] = new OracleParameter("p_course_dur_to", OracleDbType.Date, to, ParameterDirection.Input);
@@ -331,7 +387,7 @@ namespace IBS.Repositories
                     //par[0] = new OracleParameter("p_ie_cd", OracleDbType.Int16, iecode, ParameterDirection.Input);
                     //par[1] = new OracleParameter("p_course_id", OracleDbType.Varchar2, IETrainingDetailsModel.course_name, ParameterDirection.Input);
                     //var ds1 = DataAccessDB.ExecuteNonQuery(Query, par, 1);
-                   
+
                     int iecode = Convert.ToInt32(IETrainingDetailsModel.Name);
                     var count = context.TrainingDetails
                            .Where(item =>

@@ -108,7 +108,7 @@
                                     <label for="formonth">For The Month</label>
                                 </div>
                             </div>
-                            <div c lass="remember">
+                            <div class="remember">
                                 <div class="remecheckbox">
                                     <input type="radio" id="forperiod" name="formonth" value="forperiod">
                                     <label for="forperiod">For Given Period</label>
@@ -512,7 +512,7 @@
                         <div class="col-md-3">
                             <div class="input-search">
                                 <label for="FromDate">Month</label>
-                                @Html.DropDownList("monthVENDPER", new SelectList(IBS.Models.Common.GetMonths() , "Value", "Text"),"--Select--" ,new { id = "monthVENDPER" })
+                                @Html.DropDownList("monthVENDPER", new SelectList(IBS.Models.Common.GetMonth() , "Value", "Text"),"--Select--" ,new { id = "monthVENDPER" })
                                 <span class="text-danger field-validation-error" id="spnErrormonth"></span>
                             </div>
                         </div>
@@ -596,6 +596,7 @@
                     <input type="hidden" id="hdnToDateUE" name="hdnToDateUE" />
                     <input type="hidden" id="hdnAllIEsUE" name="hdnAllIEsUE" />
                     <input type="hidden" id="hdnParticularCMsUE" name="hdnParticularCMsUE" />
+                    <input type="hidden" id="hdnParticularIEsUE" name="hdnParticularIEsUE" />
                     <input type="hidden" id="hdnIEWiseUE" name="hdnIEWiseUE" />
                     <input type="hidden" id="hdnCMWiseUE" name="hdnCMWiseUE" />
                     <input type="hidden" id="hdnSortedIEUE" name="hdnSortedIEUE" />
@@ -664,7 +665,7 @@
 
                             <div class="row my-0">
                                 <div class="col-md-6" id="particularCMUE">
-                                    @Html.DropDownList("ddlsupercmUE", new SelectList(IBS.Models.Common.GetCODataSuperForm(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercmUE" })
+                                    @Html.DropDownList("ddlsupercmUE", new SelectList(IBS.Models.Common.GetOfficerIsCoStatusIsNull(@ViewBag.Regions), "Value", "Text"), "--Select--", new { id = "ddlsupercmUE" })
                                 </div>
                             </div>
                         </div>
@@ -759,12 +760,74 @@
                 </form>
             </div>
         </div>
+
+        <div class="task-inner row DSC" style="display: none">
+            <div class="row my-0">
+                <form role="form" asp-controller="OtherReports" asp-action="ManageReportData" id="frmDSC">
+                    <input type="hidden" id="hdnReportType" name="hdnReportType" />
+                    <input type="hidden" id="hdnDSCMonth" name="hdnDSCMonth" />
+                    <input type="hidden" id="hdnDSCYear" name="hdnDSCYear" />
+                    <input type="hidden" id="hdnDSCToMonth" name="hdnDSCToMonth" />
+                    <input type="hidden" id="hdnDSCToYear" name="hdnDSCToYear" />
+                    <input type="hidden" id="hdnDSCMonthText" name="hdnDSCMonthText" />
+                    <input type="hidden" id="hdnDSCToMonthText" name="hdnDSCToMonthText" />
+                    <input type="hidden" id="hdnDSC_M" name="hdnDSC_M" />
+                    <div class="row my-0">
+                        <div class="col-md-12 mb-3">
+                            <div class="custom-readio">
+                                <div class="company-checkbox">
+                                    <div class="remember">
+                                        <div class="remecheckbox">
+                                            <input type="radio" id="DSC_M"  name="DSCExp" value="M" checked>
+                                            <label for="DSC_M">Report For the Month</label>
+                                        </div>
+                                    </div>
+                                    <div c lass="remember">
+                                        <div class="remecheckbox">
+                                            <input type="radio" id="DSC_P" name="DSCExp" value="P">
+                                            <label for="DSC_P">Report For the Given Period</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="FromMn" id="lblMonth">Month</label> <br />
+                            @Html.DropDownList("DSCMonth", new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"), "--Select--",new { id = "DSCMonth" })
+                            <span class="text-danger field-validation-error" id="spnErrorFromMn"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="FromYr" id="lblYear">Year</label> <br />
+                            @Html.DropDownList("DSCYear", new SelectList(IBS.Models.Common.GetYears(), "Value", "Text"), "--Select--",new { id = "DSCYear" })
+                            <span class="text-danger field-validation-error" id="spnErrorFromYr"></span>
+                        </div>
+                    </div>
+                     <div class="row my-0" id="ToPeriod">
+                        <div class="col-md-4 mb-3">
+                            <label for="ToMn">To Month</label> <br />
+                            @Html.DropDownList("DSCToMonth", new SelectList(IBS.Models.Common.GetMonths(), "Value", "Text"), "--Select--",new { id = "DSCToMonth" })
+                            <span class="text-danger field-validation-error" id="spnErrorToMn"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="ToYr">To Year</label> <br />
+                            @Html.DropDownList("DSCToYear", new SelectList(IBS.Models.Common.GetYears(), "Value", "Text"), "--Select--",new { id = "DSCToYear" })
+                            <span class="text-danger field-validation-error" id="spnErrorToYr"></span>
+                        </div>
+                     </div>
+                    <div class="col-md-5">
+                        <div class="savenext-btn btnAlign">
+                            <button type="button" class="save-btn active" onclick="ViewReportDSC();">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 <section class="table-section COIEWiseCalls" id="tblCOIEWiseCalls" style="display: none">
     <div class="task-listinput">
         <div class="dash-table">
-            <table id="dtCOIEWiseCalls" class="table-responsive">
+            <table id="dtCOIEWiseCalls" class="display wrap">
                 <thead>
                     <tr>
                         <th>VIEW REPORT</th>
@@ -801,7 +864,7 @@
 <section class="table-section IEICPHOTO" id="tblIEICPHOTO" style="display: none">
     <div class="task-listinput">
         <div class="dash-table">
-            <table id="dtphoto" class="table-responsive">
+            <table id="dtphoto" class="display wrap">
                 <thead>
                     <tr>
                         <th>Case No.</th>
@@ -835,7 +898,7 @@
         $(document).ready(function () {
             $("#ddlsupercmUE").hide();
             $("#ddlienameUE").hide();
-            $("#AllIEUE").hide();
+            $("#AllIEUE").show();
             $("#AllCMWiseUE").hide();
             $("#divdate").hide();
             $("#iecmname").hide();
@@ -843,19 +906,22 @@
             $("#TrainingArea").hide();
             $("#Region").hide();
             $("#department").hide();
+            $("#ToPeriod").hide();
 
             $("#divdateVENDPER").hide();
 
             $("#vendorVENDPER").autocomplete({
                 source: function (request, response) {
+                    debugger
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        url: "@Url.Action("GetVendorData", "Search")",
+                       // url: "/Search/GetVendorData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                                return { text: item.VEND_NAME, value: item.VEND_NAME };
                             }))
                         }
                     })
@@ -904,6 +970,8 @@
                 $(".U").css("display", "");
             } else if ('@ReportType' == 'IEICPHOTO') {
                 $(".IEICPHOTO").css("display", "");
+            }else if ('@ReportType' == 'DSC') {
+                $(".DSC").css("display", "");
             }
 
             $('#formonthVENDPER').change(function () {
@@ -912,6 +980,14 @@
                 $("#vendorVENDPER").val('');
                 $("#divdateVENDPER").hide();
                 $("#divmonthVENDPER").show();
+            });
+
+            $('#DSC_P').change(function () {
+                $("#ToPeriod").show();
+            });
+
+            $('#DSC_M').change(function () {
+                $("#ToPeriod").hide();
             });
 
             $('#forperiodVENDPER').change(function () {
@@ -1003,7 +1079,6 @@
                 $("#IENAME").hide();
             });
         });
-
 
         $('#forperiod').change(function () {
             $("#divdate").show();
@@ -1394,6 +1469,7 @@
         }
 
         function ViewReportIEWISET() {
+            debugger
             var ReportType = '@ReportType';
             var IENAME = $('#IENAME').val();
             var TrainingArea = $('#TrainingArea').val();
@@ -1560,7 +1636,7 @@
             var vendor = $('#vendorVENDPER').val();
             var indexOfHyphen = vendor.indexOf("-");
             var vendcd = vendor.substr(0, indexOfHyphen).trim();
-            var monthtxt = $('#monthVENDPER option:selected').text();
+            var monthtxt = $('#monthVENDPER option:selected').text() == "--Select--" ? null : $('#monthVENDPER option:selected').text();
 
             $('#frmVENDPER').find("#hdnReportType").val(ReportType);
             $('#frmVENDPER').find("#hdnFromDate").val(FromDate);
@@ -1656,7 +1732,8 @@
             $('#frmUE').find("#hdnFromDateUE").val(FromDate);
             $('#frmUE').find("#hdnToDateUE").val(ToDate);
             $('#frmUE').find("#hdnAllIEsUE").val(AllIEs);
-            $('#frmUE').find("#hdnParticularCMsUE").val(ParticularIEs);
+            $('#frmUE').find("#hdnParticularCMsUE").val(ParticularCMs);
+            $('#frmUE').find("#hdnParticularIEsUE").val(ParticularIEs);
             $('#frmUE').find("#hdnIEWiseUE").val(IEWise);
             $('#frmUE').find("#hdnCMWiseUE").val(CMWise);
             $('#frmUE').find("#hdnSortedIEUE").val(SortedIE);
@@ -1710,64 +1787,64 @@
                     {
                         data: "FILE_1", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_1;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_1;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_1 + '</a>';
                         }
                     },
                     {
                         data: "FILE_2", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_2;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_2;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_2 + '</a>';
                         }
                     },
                     {
                         data: "FILE_3", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_3;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_3;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_3 + '</a>';
                         }
                     },
                     {
                         data: "FILE_4", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_4;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_4;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_4 + '</a>';
                         }
                     }, {
                         data: "FILE_5", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_5;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_5;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_5 + '</a>';
                         }
                     }, {
                         data: "FILE_6", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_6;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_6;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_6 + '</a>';
                         }
                     }, {
                         data: "FILE_7", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_7;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_7;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_7 + '</a>';
                         }
                     }, {
                         data: "FILE_8", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_8;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_8;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_8 + '</a>';
                         }
                     }, {
                         data: "FILE_9", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_9;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_9;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_9 + '</a>';
                         }
                     }, {
                         data: "FILE_10", width: "10%",
                         render: function (data, type, row) {
-                            var photoUrl = '@Url.Content("~/ReadWriteData/")' + row.FILE_10;
+                            var photoUrl = '@Url.Content("~/ReadWriteData/IC_PHOTOS/")' + row.FILE_10;
                             return '<a href="' + photoUrl + '"  target="_blank">' + row.FILE_10 + '</a>';
                         }
                     },
@@ -1802,6 +1879,31 @@
             $("#BKNO").val('');
             $("#SETNO").val('');
             $("#dtphoto tbody").empty();
+        }
+
+        function ViewReportDSC(){
+
+            var DSCMonth = $("#DSCMonth").val();
+            var MonthVal = DSCMonth.padStart(2, '0');
+            var DSCYear = $("#DSCYear").val();
+            var DSCToMonth = $("#DSCToMonth").val();
+            var ToMonthVal = DSCToMonth.padStart(2, '0');
+            var DSCToYear = $("#DSCToYear").val();
+            var DSCMonthText = $("#DSCMonth option:selected").text();
+            var DSCToMonthText = $("#DSCToMonth option:selected").text();
+            var DSC_Month = $("#DSC_M").is(":checked") == true ? "true" : "false";
+            var ReportType = '@ReportType';
+
+            $('#frmDSC').find("#hdnReportType").val(ReportType);
+            $('#frmDSC').find("#hdnDSCMonth").val(MonthVal);
+            $('#frmDSC').find("#hdnDSCYear").val(DSCYear);
+            $('#frmDSC').find("#hdnDSCToMonth").val(ToMonthVal);
+            $('#frmDSC').find("#hdnDSCToYear").val(DSCToYear);
+            $('#frmDSC').find("#hdnDSCMonthText").val(DSCMonthText);
+            $('#frmDSC').find("#hdnDSCToMonthText").val(DSCToMonthText);
+            $('#frmDSC').find("#hdnDSC_M").val(DSC_Month);
+
+            $("#frmDSC").submit();
         }
     </script>
 }

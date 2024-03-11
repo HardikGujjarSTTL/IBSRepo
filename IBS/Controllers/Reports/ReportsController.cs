@@ -3,9 +3,6 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
@@ -38,7 +35,7 @@ namespace IBS.Controllers.Reports
 
         public IActionResult Manage(string ReportType, DateTime FromDate, DateTime ToDate, string FDate, string TDate)
         {
-            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate,FDate = FDate,TDate = TDate };
+            ReportsModel model = new() { ReportType = ReportType, FromDate = FromDate, ToDate = ToDate, FDate = FDate, TDate = TDate };
             if (ReportType == "UNBILLEDIC") model.ReportTitle = "IC RECEIVED IN OFFICE BUT NOT BILLED";
             else if (ReportType == "PendingJICases") model.ReportTitle = "Pending JI Cases";
             else if (ReportType == "IEWorkPlan") model.ReportTitle = "IE DAILY WORK PLAN REPORT";
@@ -101,9 +98,9 @@ namespace IBS.Controllers.Reports
             else if (Region == "E") { wRegion = "Eastern Region"; }
             else if (Region == "W") { wRegion = "Western Region"; }
             else if (Region == "C") { wRegion = "Central Region"; }
-           // RecieptVoucherModel model = new() { FromDate = Convert.ToString(FromDate), ToDate = Convert.ToString(ToDate) };
+            // RecieptVoucherModel model = new() { FromDate = Convert.ToString(FromDate), ToDate = Convert.ToString(ToDate) };
             model.Region = wRegion;
-            model = reportsRepository.GetBankStatement(FDate,TDate, Region);
+            model = reportsRepository.GetBankStatement(FDate, TDate, Region);
             model.FromDate = FDate;
             model.ToDate = TDate;
             GlobalDeclaration.BankStatement = model;
@@ -111,7 +108,7 @@ namespace IBS.Controllers.Reports
         }
         #endregion
 
-        #region IC 7th Copy Report //IC7thCopyReport        
+        #region IC 7th Copy Report //IC7thCopyReport        IEDairy
         public IActionResult IE7thCopyReport(string Bk_No, string Set_No)
         {
             var model = reportsRepository.GetIE7thCopyReport(Bk_No, Set_No, GetUserInfo);
@@ -143,7 +140,7 @@ namespace IBS.Controllers.Reports
             foreach (var row in model.ICIssuedNotReceivedList)
             {
                 var tifPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + row.CASE_NO + ".TIF";
-                var pdfPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + row.CASE_NO + ".PDF";                
+                var pdfPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo) + "/" + row.CASE_NO + ".PDF";
                 row.IsTIF = System.IO.File.Exists(tifPath) == true ? true : false;
                 row.IsPDF = System.IO.File.Exists(pdfPath) == true ? true : false;
             }
@@ -217,7 +214,7 @@ namespace IBS.Controllers.Reports
         public IActionResult ConsigneeComplaints(DateTime FromDate, DateTime ToDate)
         {
             ConsigneeComplaintsModel model = new();
-            model = reportsRepository.Get_Consignee_Complaints(FromDate, ToDate, Convert.ToString(GetUserInfo.IeCd),GetUserInfo.Region);
+            model = reportsRepository.Get_Consignee_Complaints(FromDate, ToDate, Convert.ToString(GetUserInfo.IeCd), GetUserInfo.Region);
             foreach (var row in model.lstConsigneeComplaints)
             {
                 var rejecttif = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.RejectionMemo) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
@@ -228,7 +225,7 @@ namespace IBS.Controllers.Reports
 
                 var reporttifpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".TIF";
                 var reportpdfpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.COMPLAINTSREPORT) + "/" + row.CASE_NO + "-" + row.BK_NO + "-" + row.SET_NO + ".PDF";
-                
+
                 row.IsRejectionMemoTif = System.IO.File.Exists(rejecttif) == true ? true : false;
                 row.IsRejectionMemoPdf = System.IO.File.Exists(rejectpdf) == true ? true : false;
 
@@ -238,6 +235,7 @@ namespace IBS.Controllers.Reports
                 row.IsComplainReportTif = System.IO.File.Exists(reporttifpath) == true ? true : false;
                 row.IsComplainReportPdf = System.IO.File.Exists(reportpdfpath) == true ? true : false;
             }
+            GlobalDeclaration.ConsigneeComplaints = model;
             return PartialView(model);
         }
 
@@ -286,6 +284,11 @@ namespace IBS.Controllers.Reports
                 RecieptVoucherModel model = GlobalDeclaration.BankStatement;
                 htmlContent = await this.RenderViewToStringAsync("/Views/Reports/BankStatement.cshtml", model);
             }
+            else if(ReportType == "CCI")
+            {
+                ConsigneeComplaintsModel model = GlobalDeclaration.ConsigneeComplaints;
+                htmlContent = await this.RenderViewToStringAsync("/Views/Reports/ConsigneeComplaints.cshtml", model);
+            }
 
 
             await new BrowserFetcher().DownloadAsync();
@@ -306,7 +309,7 @@ namespace IBS.Controllers.Reports
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = true,
-                Format = PaperFormat.Letter,
+                Format = PaperFormat.A3,
                 PrintBackground = true
             });
 

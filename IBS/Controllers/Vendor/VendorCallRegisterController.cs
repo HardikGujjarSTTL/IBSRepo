@@ -1,16 +1,7 @@
-﻿using Humanizer.Localisation.TimeToClockNotation;
-using IBS.Helper;
-using IBS.Interfaces;
+﻿using IBS.Helper;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using System.Net.NetworkInformation;
-using static IBS.Helper.Enums;
 
 namespace IBS.Controllers.Vendor
 {

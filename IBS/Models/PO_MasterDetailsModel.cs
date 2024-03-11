@@ -56,7 +56,7 @@ namespace IBS.Models
 
         public decimal? Value { get; set; }
 
-        [Required(ErrorMessage = "Last Date of Supply Date is required")]
+        //[Required(ErrorMessage = "Last Date of Supply Date is required")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? DelvDt { get; set; }
@@ -70,7 +70,7 @@ namespace IBS.Models
 
         public DateTime? Datetime { get; set; }
 
-        [Required(ErrorMessage = "Other Charges Type is required")]
+        //[Required(ErrorMessage = "Other Charges Type is required")]
         public string? OtChargeType { get; set; }
         //[Required(ErrorMessage = "Other Charges Per is required")]
         public decimal? OtChargePer { get; set; }

@@ -1,4 +1,5 @@
-﻿@model IBS.Models.OnlineComplaints
+﻿@using IBS.Helper;
+@model IBS.Models.OnlineComplaints
 
 @{
     ViewData["Title"] = "Create NCR";
@@ -18,11 +19,10 @@
 </div>
 
 <section class="@clsView">
-    <div class="task-listinput" id="tab-1">
+    <div class="task-listinput">
         <form data-ajax="true" asp-antiforgery="true" asp-controller="ComplaintApproval" asp-action="Manage" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
             <div class="accordion-body">
                 <div class="row my-0">
-                    <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
                     <input type="text" asp-for="ItemSrnoPo"  hidden>
                     <input type="text" asp-for="UomCd" hidden>
                     <input type="text" asp-for="Rate"  hidden>
@@ -128,7 +128,11 @@
                         @Html.DropDownListFor(model => model.NoJIReason, new SelectList(IBS.Models.Common.NOJIReasons() , "Value", "Text"))
                     </div>
                     <div class="col-md-3 mb-3">
-                        <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.Upload_Rejection_Memo" />
+                        @if (!string.IsNullOrEmpty(Model.TEMP_COMPLAINT_ID)){
+                            var FileName = Model.TEMP_COMPLAINT_ID + ".pdf";
+                            <label>Rejection Memo Document : </label>
+                            <a target='_blank' style="color:blue;" href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints))/@FileName'>Download</a>
+                        }
                     </div>
                 </div>
                 <div class="row m-3" id="JIFields">
@@ -161,7 +165,7 @@
                 <br/>
                 <br/>
                 <div class="savenext-btn">
-                    <button type="button" class="save-btn Permission_Save" id="acceptbtn" onclick="Accept();">Accept</button>
+                    <button type="button" class="save-btn active Permission_Save" id="acceptbtn" onclick="Accept();">Accept</button>
                     <button type="button" class="save-btn active Permission_Save" id="sendemailbtn" onclick="Send_Email();">Send Email For Rejected Complaints</button>
                     <button type="button" class="save-btn" id="rejectbtn" onclick="Reject();">Reject</button>
                     <button type="button" class="save-btn active Permission_Save" id="btnsubmit" onclick="Submit();">Submit</button>
@@ -252,7 +256,6 @@
         function Accept(){
             var urlpath = "@Url.Action("AcceptComplaint", "ComplaintApproval")";
             var formData = $("#frmComplaints").serialize();
-            SaveSingleDocuments("tab-1");
             $.ajax({
                 url: urlpath,
                 type: 'POST',

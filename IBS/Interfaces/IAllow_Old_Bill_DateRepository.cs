@@ -6,7 +6,7 @@ namespace IBS.Interfaces
     {
         public Allow_Old_Bill_DateModel FindByID(string region);
 
-        DTResult<Allow_Old_Bill_DateModel> GetMessageList(DTParameters dtParameters,string GetRegionCode);
+        DTResult<Allow_Old_Bill_DateModel> GetMessageList(DTParameters dtParameters, string GetRegionCode);
 
         int DetailsInsertUpdate(Allow_Old_Bill_DateModel model);
     }

@@ -91,7 +91,7 @@
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                                return { text: item.VEND_NAME, value: item.VEND_NAME };
                             }))
                         }
                     })

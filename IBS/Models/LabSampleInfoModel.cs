@@ -36,6 +36,18 @@ namespace IBS.Models
         public string LabelExist { get; set; }
         public string NO_OF_Register_Per_Day { get; set; }
 
+        public string? DocType { get; set; }
+
+        public string? DocSubType { get; set; }
+
+        public string FileId { get; set; } = null!;
+
+        public string? FileExt { get; set; }
+
+        public string? DocumentName { get; set; }
+
+        public string? DocumentNo { get; set; }
+
     }
 
 }

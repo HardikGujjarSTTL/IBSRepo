@@ -81,7 +81,7 @@ namespace IBSAPI.Repositories
                             from t09 in t09Group.DefaultIfEmpty() // Left Join
                             join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
                             from t05 in t05Group.DefaultIfEmpty() // Left Join
-                            //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()
+                                                                  //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()
                             where t17.MfgCd == Vendor_ID && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
                             select t17).Count();
             return totalCnt;
@@ -100,7 +100,7 @@ namespace IBSAPI.Repositories
                             from t09 in t09Group.DefaultIfEmpty() // Left Join
                             join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
                             from t05 in t05Group.DefaultIfEmpty() // Left Join
-                            //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()
+                                                                  //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()
                             where t17.MfgCd == Vendor_ID && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
                             && allowedStatuses.Contains(t17.CallStatus)
                             select t17).Count();
@@ -120,7 +120,7 @@ namespace IBSAPI.Repositories
                             from t09 in t09Group.DefaultIfEmpty() // Left Join
                             join t05 in context.T05Vendors on t17.MfgCd equals t05.VendCd into t05Group
                             from t05 in t05Group.DefaultIfEmpty() // Left Join
-                            //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()                            
+                                                                  //join t21 in context.T21CallStatusCodes on t17.CallStatus.Trim() equals t21.CallStatusCd.Trim()                            
                             where t17.MfgCd == Vendor_ID && t17.CallMarkDt >= fromDT && t17.CallMarkDt <= toDT
                             && allowedStatuses.Contains(t17.CallStatus)
                             select t17).Count();
@@ -174,51 +174,93 @@ namespace IBSAPI.Repositories
                                   select t13).Count();
             return totalInspCount;
         }
+
+        public int GetClientRejectedInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate)
+        {
+            var allowedStatuses = new string[] { "R", "T", "PR", "PRB" };
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+
+            var RejectedInspCount = (from t17 in context.T17CallRegisters
+                                     join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                     from t13 in t13Group.DefaultIfEmpty() // Left Join
+                                     where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
+                                           && allowedStatuses.Contains(t17.CallStatus)
+                                           && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
+                                     select t13).Count();
+            return RejectedInspCount;
+        }
+
+        public int GetClientCancelledInspection(string Rly_CD, string Rly_NoNType, string FromDate, string ToDate)
+        {
+            var allowedStatuses = new string[] { "C" };
+            DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
+            DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
+
+            var CancelledInspCount = (from t17 in context.T17CallRegisters
+                                      join t13 in context.T13PoMasters on t17.CaseNo equals t13.CaseNo into t13Group
+                                      from t13 in t13Group.DefaultIfEmpty() // Left Join
+                                      where t13.RlyCd == Rly_CD && t13.RlyNonrly == Rly_NoNType
+                                            && allowedStatuses.Contains(t17.CallStatus)
+                                            && t17.CallRecvDt >= fromDT && t17.CallRecvDt <= toDT
+                                      select t13).Count();
+            return CancelledInspCount;
+        }
         #endregion
 
         #region CM
         public List<IEModel> Get_CM_Wise_IE(int CO_CD)
         {
-            List<IEModel> lstIE = new();
-            var IeList = (from x in context.T09Ies
+            List<IEModel> lstIE = new List<IEModel>() { };
+
+            IEModel model = new();
+            model.IE_CD = 0;
+            model.IE_Name = "All";
+
+            lstIE = (from x in context.T09Ies
                           where x.IeCoCd == CO_CD
                           select new IEModel
                           {
                               IE_CD = x.IeCd,
                               IE_Name = x.IeName
                           }).ToList();
-            return IeList;
+            lstIE.Add(model);
+            return lstIE.OrderBy(x => x.IE_Name).ToList();
         }
 
-        public int Get_CM_TotalInspection(int CO_CD, string FromDate, string ToDate)
+        public int Get_CM_TotalInspection(int CO_CD, int IE_CD, string FromDate, string ToDate)
         {
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
             var totalInsp = (from x in context.T17CallRegisters
-                             where x.CoCd == CO_CD && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                             where x.CoCd == CO_CD && (IE_CD == 0 || (x.IeCd != 0 && x.IeCd == IE_CD))
+                             && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                             && (IE_CD == 0 || (x.IeCd != 0 && x.IeCd == IE_CD))
                              select x).Count();
             return totalInsp;
         }
 
-        public int Get_CM_PendingInspection(int CO_CD, string FromDate, string ToDate)
+        public int Get_CM_PendingInspection(int CO_CD, int IE_CD, string FromDate, string ToDate)
         {
             var validCallStatus = new List<string> { "M", "U", "S", "W" };
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
             var totalInsp = (from x in context.T17CallRegisters
-                             where x.CoCd == CO_CD && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                             where x.CoCd == CO_CD && (IE_CD == 0 || (x.IeCd != 0 && x.IeCd == IE_CD))
+                             && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
                              && validCallStatus.Contains(x.CallStatus)
                              select x).Count();
             return totalInsp;
         }
 
-        public int Get_CM_RequestRejectedInspection(int CO_CD, string FromDate, string ToDate)
+        public int Get_CM_RequestRejectedInspection(int CO_CD, int IE_CD, string FromDate, string ToDate)
         {
             var validCallStatus = new List<string> { "R", "T" };
             DateTime fromDT = DateTime.ParseExact(FromDate, "dd/MM/yyyy", null);
             DateTime toDT = DateTime.ParseExact(ToDate, "dd/MM/yyyy", null);
             var totalInsp = (from x in context.T17CallRegisters
-                             where x.CoCd == CO_CD && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
+                             where x.CoCd == CO_CD && (IE_CD == 0 || (x.IeCd != 0 && x.IeCd == IE_CD))
+                             && x.CallMarkDt >= fromDT && x.CallMarkDt <= toDT
                              && validCallStatus.Contains(x.CallStatus)
                              select x).Count();
             return totalInsp;

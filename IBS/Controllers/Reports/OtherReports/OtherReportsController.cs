@@ -1,18 +1,14 @@
 ﻿using IBS.Filters;
 using IBS.Helper;
-using IBS.Interfaces.Reports;
 using IBS.Interfaces.Reports.OtherReports;
-using IBS.Models.Reports;
-using IBS.Repositories.Reports;
-using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
-using PuppeteerSharp;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using IBS.Models;
-using System.IO;
+using IBS.Models.Reports;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using IBS.Repositories;
-using System.Globalization;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
+using System.Drawing;
 
 namespace IBS.Controllers.Reports.OtherReports
 {
@@ -70,7 +66,7 @@ namespace IBS.Controllers.Reports.OtherReports
 
             if (formCollection.Keys.Contains("hdnReportType")) model.ReportType = formCollection["hdnReportType"];
             model.ReportTitle = EnumUtility<Enums.ManagementReportsTitle>.GetDescriptionByKey(model.ReportType);
-            
+
             if (model.ReportType == "C" || model.ReportType == "I")
             {
                 if (formCollection.Keys.Contains("hdnmonthtxt") && !string.IsNullOrEmpty(formCollection["hdnmonthtxt"])) model.monthChar = Convert.ToString(formCollection["hdnmonthtxt"]);
@@ -86,12 +82,12 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnforperiod") && !string.IsNullOrEmpty(formCollection["hdnforperiod"])) model.forperiod = Convert.ToString(formCollection["hdnforperiod"]);
                 if (formCollection.Keys.Contains("hdniecmname") && !string.IsNullOrEmpty(formCollection["hdniecmname"])) model.iecmname = Convert.ToString(formCollection["hdniecmname"]);
                 if (formCollection.Keys.Contains("hdnCOName") && !string.IsNullOrEmpty(formCollection["hdnCOName"])) model.COName = Convert.ToString(formCollection["hdnCOName"]);
-                if (formCollection.Keys.Contains("hdnIENametext") && !string.IsNullOrEmpty(formCollection["hdnIENametext"])) model.IENametext = Convert.ToString(formCollection["hdnIENametext"]);                
+                if (formCollection.Keys.Contains("hdnIENametext") && !string.IsNullOrEmpty(formCollection["hdnIENametext"])) model.IENametext = Convert.ToString(formCollection["hdnIENametext"]);
             }
-            else if(model.ReportType == "IEWISET")
+            else if (model.ReportType == "IEWISET")
             {
                 if (formCollection.Keys.Contains("hdnIENAME") && !string.IsNullOrEmpty(formCollection["hdnIENAME"])) model.IEName = Convert.ToString(formCollection["hdnIENAME"]);
-                if (formCollection.Keys.Contains("hdnTrainingArea") && !string.IsNullOrEmpty(formCollection["hdnTrainingArea"])) model.TrainingArea = Convert.ToString(formCollection["hdnTrainingArea"]);
+                if (formCollection.Keys.Contains("TrainingArea") && !string.IsNullOrEmpty(formCollection["TrainingArea"])) model.TrainingArea = Convert.ToString(formCollection["TrainingArea"]);
                 if (formCollection.Keys.Contains("hdnMechanical") && !string.IsNullOrEmpty(formCollection["hdnMechanical"])) model.Mechanical = Convert.ToString(formCollection["hdnMechanical"]);
                 if (formCollection.Keys.Contains("hdnElectrical") && !string.IsNullOrEmpty(formCollection["hdnElectrical"])) model.Electrical = Convert.ToString(formCollection["hdnElectrical"]);
                 if (formCollection.Keys.Contains("hdnCivil") && !string.IsNullOrEmpty(formCollection["hdnCivil"])) model.Civil = Convert.ToString(formCollection["hdnCivil"]);
@@ -99,25 +95,29 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnDeputaion") && !string.IsNullOrEmpty(formCollection["hdnDeputaion"])) model.Deputaion = Convert.ToString(formCollection["hdnDeputaion"]);
                 if (formCollection.Keys.Contains("hdnParticularie") && !string.IsNullOrEmpty(formCollection["hdnParticularie"])) model.Particularie = Convert.ToString(formCollection["hdnParticularie"]);
                 if (formCollection.Keys.Contains("hdnParticularArea") && !string.IsNullOrEmpty(formCollection["hdnParticularArea"])) model.ParticularArea = Convert.ToString(formCollection["hdnParticularArea"]);
-            }else if(model.ReportType == "ONGCON")
+            }
+            else if (model.ReportType == "ONGCON")
             {
                 if (formCollection.Keys.Contains("hdnStatusOffer") && !string.IsNullOrEmpty(formCollection["hdnStatusOffer"])) model.StatusOffer = Convert.ToString(formCollection["hdnStatusOffer"]);
                 if (formCollection.Keys.Contains("hdnRegion") && !string.IsNullOrEmpty(formCollection["hdnRegion"])) model.Region = Convert.ToString(formCollection["hdnRegion"]);
                 if (formCollection.Keys.Contains("hdnStatusOffertxt") && !string.IsNullOrEmpty(formCollection["hdnStatusOffertxt"])) model.StatusOffertxt = Convert.ToString(formCollection["hdnStatusOffertxt"]);
                 if (formCollection.Keys.Contains("hdnRegiontxt") && !string.IsNullOrEmpty(formCollection["hdnRegiontxt"])) model.Regiontxt = Convert.ToString(formCollection["hdnRegiontxt"]);
                 if (formCollection.Keys.Contains("hdnrdoregionwise") && !string.IsNullOrEmpty(formCollection["hdnrdoregionwise"])) model.rdoregionwise = Convert.ToString(formCollection["hdnrdoregionwise"]);
-            }else if(model.ReportType == "CONTRACT")
+            }
+            else if (model.ReportType == "CONTRACT")
             {
                 if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
                 if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
                 if (formCollection.Keys.Contains("hdnRegion") && !string.IsNullOrEmpty(formCollection["hdnRegion"])) model.Region = Convert.ToString(formCollection["hdnRegion"]);
                 if (formCollection.Keys.Contains("hdnclientname") && !string.IsNullOrEmpty(formCollection["hdnclientname"])) model.clientname = Convert.ToString(formCollection["hdnclientname"]);
-            }else if(model.ReportType == "CLUSVENDOR")
+            }
+            else if (model.ReportType == "CLUSVENDOR")
             {
                 if (formCollection.Keys.Contains("hdndepartment") && !string.IsNullOrEmpty(formCollection["hdndepartment"])) model.department = Convert.ToString(formCollection["hdndepartment"]);
                 if (formCollection.Keys.Contains("hdnallreport") && !string.IsNullOrEmpty(formCollection["hdnallreport"])) model.allreport = Convert.ToString(formCollection["hdnallreport"]);
                 if (formCollection.Keys.Contains("hdndepartreport") && !string.IsNullOrEmpty(formCollection["hdndepartreport"])) model.reporttype = Convert.ToString(formCollection["hdndepartreport"]);
-            }else if(model.ReportType == "VENDPER")
+            }
+            else if (model.ReportType == "VENDPER")
             {
                 if (formCollection.Keys.Contains("hdnFromDate") && !string.IsNullOrEmpty(formCollection["hdnFromDate"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDate"]);
                 if (formCollection.Keys.Contains("hdnToDate") && !string.IsNullOrEmpty(formCollection["hdnToDate"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDate"]);
@@ -128,11 +128,13 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnvendor") && !string.IsNullOrEmpty(formCollection["hdnvendor"])) model.vendor = Convert.ToString(formCollection["hdnvendor"]);
                 if (formCollection.Keys.Contains("hdnvendcd") && !string.IsNullOrEmpty(formCollection["hdnvendcd"])) model.vendorcd = Convert.ToString(formCollection["hdnvendcd"]);
                 if (formCollection.Keys.Contains("hdnmonthtxt") && !string.IsNullOrEmpty(formCollection["hdnmonthtxt"])) model.monthtxt = Convert.ToString(formCollection["hdnmonthtxt"]);
-            }else if(model.ReportType == "CHECK" || model.ReportType == "TECH")
+            }
+            else if (model.ReportType == "CHECK" || model.ReportType == "TECH")
             {
                 if (formCollection.Keys.Contains("hdnFromDatePWCHECK") && !string.IsNullOrEmpty(formCollection["hdnFromDatePWCHECK"])) model.FromDate = Convert.ToDateTime(formCollection["hdnFromDatePWCHECK"]);
                 if (formCollection.Keys.Contains("hdnToDatePWCHECK") && !string.IsNullOrEmpty(formCollection["hdnToDatePWCHECK"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDatePWCHECK"]);
-            }else if(model.ReportType == "U" || model.ReportType == "E")
+            }
+            else if (model.ReportType == "U" || model.ReportType == "E")
             {
                 if (formCollection.Keys.Contains("hdnddlienameUE") && !string.IsNullOrEmpty(formCollection["hdnddlienameUE"])) model.lstIE = Convert.ToString(formCollection["hdnddlienameUE"]);
                 if (formCollection.Keys.Contains("hdnddlsupercmUE") && !string.IsNullOrEmpty(formCollection["hdnddlsupercmUE"])) model.lstCM = Convert.ToString(formCollection["hdnddlsupercmUE"]);
@@ -140,17 +142,28 @@ namespace IBS.Controllers.Reports.OtherReports
                 if (formCollection.Keys.Contains("hdnToDateUE") && !string.IsNullOrEmpty(formCollection["hdnToDateUE"])) model.ToDate = Convert.ToDateTime(formCollection["hdnToDateUE"]);
                 if (formCollection.Keys.Contains("hdnAllIEsUE") && !string.IsNullOrEmpty(formCollection["hdnAllIEsUE"])) model.AllIEs = Convert.ToString(formCollection["hdnAllIEsUE"]);
                 if (formCollection.Keys.Contains("hdnParticularCMsUE") && !string.IsNullOrEmpty(formCollection["hdnParticularCMsUE"])) model.ParticularCMs = Convert.ToString(formCollection["hdnParticularCMsUE"]);
+                if (formCollection.Keys.Contains("hdnParticularIEsUE") && !string.IsNullOrEmpty(formCollection["hdnParticularIEsUE"])) model.ParticularIEs = Convert.ToString(formCollection["hdnParticularIEsUE"]);
                 if (formCollection.Keys.Contains("hdnIEWiseUE") && !string.IsNullOrEmpty(formCollection["hdnIEWiseUE"])) model.IEWise = Convert.ToString(formCollection["hdnIEWiseUE"]);
                 if (formCollection.Keys.Contains("hdnCMWiseUE") && !string.IsNullOrEmpty(formCollection["hdnCMWiseUE"])) model.CMWise = Convert.ToString(formCollection["hdnCMWiseUE"]);
                 if (formCollection.Keys.Contains("hdnSortedIEUE") && !string.IsNullOrEmpty(formCollection["hdnSortedIEUE"])) model.SortedIE = Convert.ToString(formCollection["hdnSortedIEUE"]);
                 if (formCollection.Keys.Contains("hdnvisitdateUE") && !string.IsNullOrEmpty(formCollection["hdnvisitdateUE"])) model.visitdate = Convert.ToString(formCollection["hdnvisitdateUE"]);
-            }else if(model.ReportType == "IEICPHOTO")
+            }
+            else if (model.ReportType == "IEICPHOTO")
             {
                 if (formCollection.Keys.Contains("hdnCaseNo") && !string.IsNullOrEmpty(formCollection["hdnCaseNo"])) model.CaseNo = Convert.ToString(formCollection["hdnCaseNo"]);
                 if (formCollection.Keys.Contains("hdnCallRecDT") && !string.IsNullOrEmpty(formCollection["hdnCallRecDT"])) model.CallRecDT = Convert.ToString(formCollection["hdnCallRecDT"]);
                 if (formCollection.Keys.Contains("hdnCallSno") && !string.IsNullOrEmpty(formCollection["hdnCallSno"])) model.CallSno = Convert.ToString(formCollection["hdnCallSno"]);
                 if (formCollection.Keys.Contains("hdnBKNO") && !string.IsNullOrEmpty(formCollection["hdnBKNO"])) model.BKNO = Convert.ToString(formCollection["hdnBKNO"]);
                 if (formCollection.Keys.Contains("hdnSETNO") && !string.IsNullOrEmpty(formCollection["hdnSETNO"])) model.SETNO = Convert.ToString(formCollection["hdnSETNO"]);
+            }else if (model.ReportType == "DSC")
+            {
+                if (formCollection.Keys.Contains("hdnDSCMonth") && !string.IsNullOrEmpty(formCollection["hdnDSCMonth"])) model.DSCMonth = Convert.ToString(formCollection["hdnDSCMonth"]);
+                if (formCollection.Keys.Contains("hdnDSCYear") && !string.IsNullOrEmpty(formCollection["hdnDSCYear"])) model.DSCYear = Convert.ToInt32(formCollection["hdnDSCYear"]);
+                if (formCollection.Keys.Contains("hdnDSCToMonth") && !string.IsNullOrEmpty(formCollection["hdnDSCToMonth"])) model.DSCToMonth = Convert.ToString(formCollection["hdnDSCToMonth"]);
+                if (formCollection.Keys.Contains("hdnDSCToYear") && !string.IsNullOrEmpty(formCollection["hdnDSCToYear"])) model.DSCToYear = Convert.ToInt32(formCollection["hdnDSCToYear"]);
+                if (formCollection.Keys.Contains("hdnDSCMonthText") && !string.IsNullOrEmpty(formCollection["hdnDSCMonthText"])) model.DSCMonthText = Convert.ToString(formCollection["hdnDSCMonthText"]);
+                if (formCollection.Keys.Contains("hdnDSCToMonthText") && !string.IsNullOrEmpty(formCollection["hdnDSCToMonthText"])) model.DSCToMonthText = Convert.ToString(formCollection["hdnDSCToMonthText"]);
+                if (formCollection.Keys.Contains("hdnDSC_M") && !string.IsNullOrEmpty(formCollection["hdnDSC_M"])) model.DSC_Monthrdo = Convert.ToString(formCollection["hdnDSC_M"]);
             }
 
 
@@ -176,11 +189,13 @@ namespace IBS.Controllers.Reports.OtherReports
         {
             return View();
         }
+
+        #region NCRCWiseReport
         public IActionResult NCRCWiseReport(string month, string year, string FromDate, string ToDate, string AllCM, string forCM, string All, string Outstanding, string formonth, string forperiod, string monthChar, string iecmname, string reporttype, string COName, string IENametext)
         {
             string Region = SessionHelper.UserModelDTO.Region;
             string wRegion = "";
-            DateTime currentDateAndTime = DateTime.Now; 
+            DateTime currentDateAndTime = DateTime.Now;
             if (Region == "N") { wRegion = "Northern Region"; }
             else if (Region == "S") { wRegion = "Southern Region"; }
             else if (Region == "E") { wRegion = "Eastern Region"; }
@@ -196,7 +211,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.NCRReports = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region IEWiseTrainingReport
         public IActionResult IEWiseTrainingReport(string IENAME, string TrainingArea, string Mechanical, string Electrical, string Civil, string Regular, string Deputaion, string Particularie, string ParticularArea)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -211,7 +228,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.IEWiseTrainingReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region OngoingContractReport
         public IActionResult OngoingContractReport(string StatusOffer, string Region, string StatusOffertxt, string Regiontxt, string rdoregionwise)
         {
             OngoingContrcatsReportModel model = otherReportsRepository.Getongoingcontractdetails(StatusOffer, Region, StatusOffertxt, Regiontxt, rdoregionwise);
@@ -220,42 +239,38 @@ namespace IBS.Controllers.Reports.OtherReports
             model.StatusOffertxt = StatusOffertxt;
             return PartialView(model);
         }
+        #endregion
 
+        #region ContractReport
         public IActionResult ContractReport(string FromDate, string ToDate, string Region, string clientname)
         {
             ContractReportModel model = otherReportsRepository.GetContractDetails(FromDate, ToDate, Region, clientname);
             GlobalDeclaration.ContractReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region VendorClusterIEReport
         public IActionResult VendorClusterIEReport(string department)
         {
             string Region = SessionHelper.UserModelDTO.Region;
-            //string wRegion = "";
-            //if (Region == "N") { wRegion = "Northern Region"; }
-            //else if (Region == "S") { wRegion = "Southern Region"; }
-            //else if (Region == "E") { wRegion = "Eastern Region"; }
-            //else if (Region == "W") { wRegion = "Western Region"; }
-            //else if (Region == "C") { wRegion = "Central Region"; }
             VendorClusterReportModel model = otherReportsRepository.GetVendorClusterReport(department, Region);
             GlobalDeclaration.VendorClusterReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region IEAlterMappingReport
         public IActionResult IEAlterMappingReport()
         {
             string Region = SessionHelper.UserModelDTO.Region;
-            //string wRegion = "";
-            //if (Region == "N") { wRegion = "Northern Region"; }
-            //else if (Region == "S") { wRegion = "Southern Region"; }
-            //else if (Region == "E") { wRegion = "Eastern Region"; }
-            //else if (Region == "W") { wRegion = "Western Region"; }
-            //else if (Region == "C") { wRegion = "Central Region"; }
             IEAlterMappingReportModel model = otherReportsRepository.GetIEAlterMappingReport(Region);
             GlobalDeclaration.IEAlterMappingReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region VendorPerforeport
         public IActionResult VendorPerforeport(string FromDate, string ToDate, string formonth, string forperiod, string month, string year, string vendcd, string vendor, string monthtxt)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -273,10 +288,12 @@ namespace IBS.Controllers.Reports.OtherReports
             model.Region = wRegion;
             model.monthtxt = monthtxt;
             model.year = year;
-            model.Region = DateTime.Now.ToString("dd-MM-yyyy"); 
+            model.Region = DateTime.Now.ToString("dd-MM-yyyy");
             return PartialView(model);
         }
+        #endregion
 
+        #region VendorFeedback
         public IActionResult VendorFeedback()
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -291,7 +308,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.VendorFeedbackReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region PeriodWiseChecksheet
         public IActionResult PeriodWiseChecksheet(string FromDate, string ToDate)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -308,7 +327,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.PeriodWiseChecksheetReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region PeriodWiseTechRef
         public IActionResult PeriodWiseTechRef(string FromDate, string ToDate)
         {
             string Region = SessionHelper.UserModelDTO.Region;
@@ -325,7 +346,9 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.PeriodWiseTechnicalRefReport = model;
             return PartialView(model);
         }
+        #endregion
 
+        #region DailyWorkIECMReport
         public IActionResult DailyWorkIECMReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
         {
             string wRegion = "";
@@ -340,9 +363,13 @@ namespace IBS.Controllers.Reports.OtherReports
             model.ToDate = Convert.ToDateTime(ToDate).ToString("dd/MM/yyyy");
             model.ReportType = ReportType;
             model.Regions = wRegion;
+            model.IEWise = IEWise;
+            model.CMWise = CMWise;
             return PartialView(model);
         }
+        #endregion
 
+        #region DailyWorkIEExcepReport
         public IActionResult DailyWorkIEExcepReport(string FromDate, string ToDate, string lstIE, string lstCM, string AllIEs, string ParticularIEs, string AllCM, string ParticularCMs, string ReportType, string IEWise, string CMWise, string SortedIE, string visitdate)
         {
             string wRegion = "";
@@ -359,7 +386,9 @@ namespace IBS.Controllers.Reports.OtherReports
             model.Regions = wRegion;
             return PartialView(model);
         }
+        #endregion
 
+        #region PhotoSubmiteedByIE
         public IActionResult PhotoSubmiteedByIE(string CaseNo, string CallRecDT, string CallSno, string BKNO, string SETNO)
         {
             string wRegion = "";
@@ -373,6 +402,28 @@ namespace IBS.Controllers.Reports.OtherReports
             GlobalDeclaration.IEICPhotoEnclosedModel = model;
             return PartialView(model);
         }
+        #endregion
+
+        #region DSCExpReport
+        public IActionResult DSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSCMonthText, string DSCToMonthText, string DSC_Monthrdo)
+        {
+            string wRegion = "";
+            if (Region == "N") { wRegion = "Northern Region"; }
+            else if (Region == "S") { wRegion = "Southern Region"; }
+            else if (Region == "E") { wRegion = "Eastern Region"; }
+            else if (Region == "W") { wRegion = "Western Region"; }
+            else if (Region == "C") { wRegion = "Central Region"; }
+            OtherReportsModel model = otherReportsRepository.GetDSCExpReport(DSCMonth, DSCYear, DSCToMonth, DSCToYear, DSC_Monthrdo, Region);
+            model.Region = wRegion;
+            model.DSCMonthText = DSCMonthText;
+            model.DSCToMonthText = DSCToMonthText;
+            model.DSCYear = Convert.ToInt32(DSCYear);
+            model.DSCToYear = Convert.ToInt32(DSCToYear);
+            model.DSC_Monthrdo = DSC_Monthrdo;
+            GlobalDeclaration.OtherReportsModelList = model;
+            return PartialView(model);
+        }
+        #endregion
 
         #region Other Event
         [HttpGet]
@@ -436,63 +487,80 @@ namespace IBS.Controllers.Reports.OtherReports
                 ControllingOfficerIEModel model = GlobalDeclaration.ControllingOfficerIE;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/CoWiseIE.cshtml", model);
             }
-            else if(ReportType == "COIEWiseCalls")
+            else if (ReportType == "COIEWiseCalls")
             {
                 CoIeWiseCallsModel model = GlobalDeclaration.CoIeWiseCalls;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/CoIeWiseCalls.cshtml", model);
             }
-            else if(ReportType == "C" || ReportType == "I")
+            else if (ReportType == "C" || ReportType == "I")
             {
                 NCRReport model = GlobalDeclaration.NCRReports;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/NCRCWiseReport.cshtml", model);
-            } else if(ReportType == "IEWISET")
+            }
+            else if (ReportType == "IEWISET")
             {
                 IEWiseTrainingReportModel model = GlobalDeclaration.IEWiseTrainingReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/IEWiseTrainingReport.cshtml", model);
-            }else if(ReportType == "ONGCON")
+            }
+            else if (ReportType == "ONGCON")
             {
                 OngoingContrcatsReportModel model = GlobalDeclaration.OngoingContrcatsReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/OngoingContractReport.cshtml", model);
-            }else if(ReportType == "CONTRACT")
+            }
+            else if (ReportType == "CONTRACT")
             {
                 ContractReportModel model = GlobalDeclaration.ContractReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/ContractReport.cshtml", model);
-            }else if(ReportType == "CLUSVENDOR")
+            }
+            else if (ReportType == "CLUSVENDOR")
             {
                 VendorClusterReportModel model = GlobalDeclaration.VendorClusterReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/VendorClusterIEReport.cshtml", model);
-            }else if(ReportType == "IEALTER")
+            }
+            else if (ReportType == "IEALTER")
             {
                 IEAlterMappingReportModel model = GlobalDeclaration.IEAlterMappingReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/IEAlterMappingReport.cshtml", model);
-            }else if(ReportType == "VENDPER")
+            }
+            else if (ReportType == "VENDPER")
             {
                 VendorPerformanceReportModel model = GlobalDeclaration.VendorPerformanceReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/VendorPerforeport.cshtml", model);
-            }else if(ReportType == "VENDFEED")
+            }
+            else if (ReportType == "VENDFEED")
             {
                 VendorFeedbackReportModel model = GlobalDeclaration.VendorFeedbackReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/VendorFeedback.cshtml", model);
-            }else if(ReportType == "CHECK")
+            }
+            else if (ReportType == "CHECK")
             {
                 PeriodWiseChecksheetReportModel model = GlobalDeclaration.PeriodWiseChecksheetReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/PeriodWiseChecksheet.cshtml", model);
-            }else if(ReportType == "TECH")
+            }
+            else if (ReportType == "TECH")
             {
                 PeriodWiseTechnicalRefReportModel model = GlobalDeclaration.PeriodWiseTechnicalRefReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/PeriodWiseTechRef.cshtml", model);
-            }else if(ReportType == "U")
+            }
+            else if (ReportType == "U")
             {
                 DailyIECMWorkPlanReportModel model = GlobalDeclaration.DailyIECMWorkPlanReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/DailyWorkIECMReport.cshtml", model);
-            }else if(ReportType == "E")
+            }
+            else if (ReportType == "E")
             {
                 DailyIECMWorkPlanReportModel model = GlobalDeclaration.DailyIECMWorkPlanReport;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/DailyWorkIEExcepReport.cshtml", model);
-            }else if(ReportType == "IEICPHOTO")
+            }
+            else if (ReportType == "IEICPHOTO")
             {
                 IEICPhotoEnclosedModelReport model = GlobalDeclaration.IEICPhotoEnclosedModel;
                 htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/PhotoSubmiteedByIE.cshtml", model);
+            }
+            else if (ReportType == "DSC")
+            {
+                OtherReportsModel model = GlobalDeclaration.OtherReportsModelList;
+                htmlContent = await this.RenderViewToStringAsync("/Views/OtherReports/DSCExpReport.cshtml", model);
             }
 
             await new BrowserFetcher().DownloadAsync();
@@ -513,7 +581,7 @@ namespace IBS.Controllers.Reports.OtherReports
             var pdfContent = await page.PdfStreamAsync(new PdfOptions
             {
                 Landscape = true,
-                Format = PaperFormat.Letter,
+                Format = PaperFormat.A3,
                 PrintBackground = true
             });
 

@@ -16,7 +16,7 @@
         <input type="hidden" asp-for="Region" />
         <input type="hidden" asp-for="ActionType" />
         <div class="task-listinput">
-            <div class="task-inner row CWBills">
+            <div class="task-inner row CWBills" style="display:none;">
                 <div class="col-md-12 mb-3">
                     <div class="custom-readio">
                         <div class="company-checkbox">
@@ -160,12 +160,12 @@
                 <div class="row my-0 NSCDt">
                     <div class="col-md-2 mb-3">
                         <label for="FromDate" id="lblFromDate">For The Period From</label> <br />
-                        <input type="text" class="datepicker" id="FromDate" readonly placeholder="DD/MM/YYYY">
+                        <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY">
                         <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
                     </div>
                     <div class="col-md-2 mb-3">
                         <label for="ToDate" id="lblToDate">For The Period To</label> <br />
-                        <input type="text" class="datepicker" id="ToDate" readonly placeholder="DD/MM/YYYY">
+                        <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY">
                         <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
                     </div>
                 </div>
@@ -235,6 +235,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="task-inner row CNoteInvoice" style="display:none;">
+                <div class="col-md-2 mb-3">
+                    <label for="CnoteFromDt">From</label> <br />
+                    <input type="text" class="datepicker" asp-for="CnoteFromDt" placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorCnoteFromDt"></span>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="CnoteToDt">To</label> <br />
+                    <input type="text" class="datepicker" asp-for="CnoteToDt" placeholder="DD/MM/YYYY">
+                    <span class="text-danger field-validation-error" id="spnErrorCnoteToDt"></span>
+                </div>
+            </div>
+
             <div class="col-md-12 mb-3">
                 <div class="savenext-btn">
                     <button type="button" class="save-btn active" onclick="GetViewReport();">Submit</button>
@@ -279,6 +293,12 @@
                 $(".CWBills").css("display", "none");
                 $(".RlyBills").css("display", "none");
             }
+            if ('@ReportType' == 'CNoteInvoice') {
+                $(".CNoteInvoice").css("display", "");
+                $(".NSCDt").css("display", "none");
+                $(".CWBills").css("display", "none");
+                $(".RlyBills").css("display", "none");
+            }
 
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -296,6 +316,12 @@
 
                         $("#tdFrom").hide();
                         $("#trTo").hide();
+
+                        $("#FromMn").val("");
+                        $("#FromYr").val("");
+
+                        $("#ToMn").val("");
+                        $("#ToYr").val("");
                     }
                 });
 
@@ -307,6 +333,9 @@
 
                         $("#tdFrom").show();
                         $("#trTo").show();
+
+                        $("#FromMn").val("");
+                        $("#FromYr").val("");
                     }
                 });
             }
@@ -680,8 +709,10 @@
 
 
                 if (!IsValid) return;
-                let myObject = { ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, actiontype, chkRegion };
-                var url = '@Url.Action("RailwayOnlineReport", "BillingReports")?' + $.param(myObject);
+                var ReportType = "@ReportType";
+                let myObject = { ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, actiontype, chkRegion, ReportType };
+                //var url = '@Url.Action("RailwayOnlineReport", "BillingReports")?' + $.param(myObject);
+                var url = '@Url.Action("Manage", "BillingReports")?' + $.param(myObject);
                 window.open(url, '_blank');
             }
             if (actiontype == "NSC" || actiontype == "RBNRS") {
@@ -737,12 +768,33 @@
                 }
 
                 if (!IsValid) return;
-
-                let myObject = { FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, rdbPRly, rdbPAU };
-                var url = '@Url.Action("BillsNotCrisReport", "BillingReports")?' + $.param(myObject);
+                var ReportType = "@ReportType";
+                let myObject = { FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, rdbPRly, rdbPAU, ReportType };
+                //var url = '@Url.Action("BillsNotCrisReport", "BillingReports")?' + $.param(myObject);
+                var url = '@Url.Action("Manage", "BillingReports")?' + $.param(myObject);
                 window.open(url, '_blank');
             }
+            if (actiontype == "CNoteInvoice") {
 
+                $("#spnErrorCnoteFromDt").html("");
+                $("#spnErrorCnoteToDt").html("");
+
+
+                var CnoteFromDt = moment($('#CnoteFromDt').datepicker('getDate')).format("YYYY-MM-DD");
+                var CnoteToDt = moment($('#CnoteToDt').datepicker('getDate')).format("YYYY-MM-DD");
+                if ($("#CnoteFromDt").val() == "") {
+                    $("#spnErrorCnoteFromDt").html("From Date field is required.");
+                    IsValid = false;
+                }
+                if ($("#CnoteToDt").val() == "") {
+                    $("#spnErrorCnoteToDt").html("To Date field is required.");
+                    IsValid = false;
+                }
+                if (!IsValid) return;
+                let myObject = { CnoteFromDt, CnoteToDt, actiontype };
+                var url = '@Url.Action("CNoteInvoiceReport", "BillingReports")?' + $.param(myObject);
+                window.open(url, '_blank');
+            }
         }
 
         function BindlstAU() {

@@ -1,10 +1,10 @@
-﻿using IBS.Interfaces;
+﻿using IBS.Helper;
+using IBS.Helpers;
+using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using IBS.Helper;
 using Newtonsoft.Json;
-using IBS.Helpers;
 
 namespace IBS.Controllers
 {
@@ -104,10 +104,10 @@ namespace IBS.Controllers
 
                         int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEFullSignature };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEFullSignature), env, iDocument, "IEFullSignature", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEFullSignature), env, iDocument, "IEFullSignature", i, DocumentIds);
 
                         int[] DocumentIds2 = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEInitials };
-                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEInitials), env, iDocument, "IEInitials", string.Empty, DocumentIds2);
+                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEInitials), env, iDocument, "IEInitials", i, DocumentIds2);
                     }
                     #endregion
 
@@ -281,7 +281,7 @@ namespace IBS.Controllers
             try
             {
                 string UserId = inspectionEngineers.GetUserID(IeEmpNo);
-                if(UserId == "1")
+                if (UserId == "1")
                 {
                     return Json(new { status = true, responseText = "Already Existing!!!." });
                 }

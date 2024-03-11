@@ -1,12 +1,8 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Collections.Generic;
 //using System.Web.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using JsonResult = Microsoft.AspNetCore.Mvc.JsonResult;
 

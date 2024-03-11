@@ -4,7 +4,7 @@ namespace IBS.Interfaces
 {
     public interface IInterUnitRecieptRepository
     {
-        public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO , string txtBPOtype, string BPOCD);
+        public List<BPOlist> GetDistinctBPOsByCaseNo(string txtCSNO, string txtBPOtype, string BPOCD);
         public List<BPOlist> fill_BPO(string txtCSNO, string lstBPO, string txtBPOtype);
         public List<BPOlist> fill_BPO01(string txtCSNO, string lstBPO, string txtBPOtype);
         public List<BPOlist> ChkCSNO(string txtCSNO);

@@ -114,6 +114,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Action</th>
                                 <th>Case No.</th>
                                 <th>PO No.</th>
                                 <th>PO Date</th>
@@ -125,7 +126,7 @@
                                 <th>Status</th>
                                 <th>Call Letter No/Dispatch Ref No.</th>
                                 <th>Remarks</th>
-                                <th>Action</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -143,8 +144,6 @@
     <script type="text/javascript">
         $(function () {
             $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
-
-
         });
 
         function NewCall() {
@@ -221,6 +220,18 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var CaseNo = data.CaseNo;
+                            var CallSno = data.CallSno;
+                            var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
+
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="UrlClick(\'' + CaseNo + '\',\'' + CallSno + '\',\'' + CallRecvDt + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     { data: "CaseNo" },
                     { data: "PoNo" },
                     {
@@ -248,27 +259,7 @@
                     { data: "CallStatus" },
                     { data: "CallLetterNo" },
                     { data: "Remarks" },
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var CaseNo = data.CaseNo;
-                            var CallSno = data.CallSno;
-                            var CallRecvDt = moment(data.CallRecvDt).format("DD/MM/YYYY");
-
-                            //var editUrl = '@Url.Action("VendorCallRegisterDetail", "VendorCallRegister")?Action=M' + "&CaseNo=" + CaseNo + "&CallRecvDt=" + CallRecvDt + "&CallSno=" + CallSno;
-                            //var html = "";
-                            //html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            //html += '</div>';
-                            //return html;
-
-                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="UrlClick(\'' + CaseNo + '\',\'' + CallSno + '\',\'' + CallRecvDt + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-
-                        }
-                    },
-
-                ],
+                 ],
                 "order": [[0, "asc"]]
             });
         }

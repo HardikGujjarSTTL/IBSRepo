@@ -3,7 +3,6 @@ using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -54,11 +53,12 @@ namespace IBS.Controllers.Vendor
                 if (id > 0)
                 {
                     #region File Upload Profile Picture
+                    string fileName= VendCd + "_" + model.DocType;
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
-                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Address_Proof_Document, (int)Enums.DocumentCategory_CANRegisrtation.Inernal_Records };
+                        int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Inernal_Records, (int)Enums.DocumentCategory_CANRegisrtation.Firm_Certificate_Like_RDSO_Approval_Type_test_etc, (int)Enums.DocumentCategory_CANRegisrtation.Raw_Material_Invoice, (int)Enums.DocumentCategory_CANRegisrtation.Calibration_Records };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        id = DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorDocument), env, iDocument, "VDInernal_Records", string.Empty, DocumentIds);
+                        id = DocumentHelper.SaveFiles(Convert.ToString(VendCd), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorDocument), env, iDocument, "VDInernal_Records", fileName, DocumentIds);
                     }
                 }
                 #endregion
@@ -87,7 +87,7 @@ namespace IBS.Controllers.Vendor
                 if (DocType != null)
                 {
                     model = pVendorDocumentRepository.FindByID(VendCd, DocType);
-                    maxSrNo= pVendorDocumentRepository.GetmaxSrNo(VendCd, DocType);
+                    maxSrNo = pVendorDocumentRepository.GetmaxSrNo(VendCd, DocType);
                 }
                 if (model != null)
                 {
@@ -145,7 +145,7 @@ namespace IBS.Controllers.Vendor
                 }
                 if (DocType == "C")
                 {
-                    model.EquipClbrCertSno =Convert.ToByte(maxSrNo);
+                    model.EquipClbrCertSno = Convert.ToByte(maxSrNo);
                     return PartialView("_CalibrationRecordsVendDocument", model);
                 }
                 else
@@ -169,7 +169,7 @@ namespace IBS.Controllers.Vendor
         }
 
         [HttpPost]
-        public IActionResult EditVendorCalibration(int VendCd,string DocType,string EquipMkSl,string CalibCertNo,int EquipClbrCertSno )
+        public IActionResult EditVendorCalibration(int VendCd, string DocType, string EquipMkSl, string CalibCertNo, int EquipClbrCertSno)
         {
             try
             {

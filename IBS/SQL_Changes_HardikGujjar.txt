@@ -1011,7 +1011,7 @@ ALTER TABLE T57_ONGOING_CONTRACTS
     MODIFY CONTRACT_ID NUMBER(8,0) DEFAULT T57_ONGOING_CONTRACTSSeq.nextval;
 
 
-    ALTER TABLE T63_EXP ADD CREATEDBY  NUMBER(6,0);
+ALTER TABLE T63_EXP ADD CREATEDBY  NUMBER(6,0);
 ALTER TABLE T63_EXP ADD CREATEDDATE TIMESTAMP(6) WITH TIME ZONE;
 ALTER TABLE T63_EXP ADD UPDATEDBY  NUMBER(6,0);
 ALTER TABLE T63_EXP ADD UPDATEDDATE TIMESTAMP(6) WITH TIME ZONE;
@@ -1653,6 +1653,9 @@ ALTER TABLE RegionalHRDataOfIE
     MODIFY ID NUMBER(6,0) DEFAULT RegionalHRDataOfIE_seq.nextval;
 
 
+Bhavesh Rathod Pending
+=====================
+
 CREATE TABLE Log_RegionalHRDataOfIE (
     LID  NUMBER(6,0) NOT NULL,
     ID NUMBER(6, 0) NOT NULL,
@@ -1952,7 +1955,7 @@ BEGIN
         T22.BILL_NO;
 END SP_Get_ItemWiseInspections;
 
-CREATE OR REPLACE PROCEDURE SP_Get_ClientWiseInspections (
+create or replace PROCEDURE SP_Get_ClientWiseInspections (
     p_RegionCode IN VARCHAR2,
     p_ItemDesc1 IN VARCHAR2,
     p_ItemDesc2 IN VARCHAR2,
@@ -1966,42 +1969,76 @@ CREATE OR REPLACE PROCEDURE SP_Get_ClientWiseInspections (
     p_RlyCd IN VARCHAR2, 
     p_Result OUT SYS_REFCURSOR
 ) AS
-    sql_stmt VARCHAR2(10000);
-
 BEGIN
-    sql_stmt := 'SELECT TRIM(T23.ITEM_DESC) ITEM_DESC, T13.RLY_CD BPO_RLY, SUM(T18.QTY_PASSED) QTY_PASS, SUM(T18.QTY_REJECTED) QTY_REJ, T04.UOM_S_DESC UOM_S_DESC, SUM(T23.VALUE) VALUE, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END) IC_PERIOD, COUNT(*) NO_OF_INSP FROM T13_PO_MASTER T13, T17_CALL_REGISTER T17, T18_CALL_DETAILS T18, T20_IC T20, T22_BILL T22, T23_BILL_ITEMS T23, T04_UOM T04 WHERE T13.CASE_NO = T17.CASE_NO AND T17.CASE_NO = T18.CASE_NO AND T17.CALL_RECV_DT = T18.CALL_RECV_DT AND T17.CALL_SNO = T18.CALL_SNO AND T17.CASE_NO = T20.CASE_NO AND T17.CALL_RECV_DT = T20.CALL_RECV_DT AND T17.CALL_SNO = T20.CALL_SNO AND T20.BILL_NO = T22.BILL_NO AND T22.BILL_NO = T23.BILL_NO AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO AND T23.UOM_CD = T04.UOM_CD';
+    OPEN p_Result FOR
+    SELECT 
+        TRIM(T23.ITEM_DESC) ITEM_DESC,
+        T13.RLY_CD BPO_RLY,
+        SUM(T18.QTY_PASSED) QTY_PASS,
+        SUM(T18.QTY_REJECTED) QTY_REJ,
+        T04.UOM_S_DESC UOM_S_DESC,
+        SUM(T23.VALUE) VALUE,
+        (CASE 
+            WHEN TO_CHAR(IC_DT, 'MM') < '04' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) - 1) || '-' || TO_CHAR(IC_DT, 'YYYY')
+            ELSE TO_CHAR(IC_DT, 'YYYY') || '-' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) + 1) 
+        END) IC_PERIOD,
+        COUNT(*) NO_OF_INSP
+    FROM 
+        T13_PO_MASTER T13,
+        T17_CALL_REGISTER T17,
+        T18_CALL_DETAILS T18,
+        T20_IC T20,
+        T22_BILL T22,
+        T23_BILL_ITEMS T23,
+        T04_UOM T04
+    WHERE 
+        T13.CASE_NO = T17.CASE_NO
+        AND T17.CASE_NO = T18.CASE_NO 
+        AND T17.CALL_RECV_DT = T18.CALL_RECV_DT 
+        AND T17.CALL_SNO = T18.CALL_SNO 
+        AND T17.CASE_NO = T20.CASE_NO 
+        AND T17.CALL_RECV_DT = T20.CALL_RECV_DT 
+        AND T17.CALL_SNO = T20.CALL_SNO 
+        AND T20.BILL_NO = T22.BILL_NO 
+        AND T22.BILL_NO = T23.BILL_NO 
+        AND T18.ITEM_SRNO_PO = T23.ITEM_SRNO 
+        AND T23.UOM_CD = T04.UOM_CD
+        AND 
+        t13.region_code = 
+          CASE
+            WHEN p_OneRegion = 'true' THEN p_RegionCode
+            ELSE t13.region_code
+          END
+        AND ( instr(upper(t23.item_desc),
+                upper(p_ItemDesc1)) > 0
+            OR instr(upper(t23.item_desc),
+                   upper(p_ItemDesc2)) > 0 
+            OR instr(upper(t23.item_desc),
+                upper(p_ItemDesc3)) > 0
+            OR instr(upper(t23.item_desc),
+                upper(p_ItemDesc4)) > 0
+            OR instr(upper(t23.item_desc),
+                upper(p_ItemDesc5)) > 0)
 
-    IF p_OneRegion = 'true' THEN
-        sql_stmt := sql_stmt || ' AND T13.REGION_CODE = ''' || p_RegionCode || '''';
-    END IF;
+        AND (p_ClientType IS NULL OR p_ClientType = 'A' OR (T13.RLY_NONRLY = p_ClientType AND T13.RLY_CD = p_RlyCd))
+        AND (T20.IC_DT BETWEEN p_FrmDt AND p_ToDt)
+    GROUP BY 
+        T13.RLY_CD,
+        (CASE 
+            WHEN TO_CHAR(IC_DT, 'MM') < '04' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) - 1) || '-' || TO_CHAR(IC_DT, 'YYYY')
+            ELSE TO_CHAR(IC_DT, 'YYYY') || '-' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) + 1) 
+        END),
+        T23.ITEM_DESC,
+        T04.UOM_S_DESC
+    ORDER BY 
+        T13.RLY_CD,
+        (CASE 
+            WHEN TO_CHAR(IC_DT, 'MM') < '04' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) - 1) || '-' || TO_CHAR(IC_DT, 'YYYY')
+            ELSE TO_CHAR(IC_DT, 'YYYY') || '-' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, 'YYYY')) + 1) 
+        END),
+        T23.ITEM_DESC,
+        T04.UOM_S_DESC;
 
-    IF p_ItemDesc1 IS NOT NULL AND p_ItemDesc1 != '' THEN
-        sql_stmt := sql_stmt || ' AND (INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc1 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc2 IS NOT NULL AND p_ItemDesc2 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc2 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc3 IS NOT NULL AND p_ItemDesc3 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc3 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc4 IS NOT NULL AND p_ItemDesc4 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc4 || ''')) > 0';
-    END IF;
-
-    IF p_ItemDesc5 IS NOT NULL AND p_ItemDesc5 != '' THEN
-        sql_stmt := sql_stmt || ' OR INSTR(UPPER(T23.ITEM_DESC), UPPER(''' || p_ItemDesc5 || ''')) > 0';
-    END IF;
-
-    IF p_ClientType IS NOT NULL AND p_ClientType != '' AND p_ClientType != 'A' THEN
-        sql_stmt := sql_stmt || ' AND T13.RLY_NONRLY = ''' || p_ClientType || ''' AND T13.RLY_CD = ''' || p_RlyCd || '''';
-    END IF;
-
-    sql_stmt := sql_stmt || ' AND (T20.IC_DT BETWEEN ''' || p_FrmDt || ''' AND ''' || p_ToDt || ''') GROUP BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC ORDER BY T13.RLY_CD, (CASE WHEN TO_CHAR(IC_DT, ''MM'') < ''04'' THEN TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) - 1) || ''-'' || TO_CHAR(IC_DT, ''YYYY'') ELSE TO_CHAR(IC_DT, ''YYYY'') || ''-'' || TO_CHAR(TO_NUMBER(TO_CHAR(IC_DT, ''YYYY'')) + 1) END), T23.ITEM_DESC, T04.UOM_S_DESC';
-
-    OPEN p_Result FOR sql_stmt;
 END SP_Get_ClientWiseInspections;
 
 
@@ -3774,7 +3811,7 @@ ADD MOBILE VARCHAR2(10 BYTE) ;
 CREATE TABLE IBS_USERS_OTP(
     ID NUMBER(6,0) NOT NULL,
 	USER_ID CHAR(20 BYTE),
-    MOBILE VARCHAR2(10 BYTE),
+    MOBILE VARCHAR2(12 BYTE),
 	OTP Varchar2(50),
 	CREATEDDATE TIMESTAMP(6) WITH TIME ZONE,
 	STATUS NUMBER(2,0)
@@ -4263,7 +4300,7 @@ BEGIN
 END GetConsigneeData;
 
 
-CREATE OR REPLACE PROCEDURE "GET_LOGINDETAILSFORAPI" (
+create or replace PROCEDURE GET_LOGINDETAILSForAPI (
     P_USER_NAME IN VARCHAR2,
     P_PASSWORD IN VARCHAR2,
     P_USERTYPE IN VARCHAR2,
@@ -4283,7 +4320,7 @@ BEGIN
             SELECT u.MOBILE AS MOBILE,u.ID AS ID, u.USER_NAME AS USER_NAME,u.USER_ID AS USER_ID,
             u.REGION AS REGION,u.auth_levl as AUTH_LEVL,
             R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,NVL(CO_CD, 0) AS COCD,UM.ID MASTER_ID
             FROM T02_USERS u 
            JOIN USER_MASTER UM ON TO_CHAR(u.USER_ID) = TO_CHAR(UM.USER_ID)
             JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
@@ -4294,7 +4331,7 @@ BEGIN
             OPEN P_RESULT_CURSOR FOR
             SELECT V.VEND_CONTACT_TEL_1 AS MOBILE, V.VEND_CD AS ID,V.VEND_NAME AS USER_NAME,V.VEND_CD AS USER_ID,
             NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD,UM.ID MASTER_ID
             FROM T05_VENDOR V 
             JOIN USER_MASTER UM ON TO_CHAR(V.VEND_CD) = TO_CHAR(UM.USER_ID)
             JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
@@ -4305,7 +4342,7 @@ BEGIN
             OPEN P_RESULT_CURSOR FOR
              SELECT E.IE_PHONE_NO AS MOBILE,E.IE_CD AS ID,E.IE_NAME AS USER_NAME, E.IE_EMP_NO AS USER_ID,
             E.IE_REGION AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,E.IE_CD AS IECD,E.IE_CO_CD AS COCD
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,E.IE_CD AS IECD,E.IE_CO_CD AS COCD,UM.ID MASTER_ID
             FROM T09_IE E
             JOIN USER_MASTER UM ON TO_CHAR(E.IE_EMP_NO) = TO_CHAR(UM.USER_ID)
             JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
@@ -4317,7 +4354,7 @@ BEGIN
             OPEN P_RESULT_CURSOR FOR
             SELECT C.MOBILE AS MOBILE, C.ID AS ID,C.USER_NAME AS USER_NAME,C.MOBILE AS USER_ID,
             NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            C.ORGN_TYPE AS ORGN_TYPE,NULL AS ORGN_CHASED,C.ORGANISATION AS ORGANISATION,0 AS IECD,0 AS COCD
+            C.ORGN_TYPE AS ORGN_TYPE,NULL AS ORGN_CHASED,C.ORGANISATION AS ORGANISATION,0 AS IECD,0 AS COCD,UM.ID MASTER_ID
             FROM T32_CLIENT_LOGIN C
             JOIN USER_MASTER UM ON TO_CHAR(C.MOBILE) = TO_CHAR(UM.USER_ID)
             JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
@@ -4328,7 +4365,7 @@ BEGIN
             OPEN P_RESULT_CURSOR FOR
             SELECT L.MOBILE AS MOBILE, 0 AS ID,L.LO_NAME AS USER_NAME,L.MOBILE AS USER_ID,
             NULL AS REGION,NULL as AUTH_LEVL,R.ROLE_ID AS ROLE_ID,R.ROLENAME AS ROLE_NAME, 
-            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD
+            NULL AS ORGN_TYPE,NULL AS ORGN_CHASED,NULL AS ORGANISATION,0 AS IECD,0 AS COCD,UM.ID MASTER_ID
             FROM T105_LO_LOGIN L
             JOIN USER_MASTER UM ON TO_CHAR(L.MOBILE) = TO_CHAR(UM.USER_ID)
             JOIN USERROLES UR ON UM.ID = UR.USER_MASTER_ID
@@ -4337,7 +4374,6 @@ BEGIN
             AND (TO_DATE((SELECT SYSDATE FROM DUAL),'DD-MM-YY') BETWEEN L.LO_PER_FR AND L.LO_PER_TO);        
         END IF;
     END IF;
-
 END;
 /
 
@@ -4509,3 +4545,979 @@ EXCEPTION
         ROLLBACK;
 END;
 /
+
+
+CREATE OR REPLACE VIEW v22b_outstanding_billsForReport AS
+
+Select REGION_CODE,BPO_TYPE,BPO_REGION,BPO_RLY,BPO_CD,BPO_NAME,BPO_ORGN,BPO_ADD,BPO_CITY,SAP_CUST_CD_BPO,AU,
+LO_REMARKS,BILL_NO,BILL_DT,CASE_NO,PO_NO,PO_DT,BK_NO,SET_NO,PO_OR_LETTER,
+ VEND_CD,VEND_NAME,VENDOR_CITY,CONSIGNEE_CD,CONSIGNEE,CONSIGNEE_ADD1,CONSIGNEE_ADD2,CONSIGNEE_CITY,
+ IE_CD,BILL_AMOUNT,TDS,TDS_SGST, TDS_CGST, TDS_IGST,RETENTION_MONEY,CNOTE_AMOUNT,WRITE_OFF_AMT,AMOUNT_POSTED,(TDS+TDS_SGST+TDS_CGST+TDS_IGST+RETENTION_MONEY+WRITE_OFF_AMT+AMOUNT_POSTED+CNOTE_AMOUNT) AMOUNT_REALISED,
+ (BILL_AMOUNT -(TDS+TDS_SGST+TDS_CGST+TDS_IGST+RETENTION_MONEY+WRITE_OFF_AMT+AMOUNT_POSTED+CNOTE_AMOUNT)) AMOUNT_OUTSTANDING,FIN_YR,YR_MTH From
+(Select t13.REGION_CODE REGION_CODE,t12.BPO_TYPE BPO_TYPE,t12.BPO_REGION BPO_REGION,t12.BPO_RLY BPO_RLY,t20.BPO_CD BPO_CD,t12.BPO_NAME BPO_NAME,
+ t12.BPO_ORGN BPO_ORGN,t12.BPO_ADD BPO_ADD,nvl2(t031.LOCATION,t031.LOCATION||','||t031.CITY,t031.CITY) BPO_CITY,t12.SAP_CUST_CD_BPO,t12.AU,t22.LO_REMARKS,
+ t22.BILL_NO BILL_NO,t22.BILL_DT BILL_DT,t22.CASE_NO CASE_NO,t13.PO_NO PO_NO,t13.PO_DT PO_DT,t20.BK_NO,t20.SET_NO,t13.PO_OR_LETTER,
+ t13.VEND_CD VEND_CD,t05.VEND_NAME VEND_NAME,nvl2(t032.LOCATION,t032.LOCATION||' '||t032.CITY,t032.CITY) VENDOR_CITY,
+ t20.CONSIGNEE_CD CONSIGNEE_CD,trim(t06.CONSIGNEE_DESIG)||'/'||trim(t06.CONSIGNEE_DEPT)||'/'||trim(t06.CONSIGNEE_FIRM) CONSIGNEE,
+ t06.CONSIGNEE_ADD1 CONSIGNEE_ADD1,t06.CONSIGNEE_ADD2 CONSIGNEE_ADD2,nvl2(t033.LOCATION,t033.LOCATION||' '||t033.CITY,t033.CITY) CONSIGNEE_CITY,
+ t20.IE_CD IE_CD,nvl(t22.BILL_AMOUNT,0) BILL_AMOUNT,
+ nvl(t22.TDS,0) TDS,nvl(t22.TDS_SGST,0) TDS_SGST,nvl(t22.TDS_CGST,0) TDS_CGST,nvl(t22.TDS_IGST,0) TDS_IGST,nvl(t22.RETENTION_MONEY,0)RETENTION_MONEY,nvl(t22.CNOTE_AMOUNT,0)CNOTE_AMOUNT,nvl(t22.WRITE_OFF_AMT,0) WRITE_OFF_AMT,sum(nvl(t26.AMOUNT_CLEARED,0)) AMOUNT_POSTED,
+decode(to_char(t22.BILL_DT,'MM'),'01',to_char(to_char(t22.BILL_DT,'YYYY')-1)||'-'||to_char(t22.BILL_DT,'YYYY'),'02',to_char(to_char(t22.BILL_DT,'YYYY')-1)||'-'||to_char(t22.BILL_DT,'YYYY'),'03',to_char(to_char(t22.BILL_DT,'YYYY')-1)||'-'||to_char(t22.BILL_DT,'YYYY'), to_char(t22.BILL_DT,'YYYY')||'-'||to_char(to_char(t22.BILL_DT,'YYYY')+1)) FIN_YR, to_char(t22.BILL_DT,'YYYYMM') YR_MTH
+From T22_BILL t22, T20_IC t20,T12_BILL_PAYING_OFFICER t12,T03_CITY t031,T13_PO_MASTER t13,T03_CITY t032,T03_CITY t033,
+     T05_VENDOR t05,T06_CONSIGNEE t06,T26_CHEQUE_POSTING t26
+Where t22.BILL_NO=t20.BILL_NO
+  and t20.BPO_CD=t12.BPO_CD
+  and t12.BPO_CITY_CD=t031.CITY_CD(+)
+  and t22.CASE_NO=t13.CASE_NO
+  and t13.VEND_CD=t05.VEND_CD
+  and t05.VEND_CITY_CD=t032.CITY_CD(+)
+  and t20.CONSIGNEE_CD=t06.CONSIGNEE_CD
+  and t06.CONSIGNEE_CITY=t033.CITY_CD(+)
+  and t22.BILL_NO=t26.BILL_NO(+)
+  and ((t12.BPO_TYPE='R' and NOT (nvl(t22.BILL_AMOUNT,0) between 0 and 100)) or (t12.BPO_TYPE<>'R')) and SUBSTR(t22.BILL_NO,1,1) NOT IN ('O','T','X','F','D','R')
+Group BY  t13.REGION_CODE,t12.BPO_TYPE,t12.BPO_REGION,t12.BPO_RLY,t20.BPO_CD,t12.BPO_NAME,t12.BPO_ORGN,t12.BPO_ADD,
+ nvl2(t031.LOCATION,t031.LOCATION||','||t031.CITY,t031.CITY),t12.SAP_CUST_CD_BPO,AU,LO_REMARKS,t22.BILL_NO,t22.BILL_DT,
+ t22.CASE_NO,t13.PO_NO,t13.PO_DT,t20.BK_NO,t20.SET_NO,t13.PO_OR_LETTER,t13.VEND_CD,t05.VEND_NAME,nvl2(t032.LOCATION,t032.LOCATION||' '||t032.CITY,t032.CITY),
+ t20.CONSIGNEE_CD,trim(t06.CONSIGNEE_DESIG)||'/'||trim(t06.CONSIGNEE_DEPT)||'/'||trim(t06.CONSIGNEE_FIRM),
+ t06.CONSIGNEE_ADD1,t06.CONSIGNEE_ADD2,nvl2(t033.LOCATION,t033.LOCATION||' '||t033.CITY,t033.CITY),t20.IE_CD,
+ nvl(t22.BILL_AMOUNT,0),nvl(t22.TDS,0),nvl(t22.TDS_SGST,0),nvl(t22.TDS_CGST,0),nvl(t22.TDS_IGST,0),nvl(t22.RETENTION_MONEY,0),nvl(t22.CNOTE_AMOUNT,0),nvl(t22.WRITE_OFF_AMT,0))
+ 
+--====================SAP=============
+create or replace PROCEDURE CREATE_SAP_QA_BPO_SELECTIVE
+(
+    pBPO_CD IN CHAR,
+    pID OUT NUMBER
+) IS
+    CURSOR c1 IS 
+        SELECT T12.BPO_CD,
+               DECODE(T12.BPO_REGION, 'N', 'NORTHERN', 'E', 'EASTERN', 'S', 'SOUTHERN', 'W', 'WESTERN', 'C', 'CENTRAL') BILL_CHASING_REGION,
+               T12.BPO_TYPE,
+               T12.BPO_NAME,
+               T12.BPO_RLY,
+               T12.BPO_ADD,
+               T03.LOCATION,
+               T03.CITY,
+               T92.STATE_NAME,
+               T92.SAP_STATE_CD,
+               T12.BILL_PASS_OFFICER,
+               T12.BPO_FEE_TYPE,
+               T12.BPO_FEE,
+               T12.BPO_TAX_TYPE,
+               T12.BPO_FLG,
+               T12.BPO_ADV_FLG,
+               T12.BPO_LOC_CD,
+               T12.BPO_ORGN,
+               T12.BPO_ADD1,
+               T12.BPO_ADD2,
+               T12.BPO_STATE,
+               NVL(TRIM(T12.PIN_CODE), '000000') BPO_PIN,
+               T12.BPO_PHONE,
+               T12.BPO_FAX,
+               T12.BPO_EMAIL,
+               T12.PAY_WINDOW_ID,
+               T12.GSTIN_NO
+        FROM T12_BILL_PAYING_OFFICER T12, T03_CITY T03, T92_STATE T92
+        WHERE T12.BPO_CITY_CD = T03.CITY_CD(+) AND T92.STATE_CD(+) = T03.STATE_CD
+        AND T12.BPO_CD = pBPO_CD
+        ORDER BY T12.BPO_CD;
+
+    r1 c1%ROWTYPE;
+    w_bpo_cd VARCHAR2(10) := NULL;
+    w_ctr VARCHAR2(200) := NULL;
+    w_location VARCHAR2(50) := NULL;
+    TYPE ADDARRAY IS VARRAY(5) OF CHAR(35);
+  W_NAME ADDARRAY := ADDARRAY();
+  W_ADDR ADDARRAY := ADDARRAY();
+  W_RLY ADDARRAY  := ADDARRAY();
+  W_ORGN ADDARRAY := ADDARRAY();
+    i NUMBER(3) := 0;
+    j INT;
+    counter NUMBER(5) := 0;
+    err_ctr NUMBER(5) := 0;
+    w_id NUMBER(13) := 0;
+BEGIN
+    SELECT MAX(NVL(ID, 0)) + 1 INTO w_id FROM SAP_QA_BPO;
+
+    FOR r1 IN c1
+    LOOP
+        counter := counter + 1;
+        w_bpo_cd := '10000' || r1.BPO_CD;
+        w_location := TRIM(r1.LOCATION);
+
+        -- BPO Name
+        err_ctr := 1;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.BPO_NAME);
+        w_name := addarray();
+        WHILE j < 2 LOOP
+            i := 35;
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ',' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ',') THEN
+                i := 34;
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+            w_name.EXTEND;
+            w_name(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+        w_name.EXTEND;
+        w_name(2) := TRIM(w_ctr);
+
+        -- Address Lines
+        err_ctr := 2;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.BPO_ADD);
+        IF (w_ctr = '' OR w_ctr IS NULL) THEN
+            IF (w_location = '' OR w_location IS NULL) THEN
+                w_ctr := r1.STATE_NAME;
+            ELSE
+                w_ctr := w_location;
+                w_location := '';
+            END IF;
+        END IF;
+
+        w_addr := addarray();
+        WHILE j < 3 LOOP
+            i := 35;
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ',' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ',') THEN
+                i := 34;
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+            w_addr.EXTEND;
+            w_addr(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+        w_addr.EXTEND;
+        w_addr(3) := TRIM(w_ctr);
+
+        -- Organisation Name
+        err_ctr := 1;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.BPO_ORGN);
+        w_orgn := addarray();
+        WHILE j < 2 LOOP
+            i := 35;
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ',' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ',') THEN
+                i := 34;
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+            w_orgn.EXTEND;
+            w_orgn(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+        w_orgn.EXTEND;
+        w_orgn(2) := TRIM(w_ctr);
+
+        DELETE FROM SAP_QA_BPO WHERE SORT2_BPO_CD = W_BPO_CD;
+
+        INSERT INTO SAP_QA_BPO
+        (
+            SORT2_BPO_CD, BPO_TYPE, BPO_NAME1, BPO_NAME2, NAME3_BPO_RAILWAYS, NAME4_BPO_ORGN1,
+            REMARKS_BPO_ORGN2, SORT1_BPO_RAILWAYS, STREET1_BPO_ADD1, STREET2_BPO_ADD2,
+            STREET3_BPO_ADD3, STREET5_BPO_LOCATION, BPO_CITY, BPO_STATE, SAP_STATE_CD,
+            POSTAL_CODE_BPO_PIN, TEL_NUMBER_BPO_PHONE, SMTP_ADDR_BPO_EMAIL, STCD3, ID, CREATEDDATE
+        )
+        VALUES
+        (
+            w_bpo_cd, r1.BPO_TYPE, w_name(1), w_name(2), r1.BPO_RLY,
+            w_orgn(1), w_orgn(2), SUBSTR(r1.BPO_RLY, 1, 20), w_addr(1), w_addr(2),
+            w_addr(3), w_location, TRIM(r1.CITY), TRIM(r1.STATE_NAME), TRIM(r1.SAP_STATE_CD),
+            r1.BPO_PIN, r1.BPO_PHONE, r1.BPO_EMAIL, r1.GSTIN_NO, w_id, SYSDATE
+        );
+    END LOOP;
+
+    COMMIT;
+    pID := w_id;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('i=' || i || '  j=' || j || ' BPO CD-->' || w_bpo_cd || '  Error->'||counter||
+                             '--'||'Error Counter - >'||err_ctr||'---'||SQLCODE||'--'||SUBSTR(SQLERRM, 1, 200));
+        COMMIT;
+END;
+/
+
+
+    CREATE TABLE "SAP_QA_CONSIGNEE" 
+   (	"BUKRS" CHAR(4) DEFAULT '1000',
+	"VKORG" CHAR(4) DEFAULT '1000',
+	"VTWEG" CHAR(2) DEFAULT '10',
+	"SPART" CHAR(2) DEFAULT '20',
+	"KTOKD" CHAR(4) DEFAULT 'Z007',
+	"AD_TITLETX" CHAR(30) DEFAULT 'Company',
+	"NAME1_CONSIGNEE_DESIG" VARCHAR2(40),
+	"NAME2_CONSIGNEE_DEPT" VARCHAR2(35),
+	"NAME3_CONSIGNEE_FIRM1" VARCHAR2(35),
+	"NAME4_CONSIGNEE_FIRM2" VARCHAR2(50),
+	"REMARKS" CHAR(1) DEFAULT NULL,
+	"SORT1_CONSIGNEE_FIRM1" CHAR(35),
+	"SORT2_CONSIGNEE_CD" CHAR(10),
+	"HOUSE_NUM1" VARCHAR2(10) DEFAULT NULL,
+	"STREET1_CONSIGNEE_ADD1" VARCHAR2(35),
+	"STREET2_CONSIGNEE_ADD2" VARCHAR2(35),
+	"STREET3_CONSIGNEE_ADD3" VARCHAR2(35),
+	"STREET4_CONSIGNEE_ADD4" VARCHAR2(35),
+	"DISTRICT_CONSIGNEE_ADD5" VARCHAR2(35),
+	"STREET5_CONSIGNEE_LOCATION" VARCHAR2(40),
+	"POSTAL_CODE" VARCHAR2(10) DEFAULT '000000',
+	"CONSIGNEE_CITY" VARCHAR2(40),
+	"COUNTRY" VARCHAR2(3) DEFAULT 'IN',
+	"CONSIGNEE_STATE" VARCHAR2(40),
+	"SAP_STATE_CD" CHAR(2),
+	"LANGU" CHAR(2) DEFAULT 'EN',
+	"TEL_NUMBER" VARCHAR2(30) DEFAULT NULL,
+	"MOB_NUMBER" VARCHAR2(30) DEFAULT NULL,
+	"SMTP_ADDR" VARCHAR2(241) DEFAULT NULL,
+	"PAN_TAN_NO" VARCHAR2(10) DEFAULT NULL,
+	"CORPORATE_GROUP" VARCHAR2(10) DEFAULT NULL,
+	"CONSIGNEE_TYPE" CHAR(1),
+	"NAME_VP" CHAR(1) DEFAULT NULL,
+	"NAME1" CHAR(1) DEFAULT NULL,
+	"AD_STRSPP1" CHAR(1) DEFAULT NULL,
+	"AD_STREET" CHAR(1) DEFAULT NULL,
+	"POST_CODE1" CHAR(1) DEFAULT NULL,
+	"COUNTY" CHAR(1) DEFAULT NULL,
+	"REGION" CHAR(1) DEFAULT NULL,
+	"SPRAS" CHAR(1) DEFAULT NULL,
+	"TEL_PHON" CHAR(1) DEFAULT NULL,
+	"FAX" CHAR(1) DEFAULT NULL,
+	"EMAIL" CHAR(1) DEFAULT NULL,
+	"PARH1" CHAR(1) DEFAULT NULL,
+	"PARH2" CHAR(1) DEFAULT NULL,
+	"PARH3" CHAR(1) DEFAULT NULL,
+	"PAKN1" CHAR(1) DEFAULT NULL,
+	"PAKN2" CHAR(1) DEFAULT NULL,
+	"PAKN3" CHAR(1) DEFAULT NULL,
+	"AKONT" VARCHAR2(10) DEFAULT '23203110',
+	"SORT_KEY" CHAR(3) DEFAULT NULL,
+	"TERMS_OF_PAYMENT" CHAR(4) DEFAULT '0002',
+	"DUNNING_PROC" CHAR(4) DEFAULT '0001',
+	"DUNNING_LEVEL" CHAR(1) DEFAULT '1',
+	"ACCOUNT_STATEMENT" CHAR(1) DEFAULT NULL,
+	"WITHT" CHAR(2) DEFAULT 'C2',
+	"WT_WITHCD" CHAR(2) DEFAULT 'C2',
+	"WT_AGENT" CHAR(1) DEFAULT 'X',
+	"WT_AGTDF" CHAR(10) DEFAULT '01.04.2012',
+	"WT_AGTDT" CHAR(10) DEFAULT '31.03.9999',
+	"VKBUR" CHAR(4) DEFAULT NULL,
+	"KDGRP" CHAR(2) DEFAULT NULL,
+	"WAERS" VARCHAR2(5) DEFAULT 'INR',
+	"KALKS" CHAR(1) DEFAULT '1',
+	"LPRIO" CHAR(2) DEFAULT '02',
+	"KZAZU" CHAR(1) DEFAULT 'X',
+	"VSBED" CHAR(2) DEFAULT '01',
+	"DWERK_EXT" CHAR(1) DEFAULT NULL,
+	"ANTLF" NUMBER(1,0) DEFAULT NULL,
+	"INCO1" CHAR(1) DEFAULT NULL,
+	"ZTERM" CHAR(4) DEFAULT '0001',
+	"KKBER" CHAR(1) DEFAULT NULL,
+	"KTGRD" CHAR(2) DEFAULT '01',
+	"TAX1" CHAR(1) DEFAULT '1',
+	"TAX2" CHAR(1) DEFAULT '1',
+	"TAX3" CHAR(1) DEFAULT '1',
+	"TAX4" CHAR(1) DEFAULT '1',
+	"TAX5" CHAR(1) DEFAULT '1',
+	"TAX6" CHAR(1) DEFAULT '1',
+	"TAX7" CHAR(1) DEFAULT '1',
+	"TAX8" CHAR(1) DEFAULT '1',
+	"TAX9" CHAR(1) DEFAULT '1',
+	"KVGR1" CHAR(3) DEFAULT NULL,
+	"KVGR2" CHAR(3) DEFAULT NULL,
+	"KVGR3" CHAR(3) DEFAULT NULL,
+	"VEND_PER_NAME_1" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_TEL_1" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_NAME_2" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_TEL_2" VARCHAR2(35) DEFAULT NULL,
+	"VEND_REMARKS" VARCHAR2(35) DEFAULT NULL,
+	"VEND_PER_EMAIL_1" VARCHAR2(35) DEFAULT NULL,
+	"STCD3" VARCHAR2(18) DEFAULT NULL,
+    ID	NUMBER(13,0),
+    CREATEDDATE	TIMESTAMP(6) WITH TIME ZONE,
+	CONSTRAINT "PK_CONSIGNEE_CODE" PRIMARY KEY ("SORT2_CONSIGNEE_CD") ENABLE
+   );
+
+
+
+   create or replace PROCEDURE CREATE_SAP_QA_CONSIGNE_SELECT (
+    pCONSIGNEE IN NUMBER,
+    pID OUT NUMBER
+) IS
+    CURSOR c1 IS
+        SELECT
+            T06.CONSIGNEE_CD,
+            T06.CONSIGNEE_TYPE,
+            T06.CONSIGNEE_DESIG,
+            T06.CONSIGNEE_DEPT,
+            T06.CONSIGNEE_FIRM,
+            T06.CONSIGNEE_ADD1,
+            T06.CONSIGNEE_ADD2,
+            T06.GSTIN_NO,
+            T03.LOCATION,
+            T03.CITY,
+            NVL(TRIM(T06.PIN_CODE), '000000') PIN_CODE,
+            T92.STATE_NAME,
+            T92.SAP_STATE_CD
+        FROM
+            T06_CONSIGNEE T06,
+            T03_CITY T03,
+            T92_STATE T92
+        WHERE
+            T03.CITY_CD(+) = T06.CONSIGNEE_CITY
+            AND T92.STATE_CD(+) = T03.STATE_CD
+            AND T06.CONSIGNEE_CD = pCONSIGNEE
+        ORDER BY
+            T06.CONSIGNEE_CD;
+    r1 c1%ROWTYPE;
+    w_consignee_cd VARCHAR2(10) := NULL;
+    w_ctr VARCHAR2(200) := NULL;
+    w_Location VARCHAR2(50) := NULL;
+    TYPE addarray IS VARRAY(5) OF CHAR(35);
+    w_name addarray := addarray();
+    w_addr addarray := addarray();
+    w_name_2 VARCHAR2(50) := NULL;
+    w_addr_5 VARCHAR2(50) := NULL;
+    i NUMBER(3) := 0;
+    j INT;
+    counter NUMBER(5) := 0;
+    err_ctr NUMBER(5) := 0;
+    w_id NUMBER(13) := 0;
+BEGIN
+    --SELECT MAX(NVL(ID, 0)) + 1 INTO w_id FROM SAP_QA_CONSIGNEE;
+    SELECT COALESCE(MAX(NVL(ID, 0)) + 1, 1) INTO w_id FROM SAP_QA_CONSIGNEE;
+
+
+    FOR r1 IN c1
+    LOOP
+        counter := counter + 1;
+        w_consignee_cd := '10' || LPAD(r1.CONSIGNEE_CD, 8, '0');
+        w_Location := TRIM(r1.LOCATION);
+
+        -- Consignee Firm Start
+        err_ctr := 1;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.CONSIGNEE_FIRM);
+        w_name := addarray();
+
+        WHILE j < 2 LOOP
+            i := 35;
+
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ')' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ')') THEN
+                i := 34;
+
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+
+            w_name.EXTEND;
+            w_name(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+
+        w_name.EXTEND;
+        w_name_2 := TRIM(w_ctr);
+        -- Consignee Firm End
+
+        -- Address Lines Start
+        err_ctr := 2;
+        i := 0;
+        j := 1;
+        w_ctr := TRIM(r1.CONSIGNEE_ADD1) || ' ' || TRIM(r1.CONSIGNEE_ADD2);
+        w_ctr := TRIM(w_ctr);
+
+        IF ((w_ctr = '') OR (w_ctr IS NULL)) THEN
+            IF ((w_Location = '') OR (w_Location IS NULL)) THEN
+                IF ((TRIM(r1.CITY) = '') OR (TRIM(r1.CITY) IS NULL)) THEN
+                    w_ctr := r1.STATE_NAME;
+                ELSE
+                    w_ctr := r1.CITY;
+                END IF;
+            ELSE
+                w_ctr := w_Location;
+                w_Location := '';
+            END IF;
+        END IF;
+
+        w_addr := addarray();
+
+        WHILE j < 5 LOOP
+            i := 35;
+
+            IF (NVL(TRIM(SUBSTR(w_ctr, 35, 1)), ',') <> ')' AND NVL(TRIM(SUBSTR(w_ctr, 36, 1)), ',') <> ')') THEN
+                i := 34;
+
+                WHILE i > 0 LOOP
+                    IF NVL(TRIM(SUBSTR(w_ctr, i, 1)), ',') <> ',' THEN
+                        i := i - 1;
+                    ELSE
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+
+            w_addr.EXTEND;
+            w_addr(j) := SUBSTR(w_ctr, 1, i);
+            w_ctr := TRIM(SUBSTR(w_ctr, i + 1));
+            j := j + 1;
+        END LOOP;
+
+        w_addr.EXTEND;
+        w_addr_5 := TRIM(w_ctr);
+        -- Address Lines End
+
+        DELETE FROM SAP_QA_CONSIGNEE WHERE SORT2_CONSIGNEE_CD = w_consignee_cd;
+
+        INSERT INTO SAP_QA_CONSIGNEE (
+            SORT2_CONSIGNEE_CD,
+            CONSIGNEE_TYPE,
+            NAME1_CONSIGNEE_DESIG,
+            NAME2_CONSIGNEE_DEPT,
+            NAME3_CONSIGNEE_FIRM1,
+            NAME4_CONSIGNEE_FIRM2,
+            SORT1_CONSIGNEE_FIRM1,
+            STREET1_CONSIGNEE_ADD1,
+            STREET2_CONSIGNEE_ADD2,
+            STREET3_CONSIGNEE_ADD3,
+            STREET4_CONSIGNEE_ADD4,
+            DISTRICT_CONSIGNEE_ADD5,
+            STREET5_CONSIGNEE_LOCATION,
+            CONSIGNEE_CITY,
+            CONSIGNEE_STATE,
+            SAP_STATE_CD,
+            POSTAL_CODE,
+            STCD3,
+            ID,
+            CREATEDDATE
+        )
+        VALUES (
+            w_consignee_cd,
+            r1.CONSIGNEE_TYPE,
+            r1.CONSIGNEE_DESIG,
+            r1.CONSIGNEE_DEPT,
+            w_name(1),
+            w_name_2,
+            w_name(1),
+            w_addr(1),
+            w_addr(2),
+            w_addr(3),
+            w_addr(4),
+            w_addr_5,
+            w_Location,
+            TRIM(r1.CITY),
+            TRIM(r1.STATE_NAME),
+            r1.SAP_STATE_CD,
+            r1.PIN_CODE,
+            r1.GSTIN_NO,
+            w_id,
+            SYSDATE
+        );
+    END LOOP;
+
+    COMMIT;
+    pID := w_id;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('i=' || i || '  j=' || j || ' CONSIGNEE CD-->' || w_consignee_cd || '  Error->' || counter || '--' || 'Error Counter - >' || err_ctr || '---' || SQLCODE || '--' || SUBSTR(SQLERRM, 1, 200));
+        COMMIT;
+END;
+/
+
+create or replace PROCEDURE SP_GET_SAP_QA_CONSIGNE_SELECT (
+    P_ID IN NUMBER,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR)
+AS
+BEGIN
+    OPEN P_RESULT_CURSOR FOR 
+        SELECT  
+            BUKRS, VKORG, VTWEG, SPART, KTOKD, AD_TITLETX, 
+            NAME1_CONSIGNEE_DESIG, NAME2_CONSIGNEE_DEPT, NAME3_CONSIGNEE_FIRM1, NAME4_CONSIGNEE_FIRM2, 
+            REMARKS, SORT1_CONSIGNEE_FIRM1, SORT2_CONSIGNEE_CD, HOUSE_NUM1, STREET1_CONSIGNEE_ADD1, 
+            STREET2_CONSIGNEE_ADD2, STREET3_CONSIGNEE_ADD3, STREET4_CONSIGNEE_ADD4, DISTRICT_CONSIGNEE_ADD5, 
+            STREET5_CONSIGNEE_LOCATION, POSTAL_CODE, CONSIGNEE_CITY, COUNTRY, CONSIGNEE_STATE, 
+            SAP_STATE_CD, LANGU, TEL_NUMBER, MOB_NUMBER, SMTP_ADDR, PAN_TAN_NO, CORPORATE_GROUP, 
+            CONSIGNEE_TYPE, NAME_VP, NAME1, AD_STRSPP1, AD_STREET, POST_CODE1, COUNTY, REGION, 
+            SPRAS, TEL_PHON, FAX, EMAIL, PARH1, PARH2, PARH3, PAKN1, PAKN2, PAKN3, AKONT, 
+            SORT_KEY, TERMS_OF_PAYMENT, DUNNING_PROC, DUNNING_LEVEL, ACCOUNT_STATEMENT, WITHT, 
+            WT_WITHCD, WT_AGENT, WT_AGTDF, WT_AGTDT, VKBUR, KDGRP, WAERS, KALKS, LPRIO, 
+            KZAZU, VSBED, DWERK_EXT, ANTLF, INCO1, ZTERM, KKBER, KTGRD, TAX1, TAX2, TAX3, 
+            TAX4, TAX5, TAX6, TAX7, TAX8, TAX9, KVGR1, KVGR2, KVGR3, VEND_PER_NAME_1, 
+            VEND_PER_TEL_1, VEND_PER_NAME_2, VEND_PER_TEL_2, VEND_REMARKS, VEND_PER_EMAIL_1, 
+            STCD3 
+        FROM SAP_QA_CONSIGNEE 
+        WHERE ID = P_ID;
+
+END;
+
+/
+
+ALTER TABLE t05_vendor
+MODIFY (VEND_PWD VARCHAR2(25));
+ALTER TABLE T05_VENDOR_HISTORY
+MODIFY (VEND_PWD VARCHAR2(25));
+
+
+ALTER TABLE t02_users
+MODIFY (PASSWORD VARCHAR2(25));
+ALTER TABLE t02_users_HISTORY
+MODIFY (PASSWORD VARCHAR2(25));
+
+ALTER TABLE t09_ie
+MODIFY (IE_PWD VARCHAR2(25));
+ALTER TABLE t09_ie_history
+MODIFY (IE_PWD VARCHAR2(25));
+
+ALTER TABLE t32_client_login
+MODIFY (PWD VARCHAR2(25));
+
+ALTER TABLE t105_lo_login
+MODIFY (PWD VARCHAR2(25));
+
+
+-- Rites123
+--Update t05_vendor set VEND_PWD = 'WPg3mg2hKkFI3zwp72u8SA=='  where VEND_PWD is not null;
+--Update t02_users set PASSWORD = 'WPg3mg2hKkFI3zwp72u8SA==' where PASSWORD is not null;
+--Update t09_ie set IE_PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where IE_PWD is not null;
+--Update t32_client_login set PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where PWD is not null;
+--Update t105_lo_login set PWD = 'WPg3mg2hKkFI3zwp72u8SA==' where PWD is not null;
+
+create or replace PROCEDURE SP_GET_Administrator_PO_DETAILS (
+    p_cs_no VARCHAR2,
+    p_po_no VARCHAR2,
+    p_po_date VARCHAR2,
+    p_vend_name VARCHAR2,
+    p_region_code VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    str1 VARCHAR2(4000);
+    total_records NUMBER;
+BEGIN
+    -- Count total records before applying pagination
+    SELECT COUNT(*) INTO total_records
+    FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t
+    WHERE m.VEND_CD = v.VEND_CD
+      AND v.VEND_CITY_CD = t.CITY_CD
+      AND m.PURCHASER_CD = c.CONSIGNEE_CD(+)
+      AND m.REGION_CODE = p_region_code
+      AND (p_cs_no IS NULL OR TRIM(CASE_NO) = p_cs_no)
+      AND (p_po_no IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER('%' || p_po_no || '%'))
+      AND (p_po_date IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_po_date)
+      AND (p_vend_name IS NULL OR UPPER(TRIM(v.VEND_NAME)) LIKE UPPER(p_vend_name || '%'));
+
+    OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+
+    -- Build the main query
+    str1 := 'SELECT * FROM (SELECT ROWNUM AS rnum, t.* FROM (' ||
+            'SELECT m.CASE_NO, m.PO_NO, TO_CHAR(m.PO_DT, ''dd/mm/yyyy'') AS PO_DT, ' ||
+            '(DECODE(m.RLY_NONRLY, ''R'', ''Railway'', ''P'', ''Private'', ''S'', ''State Government'', ''F'', ''Foreign Railways'', ''U'', ''PSU'') || ''('' || m.RLY_CD || '')'') AS RLY_CD, ' ||
+            '(v.VEND_NAME || ''('' || NVL2(t.LOCATION, t.LOCATION || '' : '' || t.CITY, t.CITY) || '')'') AS VEND_NAME, ' ||
+            '(NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || ''/'', '''') || NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || ''/'', '''') || TRIM(c.CONSIGNEE_FIRM)) AS CONSIGNEE_S_NAME, ' ||
+            'DECODE(m.INSPECTING_AGENCY, ''C'', ''Consignee'', ''X'', ''PO Cancelled'', ''RITES'') AS INSPECTING_AGENCY, ' ||
+            'DECODE(PO_SOURCE, ''V'', ''VENDOR'', ''M'', ''MANUAL'', ''C'', ''IREPS'', ''OTHER'') AS SOURCE, ' ||
+            'TO_CHAR(PO_DT, ''YYYY'') AS PO_YR, m.CASE_NO || ''.TIF'' AS PO_DOC, ' ||
+            'm.CASE_NO || ''.PDF'' AS PO_DOC1 ' ||
+            'FROM T13_PO_MASTER m, T05_VENDOR v, T06_CONSIGNEE c, T03_CITY t ' ||
+            'WHERE m.VEND_CD = v.VEND_CD ' ||
+            'AND v.VEND_CITY_CD = t.CITY_CD ' ||
+            'AND m.PURCHASER_CD = c.CONSIGNEE_CD(+) ' ||
+            'AND m.REGION_CODE = ''' || p_region_code || '''';
+
+    -- Apply filters
+    IF p_cs_no IS NOT NULL THEN
+        str1 := str1 || ' AND TRIM(CASE_NO) = ''' || p_cs_no || ''' ';
+    END IF;
+
+    IF p_po_no IS NOT NULL THEN
+        str1 := str1 || ' AND UPPER(TRIM(PO_NO)) LIKE UPPER(''%' || p_po_no || '%'') ';
+    END IF;
+
+    IF p_po_date IS NOT NULL THEN
+        str1 := str1 || ' AND TO_CHAR(PO_DT, ''dd/mm/yyyy'') = ''' || p_po_date || ''' ';
+    END IF;
+
+    IF p_vend_name IS NOT NULL THEN
+        str1 := str1 || ' AND UPPER(TRIM(v.VEND_NAME)) LIKE UPPER(''' || p_vend_name || '%'') ';
+    END IF;
+
+    -- Order the result
+    str1 := str1 || ' ORDER BY CASE_NO ASC) t WHERE ROWNUM <= ' || p_page_end || ') WHERE rnum >= ' || p_page_start;
+
+    -- Open the ref cursor for the result
+    OPEN p_result_cursor FOR str1;
+END;
+/
+
+create or replace PROCEDURE SP_GET_POMASTERLIST_For_Vendor (
+    p_VendCd IN NUMBER,
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on the given criteria
+    SELECT COUNT(*) INTO total_records
+    FROM T80_PO_MASTER m
+         JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+         LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+         LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+    WHERE m.VEND_CD = p_VendCd
+        AND (m.Isdeleted is null OR m.Isdeleted =0) 
+      AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+      AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER('%' || p_PO_NO || '%'))
+      AND (p_PO_DT IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_PO_DT);
+
+    -- Return total records count
+    OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+
+    -- Retrieve paginated data
+    OPEN p_result_cursor FOR
+        SELECT * FROM (
+            SELECT m.CASE_NO as CaseNo,
+                   m.PO_NO as PoNo,
+                   m.PO_DT AS PoDt,
+                   (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government',
+                           'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+                   m.REAL_CASE_NO as RealCaseNo,
+                   (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+                   (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                    NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') ||
+                    TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+                   m.REMARKS as Remarks,
+                   m.RLY_NONRLY as RlyNonrly,
+                   m.RLY_CD AS MainrlyCd,
+                   m.RLY_CD AS RlyCds,
+                   ROWNUM rnum
+            FROM T80_PO_MASTER m
+                 JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+                 LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+                 LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+            WHERE m.VEND_CD = p_VendCd
+              AND (m.Isdeleted is null OR m.Isdeleted =0)   
+              AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+              AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+              AND (p_PO_DT IS NULL OR TO_CHAR(m.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+            ORDER BY m.CASE_NO ASC
+        ) t
+        WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+        
+END SP_GET_POMASTERLIST_For_Vendor;
+/
+
+CREATE OR REPLACE PROCEDURE SP_GET_POMASTERLIST_For_Client (
+    p_rly_cd IN VARCHAR2,
+    p_RlyNonrly IN VARCHAR2,
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on the given criteria
+    SELECT COUNT(*) INTO total_records
+    FROM T80_PO_MASTER m
+         JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+         LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+         LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+    WHERE m.RLY_CD = p_rly_cd
+      AND m.RLY_NONRLY = p_RlyNonrly
+      AND (m.Isdeleted IS NULL OR m.Isdeleted = 0) 
+      AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+      AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER('%' || p_PO_NO || '%'))
+      AND (p_PO_DT IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_PO_DT);
+
+    -- Return total records count
+    OPEN p_result_records FOR SELECT total_records AS total_records FROM DUAL;
+
+    -- Retrieve paginated data
+    OPEN p_result_cursor FOR
+        SELECT * FROM (
+            SELECT m.CASE_NO AS CaseNo,
+                   m.PO_NO AS PoNo,
+                   m.PO_DT AS PoDt,
+                   (DECODE(m.RLY_NONRLY, 'R', 'Railway', 'P', 'Private', 'S', 'State Government',
+                           'F', 'Foreign Railways', 'U', 'PSU') || '(' || m.RLY_CD || ')') AS RlyCd,
+                   m.REAL_CASE_NO AS RealCaseNo,
+                   (v.VEND_NAME || '(' || NVL2(t.LOCATION, t.LOCATION || ' : ' || t.CITY, t.CITY) || ')') AS VendorName,
+                   (NVL2(TRIM(c.CONSIGNEE_DESIG), TRIM(c.CONSIGNEE_DESIG) || '/', '') ||
+                    NVL2(TRIM(c.CONSIGNEE_DEPT), TRIM(c.CONSIGNEE_DEPT) || '/', '') ||
+                    TRIM(c.CONSIGNEE_FIRM)) AS ConsigneeSName,
+                   m.REMARKS AS Remarks,
+                   m.RLY_NONRLY AS RlyNonrly,
+                   m.RLY_CD AS MainrlyCd,
+                   m.RLY_CD AS RlyCds,
+                   ROWNUM rnum
+            FROM T80_PO_MASTER m
+                 JOIN T05_VENDOR v ON m.VEND_CD = v.VEND_CD
+                 LEFT JOIN T06_CONSIGNEE c ON m.PURCHASER_CD = c.CONSIGNEE_CD
+                 LEFT JOIN T03_CITY t ON v.VEND_CITY_CD = t.CITY_CD
+            WHERE m.RLY_CD = p_rly_cd
+              AND m.RLY_NONRLY = p_RlyNonrly
+              AND (m.Isdeleted IS NULL OR m.Isdeleted = 0)   
+              AND (p_CASE_NO IS NULL OR TRIM(CASE_NO) = p_CASE_NO)
+              AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+              AND (p_PO_DT IS NULL OR TO_CHAR(m.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+            ORDER BY m.CASE_NO ASC
+        )
+        WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+
+END SP_GET_POMASTERLIST_For_Client;
+/
+
+create or replace PROCEDURE SP_GET_DEO_VENDOR_PURCHASE_ORDERS (
+    p_CASE_NO IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_PO_DT IN VARCHAR2,
+    p_region_code VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    p_result_cursor OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+) AS
+    total_records NUMBER;
+
+BEGIN
+    SELECT COUNT(*) INTO total_records
+    FROM
+        T80_PO_MASTER p
+        JOIN T05_VENDOR v ON p.VEND_CD = v.VEND_CD
+        LEFT JOIN T03_CITY c ON v.VEND_CITY_CD = c.CITY_CD 
+    WHERE
+        (p.Isdeleted = 0 OR p.Isdeleted IS NULL)
+        AND p.real_case_no IS NULL
+        AND (p_CASE_NO IS NULL OR TRIM(p.CASE_NO) = TRIM(p_CASE_NO))
+        AND (p_PO_NO IS NULL OR UPPER(TRIM(p.PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+        AND (p_PO_DT IS NULL OR TO_CHAR(p.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+        AND p.region_code = p_region_code;
+
+    OPEN p_result_records FOR
+    SELECT total_records as total_records FROM DUAL;
+
+    OPEN p_result_cursor FOR
+    SELECT * FROM (
+    SELECT
+        ROWNUM rnum,
+         p.CASE_NO CaseNo,
+        p.PURCHASER_CD PurchaserCd,
+        p.STOCK_NONSTOCK StockNonstock,
+        CASE
+            WHEN p.RLY_NONRLY = 'R' THEN 'Railway'
+            WHEN p.RLY_NONRLY = 'P' THEN 'Private'
+            WHEN p.RLY_NONRLY = 'S' THEN 'State Government'
+            WHEN p.RLY_NONRLY = 'F' THEN 'Foreign Railways'
+            WHEN p.RLY_NONRLY = 'U' THEN 'PSU'
+            ELSE p.RLY_NONRLY
+        END AS RlyNonrly,
+        p.PO_OR_LETTER PoOrLetter,
+        p.PO_NO PoNo,
+        p.PO_DT PoDt,
+        p.RECV_DT RecvDt,
+        p.VEND_CD VendCd,
+        p.RLY_CD RlyCd,
+        p.REGION_CODE RegionCode,
+        p.USER_ID UserId,
+        p.DATETIME Datetime,
+        p.REMARKS Remarks,
+        p.POI_CD PoiCd,
+        p.ISDELETED Isdeleted,
+        p.CREATEDDATE Createddate,
+        p.updateddate Updateddate,
+        v.vend_name VendName,
+        p.real_case_no RealCaseNo
+    FROM
+        T80_PO_MASTER p
+        JOIN T05_VENDOR v ON p.VEND_CD = v.VEND_CD
+        LEFT JOIN T03_CITY c ON v.VEND_CITY_CD = c.CITY_CD 
+    WHERE
+        (p.Isdeleted = 0 OR p.Isdeleted IS NULL)
+        AND p.real_case_no IS NULL
+        AND (p_CASE_NO IS NULL OR TRIM(p.CASE_NO) = TRIM(p_CASE_NO))
+        AND (p_PO_NO IS NULL OR UPPER(TRIM(p.PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+        AND (p_PO_DT IS NULL OR TO_CHAR(p.PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+        AND p.region_code = p_region_code
+    ORDER BY p.CASE_NO ASC
+    )
+    WHERE rnum BETWEEN p_page_start AND p_page_end ORDER BY rnum ASC;
+
+END SP_GET_DEO_VENDOR_PURCHASE_ORDERS;
+/
+
+create or replace PROCEDURE Get_SP_DEO_CRIS_PurchesOrderList(
+    p_PO_NO           IN VARCHAR2,
+    p_PO_DT           IN VARCHAR2,
+    p_region_code     IN NVARCHAR2,
+    p_page_start      NUMBER,
+    p_page_end        NUMBER,
+    p_result_cursor   OUT SYS_REFCURSOR,
+    p_result_records  OUT SYS_REFCURSOR
+)
+AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on filter criteria
+    SELECT COUNT(*) INTO total_records
+    FROM IMMS_RITES_PO_HDR H
+         LEFT JOIN T91_RAILWAYS R ON H.IMMS_RLY_CD = R.IMMS_RLY_CD
+    WHERE (REGION_CODE = p_region_code OR REGION_CODE IS NULL)
+          AND PO_DT > TO_DATE('2021-03-31', 'yyyy-mm-dd')
+          AND RITES_CASE_NO IS NULL
+          AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+          AND (p_PO_DT IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_PO_DT);
+
+    -- Open cursor for total records
+    OPEN p_result_records FOR
+        SELECT total_records AS total_records FROM DUAL;
+
+    -- Open cursor for paginated results
+    OPEN p_result_cursor FOR
+        SELECT *
+        FROM (
+            SELECT
+                ROWNUM rnum,
+                H.RITES_CASE_NO AS CASE_NO,
+                IMMS_POKEY,
+                PO_NO,
+                TO_CHAR(PO_DT, 'dd/mm/yyyy') AS PO_DT,
+                TO_CHAR(RECV_DATE, 'dd/mm/yyyy') AS RECV_DT,
+                H.IMMS_RLY_CD,
+                H.IMMS_RLY_SHORTNAME,
+                NVL2(R.RLY_CD, R.RLY_CD, H.IMMS_RLY_SHORTNAME) AS RLY_CD,
+                IMMS_VENDOR_NAME || ',' || IMMS_VENDOR_DETAIL AS VEND_NAME,
+                REMARKS,
+                'Vendor/PO/' || PO_NO || '.pdf' AS PO_DOC,
+                IMMS_POI_NAME || '/' || IMMS_POI_DETAIL AS POI,
+                DECODE(REGION_CODE, 'N', 'NORTHERN', 'S', 'SOUTHERN', 'E', 'EASTERN', 'W', 'WESTERN', 'C', 'CENTRAL', 'NA') AS REGION,
+                REGION_CODE
+            FROM
+                IMMS_RITES_PO_HDR H
+                LEFT JOIN T91_RAILWAYS R ON H.IMMS_RLY_CD = R.IMMS_RLY_CD
+            WHERE
+                (REGION_CODE = p_region_code OR REGION_CODE IS NULL)
+                AND PO_DT > TO_DATE('2021-03-31', 'yyyy-mm-dd')
+                AND RITES_CASE_NO IS NULL
+                AND (p_PO_NO IS NULL OR UPPER(TRIM(PO_NO)) LIKE UPPER(TRIM('%' || p_PO_NO || '%')))
+                AND (p_PO_DT IS NULL OR TO_CHAR(PO_DT, 'dd/mm/yyyy') = p_PO_DT)
+            ORDER BY
+                REGION_CODE DESC, H.PO_DT DESC
+        )
+        WHERE rnum BETWEEN p_page_start AND p_page_end
+        ORDER BY rnum ASC;
+
+END;
+/
+create or replace PROCEDURE Get_SP_AdministratorList(
+    p_UserName           IN VARCHAR2,
+    p_UserId           IN VARCHAR2,
+    p_page_start      NUMBER,
+    p_page_end        NUMBER,
+    p_result_cursor   OUT SYS_REFCURSOR,
+    p_result_records  OUT SYS_REFCURSOR
+)
+AS
+    total_records NUMBER;
+
+BEGIN
+    -- Count total records based on filter criteria
+    SELECT COUNT(*) INTO total_records
+    FROM t02_users u
+    WHERE (u.isdeleted = 0 or u.isdeleted is null)
+          AND (p_UserName IS NULL OR UPPER(TRIM(u.user_name)) LIKE UPPER(TRIM('%' || p_UserName || '%')))
+          AND (p_UserId IS NULL OR UPPER(TRIM(u.user_id)) LIKE UPPER(TRIM('%' || p_UserId || '%')));
+
+    -- Open cursor for total records
+    OPEN p_result_records FOR
+        SELECT total_records AS total_records FROM DUAL;
+
+    -- Open cursor for paginated results
+    OPEN p_result_cursor FOR
+        SELECT *
+        FROM (
+            SELECT
+                ROWNUM rnum,
+                u.id ID,
+                u.user_id UserId,
+                u.user_name UserName,
+                u.emp_no EmpNo,
+                u.region Region,
+                u.status Status,
+                u.ALLOW_PO AllowPo,
+                u.ALLOW_DN_CHKSHT AllowDnChksht,
+                u.CALL_MARKING CallMarking,
+                u.CALL_REMARKING CallRemarking,
+                u.USER_TYPE UserType,
+                u.ISDELETED Isdeleted,
+                u.CREATEDDATE Createddate,
+                u.CREATEDBY Createdby,
+                u.UPDATEDDATE Updateddate,
+                u.UPDATEDBY Updatedby,
+--                (
+--                    SELECT r.rolename
+--                    FROM user_master um
+--                    INNER JOIN userroles uu on um.id = uu.user_master_id
+--                    INNER JOIN roles r ON uu.role_id = r.role_id 
+--                    WHERE um.user_type ='USERS' and trim(um.user_id) = trim(u.user_id)
+--                    ORDER BY r.rolename
+--                ) AS RoleName
+                r.rolename
+            FROM t02_users u
+            LEFT JOIN user_master um on um.user_type ='USERS' and trim(um.user_id) = trim(u.user_id)
+            LEFT JOIN userroles uu ON um.id = uu.user_master_id
+            LEFT JOIN roles r ON uu.role_id = r.role_id 
+            WHERE (u.isdeleted = 0 or u.isdeleted is null)
+              AND (p_UserName IS NULL OR UPPER(TRIM(u.user_name)) LIKE UPPER(TRIM('%' || p_UserName || '%')))
+              AND (p_UserId IS NULL OR UPPER(TRIM(u.user_id)) LIKE UPPER(TRIM('%' || p_UserId || '%')))
+                ORDER BY
+                    user_name
+        )
+        WHERE rnum BETWEEN p_page_start AND p_page_end
+        ORDER BY rnum ASC;
+
+END;
+/
+
+
+ALTER TABLE t79_central_qoinsp
+add Grade VARCHAR2(30 BYTE);

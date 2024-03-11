@@ -14,7 +14,7 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="center">Outstanding Railways</h3>
         <ul class="reportLabelList center">
             <li><span class="labelName">@ViewBag.Title</span></li>
@@ -27,14 +27,14 @@
         </ul>
         <table class="borderTable">
             <tr>
-                <th width="2%" valign="top" align="center" rowspan="2"><b><font size='1' face="Verdana">S.No.</font></b></th>
+                <th width="4%" valign="top" align="center" rowspan="2"><b><font size='1' face="Verdana">S.No.</font></b></th>
                 <th width="22%" valign="top" align="center" rowspan="2"><b><font size='1' face="Verdana">Name of Client</font></b></th>
                 <th width="13%" align="center" valign="top"><b><font size='1' face="Verdana">NR</font></b></th>
                 <th width="13%" align="center" valign="top"><b><font size='1' face="Verdana">ER</font></b></th>
                 <th width="13%" align="center" valign="top"><b><font size='1' face="Verdana">WR</font></b></th>
                 <th width="13%" align="center" valign="top"><b><font size='1' face="Verdana">SR</font></b></th>
                 <th width="13%" align="center" valign="top"><b><font size='1' face="Verdana">CR</font></b></th>
-                <th width="11%" valign="top" align="center" rowspan="2"><b><font size='1' face="Verdana">Total</font></b></th>
+                <th width="9%" valign="top" align="center" rowspan="2"><b><font size='1' face="Verdana">Total</font></b></th>
             </tr>
             <tr>
                 <td width="13%" valign="top"><font size="1" face="Verdana"></font>NR Value</td>
@@ -52,16 +52,16 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td width="2%" valign="top"><font size="1" face="Verdana"></font>@Count</td>
-                        <td width="22%" valign="top"><font size="1" face="Verdana"></font>@item.bpo_orgn</td>
-                        <td width="13%" valign="top"><font size="1" face="Verdana"></font>@item.NR</td>
-                        <td width="13%" valign="top"><font size="1" face="Verdana"></font>@item.ER</td>
-                        <td width="13%" valign="top"><font size="1" face="Verdana"></font>@item.WR</td>
-                        <td width="13%" valign="top"><font size="1" face="Verdana"></font>@item.SR</td>
-                        <td width="13%" valign="top"><font size="1" face="Verdana"></font>@item.CR</td>
-                        <td width="11%" valign="top"><font size="1" face="Verdana"></font>@item.Total</td>
+                        <td width="4%" valign="top" align="center"><font size="1" face="Verdana"></font>@Count</td>
+                        <td width="22%" valign="top" align="left"><font size="1" face="Verdana"></font>@item.bpo_orgn</td>
+                        <td width="13%" valign="top" align="left"><font size="1" face="Verdana"></font>@item.NR</td>
+                        <td width="13%" valign="top" align="left"><font size="1" face="Verdana"></font>@item.ER</td>
+                        <td width="13%" valign="top" align="left"><font size="1" face="Verdana"></font>@item.WR</td>
+                        <td width="13%" valign="top" align="left"><font size="1" face="Verdana"></font>@item.SR</td>
+                        <td width="13%" valign="top" align="left"><font size="1" face="Verdana"></font>@item.CR</td>
+                        <td width="9%" valign="top" align="left"><font size="1" face="Verdana"></font>@item.Total</td>
                     </tr>
-                    Count= Count + 1;
+                    Count = Count + 1;
                     t_NR = t_NR + Convert.ToDecimal(item.NR);
                     t_ER = t_ER + Convert.ToDecimal(item.ER);
                     t_WR = t_WR + Convert.ToDecimal(item.WR);

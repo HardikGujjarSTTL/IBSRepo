@@ -1,0 +1,50 @@
+﻿@model IBS.Models.MultipleFileUploadModel
+
+<form method="post" asp-antiforgery="true" data-ajax="true" enctype="multipart/form-data" asp-controller="MultipleFileUpload" data-ajax-complete="completed" asp-action="Index" id="frmMultipleFileUpload">
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2 style="color:#2b368b">Multiple File Upload</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="Reference">Upload</label>
+                <input id="FileUpload" type="file" name="Files" accept="application/pdf" multiple />
+                <span asp-validation-for="Files" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <div id="image-holder"></div>
+            </div>
+        </div>
+        <div class="row my-0">
+            <div class="col-md-6 mb-3">
+                <div class="savenext-btn">
+                    <button id="btnUpload" type="submit" class="save-btn active">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+            completed = function (response) {
+                var res = response.responseJSON;
+                ShowHideMsgNew(res.status, res.responseText);
+                if (res.status) {
+                    setTimeout(function () {
+                        window.location.href = '@Url.Action("Index", "MultipleFileUpload")';
+                    }, 1000)
+                }
+
+            };
+
+    </script>
+}
+

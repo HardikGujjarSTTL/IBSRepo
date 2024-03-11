@@ -2,11 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace IBS.Repositories
 {
@@ -73,11 +69,11 @@ namespace IBS.Repositories
             }
             query = from l in context.Regionalhrdataofies
                     join i in context.T09Ies on l.IeCd equals i.IeCd
-                    where l.Isdeleted == 0 
+                    where l.Isdeleted == 0
                     select new RegionalHRDataOfIEModel
                     {
                         IeCd = l.IeCd,
-                        IE_NAME=i.IeName,
+                        IE_NAME = i.IeName,
                         Disclipline = l.Disclipline,
                         Joiningdate = l.Joiningdate,
                         Postingdate = l.Postingdate,

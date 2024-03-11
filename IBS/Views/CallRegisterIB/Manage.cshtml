@@ -391,7 +391,7 @@
                 $("#btnDelete").hide();
                 $("#CallStatus").val("Marked");
             }
-
+            //FillVendor();
         });
 
         function Save() {
@@ -419,7 +419,7 @@
             }
 
         });
-
+        
         function FillVendor() {
             var MfgCd = $('#MfgCd').val();
             var hdnMfgCd = $("#MfgCd1").val();
@@ -431,7 +431,7 @@
                 url: '@Url.Action("GetVendorDetails", "CallRegisterIB")',
                 type: "GET",
                 dataType: "JSON",
-                data: { "MfgCd": MfgCd, "CaseNo": CaseNo },
+                data: { "MfgCd": 0, "CaseNo": CaseNo },
                 success: function (contacts) {
                     if (contacts.data && contacts.data.length > 0) {
                         $("#MfgCd").val(contacts.data[0].VendCd);

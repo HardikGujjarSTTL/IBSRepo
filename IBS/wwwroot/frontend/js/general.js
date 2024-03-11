@@ -62,7 +62,14 @@ $(document).ready( function(){
 		loop:true,
 		simulateTouch: true,
 		keyboard:true,
-		autoplay:false,					  
+		speed: 1500,
+		effect: 'fade',
+		fadeEffect: {
+			crossFade: true
+		},
+		autoplay: {
+			delay: 2000,
+		},
         navigation: {
         nextEl: " .homeImgSlider-next",
         prevEl: " .homeImgSlider-prev",
@@ -334,8 +341,7 @@ $(document).ready( function(){
 		return false;
 	});
 
-
-	$('a').not(".litebox").filter(function () {
+	$('a').not(".litebox, .galleryBox a").filter(function () {
 		return this.hostname && this.hostname !== location.hostname;
 	}).click(function (e) {
 		e.preventDefault();

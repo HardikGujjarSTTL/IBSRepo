@@ -85,7 +85,7 @@ public partial class T22Bill
 
     public string? BillResentStatus { get; set; }
 
-    public bool? BillResentCount { get; set; }
+    public byte? BillResentCount { get; set; }
 
     public string? IrnNo { get; set; }
 
@@ -126,6 +126,8 @@ public partial class T22Bill
     public decimal? NewInspFee { get; set; }
 
     public decimal? NewBillAmount { get; set; }
+
+    public string? Relativepath { get; set; }
 
     public virtual ICollection<T20Ic> T20Ics { get; set; } = new List<T20Ic>();
 

@@ -260,7 +260,9 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
-            $("#UomCd").val(3);
+            if ($("#UomCd").val() == "") {
+                $("#UomCd").val(6);
+            }
             GetUOMChanged();
             $('#OtChargePer ,#ExcisePer ,#DiscountPer ,#Rate ,#Qty, #SalesTaxPer').on('keyup', function () {
                 var idName = $(this).attr('id');
@@ -382,6 +384,7 @@
         }
         function SearchConsignee() {
             var ConsigneeSearch = $("#ConsigneeSearch").val();
+            var id;
             if (id != null) {
                 ConsigneeSearch = id;
             }

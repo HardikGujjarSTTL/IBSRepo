@@ -15,7 +15,7 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime? CallRecvDt { get; set; }
 
-        public byte? CallInstallNo { get; set; }
+        public int? CallInstallNo { get; set; }
 
         public int? CallSno { get; set; }
 
@@ -68,6 +68,8 @@ namespace IBS.Models
         public string? SetRegionCode { get; set; }
 
         public int MfgCd { get; set; }
+
+        public int MfgCd1 { get; set; }
 
         public string? MfgPlace { get; set; }
 
@@ -228,7 +230,7 @@ namespace IBS.Models
 
         //public string IsFinalizedStatus { get; set; }
         public bool IsFinalizedStatus { get; set; }
-        
+
         public int Isstageinspection { get; set; }
 
         public string? Createdby { get; set; }
@@ -275,14 +277,14 @@ namespace IBS.Models
 
         public string CHKRejCan { get; set; }
 
-        public List<UnInspectedQtylstModel> lstUnInspectedQty { get;set; }
+        public List<UnInspectedQtylstModel> lstUnInspectedQty { get; set; }
 
         public string FrIeName { get; set; }
-        
+
         public string ToIeName { get; set; }
-        
+
         public string UserName { get; set; }
-        
+
         public DateTime? RemInitDatetime { get; set; }
 
     }
@@ -315,7 +317,7 @@ namespace IBS.Models
 
         public string? CallLetterDt { get; set; }
 
-        public byte? CallInstallNo { get; set; }
+        public int? CallInstallNo { get; set; }
 
         public string? OnlineCall { get; set; }
 
@@ -514,6 +516,18 @@ namespace IBS.Models
 
         public bool[] chkItems { get; set; }
 
+        public int IeCd { get; set; }
+
+        public DateTime CallLetterDt { get; set; }
+
+        public string? CanCharges { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? CallStatusDt { get; set; }
+
+        public string CallCancelStatusdrp { get; set; }
+
     }
 
     public class VenderCallStatusModel
@@ -572,7 +586,13 @@ namespace IBS.Models
 
         public string? CallCancelStatus { get; set; }
 
+        public string? CallCancelStatusDesc { get; set; }
+
         public string? CallCancelCharges { get; set; }
+
+        public string? CallCancelChargesStatus { get; set; }
+
+        public decimal? CallCancelAmount { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -605,7 +625,8 @@ namespace IBS.Models
         public string? IeCd { get; set; }
         public int? IssueToIecd { get; set; }
 
-        public string UserId { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
 
         public string? MaterialValue { get; set; }
 
@@ -632,6 +653,10 @@ namespace IBS.Models
         public string? DocBkNo { get; set; }
         [Required(ErrorMessage = "Please Enter Set No.")]
         public string? DocSetNo { get; set; }
+
+        public string? RlyNonrly { get; set; }
+
+        public string? RejectMaterialValue { get; set; }
     }
 
     public class VendrorCallDetailsModel

@@ -30,4 +30,32 @@ public partial class OnlinePayment
     public string? Status { get; set; }
 
     public DateTime? Datetime { get; set; }
+
+    public string? CustEmail { get; set; }
+
+    public string? CustMobile { get; set; }
+
+    public string? MerId { get; set; }
+
+    public DateTimeOffset? MerTxnDate { get; set; }
+
+    public string? MerTxnId { get; set; }
+
+    public string? AtomTxnId { get; set; }
+
+    public string? CustAccNo { get; set; }
+
+    public DateTimeOffset? TxnCompleteDate { get; set; }
+
+    public string? BankTxnId { get; set; }
+
+    public string? BankName { get; set; }
+
+    public string? SubChannel { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? StatusCd { get; set; }
+
+    public string? TokId { get; set; }
 }

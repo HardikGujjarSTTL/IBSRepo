@@ -1,0 +1,235 @@
+﻿@model IBS.Models.MultipleFileUploadModel
+@{
+
+}
+
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Multiple Document List</h2>
+    </div>
+</div>
+<div class="accordion-body">
+    <div class="row my-0">
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Bill No</label>
+                <input type="text" asp-for="BillNO" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Bill Date</label>
+                <input type="text" asp-for="BillDT" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Case No.</label>
+                <input type="text" asp-for="CaseNo" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">BK NO.</label>
+                <input type="text" class="input" asp-for="BKNO" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Set No.</label>
+                <input type="text" class="input" asp-for="SetNo" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Call Date</label>
+                <input type="text" class="datepicker" placeholder="DD/MM/YYYY" asp-for="CallRecvDt" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Call SNo.</label>
+                <input type="text" class="input" asp-for="CallSno" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">PO No.</label>
+                <input type="text" class="input" asp-for="PoNo" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">IC NO.</label>
+                <input type="text" class="input" asp-for="IC_NO" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">IC Date From</label>
+                <input type="text" class="datepicker" placeholder="DD/MM/YYYY" id="IC_DT_From" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">IC Date To</label>
+                <input type="text" class="datepicker" placeholder="DD/MM/YYYY" id="IC_DT_To" maxlength="100" style="text-transform: uppercase;">
+            </div>
+        </div>
+    </div>
+    <div class="row my-0">
+        <div class="col-md-12 mb-4 text-center">
+            <div class="savenext-btn">
+                <button type="button" class="save-btn active" id="btnSearch">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="table-section">
+    <div class="task-listinput">
+        <div class="dash-table">
+            <table id="dtList" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Bill No.</th>
+                        <th>Bill Date</th>
+                        <th>Call Date</th>
+                        <th>Case No.</th>
+                        <th>BK No.</th>
+                        <th>Set No.</th>
+                        <th>PO No.</th>
+                        <th>IC No.</th>
+                        <th>IC Date</th>
+                        <th>Created Date</th>
+                        <th>Document</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $("#btnSearch").click(function () {
+            InitializeDatatable();
+        });
+        
+        function InitializeDatatable() {
+            var CaseNo = $("#CaseNo").val().toUpperCase();
+            var PoNo = $("#PoNo").val();
+            var CallSno = $("#CallSno").val();
+            var BillNO = $("#BillNO").val();
+            var CallRecvDt = $("#CallRecvDt").val();
+            var BillDT = $("#BillDT").val();
+            var IC_NO = $("#IC_NO").val();
+            var BKNO = $("#BKNO").val();
+            var SetNo = $("#SetNo").val();
+            var IC_DT_From = $("#IC_DT_From").val();
+            var IC_DT_To = $("#IC_DT_To").val();
+
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable", "MultipleFileUpload")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "CaseNo": CaseNo,
+                            "PoNo": PoNo,
+                            "CallSno": CallSno,
+                            "BillNO": BillNO,
+                            "CallRecvDt": CallRecvDt,
+                            "BillDT": BillDT,
+                            "IC_NO": IC_NO,
+                            "BKNO": BKNO,
+                            "IC_DT_To": IC_DT_To,
+                            "IC_DT_From": IC_DT_From,
+                            "SetNo": SetNo
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BillNO" },
+                    {
+                        data: "BillDT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "CallRecvDt",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "CaseNo" },
+                    { data: "BKNO" },
+                    { data: "SetNo" },
+                    { data: "PoNo" },
+                    { data: "IC_NO" },
+                    { data: "IC_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "CreatedDate",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: "FileName",
+                        render: function (data, type, row) {
+                            if (type === "display") {
+                                return '<a  href="' + data + '" class="btn" target="_blank"><span class="fa fa-file-pdf-o"></span></a>';
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}

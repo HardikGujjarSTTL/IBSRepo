@@ -13,7 +13,7 @@
     else if (ReportType == "CallMarked") ReportTitle = "Call Marked Period Wise";
 
     //else if (ReportType == "VenInsp") ReportTitle = "Summary of Vendor Wise Inspections";
-   
+
     ViewData["Title"] = ReportTitle;
 }
 
@@ -21,7 +21,7 @@
     <div class="tast-list">
         <h2>@ReportTitle</h2>
     </div>
-   
+
 </div>
 <section>
     <div class="task-listinput">
@@ -30,7 +30,7 @@
                 <div class="row my-0">
                     <div class="col-md-12">
                         <h3 class="heading3">From the Period</h3>
-                    </div>  
+                    </div>
                     <div class="col-md-4 mb-4">
                         <label for="Reference">From</label>
                         <input type="text" id="frmDate" class="input datepicker">
@@ -51,7 +51,7 @@
                 </div>
 
 
-               
+
             </div>
             <div class="task-inner row report2" style="display: none">
                 <!-- Row 1: Radio Buttons -->
@@ -59,54 +59,55 @@
                     <div class="col-md-12">
                         <ul class="radioListForm">
                             <li>
-                            <label class="form-check-label" for="radio1">
-                            <input class="form-check-input" type="radio" name="radioOptions" id="radio1" value="callwise" checked>
-                            CALL DATE WISE
-                        </label></li>
-                        <li>
-                        <label class="form-check-label" for="radio2">
-                        <input class="form-check-input" type="radio" name="radioOptions" id="radio2" value="iewise">
-                            IE WISE
-                        </label>
-                        </li>
-                        <li>
-                        <label class="form-check-label" for="radio3">
-                        <input class="form-check-input" type="radio" name="radioOptions" id="radio3" value="cmwise">
-                            CM WISE
-                        </label>
-                        </li>
+                                <label class="form-check-label" for="radio1">
+                                    <input class="form-check-input" type="radio" name="radioOptions" id="radio1" value="callwise" checked>
+                                    CALL DATE WISE
+                                </label>
+                            </li>
+                            <li>
+                                <label class="form-check-label" for="radio2">
+                                    <input class="form-check-input" type="radio" name="radioOptions" id="radio2" value="iewise">
+                                    IE WISE
+                                </label>
+                            </li>
+                            <li>
+                                <label class="form-check-label" for="radio3">
+                                    <input class="form-check-input" type="radio" name="radioOptions" id="radio3" value="cmwise">
+                                    CM WISE
+                                </label>
+                            </li>
                         </ul>
-                        
-                        
-                        
+
+
+
                     </div>
                 </div>
 
                 <!-- Row 2: Checkboxes -->
                 <div class="row my-0">
                     <div class="col-md-7" id="ddlc">
-                     <ul class="radioListForm">
-                        <li>
-                        <label class="form-check-label" for="nsicCalls">
-                        <input class="form-check-input" type="checkbox" id="nsicCalls">
-                            INCLUDE NSIC CALLS
-                        </label>
-                        </li>
-                        <li>
-                        <label class="form-check-label" for="pendingCalls">
-                        <input class="form-check-input" type="checkbox" id="pendingCalls">
-                            PENDING CALLS ONLY
-                        </label>
-                        </li>
+                        <ul class="radioListForm">
+                            <li>
+                                <label class="form-check-label" for="nsicCalls">
+                                    <input class="form-check-input" type="checkbox" id="nsicCalls">
+                                    INCLUDE NSIC CALLS
+                                </label>
+                            </li>
+                            <li>
+                                <label class="form-check-label" for="pendingCalls">
+                                    <input class="form-check-input" type="checkbox" id="pendingCalls">
+                                    PENDING CALLS ONLY
+                                </label>
+                            </li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Row 3: Status of IE Radio Buttons -->
                 <div class="row my-0">
-                <div class="col-lg-12">
-                <h3 class="heading3">Status of IE :</h3>
-                </div>
+                    <div class="col-lg-12">
+                        <h3 class="heading3">Status of IE :</h3>
+                    </div>
                 </div>
                 <div class="row my-0">
                     <div class="col-md-12">
@@ -118,29 +119,33 @@
                             </li>
                             <li>
                                 <label class="form-check-label" for="radio5">
-                                    <input class="form-check-input" type="radio" name="radioOptions1" id="radio5" value="perticularIe">                        
-                                For Particular IE
+                                    <input class="form-check-input" type="radio" name="radioOptions1" id="radio5" value="perticularIe">
+                                    For Particular IE
                                 </label>
                             </li>
                         </ul>
+                    </div>
+                    <div class="col-md-4 mb-4" id="IElstDiv" style="display:none;">
+                        <label for="Reference">IE</label>
+                        @Html.DropDownListFor(model => model.IE, Common.GetIEname(), "- Select All -"    ,new { id = "IEdropdown" })
+
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="PropertyId">Select Overdue Period (No. Of Days) :</label>
 
                         <input type="number" id="numericField" name="numericField" value="30" min="0" step="1" pattern="[0-9]*" inputmode="numeric" />
                     </div>
-                        <div class="savenext-btn">
+                    <div class="savenext-btn">
                         <button type="button" class="save-btn active" onclick="Submit();">Generate</button>
-                        </div>
                     </div>
+                </div>
 
 
-                    <!-- Row 3: Numeric Field and Generate Button -->
-                    <div class="col-md-2 mb-3" id="Vdd1">
-                      
-                    </div>
+                <!-- Row 3: Numeric Field and Generate Button -->
+                <div class="col-md-2 mb-3" id="Vdd1">
+                </div>
 
-                
+
             </div>
             <div class="task-inner row report3" style="display: none">
                 <div class="row">
@@ -190,7 +195,7 @@
                     </div>
 
 
-                    <table id="table1" class="table-responsive" >
+                    <table id="table1" class="table-responsive">
                         <thead>
                             <tr>
 
@@ -208,25 +213,34 @@
             </div>
             <div class="task-inner row report5" style="display: none">
                 <div class="row my-0">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-4">
+                        <div class="row my-0">
+                        <div class="col-md-12">
                             <label for="Reference">View Calls Marked between the period</label>
+                        </div>
+                            <div class="col-md-3 mb-4">
                             <label for="Reference">From</label>
-                            <input type="text" class=" datepicker"  id="FDate" maxlength="300" />
+                            <input type="text" class=" datepicker" id="FDate" maxlength="300" />
+                            </div>
+                            <div class="col-md-3 mb-4">
                             <label for="Reference">To</label>
                             <input type="text" class=" datepicker" id="TDate" maxlength="300" />
+                            </div>
                         </div>
                         <div>
                             <label>Report to be Sorted on</label>
-                            <br></br>
+
+                        <ul class="radioListForm">
+                        <li>
                             <label for="option1">
                                 <input type="radio" id="vendor" name="options" value="option1" checked> Vendor
                             </label>
-                            <br>
+                           </li>
+                           <li>
                             <label for="option2">
                                 <input type="radio" id="callDate" name="options" value="option2"> Call Date
                             </label>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
                     <div class="savenext-btn">
                         <button type="button" class="save-btn active " onclick="CallMarked();">Search</button>
@@ -245,20 +259,16 @@
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
-            if ('@ReportType' == "IeVendorWise")
-            {
+            if ('@ReportType' == "IeVendorWise") {
                 $(".report1").css("display", "");
             }
-            else if ('@ReportType' == "OverdueCalls") 
-            {
+            else if ('@ReportType' == "OverdueCalls") {
                 $(".report2").css("display", "");
             }
-            else if ('@ReportType' == "ApprovalReport")
-            {
-                $(".report3").css("display","");
+            else if ('@ReportType' == "ApprovalReport") {
+                $(".report3").css("display", "");
             }
-            else if ('@ReportType' == "SpecificPO")
-            {
+            else if ('@ReportType' == "SpecificPO") {
                 $(".report4").css("display", "");
 
                 $('#railwaytypes').change(function () {
@@ -336,10 +346,10 @@
             window.open(url, '_blank');
         }
         completed = function (response) {
-          
+
         }
 
-        function btnSubmit(){
+        function btnSubmit() {
             debugger;
             var ReportType = '@ReportType';
             var frmDate = $("#fromDate").val();
@@ -349,7 +359,7 @@
             window.open(url, '_blank');
         }
 
-        function CallMarked(){
+        function CallMarked() {
 
             var wSortkEy = "";
 
@@ -369,7 +379,7 @@
 
         }
 
-        function show(){
+        function show() {
             var railwaytypes = $("#railwaytypes").val();
             var railwaytypes1 = $("#railwaytypes1").val();
             var podt = $("#podt").val();
@@ -449,6 +459,29 @@
             window.location.href = url;
         });
 
+
+        var radioButtons = document.getElementsByName('radioOptions1');
+        var selectedValue = "";
+        radioButtons.forEach(function (radioButton) {
+
+            radioButton.addEventListener('change', function (event) {
+
+                if (event.target.id === 'radio5' && event.target.checked) {
+                    selectedValue = "p";
+
+                    if (selectedValue == "p") {
+                        $("#IElstDiv").css("display", "block");
+                    }
+
+                } else {
+
+                    selectedValue = event.target.value;
+                }
+
+
+                console.log('Selected Value: ', selectedValue);
+            });
+        });
 
     </script>
     }

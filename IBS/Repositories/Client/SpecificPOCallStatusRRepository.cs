@@ -2,14 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -85,7 +79,7 @@ namespace IBS.Repositories
                         PO_DT = Convert.ToString(row["PO_DT"]),
                         RLY_NONRLY = Convert.ToString(row["RLY_NONRLY"]),
                         RLY_CD = Convert.ToString(row["RLY_CD"]),
-                        
+
                     };
 
                     modelList.Add(model);

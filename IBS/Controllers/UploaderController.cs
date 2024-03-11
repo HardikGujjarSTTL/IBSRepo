@@ -3,15 +3,9 @@ using IBS.Controllers;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
+using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace GSDMWeb.Controllers.Master
 {
@@ -217,8 +211,8 @@ namespace GSDMWeb.Controllers.Master
             d.Add(".jpeg", "FFD8FF");
             d.Add(".jpg", "FFD8FF");
             d.Add(".png", "89504E470D0A1A0A");
-            d.Add(".tif", "492049");
-            d.Add(".tiff", "492049");
+            d.Add(".tif", "49492");
+            d.Add(".tiff", "49492");
             //Documents'
             d.Add(".doc", "D0CF11E0A1B11AE1");
             d.Add(".docx", "504B030414000600");
@@ -443,7 +437,7 @@ namespace GSDMWeb.Controllers.Master
                     bytes = null;
                     return false;
                 }
-                decimal size = Math.Round(((decimal)fileUpload.Length / (decimal)1024), 2);
+                decimal size = Math.Round((fileUpload.Length / (decimal)1024), 2);
                 if (size < 1 || size > FileSize)
                 {
                     //Functions.AlertMessage(this.Page, Constants.GeneralMessages.SupportedImageType);
@@ -462,5 +456,182 @@ namespace GSDMWeb.Controllers.Master
             }
         }
         #endregion
+
+        public IActionResult Manage()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult SaveFile(string FolderName, string DocumentcategoryID, string Documentid)
+        {
+            string result = "";
+            string folderPath = env.WebRootPath + FolderName;
+            string applicationid = "";
+            string otherdocumentname = "";
+            try
+            {
+                if (Directory.Exists(folderPath))
+                {
+                    StringBuilder queryBuilder = new StringBuilder();
+                    string[] fileNames = Directory.GetFiles(folderPath).Select(Path.GetFileName).ToArray();
+                    if (FolderName == "/ReadWriteData/Files/TECH")
+                    {
+                        if (Convert.ToInt32(Documentid) == 11)
+                            fileNames = fileNames.Where(fileName => !fileName.Contains("_")).ToArray();
+                        else
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_")).ToArray();
+                    }
+                    else if (FolderName == "/ReadWriteData/Files/Vendor/DOC")
+                    {
+                        if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 45)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_I")).ToArray();
+                            otherdocumentname = "Inernal Records";
+                        }
+                        else if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 47)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_F")).ToArray();
+                            otherdocumentname = "Firm Certificate(Like RDSO, Approval, Type test etc.)";
+                        }
+                        else if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 48)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_R")).ToArray();
+                            otherdocumentname = "Raw Material/Invoice";
+                        }
+                        else if (Convert.ToInt32(DocumentcategoryID) == 4 && Convert.ToInt32(Documentid) == 49)
+                        {
+                            fileNames = fileNames.Where(fileName => fileName.Contains("_C")).ToArray();
+                            otherdocumentname = "Calibration Records";
+                        }
+                    }
+                    for (int i = 0; i < fileNames.Length; i++)
+                    {
+                        string fileName = fileNames[i];
+                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                        string extension = Path.GetExtension(fileName);
+                        int indexOfHyphen = fileName.IndexOf('-');
+                        if (FolderName == "/ReadWriteData/TESTPLAN")
+                        {
+                            if (indexOfHyphen != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen);
+                            }
+                            otherdocumentname = "Upload TestPlan";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Vendor/PO")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "To get the RITES \'Case No.\' Kindly E-mail a copy of Purchase Order in \'PDF\' format on the Email-Id mentioned above or Upload a scanned copy of Purchase Order in 'PDF\' format from here. Scanned copy should be in Black & White and Low DPI.";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/CONTRACTS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Contract Documents (If Any)";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/CASE_NO")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                        }
+                        else if (FolderName == "/ReadWriteData/CALLS_DOCUMENTS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "CallRegistrationDoc";
+                        }
+                        else if (FolderName == "/ReadWriteData/CALL_CANCELLATION_DOCUMENTS")
+                        {
+                            if (indexOfHyphen != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen);
+                            }
+                            otherdocumentname = "Cancellation Document";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/TECH")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            if (Convert.ToInt32(Documentid) == 12)
+                            {
+                                if (indexOfHyphen1 != -1)
+                                {
+                                    applicationid = fileName.Substring(0, indexOfHyphen1);
+                                    otherdocumentname = "Upload Tech Ref Reply";
+                                }
+                            }
+                            else
+                            {
+                                applicationid = fileNameWithoutExtension;
+                                otherdocumentname = "Upload Tech Ref";
+                            }
+                            
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/VENDOR_CREATION_BASIS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Document on the basis of which vendor/manufacturer is created( IN PDF ONLY)";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Vendor/DOC")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            applicationid = fileName.Substring(0, indexOfHyphen1);
+                            
+                        }
+                        else if (FolderName == "/ReadWriteData/VENDOR/MA")
+                        {
+                            int indexOfHyphen1 = fileName.IndexOf('_');
+                            if (indexOfHyphen1 != -1)
+                            {
+                                applicationid = fileName.Substring(0, indexOfHyphen1);
+                            }
+                            otherdocumentname = "Vendor MA Doc";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/Online_Complaints")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Upload Rejection Memo";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/INVOICE_SUPP_DOCS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Invoice Supporting Documents";
+                        }
+                        else if (FolderName == "/ReadWriteData/Files/INVOICE_SUPP_DOCS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Invoice Supporting Documents";
+                        }
+                        else if (FolderName == "/ReadWriteData/IE/SIGNATURE/FULL")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "IE Full Signature";
+                        }
+                        else if (FolderName == "/ReadWriteData/IE/SIGNATURE/INITIALS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "IE Initials";
+                        }
+                        else if (FolderName == "/ReadWriteData/MASTER_ITEMS_CHECKSHEETS")
+                        {
+                            applicationid = fileNameWithoutExtension;
+                            otherdocumentname = "Checksheet";
+                        }
+                        queryBuilder.AppendLine($"INSERT INTO ibs_appdocument (applicationid,documentcategory,documentid,relativepath,fileid,extension,filedisplayname,isotherdoc,otherdocumentname,isdeleted,latitude,longitude,camera,phototakendate,maker,accuracy,isvideo, thumnailpath,thumnailfileid,thumnailextension,couchdbdocid)" +
+                            $"VALUES('{applicationid}','{DocumentcategoryID}','{Documentid}','{FolderName}','{fileName}','{extension}','{fileNameWithoutExtension}','',{otherdocumentname},null,null,null,null,null,null,null,0,null,null,null,null);");
+                    }
+
+                    result = queryBuilder.ToString();
+                }
+                else
+                {
+                    return Ok("Path not found");
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions if needed
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
     }
 }

@@ -77,6 +77,8 @@ public partial class T12BillPayingOfficer
 
     public DateTime? Updateddate { get; set; }
 
+    public string? Status { get; set; }
+
     public virtual T01Region? BpoRegionNavigation { get; set; }
 
     public virtual ICollection<T14PoBpo> T14PoBpos { get; set; } = new List<T14PoBpo>();

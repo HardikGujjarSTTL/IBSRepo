@@ -3,13 +3,8 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
-using IBS.Repositories.Vendor;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Dynamic;
-using System.Net.NetworkInformation;
 
 namespace IBS.Controllers.Vendor
 {
@@ -114,10 +109,17 @@ namespace IBS.Controllers.Vendor
                     {
                         if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                         {
-                            string UNo = model.CASE_NO + "_" + model.MA_NO;
+                            string myYear, myMonth, myDay;
+
+                            myYear = Convert.ToString(model.MA_DT).Substring(6, 4);
+                            myMonth = Convert.ToString(model.MA_DT).Substring(3, 2);
+                            myDay = Convert.ToString(model.MA_DT).Substring(0, 2);
+                            string mdt = myYear + myMonth + myDay;
+
+                            string UNo = model.CASE_NO + "_" + model.MA_NO + "_" + mdt;
                             int[] DocumentIds = { (int)Enums.DocumentCategory_VendorMADoc.VendorMADoc };
                             List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                            DocumentHelper.SaveFiles(UNo, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorMADocument), env, iDocument, "MADoc", string.Empty, DocumentIds);
+                            DocumentHelper.SaveFiles(model.CASE_NO, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorMADocument), env, iDocument, string.Empty, UNo, DocumentIds);
                         }
                     }
                     return Json(new { success = true, responseText = msg, Status = i });

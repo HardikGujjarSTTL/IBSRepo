@@ -179,6 +179,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="WebService1.asmx" />
     <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -296,6 +297,12 @@
     <Compile Include="Reports\DsInspectionCertificate.designer.cs">
       <DependentUpon>DsInspectionCertificate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\InspectionCertificateNewStage.cs">
+      <DependentUpon>InspectionCertificateNewStage.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Reports\InspectionCertificateNew.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -391,6 +398,10 @@
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
+    <Compile Include="WebService1.asmx.cs">
+      <DependentUpon>WebService1.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -409,6 +420,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reports\InspectionCertificateNewStage.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>InspectionCertificateNewStage.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\InspectionCertificateNew.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>InspectionCertificateNew.cs</LastGenOutput>

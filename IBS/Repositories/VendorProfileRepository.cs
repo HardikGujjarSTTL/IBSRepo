@@ -2,10 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Data;
 
 namespace IBS.Repositories
@@ -25,9 +23,9 @@ namespace IBS.Repositories
                                  where m.VendCd == VendCd
                                  select new VendorModel
                                  {
-                                     VendCd= m.VendCd,
+                                     VendCd = m.VendCd,
                                      VendName = m.VendName,
-                                     VendAdd1 =  m.VendAdd1,
+                                     VendAdd1 = m.VendAdd1,
                                      VendAdd2 = m.VendAdd2,
                                      VendCityCd = m.VendCityCd,
                                      VendApproval = m.VendApproval,
@@ -75,9 +73,16 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
 
+            //OracleParameter[] par = new OracleParameter[4];
+            //par[0] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            //par[1] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            //par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[3] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            //var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 2);
+
             OracleParameter[] par = new OracleParameter[1];
             par[0] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
-
             var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 1);
 
             List<VendorlistModel> model = new List<VendorlistModel>();
@@ -88,6 +93,12 @@ namespace IBS.Repositories
             }
             query = model.AsQueryable();
 
+            //int recordsTotal = 0;
+            //if (ds != null && ds.Tables[1].Rows.Count > 0)
+            //{
+            //    recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            //}
+            //dTResult.recordsTotal = recordsTotal;
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
@@ -98,9 +109,12 @@ namespace IBS.Repositories
                 );
 
             dTResult.recordsFiltered = query.Count();
+            //dTResult.recordsFiltered = recordsTotal;
+
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
 
             dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
@@ -154,7 +168,7 @@ namespace IBS.Repositories
             }
             else
             {
-                if(isSameVendor)
+                if (isSameVendor)
                 {
                     t05Vendors.VendAdd1 = model.VendAdd1;
                     t05Vendors.VendAdd2 = model.VendAdd2;

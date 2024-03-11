@@ -55,6 +55,8 @@ public partial class V22Bill
 
     public string? Consignee { get; set; }
 
+    public string? Relativepath { get; set; }
+
     public string? ConsigneeAdd1 { get; set; }
 
     public string? ConsigneeAdd2 { get; set; }
@@ -81,7 +83,7 @@ public partial class V22Bill
 
     public string? FeeType { get; set; }
 
-    public int? Visits { get; set; }
+    public decimal? Visits { get; set; }
 
     public decimal? FeeRate { get; set; }
 
@@ -147,7 +149,7 @@ public partial class V22Bill
 
     public string? BillResentStatus { get; set; }
 
-    public bool? BillResentCount { get; set; }
+    public byte? BillResentCount { get; set; }
 
     public string? IrfcFunded { get; set; }
 

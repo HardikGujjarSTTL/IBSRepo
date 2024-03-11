@@ -1,9 +1,10 @@
 ﻿using IBS.Filters;
 using IBS.Helper;
-using IBS.Interfaces;
 using IBS.Interfaces.Reports;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
 
 namespace IBS.Controllers.Reports
 {
@@ -12,10 +13,12 @@ namespace IBS.Controllers.Reports
     {
         #region Variables
         private readonly IInspectionBillingDelayRepository inspectionBillingDelayRepository;
+        private readonly IWebHostEnvironment env;
         #endregion
-        public InspectionBillingDelayController(IInspectionBillingDelayRepository _inspectionBillingDelayRepository)
+        public InspectionBillingDelayController(IInspectionBillingDelayRepository _inspectionBillingDelayRepository, IWebHostEnvironment _environment)
         {
             inspectionBillingDelayRepository = _inspectionBillingDelayRepository;
+            env = _environment;
         }
         [Authorization("InspectionBillingDelay", "Index", "view")]
         public IActionResult Index()
@@ -43,7 +46,8 @@ namespace IBS.Controllers.Reports
         }
         public IActionResult Report(bool MonthWise, bool DateWise, string Month, string Year, string FromDate, string ToDate, bool BillDate, bool IEName, bool IcDt, bool FInspDt, bool LFnspDt, bool AllIE, bool PartiIE, string IECD, string ReportTitle)
         {
-            InspectionBillingDelayReportModel model = new() {
+            InspectionBillingDelayReportModel model = new()
+            {
                 MonthWise = MonthWise,
                 DateWise = DateWise,
                 Month = Month,
@@ -93,9 +97,47 @@ namespace IBS.Controllers.Reports
                 IECD = IECD,
                 ReportTitle = ReportTitle,
                 Region = wRegion
-            };            
+            };
             obj.InspBillDelayList = inspectionBillingDelayRepository.Get_Inspection_Billing_Delay(obj, GetUserInfo);
+            GlobalDeclaration.InspBillDelayList = obj;
             return PartialView(obj);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF()
+        {
+            string htmlContent = string.Empty;
+
+
+            InspectionBillingDelayReportModel model = GlobalDeclaration.InspBillDelayList;
+            htmlContent = await this.RenderViewToStringAsync("/Views/InspectionBillingDelay/InspectionBillingDelay.cshtml", model);
+
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
     }
 }
