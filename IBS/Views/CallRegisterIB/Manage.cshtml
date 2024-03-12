@@ -422,15 +422,32 @@
             var dtInspDesireDate = parseDate(DtInspDesire);
             var Delv_dtDate = parseDate(formattedDate);
             
-            if (callMarkDate > dtInspDesireDate) {
-                $("#DtInspDesire").val(CallMarkDt);
-                ShowHideMsgNew(false, "Not less then Expected Date of Inspection/Material Readiness Date.");
-            }
+            // if (callMarkDate > dtInspDesireDate) {
+            //     $("#DtInspDesire").val(CallMarkDt);
+            //     ShowHideMsgNew(false, "Not less then Expected Date of Inspection/Material Readiness Date.");
+            // }
             if (dtInspDesireDate > Delv_dtDate) {
                 $("#DtInspDesire").val(CallMarkDt);
-                ShowHideMsgNew(false, "Not greter then Delevery Date.");
+                ShowHideMsgNew(false, "Not more then Delevery Date PO.");
+            }
+            var CallRecvDt = $("#CallRecvDt").val();
+
+            var futureDate = parseDate(CallRecvDt);
+            futureDate.setDate(futureDate.getDate() + 5);
+            
+            var timeDifference = futureDate.getTime() - parseDate(DtInspDesire).getTime();
+            var daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+            if (daysDifference > 5) {
+                $("#DtInspDesire").val(CallRecvDt);
+                ShowHideMsgNew(false, "Inspection Desired date not less then call registration.");
+            }
+            if (daysDifference < 0) {
+                $("#DtInspDesire").val(CallRecvDt);
+                ShowHideMsgNew(false, "Inspection Desired date may be within 5 days from the call registration.");
             }
         });
+
+        
 
         $("#SearchDetailsM").click(function () {
             FillVendorClick();

@@ -53,7 +53,7 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Qty Ordered</label>
-                    <input type="text" class="input" asp-for="QtyOrdered" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="QtyOrdered" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                     <span asp-validation-for="QtyOrdered" class="text-danger"></span>
                 </div>
             </div>
@@ -62,21 +62,21 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Cumm. Qty off Prev</label>
-                    <input type="text" class="input" asp-for="CumQtyPrevOffered" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="CumQtyPrevOffered" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                     <span asp-validation-for="CumQtyPrevOffered" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Qty Prev Passed</label>
-                    <input type="text" class="input" asp-for="CumQtyPrevPassed" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="CumQtyPrevPassed" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                     <span asp-validation-for="CumQtyPrevPassed" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Reference">Qty Offered Now</label>
-                    <input type="text" class="input" asp-for="QtyToInsp" maxlength="100" style="text-transform: uppercase;">
+                    <input type="text" class="input" asp-for="QtyToInsp" maxlength="100" style="text-transform: uppercase;" onkeypress="return isNumber(event)">
                     <span asp-validation-for="QtyToInsp" class="text-danger"></span>
                 </div>
             </div>
@@ -152,14 +152,24 @@
 
 
 
-            $('#QtyToInsp').on('input', function () {
-                var QtyToInsp = parseFloat($(this).val());
-                var hdnQtyToInsp = $("#hdnQtyToInsp").val();
+            // $('#QtyToInsp').on('input', function () {
+            //     var QtyToInsp = parseFloat($(this).val());
+            //     var hdnQtyToInsp = $("#hdnQtyToInsp").val();
 
-                if (QtyToInsp < hdnQtyToInsp) {
-                    alert("Qty To Inspected Cannot Be Decreased!!!");
-                    $("#QtyToInsp").val(hdnQtyToInsp);
+            //     if (QtyToInsp < hdnQtyToInsp) {
+            //         alert("Qty To Inspected Cannot Be Decreased!!!");
+            //         $("#QtyToInsp").val(hdnQtyToInsp);
+            //     }
+            // });
+
+            $("#QtyToInsp").change(function () {
+                var QtyOrdered = $("#QtyOrdered").val();
+                var QtyToInsp = $("#QtyToInsp").val();
+                if (QtyOrdered < QtyToInsp) {
+                    $("#QtyToInsp").val(0);
+                    ShowHideMsgNew(false, "Qty Offered Now not more then Qty Ordered.");
                 }
+
             });
 
             const urlParams = new URLSearchParams(window.location.search);
