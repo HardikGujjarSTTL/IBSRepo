@@ -6464,3 +6464,103 @@ END SP_GET_DEO_VENDOR_PURCHASE_ORDERS;
 
 ------------------
 
+create or replace PROCEDURE GetConsineeSearchData (
+    p_searchTerm VARCHAR2,
+    p_charType VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    
+    IF p_searchTerm <> '0' THEN
+        IF p_charType = '0' THEN
+        OPEN p_cursor FOR
+            --SELECT CONSIGNEE_CD as Value, CONSIGNEE_CD || '-' || CONSIGNEE AS Text
+            --FROM V06_CONSIGNEE
+            --WHERE UPPER(TRIM(CONSIGNEE)) LIKE TRIM(UPPER(p_searchTerm || '%'))
+            ----OR CONSIGNEE_CD = p_searchTerm
+            --ORDER BY CONSIGNEE;
+            
+            SELECT 
+                A.CONSIGNEE_CD AS Value,
+                A.CONSIGNEE_CD || '-' || 
+                    (NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+                     NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+                     NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+                     NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+                     NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) AS Text
+            FROM 
+                T06_CONSIGNEE A, 
+                T03_CITY B
+            WHERE 
+                A.CONSIGNEE_CITY = B.CITY_CD
+                AND (
+                    UPPER(TRIM(A.CONSIGNEE_CD)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+                    UPPER(TRIM(A.CONSIGNEE_FIRM)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+                    UPPER(TRIM(A.CONSIGNEE_DESIG)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+                    UPPER(TRIM(A.CONSIGNEE_DEPT)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+                    UPPER(TRIM(A.CONSIGNEE_ADD1)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+                    UPPER(TRIM(B.LOCATION)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+                    UPPER(TRIM(B.CITY)) LIKE TRIM(UPPER('%' || p_searchTerm || '%'))
+                )
+            ORDER BY 
+                A.CONSIGNEE_FIRM, A.CONSIGNEE_DESIG, A.CONSIGNEE_DEPT, A.CONSIGNEE_ADD1, B.LOCATION, B.CITY;
+
+  
+        ELSE
+            OPEN p_cursor FOR
+            SELECT CONSIGNEE_CD as Value, CONSIGNEE_CD || '-' || CONSIGNEE AS Text
+            FROM V06_CONSIGNEE
+            WHERE CONSIGNEE_CD = p_searchTerm
+            ORDER BY CONSIGNEE;
+        END IF;
+    END IF;
+END GetConsineeSearchData;
+
+------------------
+create or replace PROCEDURE SP_INSERT_RITES_BILL_DTLS_FROMAPI (
+    P_BILL_NO IN VARCHAR2,
+    P_IC_NO IN VARCHAR2,
+    P_IC_DT IN DATE,
+    P_INVOICENO IN VARCHAR2,
+    P_CO6_NO IN VARCHAR2,
+    P_CO6_DATE IN DATE,
+    P_CO6_STATUS IN VARCHAR2,
+    P_CO6_STATUS_DATE IN DATE,
+    P_PASSED_AMT IN VARCHAR2,
+    P_DEDUCTED_AMT IN VARCHAR2,
+    P_NET_AMT IN VARCHAR2,
+    P_BOOKDATE IN DATE,
+    P_RETURN_REASON IN VARCHAR2,
+    P_RETURN_DATE IN DATE,
+    P_CO7_NO IN VARCHAR2,
+    P_CO7_DATE IN DATE,
+    P_PAYMENT_DT IN DATE,
+    P_BILL_RESENT_COUNT IN VARCHAR2,
+    P_IRFC_FUNDED IN VARCHAR2,
+    P_INVOICE_SUPP_DOCS IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+)
+AS
+    v_OID NUMBER;
+BEGIN
+    INSERT INTO RITES_BILL_DTLS (
+        BILL_NO, IC_NO, IC_DT, INVOICENO, CO6_NO, CO6_DATE,
+        CO6_STATUS, CO6_STATUS_DATE, PASSED_AMT, DEDUCTED_AMT,
+        NET_AMT, BOOKDATE, RETURN_REASON, RETURN_DATE, CO7_NO,
+        CO7_DATE, PAYMENT_DT, BILL_RESENT_COUNT, IRFC_FUNDED,
+        INVOICE_SUPP_DOCS
+    )
+    VALUES (
+        P_BILL_NO, P_IC_NO, P_IC_DT, P_INVOICENO, P_CO6_NO, P_CO6_DATE,
+        P_CO6_STATUS, P_CO6_STATUS_DATE, P_PASSED_AMT, P_DEDUCTED_AMT,
+        P_NET_AMT, P_BOOKDATE, P_RETURN_REASON, P_RETURN_DATE, P_CO7_NO,
+        P_CO7_DATE, P_PAYMENT_DT, P_BILL_RESENT_COUNT, P_IRFC_FUNDED,
+        P_INVOICE_SUPP_DOCS
+    );
+
+    OPEN p_Result FOR
+    SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = P_BILL_NO AND ROWNUM = 1;
+END;
+
+------------
