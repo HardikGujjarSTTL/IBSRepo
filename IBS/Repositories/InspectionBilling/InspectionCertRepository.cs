@@ -2570,10 +2570,21 @@ namespace IBS.Repositories.InspectionBilling
                         model.QtyOrdered = CDetails.c.QtyOrdered;
                         model.ItemSrnoPo = CDetails.c.ItemSrnoPo;
                         model.ItemDescPo = CDetails.c.ItemDescPo;
-                        model.QtyToInsp = (CDetails.intermediate.QtyToInsp != 0) ? CDetails.intermediate.QtyToInsp : CDetails.c.QtyToInsp;
-                        model.QtyPassed = (CDetails.intermediate.QtyPassed != 0) ? CDetails.intermediate.QtyPassed : CDetails.c.QtyPassed;
-                        model.QtyRejected = (CDetails.intermediate.QtyRejected != 0) ? CDetails.intermediate.QtyRejected : CDetails.c.QtyRejected;
-                        model.QtyDue = (CDetails.intermediate.QtyDue != 0) ? CDetails.intermediate.QtyDue : CDetails.c.QtyDue;
+                        if(CDetails.intermediate != null)
+                        {
+                            model.QtyToInsp = (CDetails.intermediate.QtyToInsp != 0) ? CDetails.intermediate.QtyToInsp : CDetails.c.QtyToInsp;
+                            model.QtyPassed = (CDetails.intermediate.QtyPassed != 0) ? CDetails.intermediate.QtyPassed : CDetails.c.QtyPassed;
+                            model.QtyRejected = (CDetails.intermediate.QtyRejected != 0) ? CDetails.intermediate.QtyRejected : CDetails.c.QtyRejected;
+                            model.QtyDue = (CDetails.intermediate.QtyDue != 0) ? CDetails.intermediate.QtyDue : CDetails.c.QtyDue;
+                        }
+                        else
+                        {
+                            model.QtyToInsp = CDetails.c.QtyToInsp;
+                            model.QtyPassed = CDetails.c.QtyPassed;
+                            model.QtyRejected = CDetails.c.QtyRejected;
+                            model.QtyDue = CDetails.c.QtyDue;
+                        }
+                        
                         //model.QtyToInsp = CDetails.c.QtyToInsp;
                         //model.QtyPassed = CDetails.c.QtyPassed;
                         //model.QtyRejected = CDetails.c.QtyRejected;
