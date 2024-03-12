@@ -6152,21 +6152,123 @@ END;
 
 -----------------
 
-create or replace PROCEDURE SP_INSERT_MMP_POMA_HDR_FROMAPI (
+CREATE OR REPLACE PROCEDURE SP_INSERT_MMP_POMA_HDR_FROMAPI (
     P_RLY IN VARCHAR2,
     P_MAKEY IN VARCHAR2,
+    P_MAKEY_DATE IN DATE,
+    P_POKEY IN VARCHAR2,
+    P_PO_NO IN VARCHAR2,
+    P_MA_NO IN VARCHAR2,
+    P_MA_DATE IN DATE,
+    P_MA_TYPE IN VARCHAR2,
+    P_VCODE IN VARCHAR2,
+    P_SUBJECT IN VARCHAR2,
+    P_REF_NO IN VARCHAR2,
+    P_REF_DATE IN DATE,
+    P_REMARKS IN VARCHAR2,
+    P_MA_SIGN_OFF IN VARCHAR2,
+    P_REQUEST_ID IN VARCHAR2,
+    P_AUTH_SEQ IN VARCHAR2,
+    P_AUTH_SEQ_FIN IN VARCHAR2,
+    P_CURUSER IN VARCHAR2,
+    P_CURUSER_IND IN VARCHAR2,
+    P_SIGN_ID IN VARCHAR2,
+    P_REQ_ID IN VARCHAR2,
+    P_FIN_STATUS IN VARCHAR2,
+    P_REC_IND IN VARCHAR2,
+    P_FLAG IN VARCHAR2,
+    P_STATUS IN VARCHAR2,
+    P_PUR_DIV IN VARCHAR2,
+    P_PUR_SEC IN VARCHAR2,
+    P_OLD_PO_VALUE IN VARCHAR2,
+    P_NEW_PO_VALUE IN VARCHAR2,
+    P_PO_MA_SRNO IN VARCHAR2,
+    P_PUBLISH_FLAG IN VARCHAR2,
+    P_SENT4VET IN VARCHAR2,
+    P_VET_DATE IN DATE,
+    P_VET_BY IN VARCHAR2,
+    P_REQ_FLAG IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
 )
 AS
     v_PoId NUMBER;
 BEGIN
-
-    INSERT INTO MMP_POMA_HDR ( RLY, MAKEY)
-    VALUES (P_RLY, P_MAKEY);
+    INSERT INTO MMP_POMA_HDR (
+        RLY,
+        MAKEY,
+        MAKEY_DATE,
+        POKEY,
+        PO_NO,
+        MA_NO,
+        MA_DATE,
+        MA_TYPE,
+        VCODE,
+        SUBJECT,
+        REF_NO,
+        REF_DATE,
+        REMARKS,
+        MA_SIGN_OFF,
+        REQUEST_ID,
+        AUTH_SEQ,
+        AUTH_SEQ_FIN,
+        CURUSER,
+        CURUSER_IND,
+        SIGN_ID,
+        REQ_ID,
+        FIN_STATUS,
+        REC_IND,
+        FLAG,
+        STATUS,
+        PUR_DIV,
+        PUR_SEC,
+        OLD_PO_VALUE,
+        NEW_PO_VALUE,
+        PO_MA_SRNO,
+        PUBLISH_FLAG,
+        SENT4VET,
+        VET_DATE,
+        VET_BY
+    ) VALUES (
+        P_RLY,
+        P_MAKEY,
+        P_MAKEY_DATE,
+        P_POKEY,
+        P_PO_NO,
+        P_MA_NO,
+        P_MA_DATE,
+        P_MA_TYPE,
+        P_VCODE,
+        P_SUBJECT,
+        P_REF_NO,
+        P_REF_DATE,
+        P_REMARKS,
+        P_MA_SIGN_OFF,
+        P_REQUEST_ID,
+        P_AUTH_SEQ,
+        P_AUTH_SEQ_FIN,
+        P_CURUSER,
+        P_CURUSER_IND,
+        P_SIGN_ID,
+        P_REQ_ID,
+        P_FIN_STATUS,
+        P_REC_IND,
+        P_FLAG,
+        P_STATUS,
+        P_PUR_DIV,
+        P_PUR_SEC,
+        P_OLD_PO_VALUE,
+        P_NEW_PO_VALUE,
+        P_PO_MA_SRNO,
+        P_PUBLISH_FLAG,
+        P_SENT4VET,
+        P_VET_DATE,
+        P_VET_BY
+    );
 
     OPEN p_Result FOR
-    SELECT P_RLY FROM MMP_POMA_HDR WHERE RLY = P_RLY AND MAKEY = P_MAKEY AND ROWNUM = 1;
+    SELECT RLY FROM MMP_POMA_HDR WHERE RLY = P_RLY AND MAKEY = P_MAKEY AND ROWNUM = 1;
 END;
+
 
 -------------------
 create or replace PROCEDURE SP_INSERT_MMP_POMA_HDR_DETAIL_FROMAPI (

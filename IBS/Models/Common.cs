@@ -2511,12 +2511,12 @@ namespace IBS.Models
             dropList = (from a in ModelContext.T06Consignees
                         join city in ModelContext.T03Cities on a.ConsigneeCity equals city.CityCd
                         where (string.IsNullOrEmpty(consignee) ||
-                               a.ConsigneeFirm.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
-                               a.ConsigneeDesig.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
-                               a.ConsigneeDept.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+                               a.ConsigneeFirm.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
+                               a.ConsigneeDesig.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
+                               a.ConsigneeDept.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
                                a.ConsigneeCd.ToString() == consignee ||
-                               city.Location.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
-                               city.City.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()))
+                               city.Location.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
+                               city.City.Trim().ToUpper().Contains(consignee.Trim().ToUpper()))
                                && a.Status == null
                         orderby a.ConsigneeFirm, a.ConsigneeDesig, a.ConsigneeDept, city.Location, city.City
                         select new SelectListItem
@@ -3360,12 +3360,12 @@ namespace IBS.Models
                 objdata = (from bpo in context.T12BillPayingOfficers
                            join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
                            where (
-                               bpo.BpoName.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
-                               bpo.BpoRly.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
-                               bpo.BpoAdd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
+                               bpo.BpoName.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
+                               bpo.BpoRly.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
+                               bpo.BpoAdd.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
                                bpo.BpoCd.ToString() == SBPO ||
-                               city.Location.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
-                               city.City.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()))
+                               city.Location.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
+                               city.City.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()))
                               && bpo.Status == null
                            orderby bpo.BpoName, bpo.BpoRly, bpo.BpoAdd, city.Location, city.City
                            select new SelectListItem
@@ -3659,12 +3659,12 @@ namespace IBS.Models
                 objdata = (from a in context.T06Consignees
                            join city in context.T03Cities on a.ConsigneeCity equals city.CityCd
                            where (string.IsNullOrEmpty(ConsigneeSearch) ||
-                                  a.ConsigneeFirm.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
-                                  a.ConsigneeDesig.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
-                                  a.ConsigneeDept.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
+                                  a.ConsigneeFirm.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
+                                  a.ConsigneeDesig.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
+                                  a.ConsigneeDept.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
                                   a.ConsigneeCd.ToString() == ConsigneeSearch ||
-                                  city.Location.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
-                                  city.City.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()))
+                                  city.Location.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
+                                  city.City.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()))
                                   && a.Status == null
                            orderby a.ConsigneeFirm, a.ConsigneeDesig, a.ConsigneeDept, city.Location, city.City
                            select new SelectListItem

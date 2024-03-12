@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IBSAPI", "..\IBSAPI\IBSAPI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBSReports", "..\IBSReport\IBSReports.csproj", "{CE065484-D42C-4C07-A2F9-545312C8CB5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBSWindowsService", "..\IBSWindowsService\IBSWindowsService.csproj", "{C52A8CF8-0FA8-437E-9A9D-A98081F48D02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CE065484-D42C-4C07-A2F9-545312C8CB5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE065484-D42C-4C07-A2F9-545312C8CB5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE065484-D42C-4C07-A2F9-545312C8CB5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C52A8CF8-0FA8-437E-9A9D-A98081F48D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C52A8CF8-0FA8-437E-9A9D-A98081F48D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C52A8CF8-0FA8-437E-9A9D-A98081F48D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C52A8CF8-0FA8-437E-9A9D-A98081F48D02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
