@@ -272,7 +272,7 @@ namespace IBS.Repositories.IE
                 RecCount = Convert.ToInt32(deserializedData.Count);
             }
 
-            if (VendCount > 3 || RecCount > 5)
+            if (VendCount > 3 && RecCount > 5)
             {
                 ID = 0;
             }
