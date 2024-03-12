@@ -2497,16 +2497,36 @@ namespace IBS.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
             List<SelectListItem> dropList = new List<SelectListItem>();
-            dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
-                        a.ConsigneeCd.ToString() == consignee.ToString() && a.Status == null
-                        orderby a.Consignee
-                        select
-                   new SelectListItem
-                   {
-                       Text = Convert.ToString(a.ConsigneeCd + "-" + a.Consignee),
-                       Value = Convert.ToString(a.ConsigneeCd)
-                   }).ToList();
+            //dropList = (from a in ModelContext.V06Consignees
+            //            where (a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+            //            a.ConsigneeCd.ToString() == consignee.ToString()) && a.Status == null
+            //            orderby a.Consignee
+            //            select
+            //       new SelectListItem
+            //       {
+            //           Text = Convert.ToString(a.ConsigneeCd + "-" + a.Consignee),
+            //           Value = Convert.ToString(a.ConsigneeCd)
+            //       }).ToList();
+
+            dropList = (from a in ModelContext.T06Consignees
+                        join city in ModelContext.T03Cities on a.ConsigneeCity equals city.CityCd
+                        where (string.IsNullOrEmpty(consignee) ||
+                               a.ConsigneeFirm.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+                               a.ConsigneeDesig.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+                               a.ConsigneeDept.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+                               a.ConsigneeCd.ToString() == consignee ||
+                               city.Location.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+                               city.City.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()))
+                               && a.Status == null
+                        orderby a.ConsigneeFirm, a.ConsigneeDesig, a.ConsigneeDept, city.Location, city.City
+                        select new SelectListItem
+                        {
+                            Value = Convert.ToString(a.ConsigneeCd),
+                            Text = $"{a.ConsigneeCd}-{a.ConsigneeFirm}{(string.IsNullOrEmpty(a.ConsigneeDesig) ? "" : $"/{a.ConsigneeDesig}")}{(string.IsNullOrEmpty(a.ConsigneeDept) ? "" : $"/{a.ConsigneeDept}")}/{city.Location}/{city.City}"
+
+                        }).ToList();
+
+
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
@@ -2642,7 +2662,7 @@ namespace IBS.Models
                             && (v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
                             || v.VendAdd1.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
                             || c.Location.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                            || c.City.Trim().ToUpper().StartsWith(VENDOR.ToUpper() ))
+                            || c.City.Trim().ToUpper().StartsWith(VENDOR.ToUpper()))
                             orderby v.VendName
                             select
                        new SelectListItem
@@ -3317,28 +3337,43 @@ namespace IBS.Models
             List<SelectListItem> objdata = new List<SelectListItem>();
             if (SBPO != null && SBPO != "")
             {
-                List<SelectListItem> model = new();
-                OracleParameter[] par = new OracleParameter[2];
-                par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, SBPO, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                var ds = DataAccessDB.GetDataSet("GetBPOData", par, 1);
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                }
+                //List<SelectListItem> model = new();
+                //OracleParameter[] par = new OracleParameter[2];
+                //par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, SBPO, ParameterDirection.Input);
+                //par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                //var ds = DataAccessDB.GetDataSet("GetBPOData", par, 1);
+                //if (ds != null && ds.Tables.Count > 0)
+                //{
+                //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                //    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                //}
 
-                //var obj = (from of in context.V12BillPayingOfficers
-                //             where SqlMethods.Like(of.Bpo.ToUpper().Trim(), SBPO + "%") ||
-                //                    of.BpoCd == SBPO.Trim()
-                //             select of).ToList();
-                objdata = (from a in model
-                           select
-                      new SelectListItem
-                      {
-                          Text = a.Text,
-                          Value = a.Value
-                      }).ToList();
+
+                //objdata = (from a in model
+                //           select
+                //      new SelectListItem
+                //      {
+                //          Text = a.Text,
+                //          Value = a.Value
+                //      }).ToList();
+
+                objdata = (from bpo in context.T12BillPayingOfficers
+                           join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                           where (
+                               bpo.BpoName.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
+                               bpo.BpoRly.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
+                               bpo.BpoAdd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
+                               bpo.BpoCd.ToString() == SBPO ||
+                               city.Location.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) ||
+                               city.City.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()))
+                              && bpo.Status == null
+                           orderby bpo.BpoName, bpo.BpoRly, bpo.BpoAdd, city.Location, city.City
+                           select new SelectListItem
+                           {
+                               Value = Convert.ToString(bpo.BpoCd),
+                               Text = $"{bpo.BpoCd}-{bpo.BpoName}/{bpo.BpoRly}/{bpo.BpoAdd}/{city.Location}/{city.City}"
+                           }).ToList();
+
 
 
                 //var obj = (from of in context.V12BillPayingOfficers
@@ -3598,29 +3633,48 @@ namespace IBS.Models
             List<SelectListItem> objdata = new List<SelectListItem>();
             if (ConsigneeSearch != null && ConsigneeSearch != "")
             {
-                //ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
                 //var obj = (from of in context.V06Consignees
                 //           where of.Consignee.Trim().ToUpper().StartsWith(ConsigneeSearch.ToUpper())
                 //           select of).ToList();
 
-                List<SelectListItem> model = new();
-                OracleParameter[] par = new OracleParameter[2];
-                par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                var ds = DataAccessDB.GetDataSet("GetConsigneeData", par, 1);
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                }
+                //List<SelectListItem> model = new();
+                //OracleParameter[] par = new OracleParameter[2];
+                //par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
+                //par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                //var ds = DataAccessDB.GetDataSet("GetConsigneeData", par, 1);
+                //if (ds != null && ds.Tables.Count > 0)
+                //{
+                //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                //    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                //}
+                //objdata = (from a in model
+                //           select
+                //      new SelectListItem
+                //      {
+                //          Text = a.Text,
+                //          Value = a.Value
+                //      }).ToList();
 
-                objdata = (from a in model
-                           select
-                      new SelectListItem
-                      {
-                          Text = a.Text,
-                          Value = a.Value
-                      }).ToList();
+                objdata = (from a in context.T06Consignees
+                           join city in context.T03Cities on a.ConsigneeCity equals city.CityCd
+                           where (string.IsNullOrEmpty(ConsigneeSearch) ||
+                                  a.ConsigneeFirm.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
+                                  a.ConsigneeDesig.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
+                                  a.ConsigneeDept.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
+                                  a.ConsigneeCd.ToString() == ConsigneeSearch ||
+                                  city.Location.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()) ||
+                                  city.City.Trim().ToUpper().StartsWith(ConsigneeSearch.Trim().ToUpper()))
+                                  && a.Status == null
+                           orderby a.ConsigneeFirm, a.ConsigneeDesig, a.ConsigneeDept, city.Location, city.City
+                           select new SelectListItem
+                           {
+                               Value = Convert.ToString(a.ConsigneeCd),
+                               Text = $"{a.ConsigneeCd}-{a.ConsigneeFirm}{(string.IsNullOrEmpty(a.ConsigneeDesig) ? "" : $"/{a.ConsigneeDesig}")}{(string.IsNullOrEmpty(a.ConsigneeDept) ? "" : $"/{a.ConsigneeDept}")}/{city.Location}/{city.City}"
+
+                           }).ToList();
+
+
             }
             return objdata;
         }
@@ -5205,7 +5259,7 @@ namespace IBS.Models
                        select new SelectListItem
                        {
                            Value = c.Id.ToString(),
-                           Text = c.Status                           
+                           Text = c.Status
                        }).ToList();
             //obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
             return obj;
@@ -5227,7 +5281,7 @@ namespace IBS.Models
         {
             List<SelectListItem> textValueDropDownStaff = new List<SelectListItem>() {
                 new SelectListItem() { Text = "Technical", Value = "T" },
-                new SelectListItem() { Text = "Non Technical", Value = "N" },                
+                new SelectListItem() { Text = "Non Technical", Value = "N" },
             };
             return textValueDropDownStaff.ToList();
         }
