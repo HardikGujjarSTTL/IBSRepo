@@ -8,16 +8,7 @@ using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using Newtonsoft.Json;
 using System.Globalization;
-using IBS.Controllers;
-using Humanizer.Localisation;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Linq;
-using System.Collections.Generic;
-using static IBS.Helper.Enums;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Security.Principal;
-using DocumentFormat.OpenXml.InkML;
 using QRCoder;
 using System.Drawing;
 
@@ -3358,36 +3349,6 @@ namespace IBS.Models
                           Text = a.Text,
                           Value = a.Value
                       }).ToList();
-
-                //objdata = (from bpo in context.T12BillPayingOfficers
-                //           join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
-                //           where (
-                //               bpo.BpoName.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                //               bpo.BpoRly.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                //               bpo.BpoAdd.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                //               bpo.BpoCd.ToString() == SBPO ||
-                //               city.Location.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                //               city.City.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()))
-                //              && bpo.Status == null
-                //           orderby bpo.BpoName, bpo.BpoRly, bpo.BpoAdd, city.Location, city.City
-                //           select new SelectListItem
-                //           {
-                //               Value = Convert.ToString(bpo.BpoCd),
-                //               Text = $"{bpo.BpoCd}-{bpo.BpoName}/{bpo.BpoRly}/{bpo.BpoAdd}/{city.Location}/{city.City}"
-                //           }).ToList();
-
-
-
-                //var obj = (from of in context.V12BillPayingOfficers
-                //           where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
-                //           select of).ToList();
-                //objdata = (from a in obj
-                //           select
-                //      new SelectListItem
-                //      {
-                //          Text = a.BpoCd + "-" + a.Bpo,
-                //          Value = a.BpoCd
-                //      }).ToList();
             }
             return objdata;
         }
@@ -3636,28 +3597,6 @@ namespace IBS.Models
             if (ConsigneeSearch != null && ConsigneeSearch != "")
             {
                 ModelContext context = new(DbContextHelper.GetDbContextOptions());
-                //var obj = (from of in context.V06Consignees
-                //           where of.Consignee.Trim().ToUpper().StartsWith(ConsigneeSearch.ToUpper())
-                //           select of).ToList();
-
-                //List<SelectListItem> model = new();
-                //OracleParameter[] par = new OracleParameter[2];
-                //par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
-                //par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                //var ds = DataAccessDB.GetDataSet("GetConsigneeData", par, 1);
-                //if (ds != null && ds.Tables.Count > 0)
-                //{
-                //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                //    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                //}
-                //objdata = (from a in model
-                //           select
-                //      new SelectListItem
-                //      {
-                //          Text = a.Text,
-                //          Value = a.Value
-                //      }).ToList();
-
                 OracleParameter[] par = new OracleParameter[2];
                 par[0] = new OracleParameter("P_consignee", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
