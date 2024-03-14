@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Bills API";
+}
+
+<div>
+    <div class="list-inner">
+        <div class="tast-list">
+            <h2>Bills API For Get Data And Insert</h2>
+        </div>
+    </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-3 mb-3">
+                <label for="reference">From Date</label>
+                <input type="text" class="input datepicker" id="txtFromDate" placeholder="DD/MM/YYYY">
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">To Date</label>
+                <input type="text" class="input datepicker" id="txtToDate" placeholder="DD/MM/YYYY">
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="GetPassedBills();">Get Passed Bills</button>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="GetAllBills();">Get All Bills</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        function GetPassedBills() {
+            var txtFromDate = $("#txtFromDate").val();
+            var txtToDate = $("#txtToDate").val();
+            if (txtFromDate == "" || txtToDate == "") {
+                ShowHideMsgNew(false, "Please Select Dates");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetPassedBills", "BillsAPI")?FromDate=' + txtFromDate + '&ToDate=' + txtToDate,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+
+        function GetAllBills() {
+            var txtFromDate = $("#txtFromDate").val();
+            var txtToDate = $("#txtToDate").val();
+            if (txtFromDate == "" || txtToDate == "") {
+                ShowHideMsgNew(false, "Please Select Dates");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetAllBills", "BillsAPI")?FromDate=' + txtFromDate + '&ToDate=' + txtToDate,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+                else {
+                    ShowHideMsgNew(response.status, response.responseText);
+                }
+            });
+        }
+    </script>
+}

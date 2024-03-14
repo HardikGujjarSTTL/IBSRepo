@@ -1347,7 +1347,7 @@ BEGIN
 END;
 
 
-CREATE OR REPLACE PROCEDURE "GET_VENDOR_DETAILSFORDROPDOWN" (
+CREATE OR REPLACE PROCEDURE GET_VENDOR_DETAILSForDropDown (
     p_vend_cd IN VARCHAR2,
     p_result_cursor OUT SYS_REFCURSOR
 )
@@ -1359,9 +1359,14 @@ BEGIN
     FROM T05_VENDOR V
     JOIN T03_CITY C ON V.VEND_CITY_CD = C.CITY_CD
     WHERE V.VEND_NAME IS NOT NULL
-    AND (TRIM(V.VEND_CD) = p_vend_cd OR p_vend_cd IS NULL)
-    ORDER BY VEND_NAME;
+    AND (
+        TRIM(V.VEND_CD) = p_vend_cd OR 
+        (V.VEND_NAME is not null and trim(upper(V.VEND_NAME)) LIKE upper(p_vend_cd || '%') 
+        and V.VEND_CITY_CD = C.CITY_CD) 
+    )
+    ORDER BY V.VEND_NAME;
 END;
+
 /
 
 
@@ -6475,36 +6480,36 @@ BEGIN
     IF p_searchTerm <> '0' THEN
         IF p_charType = '0' THEN
         OPEN p_cursor FOR
-            --SELECT CONSIGNEE_CD as Value, CONSIGNEE_CD || '-' || CONSIGNEE AS Text
-            --FROM V06_CONSIGNEE
-            --WHERE UPPER(TRIM(CONSIGNEE)) LIKE TRIM(UPPER(p_searchTerm || '%'))
+            SELECT CONSIGNEE_CD as Value, CONSIGNEE_CD || '-' || CONSIGNEE AS Text
+            FROM V06_CONSIGNEE
+            WHERE UPPER(TRIM(CONSIGNEE)) LIKE TRIM(UPPER(p_searchTerm || '%'))
             ----OR CONSIGNEE_CD = p_searchTerm
-            --ORDER BY CONSIGNEE;
+            ORDER BY CONSIGNEE;
             
-            SELECT 
-                A.CONSIGNEE_CD AS Value,
-                A.CONSIGNEE_CD || '-' || 
-                    (NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
-                     NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
-                     NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
-                     NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
-                     NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) AS Text
-            FROM 
-                T06_CONSIGNEE A, 
-                T03_CITY B
-            WHERE 
-                A.CONSIGNEE_CITY = B.CITY_CD
-                AND (
-                    UPPER(TRIM(A.CONSIGNEE_CD)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
-                    UPPER(TRIM(A.CONSIGNEE_FIRM)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
-                    UPPER(TRIM(A.CONSIGNEE_DESIG)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
-                    UPPER(TRIM(A.CONSIGNEE_DEPT)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
-                    UPPER(TRIM(A.CONSIGNEE_ADD1)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
-                    UPPER(TRIM(B.LOCATION)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
-                    UPPER(TRIM(B.CITY)) LIKE TRIM(UPPER('%' || p_searchTerm || '%'))
-                )
-            ORDER BY 
-                A.CONSIGNEE_FIRM, A.CONSIGNEE_DESIG, A.CONSIGNEE_DEPT, A.CONSIGNEE_ADD1, B.LOCATION, B.CITY;
+            --SELECT 
+--                A.CONSIGNEE_CD AS Value,
+--                A.CONSIGNEE_CD || '-' || 
+--                    (NVL2(TRIM(A.CONSIGNEE_FIRM), TRIM(A.CONSIGNEE_FIRM) || '/', '') ||
+--                     NVL2(TRIM(A.CONSIGNEE_DESIG), TRIM(A.CONSIGNEE_DESIG) || '/', '') ||
+--                     NVL2(TRIM(A.CONSIGNEE_DEPT), TRIM(A.CONSIGNEE_DEPT) || '/', '') ||
+--                     NVL2(TRIM(A.CONSIGNEE_ADD1), TRIM(A.CONSIGNEE_ADD1) || '/', '') ||
+--                     NVL2(TRIM(B.LOCATION), TRIM(B.LOCATION) || ' : ' || TRIM(B.CITY), TRIM(B.CITY))) AS Text
+--            FROM 
+--                T06_CONSIGNEE A, 
+--                T03_CITY B
+--            WHERE 
+--                A.CONSIGNEE_CITY = B.CITY_CD
+--                AND (
+--                    UPPER(TRIM(A.CONSIGNEE_CD)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+--                    UPPER(TRIM(A.CONSIGNEE_FIRM)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+--                    UPPER(TRIM(A.CONSIGNEE_DESIG)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+--                    UPPER(TRIM(A.CONSIGNEE_DEPT)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+--                    UPPER(TRIM(A.CONSIGNEE_ADD1)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+--                    UPPER(TRIM(B.LOCATION)) LIKE TRIM(UPPER('%' || p_searchTerm || '%')) OR
+--                    UPPER(TRIM(B.CITY)) LIKE TRIM(UPPER('%' || p_searchTerm || '%'))
+--                )
+--            ORDER BY 
+--                A.CONSIGNEE_FIRM, A.CONSIGNEE_DESIG, A.CONSIGNEE_DEPT, A.CONSIGNEE_ADD1, B.LOCATION, B.CITY;
 
   
         ELSE
@@ -6564,3 +6569,110 @@ BEGIN
 END;
 
 ------------
+create or replace PROCEDURE SP_INSERT_Get_Passed_Bills_FROMAPI (
+    P_BILL_NO IN VARCHAR2,
+    P_IC_NO IN VARCHAR2,
+    P_IC_DT IN DATE,
+    P_INVOICENO IN VARCHAR2,
+    P_CO6_NO IN VARCHAR2,
+    P_CO6_DATE IN DATE,
+    P_CO6_STATUS IN VARCHAR2,
+    P_CO6_STATUS_DATE IN DATE,
+    P_PASSED_AMT IN VARCHAR2,
+    P_DEDUCTED_AMT IN VARCHAR2,
+    P_NET_AMT IN VARCHAR2,
+    P_BOOKDATE IN DATE,
+    P_RETURN_REASON IN VARCHAR2,
+    P_RETURN_DATE IN DATE,
+    P_CO7_NO IN VARCHAR2,
+    P_CO7_DATE IN DATE,
+    P_PAYMENT_DT IN DATE,
+    P_BILL_RESENT_COUNT IN VARCHAR2,
+    P_IRFC_FUNDED IN VARCHAR2,
+    P_INVOICE_SUPP_DOCS IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+    v_OID NUMBER;
+BEGIN
+    INSERT INTO RITES_BILL_DTLS (
+        bill_no, ic_no, ic_dt, invoiceno, co6_no, co6_date,
+        co6_status, co6_status_date, passed_amt, deducted_amt,
+        net_amt, bookdate, return_reason, return_date, co7_no,
+        co7_date, payment_dt, bill_resent_count, irfc_funded,
+        invoice_supp_docs
+    )
+    VALUES (
+        P_BILL_NO, P_IC_NO, P_IC_DT, P_INVOICENO, P_CO6_NO, P_CO6_DATE,
+        P_CO6_STATUS, P_CO6_STATUS_DATE, P_PASSED_AMT, P_DEDUCTED_AMT,
+        P_NET_AMT, P_BOOKDATE, P_RETURN_REASON, P_RETURN_DATE, P_CO7_NO,
+        P_CO7_DATE, P_PAYMENT_DT, P_BILL_RESENT_COUNT, P_IRFC_FUNDED,
+        P_INVOICE_SUPP_DOCS
+    );
+
+    OPEN p_Result FOR
+    SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = P_BILL_NO AND ROWNUM = 1;
+END;
+
+---------------
+
+    ALTER TABLE IC_INTERMEDIATE_HISTORY
+MODIFY CONSGN_CALL_STATUS CHAR(5 BYTE);
+
+-------------------
+create or replace PROCEDURE SP_Get_Purchaser_For_DropDown (
+    P_consignee IN VARCHAR2,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+    SELECT 
+        CONSIGNEE_CD Value,
+        (CONSIGNEE_CD || '-' || CONSIGNEE) AS Text
+    FROM 
+        V06_CONSIGNEE
+    WHERE 
+        UPPER(TRIM(CONSIGNEE)) LIKE UPPER(TRIM(P_consignee || '%'))
+        AND Status IS NULL
+    ORDER BY 
+        CONSIGNEE_CD;
+END;
+
+--------------
+
+CREATE OR REPLACE PROCEDURE GET_VENDOR_DETAILSForDropDown (
+    p_vend_cd IN VARCHAR2,
+    p_result_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result_cursor FOR
+    SELECT V.VEND_CD as Value,
+           (TRIM(V.VEND_NAME) || '/' || TRIM(V.VEND_ADD1) || '/' || NVL2(C.LOCATION, C.LOCATION || ' / ' || C.CITY, C.CITY)) AS Text
+    FROM T05_VENDOR V
+    JOIN T03_CITY C ON V.VEND_CITY_CD = C.CITY_CD
+    WHERE V.VEND_NAME IS NOT NULL
+    AND (
+        TRIM(V.VEND_CD) = p_vend_cd OR 
+        (V.VEND_NAME is not null and trim(upper(V.VEND_NAME)) LIKE upper(p_vend_cd || '%') 
+        and V.VEND_CITY_CD = C.CITY_CD) 
+    )
+    ORDER BY V.VEND_NAME;
+END;
+
+------
+create or replace PROCEDURE GetBPOData (
+    p_searchTerm VARCHAR2,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT BPO_CD as Value, BPO_CD || '-' || BPO AS Text
+    FROM V12_BILL_PAYING_OFFICER
+    WHERE (UPPER(TRIM(BPO)) LIKE TRIM(UPPER(p_searchTerm || '%'))
+       OR BPO_CD = p_searchTerm)
+       --AND Status = null
+    ORDER BY V12_BILL_PAYING_OFFICER.BPO;
+END GetBPOData;
+
+-------------
