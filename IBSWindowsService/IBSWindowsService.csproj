@@ -104,7 +104,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IBSService.cs" />
+    <Compile Include="IBSService.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="IBSService.Designer.cs">
       <DependentUpon>IBSService.cs</DependentUpon>
     </Compile>
