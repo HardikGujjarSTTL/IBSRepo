@@ -2508,25 +2508,17 @@ namespace IBS.Models
             //           Value = Convert.ToString(a.ConsigneeCd)
             //       }).ToList();
 
-            dropList = (from a in ModelContext.T06Consignees
-                        join city in ModelContext.T03Cities on a.ConsigneeCity equals city.CityCd
-                        where (string.IsNullOrEmpty(consignee) ||
-                               a.ConsigneeFirm.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
-                               a.ConsigneeDesig.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
-                               a.ConsigneeDept.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
-                               a.ConsigneeCd.ToString() == consignee ||
-                               city.Location.Trim().ToUpper().Contains(consignee.Trim().ToUpper()) ||
-                               city.City.Trim().ToUpper().Contains(consignee.Trim().ToUpper()))
-                               && a.Status == null
-                        orderby a.ConsigneeFirm, a.ConsigneeDesig, a.ConsigneeDept, city.Location, city.City
-                        select new SelectListItem
-                        {
-                            Value = Convert.ToString(a.ConsigneeCd),
-                            Text = $"{a.ConsigneeCd}-{a.ConsigneeFirm}{(string.IsNullOrEmpty(a.ConsigneeDesig) ? "" : $"/{a.ConsigneeDesig}")}{(string.IsNullOrEmpty(a.ConsigneeDept) ? "" : $"/{a.ConsigneeDept}")}/{city.Location}/{city.City}"
-
-                        }).ToList();
-
-
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("P_consignee", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_Get_Purchaser_For_DropDown", par, 1);
+            DataTable dt = ds.Tables[0];
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                dropList = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
@@ -2656,20 +2648,31 @@ namespace IBS.Models
             List<SelectListItem> dropList = new List<SelectListItem>();
             if (VENDOR != null)
             {
-                dropList = (from v in ModelContext.T05Vendors
-                            join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
-                            where v.VendCityCd == c.CityCd && v.VendName != null
-                            && (v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                            || v.VendAdd1.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                            || c.Location.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                            || c.City.Trim().ToUpper().StartsWith(VENDOR.ToUpper()))
-                            orderby v.VendName
-                            select
-                       new SelectListItem
-                       {
-                           Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
-                           Value = Convert.ToString(v.VendCd),
-                       }).ToList();
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, VENDOR != "" ? VENDOR : DBNull.Value, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GET_VENDOR_DETAILSForDropDown", par, 1);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    dropList = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+                }
+
+                //dropList = (from v in ModelContext.T05Vendors
+                //            join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                //            where v.VendCityCd == c.CityCd && v.VendName != null
+                //            && (v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                //            || v.VendAdd1.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                //            || c.Location.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                //            || c.City.Trim().ToUpper().StartsWith(VENDOR.ToUpper()))
+                //            orderby v.VendName
+                //            select
+                //       new SelectListItem
+                //       {
+                //           Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                //           Value = Convert.ToString(v.VendCd),
+                //       }).ToList();
             }
             if (dropList.Count > 0)
             {
@@ -3337,42 +3340,41 @@ namespace IBS.Models
             List<SelectListItem> objdata = new List<SelectListItem>();
             if (SBPO != null && SBPO != "")
             {
-                //List<SelectListItem> model = new();
-                //OracleParameter[] par = new OracleParameter[2];
-                //par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, SBPO, ParameterDirection.Input);
-                //par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                //var ds = DataAccessDB.GetDataSet("GetBPOData", par, 1);
-                //if (ds != null && ds.Tables.Count > 0)
-                //{
-                //    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                //    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                //}
+                List<SelectListItem> model = new();
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, SBPO, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GetBPOData", par, 1);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
 
+                objdata = (from a in model
+                           select
+                      new SelectListItem
+                      {
+                          Text = a.Text,
+                          Value = a.Value
+                      }).ToList();
 
-                //objdata = (from a in model
-                //           select
-                //      new SelectListItem
-                //      {
-                //          Text = a.Text,
-                //          Value = a.Value
-                //      }).ToList();
-
-                objdata = (from bpo in context.T12BillPayingOfficers
-                           join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
-                           where (
-                               bpo.BpoName.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                               bpo.BpoRly.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                               bpo.BpoAdd.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                               bpo.BpoCd.ToString() == SBPO ||
-                               city.Location.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
-                               city.City.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()))
-                              && bpo.Status == null
-                           orderby bpo.BpoName, bpo.BpoRly, bpo.BpoAdd, city.Location, city.City
-                           select new SelectListItem
-                           {
-                               Value = Convert.ToString(bpo.BpoCd),
-                               Text = $"{bpo.BpoCd}-{bpo.BpoName}/{bpo.BpoRly}/{bpo.BpoAdd}/{city.Location}/{city.City}"
-                           }).ToList();
+                //objdata = (from bpo in context.T12BillPayingOfficers
+                //           join city in context.T03Cities on bpo.BpoCityCd equals city.CityCd
+                //           where (
+                //               bpo.BpoName.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
+                //               bpo.BpoRly.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
+                //               bpo.BpoAdd.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
+                //               bpo.BpoCd.ToString() == SBPO ||
+                //               city.Location.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()) ||
+                //               city.City.Trim().ToUpper().Contains(SBPO.Trim().ToUpper()))
+                //              && bpo.Status == null
+                //           orderby bpo.BpoName, bpo.BpoRly, bpo.BpoAdd, city.Location, city.City
+                //           select new SelectListItem
+                //           {
+                //               Value = Convert.ToString(bpo.BpoCd),
+                //               Text = $"{bpo.BpoCd}-{bpo.BpoName}/{bpo.BpoRly}/{bpo.BpoAdd}/{city.Location}/{city.City}"
+                //           }).ToList();
 
 
 
@@ -3656,25 +3658,16 @@ namespace IBS.Models
                 //          Value = a.Value
                 //      }).ToList();
 
-                objdata = (from a in context.T06Consignees
-                           join city in context.T03Cities on a.ConsigneeCity equals city.CityCd
-                           where (string.IsNullOrEmpty(ConsigneeSearch) ||
-                                  a.ConsigneeFirm.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
-                                  a.ConsigneeDesig.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
-                                  a.ConsigneeDept.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
-                                  a.ConsigneeCd.ToString() == ConsigneeSearch ||
-                                  city.Location.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()) ||
-                                  city.City.Trim().ToUpper().Contains(ConsigneeSearch.Trim().ToUpper()))
-                                  && a.Status == null
-                           orderby a.ConsigneeFirm, a.ConsigneeDesig, a.ConsigneeDept, city.Location, city.City
-                           select new SelectListItem
-                           {
-                               Value = Convert.ToString(a.ConsigneeCd),
-                               Text = $"{a.ConsigneeCd}-{a.ConsigneeFirm}{(string.IsNullOrEmpty(a.ConsigneeDesig) ? "" : $"/{a.ConsigneeDesig}")}{(string.IsNullOrEmpty(a.ConsigneeDept) ? "" : $"/{a.ConsigneeDept}")}/{city.Location}/{city.City}"
-
-                           }).ToList();
-
-
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("P_consignee", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("SP_Get_Purchaser_For_DropDown", par, 1);
+                DataTable dt = ds.Tables[0];
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    objdata = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
             }
             return objdata;
         }
