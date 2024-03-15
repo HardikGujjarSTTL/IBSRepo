@@ -1671,7 +1671,8 @@
             var CALL_RECV_DT = $('#CallRecvDt').val();
             var CALL_SNO = $('#callsnos').val();
             var CONSIGNEE_CD = $('#consigneeFirmDropdown').val();
-            var ACTIONAR = $("#ActionType").val();
+            // var ACTIONAR = $("#ActionType").val();
+            var ACTIONAR = $('#CallStatusdrp').val();
 
             let myObject = { CASE_NO, CALL_RECV_DT, CALL_SNO, CONSIGNEE_CD };
             $.ajax({
