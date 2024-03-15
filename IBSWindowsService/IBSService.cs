@@ -32,9 +32,9 @@ namespace IBSWindowsService
         {
 
             string token = CallAuthenticate();
-            //GetPOList(token);
+            GetPOList(token);
             //GetPOMAList(token);
-            GetBillsStatus(token);
+            //GetBillsStatus(token);
 
             //InitializeComponent();
         }
