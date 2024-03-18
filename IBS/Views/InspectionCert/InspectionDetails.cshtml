@@ -898,6 +898,41 @@
 
         });
 
+        function QtyToInspChanged()
+        {
+            var QtyOrdered = $("#QtyOrdered").val();
+            var QtyToInsp = $("#QtyToInsp").val();
+            if (QtyOrdered < QtyToInsp) {
+                $("#QtyToInsp").val(0);
+                ShowHideMsgNew(false, "Qty Offered Now not more then Qty Ordered.");
+            }
+        }
+        function QtyPassedChanged() {
+            var QtyOrdered = $("#QtyOrdered").val();
+            var QtyPassed = $("#QtyPassed").val();
+            if (QtyOrdered < QtyPassed) {
+                $("#QtyPassed").val(0);
+                ShowHideMsgNew(false, "Qty Passed not more then Qty Ordered.");
+            }
+        }
+        function QtyRejectedChanged()
+        {
+            var QtyOrdered = $("#QtyOrdered").val();
+            var QtyRejected = $("#QtyRejected").val();
+            if (QtyOrdered < QtyRejected) {
+                $("#QtyRejected").val(0);
+                ShowHideMsgNew(false, "Qty Rejected not more then Qty Ordered.");
+            }
+        }
+        function QtyDueChanged()
+        {
+            var QtyOrdered = $("#QtyOrdered").val();
+            var QtyDue = $("#QtyDue").val();
+            if (QtyOrdered < QtyDue) {
+                $("#QtyDue").val(0);
+                ShowHideMsgNew(false, "Qty Due not more then Qty Ordered.");
+            }
+        }
         function RejectionMatrialValue() {
             var selectedValue = $('#LocalOutstation').val();
             var CaseNo = $("#Caseno").val();
