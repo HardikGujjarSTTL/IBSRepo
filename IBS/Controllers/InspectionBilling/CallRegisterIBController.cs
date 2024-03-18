@@ -790,6 +790,7 @@ namespace IBS.Controllers.InspectionBilling
                 {
                     var FileName = model.CaseNo + "-" + model.DocBkNo + "-" + model.DocSetNo + ".PDF";
                     DocumentHelper.SaveFiles(Convert.ToString(model.CaseNo) + "_" + Convert.ToString(model.CallSno) + "_TestPlan", DocumentsList.Where(a => a.DocumentCategoryID == (int)Enums.DocumentCategory.UploadTestPlan).ToList(), Enums.GetEnumDescription(Enums.FolderPath.TESTPLAN), env, iDocument, FileName, string.Empty, Upload_Test_PlanDID);
+                    model.AlertMsg = "Success";
                 }
                 if (DocumentsList.Count > 2)
                 {

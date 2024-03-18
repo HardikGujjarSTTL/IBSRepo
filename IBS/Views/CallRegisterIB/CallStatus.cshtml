@@ -670,10 +670,11 @@
 
                 }
                 else if (selectedValue == "T") {
+                    $(".CallRejected").show();
                     $('#accepteuploadddrp').show();
                     $('#localdrp').hide();
                     $('.rejvalue').hide();
-                    $('#accepteddrp').hide();
+                    $('#accepteddrp').show();
                     $('#savedetails').show();
                     $('#bkset').show();
                     $('#Remarksval').hide();
@@ -682,12 +683,33 @@
                     $('#ReasonFIFOdv').show();
                     $('#CallCancelStatusdrp').hide();
                     $('#frmcancelled').hide();
-                    $('#uploadfile').hide();
+                    $('#uploadfile').show();
                     $('#RefreshAll').hide();
                     $('#AcceptReject').hide();
-                    $('#ViewPrintIC').hide();
+                    $('#ViewPrintIC').show();
                     $('#CallCancelChargesdrp').hide();
                     $('#uploadcancel').hide();
+                    $('#consigneeFirmDropdown').trigger('change');
+                    // $(".CallRejected").show();
+                    // $('#accepteuploadddrp').show();
+                    // $('#localdrp').hide();
+                    // $('.rejvalue').hide();
+                    // $('#accepteddrp').hide();
+                    // $('#savedetails').show();
+                    // $('#bkset').show();
+                    // $('#Remarksval').hide();
+                    // $("#ForARS").hide();
+                    // $('#Holograms').hide();
+                    // $('#ReasonFIFOdv').show();
+                    // $('#CallCancelStatusdrp').hide();
+                    // $('#frmcancelled').hide();
+                    // $('#uploadfile').hide();
+                    // $('#RefreshAll').hide();
+                    // $('#AcceptReject').hide();
+                    // $('#ViewPrintIC').hide();
+                    // $('#CallCancelChargesdrp').hide();
+                    // $('#uploadcancel').hide();
+                    // $('#consigneeFirmDropdown').trigger('change');
                 }
                 else if (selectedValue == "S") {
                     $('#accepteuploadddrp').hide();
@@ -845,6 +867,7 @@
                     type: 'GET',
                     data: { selectedValue: selectedValue, CaseNo: CaseNo, CallSno: CallSno, DesireDt: DesireDt },
                     success: function (data) {
+                        debugger
                         if (data.ChkFIFO == "true") {
                             $('#ReasonFIFOdv').show();
                         } else if (data.ChkFIFO == "false") {
@@ -890,7 +913,8 @@
                     CallCancellationChanges();
                 }
 
-            } else if (CallStatusdrp == "A") {
+            } 
+            else if (CallStatusdrp == "A") {
                 $(".CallRejected").show();
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
@@ -981,7 +1005,8 @@
 
                 // $('#consigneeFirmDropdown').trigger('change');
 
-            } else if (CallStatusdrp == "G") {
+            } 
+            else if (CallStatusdrp == "G") {
 
                 $('#CallStatusdrp').prop('disabled', true);
                 $('#savefiles').prop('disabled', true);
@@ -1009,29 +1034,32 @@
                 $('#frmcancelled').hide();
                 $('#consigneeFirmDropdown').trigger('change');
                 $('#ReasonFIFOdv').show();
-            } else if (CallStatusdrp == "T") {
+            } 
+            else if (CallStatusdrp == "T") {
+                $(".CallRejected").show();
                 $('#accepteuploadddrp').show();
                 $('#localdrp').hide();
                 $('.rejvalue').hide();
-                $('#accepteddrp').hide();
+                $('#accepteddrp').show();
                 $('#savedetails').show();
                 $('#bkset').show();
                 $('#Remarksval').hide();
                 $('#Holograms').hide();
-                $('#ReasonFIFOdv').show();
+                $('#ReasonFIFOdv').hide();
                 $('#CallCancelStatusdrp').hide();
-                $('#uploadfile').hide();
+                $('#uploadfile').show();
                 $('#RefreshAll').hide();
                 $('#AcceptReject').hide();
                 $('#CallCancelChargesdrp').hide();
-                $('#ViewPrintIC').hide();
+                $('#ViewPrintIC').show();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
+                $('#consigneeFirmDropdown').trigger('change');
 
 
 
-
-            } else if (CallStatusdrp == "S") {
+            } 
+            else if (CallStatusdrp == "S") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
                 $('.rejvalue').hide();
@@ -1049,7 +1077,8 @@
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "U") {
+            } 
+            else if (CallStatusdrp == "U") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
                 $('.rejvalue').hide();
@@ -1067,7 +1096,8 @@
                 $('#uploadcancel').hide();
                 $('#CallCancelStatusdrp').hide();
                 $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "W") {
+            } 
+            else if (CallStatusdrp == "W") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
                 $('.rejvalue').hide();
@@ -1085,7 +1115,8 @@
                 $('#ViewPrintIC').hide();
                 $('#uploadcancel').hide();
                 $('#frmcancelled').hide();
-            } else if (CallStatusdrp == "M" || CallStatusdrp == "B") {
+            } 
+            else if (CallStatusdrp == "M" || CallStatusdrp == "B") {
                 $('#accepteuploadddrp').hide();
                 $('#localdrp').hide();
                 $('.rejvalue').hide();
@@ -1392,11 +1423,11 @@
         }
 
         function Save() {
-            
-            if ($("#ReasonFIFO").val() == "") {
-                $("#spnReasonFIFO").html("Reason For Violating FIFO.");
-                return;
-            }
+            debugger
+            // if ($("#ReasonFIFO").val() == "") {
+            //     $("#spnReasonFIFO").html("Reason For Violating FIFO.");
+            //     return;
+            // }
 
             var formData = new FormData();
             SaveSingleDocuments("tab-2");
