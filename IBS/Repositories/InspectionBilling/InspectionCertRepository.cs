@@ -2670,27 +2670,55 @@ namespace IBS.Repositories.InspectionBilling
         {
             string ID = "";
             var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
-            if (CallDetails != null)
+            var IcIntermediates = context.IcIntermediates.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+            if(IcIntermediates == null)
             {
-                CallDetails.ItemDescPo = model.ItemDescPo;
-                CallDetails.QtyToInsp = model.QtyToInsp;
-                CallDetails.QtyPassed = model.QtyPassed;
-                CallDetails.QtyRejected = model.QtyRejected;
-                CallDetails.QtyDue = model.QtyDue;
-                CallDetails.Updatedby = model.UserId;
-                CallDetails.Updateddate = DateTime.Now.Date;
-
-                context.SaveChanges();
-                ID = Convert.ToString(CallDetails.ItemSrnoPo);
-
-                var PODetails = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrnoPo && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
-                if (PODetails != null)
+                if (CallDetails != null)
                 {
-                    PODetails.OtherCharges = model.OtherCharges;
-                    context.SaveChanges();
-                }
+                    CallDetails.ItemDescPo = model.ItemDescPo;
+                    CallDetails.QtyToInsp = model.QtyToInsp;
+                    CallDetails.QtyPassed = model.QtyPassed;
+                    CallDetails.QtyRejected = model.QtyRejected;
+                    CallDetails.QtyDue = model.QtyDue;
+                    CallDetails.Updatedby = model.UserId;
+                    CallDetails.Updateddate = DateTime.Now.Date;
 
+                    context.SaveChanges();
+                    ID = Convert.ToString(CallDetails.ItemSrnoPo);
+
+                    var PODetails = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrnoPo && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                    if (PODetails != null)
+                    {
+                        PODetails.OtherCharges = model.OtherCharges;
+                        context.SaveChanges();
+                    }
+                }
             }
+            else
+            {
+                if (IcIntermediates != null)
+                {
+                    IcIntermediates.ItemDescPo = model.ItemDescPo;
+                    IcIntermediates.QtyToInsp = model.QtyToInsp;
+                    IcIntermediates.QtyPassed = model.QtyPassed;
+                    IcIntermediates.QtyRejected = model.QtyRejected;
+                    IcIntermediates.QtyDue = model.QtyDue;
+                    //IcIntermediates.Updatedby = model.UserId;
+                    IcIntermediates.Updateddate = DateTime.Now.Date;
+
+                    context.SaveChanges();
+                    ID = Convert.ToString(IcIntermediates.ItemSrnoPo);
+
+                    var PODetails = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrnoPo && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                    if (PODetails != null)
+                    {
+                        PODetails.OtherCharges = model.OtherCharges;
+                        context.SaveChanges();
+                    }
+                }
+            }
+            
+            
             return ID;
         }
 
