@@ -133,14 +133,14 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked</label>
-                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEName(@Model.RegionCode) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.IeCd, new SelectList(IBS.Models.Common.GetIEName(@Model.RegionCode), "Value", "Text"), "--Select--")
                         <span asp-validation-for="IeCd" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Call Re-Mark Status(If Call has been Re-marked)</label>
-                        @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus(), "Value", "Text"), "--Select--")
                         <span asp-validation-for="CallRemarkStatus" class="text-danger"></span>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
             <div class="col-md-4 mb-3">
                 <div class="reference">
                     <label for="Name">Item to be inspected viz. Mechanical, Electrical, Civil etc <i class="text-danger">*</i></label>
-                    @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist(), "Value", "Text"), "--Select--")
                     <span asp-validation-for="DepartmentCode" class="text-danger" id="spnDepartmentCode"></span>
                 </div>
             </div>
@@ -345,7 +345,7 @@
             <div class="col-md-8 mb-3">
                 <div class="reference">
                     <label for="MfgCd"><i class="text-danger">*</i> To Search Enter First Few Characters Of Name and Click on Select Manufacturer Button, then select the from the list given below.</label>
-                    @Html.DropDownListFor(model => model.MfgCd, new SelectList(IBS.Models.Common.GetVendor_City(@Model.MfgCd) , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(model => model.MfgCd, new SelectList(IBS.Models.Common.GetVendor_City(@Model.MfgCd), "Value", "Text"), "--Select--")
                     <span asp-validation-for="MfgCd" class="text-danger"></span>
                 </div>
             </div>
@@ -480,7 +480,6 @@
                             <th>Qty Due</th>
                             <th>Delivery Date</th>
                             <th>Bill Paying Officer</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -520,7 +519,7 @@
 
 <div id="TermsConditionPopUp" class="modal" tabindex="-1" role="dialog">
 </div>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
@@ -660,6 +659,15 @@
             window.location.href = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
         };
 
+        function QtyInspChanged() {
+            var QtyOrdered = $("#QtyOrdered").val();
+            var QtyToInsp = $("#QtyToInsp").val();
+            if (QtyOrdered < QtyToInsp) {
+                $("#QtyToInsp").val(0);
+                ShowHideMsgNew(false, "Qty Offered Now not more then Qty Ordered.");
+            }
+        }
+
         function InitializeDatatable() {
             var CaseNo = $("#CaseNo").val();
             var CallRecvDt = $("#CallRecvDt").val();
@@ -706,14 +714,19 @@
                         render: function (data, type, row) {
                             var _ItemSrnoPo = data.ItemSrnoPo;
                             var html = "";
-                            if ($("#ActionType").val() == "M" || $("#ActionType").val() == "D") {
-                                html = "";
-                            }
-                            else {
-                                html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                                html += '</div>';
-                            }
+                            html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '</div>';
                             return html;
+                            // if ($("#ActionType").val() == "M" || $("#ActionType").val() == "D") {
+                            //     // html = "";
+                            //     html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //     html += '</div>';
+                            // }
+                            // else {
+                            //     html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            //     html += '</div>';
+                            // }
+
                         }
                     },
                     {
