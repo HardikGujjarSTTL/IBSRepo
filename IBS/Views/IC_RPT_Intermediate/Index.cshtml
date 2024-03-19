@@ -450,6 +450,19 @@
             }
         }
 
+        $("#QTY_PASSED").change(function () {
+
+            var QTY_ORDERED = $("#QTY_ORDERED").val();
+            var QTY_PASSED = $("#QTY_PASSED").val();
+            var CUM_QTY_PREV_OFFERED = $("#CUM_QTY_PREV_OFFERED").val();
+            var CUM_QTY_PREV_PASSED = $("#CUM_QTY_PREV_PASSED").val();
+            var OfferPassQty = parseInt(CUM_QTY_PREV_OFFERED) - parseInt(CUM_QTY_PREV_PASSED);
+            var PassQtyOrder = parseInt(QTY_ORDERED) - parseInt(CUM_QTY_PREV_PASSED);
+            var QtyDuePending = parseInt(QTY_PASSED) - parseInt(PassQtyOrder)
+            $("#QTY_DUE").val(QtyDuePending);
+            
+        });
+
         $("#btnSave").click(function () {
             if ($("#CONSIGNEE_CD").val() == "0" || $("#CONSIGNEE_CD").val() == "") {
                 ShowHideMsgNew(false, "Please select consignee !");
