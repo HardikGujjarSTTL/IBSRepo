@@ -6091,21 +6091,106 @@ END SP_GET_ProjectDetailsReport;
 -------------------
 
 CREATE OR REPLACE PROCEDURE SP_INSERT_POHDR_FROMAPI (
-    P_RLY IN VARCHAR2,
-    P_POKEY IN VARCHAR2,
+    p_CASE_NO IN VARCHAR2,
+    p_PURCHASER_CD IN VARCHAR2,
+    p_IMMS_PURCHASER_CODE IN VARCHAR2,
+    p_IMMS_PURCHASER_DETAIL IN VARCHAR2,
+    p_STOCK_NONSTOCK IN VARCHAR2,
+    p_RLY_NONRLY IN VARCHAR2,
+    p_PO_OR_LETTER IN VARCHAR2,
+    p_PO_NO IN VARCHAR2,
+    p_L5NO_PO IN VARCHAR2,
+    p_PO_DT IN DATE,
+    p_RECV_DT IN DATE,
+    p_VEND_CD IN VARCHAR2,
+    p_IMMS_VENDOR_CODE IN VARCHAR2,
+    p_VENDOR_DETAILS IN VARCHAR2,
+    p_FIRM_DETAILS IN VARCHAR2,
+    p_RLY_CD IN VARCHAR2,
+    p_RLY_SHORTNAME IN VARCHAR2,
+    p_REGION_CODE IN VARCHAR2,
+    p_REMARKS IN VARCHAR2,
+    p_BILL_PAY_OFF IN VARCHAR2,
+    p_BILL_PAY_OFF_NAME IN VARCHAR2,
+    p_USER_ID IN VARCHAR2,
+    p_DATETIME IN DATE,
+    p_INSPECTING_AGENCY IN VARCHAR2,
+    p_POI_CD IN VARCHAR2,
+    p_PO_STATUS IN VARCHAR2,
+    p_IMMS_POKEY IN VARCHAR2,
     p_Result OUT SYS_REFCURSOR
 )
 AS
     v_PoId NUMBER;
+
 BEGIN
     SELECT NVL(MAX(PO_ID), 0) + 1 INTO v_PoId FROM IMMS_RITES_PO_HDR;
-
-    INSERT INTO IMMS_RITES_PO_HDR (PO_ID, IMMS_RLY_CD, IMMS_POKEY)
-    VALUES (v_PoId, P_RLY, P_POKEY);
+    
+    INSERT INTO IMMS_RITES_PO_HDR (
+        PO_ID,
+        IMMS_POKEY,
+        RITES_CASE_NO,
+        PURCHASER_CD,
+        IMMS_PURCHASER_CD,
+        IMMS_PURCHASER_DETAIL,
+        STOCK_NONSTOCK,
+        RLY_NONRLY,
+        PO_OR_LETTER,
+        PO_NO,
+        L5NO_PO,
+        PO_DT,
+        RECV_DATE,
+        VEND_CD,
+        IMMS_VENDOR_CD,
+        IMMS_VENDOR_DETAIL,
+        --FIRM_DETAILS,
+        RLY_CD,
+        IMMS_RLY_SHORTNAME,
+        REGION_CODE,
+        REMARKS,
+        --BILL_PAY_OFF,
+        --BILL_PAY_OFF_NAME,
+        USER_ID,
+        DATETIME,
+        INSPECTING_AGENCY,
+        POI_CD
+        --PO_STATUS
+    ) VALUES (
+        v_PoId,
+        p_IMMS_POKEY,
+        p_CASE_NO,
+        p_PURCHASER_CD,
+        p_IMMS_PURCHASER_CODE,
+        p_IMMS_PURCHASER_DETAIL,
+        p_STOCK_NONSTOCK,
+        p_RLY_NONRLY,
+        p_PO_OR_LETTER,
+        p_PO_NO,
+        p_L5NO_PO,
+        p_PO_DT,
+        p_RECV_DT,
+        p_VEND_CD,
+        p_IMMS_VENDOR_CODE,
+        p_VENDOR_DETAILS,
+        --p_FIRM_DETAILS,
+        p_RLY_CD,
+        p_RLY_SHORTNAME,
+        p_REGION_CODE,
+        p_REMARKS,
+        --p_BILL_PAY_OFF,
+        --p_BILL_PAY_OFF_NAME,
+        p_USER_ID,
+        p_DATETIME,
+        p_INSPECTING_AGENCY,
+        p_POI_CD
+        --p_PO_STATUS
+    );
 
     OPEN p_Result FOR
-    SELECT PO_ID FROM IMMS_RITES_PO_HDR WHERE IMMS_RLY_CD = P_RLY AND IMMS_POKEY = P_POKEY AND ROWNUM = 1;
+    SELECT PO_ID FROM IMMS_RITES_PO_HDR WHERE IMMS_PURCHASER_CD = p_IMMS_PURCHASER_CODE AND RITES_CASE_NO = p_CASE_NO AND ROWNUM = 1;
 END;
+
+
 
 -----------------------
 
@@ -6569,7 +6654,7 @@ BEGIN
 END;
 
 ------------
-create or replace PROCEDURE SP_INSERT_Get_Passed_Bills_FROMAPI (
+create or replace PROCEDURE SP_UPDATE_Get_Passed_Bills_FROMAPI (
     P_BILL_NO IN VARCHAR2,
     P_IC_NO IN VARCHAR2,
     P_IC_DT IN DATE,
@@ -6594,20 +6679,31 @@ create or replace PROCEDURE SP_INSERT_Get_Passed_Bills_FROMAPI (
 ) AS
     v_OID NUMBER;
 BEGIN
-    INSERT INTO RITES_BILL_DTLS (
-        bill_no, ic_no, ic_dt, invoiceno, co6_no, co6_date,
-        co6_status, co6_status_date, passed_amt, deducted_amt,
-        net_amt, bookdate, return_reason, return_date, co7_no,
-        co7_date, payment_dt, bill_resent_count, irfc_funded,
-        invoice_supp_docs
-    )
-    VALUES (
-        P_BILL_NO, P_IC_NO, P_IC_DT, P_INVOICENO, P_CO6_NO, P_CO6_DATE,
-        P_CO6_STATUS, P_CO6_STATUS_DATE, P_PASSED_AMT, P_DEDUCTED_AMT,
-        P_NET_AMT, P_BOOKDATE, P_RETURN_REASON, P_RETURN_DATE, P_CO7_NO,
-        P_CO7_DATE, P_PAYMENT_DT, P_BILL_RESENT_COUNT, P_IRFC_FUNDED,
-        P_INVOICE_SUPP_DOCS
-    );
+    
+    UPDATE RITES_BILL_DTLS
+    SET
+        ic_no = P_IC_NO,
+        ic_dt = P_IC_DT,
+        invoiceno = P_INVOICENO,
+        co6_no = P_CO6_NO,
+        co6_date = P_CO6_DATE,
+        co6_status = P_CO6_STATUS,
+        co6_status_date = P_CO6_STATUS_DATE,
+        passed_amt = P_PASSED_AMT,
+        deducted_amt = P_DEDUCTED_AMT,
+        net_amt = P_NET_AMT,
+        bookdate = P_BOOKDATE,
+        return_reason = P_RETURN_REASON,
+        return_date = P_RETURN_DATE,
+        co7_no = P_CO7_NO,
+        co7_date = P_CO7_DATE,
+        payment_dt = P_PAYMENT_DT,
+        bill_resent_count = P_BILL_RESENT_COUNT,
+        irfc_funded = P_IRFC_FUNDED,
+        invoice_supp_docs = P_INVOICE_SUPP_DOCS
+    WHERE
+        bill_no = P_BILL_NO;
+
 
     OPEN p_Result FOR
     SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = P_BILL_NO AND ROWNUM = 1;
@@ -6761,3 +6857,324 @@ END;
 
 
 --------------
+ALTER TABLE IMMS_RITES_PO_HDR
+MODIFY (L5NO_PO VARCHAR2(20 BYTE));
+
+----------------
+create or replace PROCEDURE SP_INSERT_Get_AllBills_FROMAPI (
+--p_BILL_NO                IN VARCHAR2,
+--p_INVOICEDATE            IN VARCHAR2,
+--p_CASE_NO                IN VARCHAR2,
+-- p_INVOICENO              IN VARCHAR2,
+-- p_AU                     IN VARCHAR2,
+-- p_BILL_RESENT_COUNT      IN VARCHAR2,
+    p_BILL_NO                IN VARCHAR2,
+    P_RLY_CODE                IN VARCHAR2,
+    p_INVOICEDATE            IN DATE,
+    p_BPO_CD                 IN VARCHAR2,
+    p_BPO_TYPE               IN VARCHAR2,
+    p_BPO_RLY                IN VARCHAR2,
+    p_BPO_NAME               IN VARCHAR2,
+    p_BPO_ORGN               IN VARCHAR2,
+    p_BPO_ADD                IN VARCHAR2,
+    p_BPO_CITY               IN VARCHAR2,
+    p_CASE_NO                IN VARCHAR2,
+    p_REGION_CODE            IN VARCHAR2,
+    p_PO_NO                  IN VARCHAR2,
+    p_PO_DT                  IN DATE,
+    p_VEND_CD                IN VARCHAR2,
+    p_VEND_NAME              IN VARCHAR2,
+    p_VEND_ADD1              IN VARCHAR2,
+    p_VEND_ADD2              IN VARCHAR2,
+    p_VENDOR_CITY            IN VARCHAR2,
+    p_CONSIGNEE_CD           IN VARCHAR2,
+    p_CONSIGNEE              IN VARCHAR2,
+    p_CONSIGNEE_ADD1         IN VARCHAR2,
+    p_CONSIGNEE_ADD2         IN VARCHAR2,
+    p_CONSIGNEE_CITY         IN VARCHAR2,
+    p_IE_CD                  IN VARCHAR2,
+    p_IE_CO_CD               IN VARCHAR2,
+    p_IC_NO                  IN VARCHAR2,
+    p_IC_DT                  IN DATE,
+    p_BK_NO                  IN VARCHAR2,
+    p_SET_NO                 IN VARCHAR2,
+    p_CALL_INSTALMENT_NO     IN VARCHAR2,
+    p_MATERIAL_VALUE         IN VARCHAR2,
+    p_VISITS                 IN VARCHAR2,
+    p_GSTTAXABLEAMT          IN VARCHAR2,
+    p_CGSTAMT                IN VARCHAR2,
+    p_SGSTAMT                IN VARCHAR2,
+    p_IGSTAMT                IN VARCHAR2,
+    p_AMOUNT                 IN VARCHAR2,
+    p_INVOICENO              IN VARCHAR2,
+    p_RLYGSTIN               IN VARCHAR2,
+    p_PARTYGSTIN             IN VARCHAR2,
+    p_PARTYCODE              IN VARCHAR2,
+    p_PARTYNAME              IN VARCHAR2,
+    p_ITEM_SRNO              IN VARCHAR2,
+    p_ITEMDESC               IN VARCHAR2,
+    p_QTY                    IN VARCHAR2,
+    p_RATE                   IN VARCHAR2,
+    p_UNITCODE               IN VARCHAR2,
+    p_UOM_FACTOR             IN VARCHAR2,
+    p_BASIC_VALUE            IN VARCHAR2,
+    p_VALUE                  IN VARCHAR2,
+    p_PDFFILE                IN VARCHAR2,
+    p_BILLDESC               IN VARCHAR2,
+    p_PARTYSTATE             IN VARCHAR2,
+    p_REVERSECHARGE          IN VARCHAR2,
+    p_ISGSTREGISTERED        IN VARCHAR2,
+    p_GSTTDSDEDUCTION        IN VARCHAR2,
+    p_COMPOSITETAXABLE       IN VARCHAR2,
+    p_HSNSAC                 IN VARCHAR2,
+    p_HSNSACCODE             IN VARCHAR2,
+    p_ITCELIGIBLE            IN VARCHAR2,
+    p_SGSTRATE               IN VARCHAR2,
+    p_CGSTRATE               IN VARCHAR2,
+    p_UGSTRATE               IN VARCHAR2,
+    p_UGSTAMT                IN VARCHAR2,
+    p_IGSTRATE               IN VARCHAR2,
+    p_STATESUPPLY            IN VARCHAR2,
+    p_RECV_DATE              IN DATE,
+    p_UPD_DATE               IN DATE,
+    p_STATUS                 IN VARCHAR2,
+    p_CO6_NO                 IN VARCHAR2,
+    p_CO6_DATE               IN DATE,
+    p_CO6_STATUS             IN VARCHAR2,
+    p_CO6_STATUS_DATE        IN DATE,
+    p_PASSED_AMT             IN VARCHAR2,
+    p_DEDUCTED_AMT           IN VARCHAR2,
+    p_NET_AMT                IN VARCHAR2,
+    p_BOOKDATE               IN DATE,
+    p_RETURN_REASON          IN VARCHAR2,
+    p_RETURN_DATE            IN DATE,
+    p_PDF_LINK               IN VARCHAR2,
+    p_PAYMENT_DT             IN DATE,
+    p_CO7_NO                 IN VARCHAR2,
+    p_CO7_DATE               IN DATE,
+    p_BANK_ACCT_NO           IN VARCHAR2,
+    p_IFSCCODE               IN VARCHAR2,
+    p_BANK_NAME              IN VARCHAR2,
+    p_BANKADDRESS            IN VARCHAR2,
+    p_IC_PDF                 IN VARCHAR2,
+    p_INVOICE_PDF            IN VARCHAR2,
+    p_AU                     IN VARCHAR2,
+    p_BILL_RESENT_COUNT      IN VARCHAR2,
+    p_IRFC_FUNDED            IN VARCHAR2,
+    p_INVOICE_SUPP_DOCS      IN VARCHAR2,
+    p_Result                 OUT SYS_REFCURSOR
+)
+AS
+    v_count NUMBER;
+BEGIN
+
+--DBMS_OUTPUT.PUT_LINE(TO_DATE(p_INVOICEDATE)); 
+    SELECT COUNT(*) INTO v_count FROM RITES_BILL_DTLS WHERE bill_no = p_BILL_NO AND bill_resent_count = p_BILL_RESENT_COUNT;
+    IF v_count > 0 THEN
+         --DBMS_OUTPUT.PUT_LINE('Condition is true!'); 
+        OPEN p_Result FOR
+        SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = p_BILL_NO AND ROWNUM = 1;
+        RETURN;
+    END IF;
+
+    INSERT INTO RITES_BILL_DTLS (
+        bill_no,
+        invoicedate,
+        bpo_cd,
+        bpo_type,
+        bpo_rly,
+        bpo_name,
+        bpo_orgn,
+        bpo_add,
+        bpo_city,
+        case_no,
+        region_code,
+        po_no,
+        po_dt,
+        vend_cd,
+        vend_name,
+        vend_add1,
+        vend_add2,
+        vendor_city,
+        consignee_cd,
+        consignee,
+        consignee_add1,
+        consignee_add2,
+        consignee_city,
+        ie_cd,
+        ie_co_cd,
+        ic_no,
+        ic_dt,
+        bk_no,
+        set_no,
+        call_instalment_no,
+        material_value,
+        visits,
+        gsttaxableamt,
+        cgstamt,
+        sgstamt,
+        igstamt,
+        amount,
+        invoiceno,
+        rlygstin,
+        partygstin,
+        partycode,
+        partyname,
+        item_srno,
+        itemdesc,
+        qty,
+        rate,
+        unitcode,
+        uom_factor,
+        basic_value,
+        value,
+        pdffile,
+        billdesc,
+        partystate,
+        reversecharge,
+        isgstregistered,
+        gsttdsdeduction,
+        compositetaxable,
+        hsnsac,
+        hsnsaccode,
+        itceligible,
+        sgstrate,
+        cgstrate,
+        ugstrate,
+        ugstamt,
+        igstrate,
+        statesupply,
+        recv_date,
+        upd_date,
+        status,
+        co6_no,
+        co6_date,
+        co6_status,
+        co6_status_date,
+        passed_amt,
+        deducted_amt,
+        net_amt,
+        bookdate,
+        return_reason,
+        return_date,
+        pdf_link,
+        payment_dt,
+        co7_no,
+        co7_date,
+        bank_acct_no,
+        ifsccode,
+        bank_name,
+        bankaddress,
+        ic_pdf,
+        invoice_pdf,
+        au,
+        bill_resent_count,
+        irfc_funded,
+        invoice_supp_docs
+    ) VALUES (
+        p_BILL_NO,
+        p_INVOICEDATE,
+        p_BPO_CD,
+        p_BPO_TYPE,
+        p_BPO_RLY,
+        p_BPO_NAME,
+        p_BPO_ORGN,
+        p_BPO_ADD,
+        p_BPO_CITY,
+        p_CASE_NO,
+        p_REGION_CODE,
+        p_PO_NO,
+        p_PO_DT,
+        p_VEND_CD,
+        p_VEND_NAME,
+        p_VEND_ADD1,
+        p_VEND_ADD2,
+        p_VENDOR_CITY,
+        p_CONSIGNEE_CD,
+        p_CONSIGNEE,
+        p_CONSIGNEE_ADD1,
+        p_CONSIGNEE_ADD2,
+        p_CONSIGNEE_CITY,
+        p_IE_CD,
+        p_IE_CO_CD,
+        p_IC_NO,
+        p_IC_DT,
+        p_BK_NO,
+        p_SET_NO,
+        p_CALL_INSTALMENT_NO,
+        p_MATERIAL_VALUE,
+        p_VISITS,
+        p_GSTTAXABLEAMT,
+        p_CGSTAMT,
+        p_SGSTAMT,
+        p_IGSTAMT,
+        p_AMOUNT,
+        p_INVOICENO,
+        p_RLYGSTIN,
+        p_PARTYGSTIN,
+        p_PARTYCODE,
+        p_PARTYNAME,
+        p_ITEM_SRNO,
+        p_ITEMDESC,
+        p_QTY,
+        p_RATE,
+        p_UNITCODE,
+        p_UOM_FACTOR,
+        p_BASIC_VALUE,
+        p_VALUE,
+        p_PDFFILE,
+        p_BILLDESC,
+        p_PARTYSTATE,
+        p_REVERSECHARGE,
+        p_ISGSTREGISTERED,
+        p_GSTTDSDEDUCTION,
+        p_COMPOSITETAXABLE,
+        p_HSNSAC,
+        p_HSNSACCODE,
+        p_ITCELIGIBLE,
+        p_SGSTRATE,
+        p_CGSTRATE,
+        p_UGSTRATE,
+        p_UGSTAMT,
+        p_IGSTRATE,
+        p_STATESUPPLY,
+        p_RECV_DATE,
+        p_UPD_DATE,
+        p_STATUS,
+        p_CO6_NO,
+        p_CO6_DATE,
+        p_CO6_STATUS,
+        p_CO6_STATUS_DATE,
+        p_PASSED_AMT,
+        p_DEDUCTED_AMT,
+        p_NET_AMT,
+        p_BOOKDATE,
+        p_RETURN_REASON,
+        p_RETURN_DATE,
+        p_PDF_LINK,
+        p_PAYMENT_DT,
+        p_CO7_NO,
+        p_CO7_DATE,
+        p_BANK_ACCT_NO,
+        p_IFSCCODE,
+        p_BANK_NAME,
+        p_BANKADDRESS,
+        p_IC_PDF,
+        p_INVOICE_PDF,
+        p_AU,
+        p_BILL_RESENT_COUNT,
+        p_IRFC_FUNDED,
+        p_INVOICE_SUPP_DOCS
+    );
+
+    OPEN p_Result FOR
+    SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = p_BILL_NO AND ROWNUM = 1;
+END;
+
+
+-----------------
+
+ALTER TABLE RITES_BILL_DTLS
+MODIFY bill_resent_count NUMBER(6);
+
+----------
