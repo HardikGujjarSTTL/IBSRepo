@@ -11,7 +11,7 @@ namespace IBS.Models
         public int? PurchaserCd { get; set; }
 
         public string? Purchaser { get; set; }
-        [Required(ErrorMessage = "Stock / Non-Stock (For Railways Only) is required")]
+        //[Required(ErrorMessage = "Stock / Non-Stock (For Railways Only) is required")]
         public string? StockNonstock { get; set; }
 
         [Required(ErrorMessage = "Railway/Non-Railway is required")]
