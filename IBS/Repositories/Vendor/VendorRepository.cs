@@ -163,7 +163,7 @@ namespace IBS.Repositories.Vendor
                     VendGstno = model.GSTNO,
                     VendTanno = model.TANNO,
                     VendPanno = model.PANNO,
-                    VendPwd = "Rites123",
+                    VendPwd = Common.getEncryptedText("Rites123", "301ae92bb2bc7599"),
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
                     Createdby = model.Createdby,

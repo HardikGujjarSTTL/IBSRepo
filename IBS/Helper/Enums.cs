@@ -456,10 +456,10 @@ namespace IBS.Helper
 
         public enum OnlineCallStatus
         {
-            [Description("No")]
-            N,
             [Description("Yes")]
             Y,
+            [Description("No")]
+            N,
         }
 
         public enum Department
