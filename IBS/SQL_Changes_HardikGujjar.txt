@@ -6862,12 +6862,6 @@ MODIFY (L5NO_PO VARCHAR2(20 BYTE));
 
 ----------------
 create or replace PROCEDURE SP_INSERT_Get_AllBills_FROMAPI (
---p_BILL_NO                IN VARCHAR2,
---p_INVOICEDATE            IN VARCHAR2,
---p_CASE_NO                IN VARCHAR2,
--- p_INVOICENO              IN VARCHAR2,
--- p_AU                     IN VARCHAR2,
--- p_BILL_RESENT_COUNT      IN VARCHAR2,
     p_BILL_NO                IN VARCHAR2,
     P_RLY_CODE                IN VARCHAR2,
     p_INVOICEDATE            IN DATE,
