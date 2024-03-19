@@ -1,4 +1,5 @@
-﻿@{
+﻿  @model IBS.Models.InspectionEngineersModel
+@{
     ViewData["Title"] = "Inspection Engineers";
     string Region = IBS.Helper.SessionHelper.UserModelDTO.Region;
 }
@@ -14,13 +15,13 @@
 <div class="task-listinput">
     <div class="accordion-body">
         <div class="task-inner row my-0">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="reference">
                     <label for="Reference">IE Code</label>
                     <input type="text" id="IeCd" class="input" onkeypress="return isNumber(event)" />
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="reference">
                     <label for="Reference">IE Short Name</label>
                     <input type="text" id="IeSname" class="input" />
@@ -35,11 +36,32 @@
             <div class="col-md-3">
                 <div class="reference">
                     <label for="Reference">Controlling Officer</label>
-                    @Html.DropDownList("IeCoCd", new SelectList(IBS.Models.Common.GetControllingOfficer(Region) , "Value", "Text"),"--Select--")
+                    @Html.DropDownList("IeCoCd", new SelectList(IBS.Models.Common.GetControllingOfficer(Region), "Value", "Text"), "--Select--")
                 </div>
             </div>
+        </div>
+        <div class="task-inner row my-0">
+            <div class="col-md-3">
+                <div class="reference">
+                    <label for="Reference">Department Name</label>
+                    @* @Html.DropDownList(Model., new SelectList(IBS.Models.Common.Departmentlist(), "Value", "Text"), "--Select--") *@
+                    @Html.DropDownListFor(model => model.IeDepartment, new SelectList(Common.GetDepartment(), "Value", "Text"), "--Select--", new { @class = "", @onchange = "BindClusterData();" })
+                </div>
             </div>
-            <div class="row my-0">
+            <div class="col-md-3">
+                <div class="reference">
+                    <label for="Reference">Cluster Name</label>
+                    @Html.DropDownListFor(model => model.ClusterID, new SelectList(IBS.Models.Common.GetClusterByIE(Region, ""), "Value", "Text"), "--Select--")
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="reference">
+                    <label for="Reference">IE Name</label>
+                    @Html.DropDownListFor(model => model.IeCode, new SelectList(IBS.Models.Common.GetIENameIsStatusNull(Region), "Value", "Text"), "--Select--")
+                </div>
+            </div>
+        </div>
+        <div class="row my-0">
             <div class="col-md-2">
                 <div class="savenext-btn btnAlign">
                     <button type="button" class="save-btn active" onclick="InitializeDatatable();">Search</button>
@@ -54,11 +76,13 @@
                 <table id="dtIE" class="table-responsive">
                     <thead>
                         <tr>
+                            @* <th>Cluster Code</th> *@
+                            <th>Cluster Name</th>
                             <th>IE Code</th>
                             <th>IE Full Name</th>
                             <th>IE Short Name</th>
                             <th>Employee No</th>
-                            <th>IE Seal No.</th>
+                            @* <th>IE Seal No.</th> *@
                             <th>IE City</th>
                             <th>IE Region</th>
                             <th class="dt-align-center">Action</th>
@@ -72,7 +96,7 @@
     </section>
 </div>
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
 
@@ -82,12 +106,31 @@
             InitializeDatatable();
         });
 
+        function BindClusterData() {
+            $("#ClusterID").empty();
+            $("#ClusterID").append($('<option value="">--Select--</option>'));
+
+            $.get("@Url.Action("GetClusterByIE", "InspectionEngineers")", { IeDepartment: $("#IeDepartment").val() }, function (response) {
+                if (response != null) {
+                    debugger
+                    $("#ClusterID").empty();
+                    $("#ClusterID").append($('<option value="">--Select--</option>'));
+                    $.each(response.list, function (ind, val) {
+                        $("#ClusterID").append($('<option></option>').val(val.Value).html(val.Text));
+                    });
+                }
+            });
+        }
+
         function InitializeDatatable() {
 
             var IeCd = $("#IeCd").val();
             var IeSname = $("#IeSname").val();
             var IeName = $("#IeName").val();
             var IeCoCd = $("#IeCoCd").val();
+            var IeDepartment = $("#IeDepartment").val();
+            var ClusterID = $("#ClusterID").val();
+            var IeCode = $("#IeCode").val();
 
             $("#dtIE").DataTable({
                 stateSave: false,// Design Assets
@@ -106,20 +149,49 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            IeCd, IeSname, IeName, IeCoCd
+                            IeCd, IeSname, IeName, IeCoCd, IeDepartment, ClusterID, IeCode
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
                     }
                 },
                 columns: [// Columns Setups
+                    // { data: "Cluster" },
+                    { data: "ClusterName" },
                     { data: "IeCd" },
                     { data: "IeName" },
                     { data: "IeSname" },
                     { data: "IeEmpNo" },
-                    { data: "IeSealNo" },
+                    // { data: "IeSealNo" },
                     { data: "IeCityCd" },
-                    { data: "IeRegion" },
+                    // { data: "IeRegion" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Region = data.IeRegion;
+                            var html = '';
+                            if (Region == 'N') {
+                                html = "Northern Region";
+                            }
+                            else if (Region == 'S') {
+                                html = "Southern Region";
+
+                            }
+                            else if (Region == 'W') {
+                                html = "Western Region";
+                            }
+                            else if (Region == 'E') {
+                                html = "Eastern Region";
+                            }
+                            else if (Region == 'C') {
+                                html = "Central Region";
+                            }
+                            else if (Region == 'Q') {
+                                html = "CO QA Division";
+                            }
+                            return html;
+                        }
+                    },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
@@ -168,4 +240,4 @@
         }
 
     </script>
-    }
+}

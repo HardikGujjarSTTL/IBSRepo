@@ -95,7 +95,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DTResult<InspectionEngineersModel> GetInspectionEngineersList(DTParameters dtParameters)
+        public DTResult<InspectionEngineersModel> GetInspectionEngineersList(DTParameters dtParameters, string Region)
         {
 
             DTResult<InspectionEngineersModel> dTResult = new() { draw = 0 };
@@ -122,13 +122,23 @@ namespace IBS.Repositories
             string IeName = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeName"]) ? Convert.ToString(dtParameters.AdditionalValues["IeName"]) : "";
             int? IeCoCd = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeCoCd"]) ? Convert.ToInt32(dtParameters.AdditionalValues["IeCoCd"]) : null;
 
+            string IeDepartment = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeDepartment"]) ? Convert.ToString(dtParameters.AdditionalValues["IeDepartment"]) : "";
+            int? ClusterID = !string.IsNullOrEmpty(dtParameters.AdditionalValues["ClusterID"]) ? Convert.ToInt32(dtParameters.AdditionalValues["ClusterID"]) : null;
+            int? IeCode = !string.IsNullOrEmpty(dtParameters.AdditionalValues["IeCode"]) ? Convert.ToInt32(dtParameters.AdditionalValues["IeCode"]) : null;
+
             query = from v in context.T09Ies
+                    join T101 in context.T101IeClusters on v.IeCd equals T101.IeCode
+                    join T99 in context.T99ClusterMasters on T101.ClusterCode equals T99.ClusterCode
                     join c in context.T03Cities on v.IeCityCd equals c.CityCd into cityJoin
                     from c in cityJoin.DefaultIfEmpty()
                     where ((IeCd != null) ? v.IeCd == IeCd : true)
                      && (!string.IsNullOrEmpty(IeSname) ? v.IeSname.ToLower().Contains(IeSname.ToLower()) : true)
                      && (!string.IsNullOrEmpty(IeName) ? v.IeName.ToLower().Contains(IeName.ToLower()) : true)
                      && ((IeCoCd != null) ? v.IeCoCd == IeCoCd : true)
+                     && ((IeDepartment != "") ? v.IeDepartment == IeDepartment : true)
+                     && ((ClusterID != null) ? T99.ClusterCode == Convert.ToInt32(ClusterID) : true)
+                     && ((IeCode != null) ? v.IeCd == Convert.ToInt32(IeCode) : true)
+                     && v.IeRegion == Region
                     select new InspectionEngineersModel
                     {
                         IeCd = v.IeCd,
@@ -137,7 +147,9 @@ namespace IBS.Repositories
                         IeEmpNo = v.IeEmpNo,
                         IeSealNo = v.IeSealNo,
                         IeCityCd = c.Location != null ? c.Location + " : " + c.City : c.City,
-                        IeRegion = v.IeRegion
+                        IeRegion = v.IeRegion,
+                        Cluster = T99.ClusterCode,
+                        ClusterName = T99.ClusterName + "-" + T99.GeographicalPartition
                     };
 
             dTResult.recordsTotal = query.Count();

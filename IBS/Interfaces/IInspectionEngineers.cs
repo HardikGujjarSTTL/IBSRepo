@@ -8,7 +8,7 @@ namespace IBS.Interfaces
 
         public InspectionEngineersModel FindManageByID(int Id);
 
-        DTResult<InspectionEngineersModel> GetInspectionEngineersList(DTParameters dtParameters);
+        DTResult<InspectionEngineersModel> GetInspectionEngineersList(DTParameters dtParameters, string Region);
 
         bool Remove(int IeCd, int UserID);
 

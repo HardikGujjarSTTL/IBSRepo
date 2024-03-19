@@ -6,6 +6,8 @@ namespace IBS.Models
     {
         public int IeCd { get; set; }
 
+        public int IeCode { get; set; }
+        
         [Display(Name = "IE Name")]
         [Required]
         public string? IeName { get; set; }
@@ -105,6 +107,8 @@ namespace IBS.Models
         public int Cluster { get; set; }
 
         public string lstCluster { get; set; }
+
+        public string ClusterName { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
