@@ -4552,7 +4552,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("CASE_NO");
             entity.Property(e => e.ConsgnCallStatus)
-                .HasMaxLength(1)
+                .HasMaxLength(5)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("CONSGN_CALL_STATUS");

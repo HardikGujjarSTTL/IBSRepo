@@ -94,7 +94,7 @@
                             <input type="text" class="input" id="lblps" readonly="readonly">
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-4 mb-3" id="fileupload">
                         <partial name="_FileUploader" model="(IBS.Models.FileUploaderDTO)ViewBag.LabUploadDoc" />
                     </div>
                     <div class="savenext-btn">
@@ -102,17 +102,17 @@
                         <button type="button" class="save-btn active" onclick="Update();" style="display:none;" id="btnupdate">Update</button>
                         <a asp-controller="LabSampleInfo" asp-action="LabSampleInfo" class="reset-btn">Clear</a>
                     </div>
-                   @*  <div class="row my-0">
-                        <div class="col-md-4 mb-3" id="showfill">
-                            <label for="Reference">Upload Lab Report<i class="text-danger">(PDF Only and Max Size: 1 MB)</i><i id="mandatory" class="text-danger">*</i></label>
+                    @*  <div class="row my-0">
+                    <div class="col-md-4 mb-3" id="showfill">
+                    <label for="Reference">Upload Lab Report<i class="text-danger">(PDF Only and Max Size: 1 MB)</i><i id="mandatory" class="text-danger">*</i></label>
 
-                            <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
-                        </div>
-                        <a id="download" href="javascript:void(0);" style="display:none;">Download File</a>
+                    <input type="file" name="fileUpload" id="upload" enctype="multipart/form-data" />
+                    </div>
+                    <a id="download" href="javascript:void(0);" style="display:none;">Download File</a>
                     </div> *@
                     @* <div class="savenext-btn">
-                        <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
-                        <button type="button" class="save-btn active Permission_EditView" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
+                    <button type="button" class="save-btn active Permission_Save" onclick="SaveDetails();" id="btnsave">Save</button>
+                    <button type="button" class="save-btn active Permission_EditView" style="display:none;" onclick="UpdateDetails();" id="btnupdate">Update</button>
                     </div> *@
                 </div>
                 @*<form asp-controller="YourController" asp-action="YourAction" method="post">*@
@@ -243,11 +243,11 @@
 
 
             if ($("#ddlstatus").val() != "U") {
-                $("#showfill").css("display", "none");
+                $("#fileupload").css("display", "none");
                 $("#mandatory").css("display", "none");
             }
             else {
-                $("#showfill").css("display", "");
+                $("#fileupload").css("display", "");
                 $("#mandatory").css("display", "");
             }
         })
@@ -305,17 +305,18 @@
                         $("#btnupdate").css("display", "");
 
                         if ($("#ddlstatus").val(success.Status).val() != "U") {
-                            $("#showfill").css("display", "none");
+                            $("#fileupload").css("display", "none");
                             $("#mandatory").css("display", "none");
                         }
                         else {
-                            $("#showfill").css("display", "");
+                            $("#fileupload").css("display", "");
                             $("#mandatory").css("display", "");
                         }
                     }
                     else {
                         $("#dtrecsam").val('');
                         $("#dtlike").val('');
+
                     }
 
                     $("#lblcno").val(success.CaseNo);
@@ -337,6 +338,17 @@
                     sessionStorage.setItem("lINK", success.Hyperlink2);
                     sessionStorage.setItem("IEcode", success.IE);
                     $("#lblIECD").val(success.IE);
+                    
+                    if (success.Status == "")
+                        success.Status = "S";
+                    if ($("#ddlstatus").val(success.Status).val() != "U") {
+                        $("#fileupload").css("display", "none");
+                        $("#mandatory").css("display", "none");
+                    }
+                    else {
+                        $("#fileupload").css("display", "");
+                        $("#mandatory").css("display", "");
+                    }
                 }
 
             });

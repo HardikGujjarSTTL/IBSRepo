@@ -41,7 +41,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label for="Reference">Qty Off Now</label>
-                    <input type="text" class="input" asp-for="QtyToInsp" onkeypress="return isNumber(event)">
+                    <input type="text" class="input" asp-for="QtyToInsp" onkeypress="return isNumber(event)" onchange="QtyInspChanged();">
                     <span style="color:red;">New Qty Off Now add/update.</span>
                 </div>
                 <div class="col-md-4 mb-3">

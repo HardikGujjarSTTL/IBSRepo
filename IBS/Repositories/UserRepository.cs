@@ -1,4 +1,5 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.Drawing;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
@@ -695,13 +696,13 @@ namespace IBS.Repositories
 
                 if (orderCriteria == "")
                 {
-                    orderCriteria = "UserName";
+                    orderCriteria = "ID";
                 }
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
-                orderCriteria = "UserName";
+                orderCriteria = "ID";
                 orderAscendingDirection = true;
             }
 
@@ -793,6 +794,30 @@ namespace IBS.Repositories
                 context.SaveChanges();
                 Id = Convert.ToInt32(obj.Id);
 
+                long? userMasterID = 0;
+                var userMaster = (from ur in context.UserMasters where ur.UserId == obj.UserId select ur).FirstOrDefault();
+                if(userMaster == null)
+                {
+                    UserMaster userMaster1 = new UserMaster();
+                    userMaster1.UserId = Convert.ToString(obj.UserId);
+                    userMaster1.Name = obj.UserName;
+                    userMaster1.UserType = "USERS";
+                    userMaster1.Createdby = obj.Createdby;
+                    userMaster1.Createddate = DateTime.Now;
+                    context.UserMasters.Add(userMaster1);
+                    context.SaveChanges();
+                    userMasterID = userMaster1.Id;
+                }
+                else
+                {
+                    userMaster.UserId = Convert.ToString(obj.UserId);
+                    userMaster.Name = obj.UserName;
+                    userMaster.UserType = "USERS";
+                    userMaster.Createdby = obj.Createdby;
+                    userMaster.Createddate = DateTime.Now;
+                    context.SaveChanges();
+                    userMasterID = userMaster.Id;
+                }
                 var role = (from ur in context.Userroles where ur.UserId == obj.UserId select ur).FirstOrDefault();
                 if (role == null)
                 {
@@ -802,6 +827,7 @@ namespace IBS.Repositories
                     objUR.UserId = Convert.ToString(obj.UserId);
                     objUR.RoleId = Convert.ToInt32(model.RoleId);
                     objUR.Isdeleted = Convert.ToByte(false);
+                    objUR.UserMasterId = userMasterID;
                     objUR.Createdby = Convert.ToInt32(model.Createdby);
                     objUR.Createddate = DateTime.Now;
                     context.Userroles.Add(objUR);
@@ -810,6 +836,7 @@ namespace IBS.Repositories
                 else
                 {
                     role.RoleId = Convert.ToInt32(model.RoleId);
+                    role.UserMasterId = userMasterID;
                     role.Updatedby = Convert.ToInt32(model.Updatedby);
                     role.Updateddate = DateTime.Now;
                     context.SaveChanges();
@@ -833,6 +860,31 @@ namespace IBS.Repositories
                 User.Updateddate = DateTime.Now;
                 context.SaveChanges();
 
+                long? userMasterID = 0;
+                var userMaster = (from ur in context.UserMasters where ur.UserId == User.UserId select ur).FirstOrDefault();
+                if (userMaster == null)
+                {
+                    UserMaster userMaster1 = new UserMaster();
+                    userMaster1.UserId = Convert.ToString(User.UserId);
+                    userMaster1.Name = User.UserName;
+                    userMaster1.UserType = "USERS";
+                    userMaster1.Createdby = User.Createdby;
+                    userMaster1.Createddate = DateTime.Now;
+                    context.UserMasters.Add(userMaster1);
+                    context.SaveChanges();
+                    userMasterID = userMaster1.Id;
+                }
+                else
+                {
+                    userMaster.UserId = Convert.ToString(User.UserId);
+                    userMaster.Name = User.UserName;
+                    userMaster.UserType = "USERS";
+                    userMaster.Createdby = User.Createdby;
+                    userMaster.Createddate = DateTime.Now;
+                    context.SaveChanges();
+                    userMasterID = userMaster.Id;
+                }
+
                 var role = (from ur in context.Userroles where ur.UserId == User.UserId select ur).FirstOrDefault();
                 if (role == null)
                 {
@@ -841,6 +893,7 @@ namespace IBS.Repositories
                     objUR.Id = maxID;
                     objUR.UserId = Convert.ToString(User.UserId);
                     objUR.RoleId = Convert.ToInt32(model.RoleId);
+                    objUR.UserMasterId = userMasterID;
                     objUR.Isdeleted = Convert.ToByte(false);
                     objUR.Createdby = Convert.ToInt32(model.Createdby);
                     objUR.Createddate = DateTime.Now;
@@ -850,6 +903,7 @@ namespace IBS.Repositories
                 else
                 {
                     role.RoleId = Convert.ToInt32(model.RoleId);
+                    role.UserMasterId = userMasterID;
                     role.Updatedby = Convert.ToInt32(model.Updatedby);
                     role.Updateddate = DateTime.Now;
                     context.SaveChanges();

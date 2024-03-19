@@ -1754,11 +1754,12 @@ namespace IBS.Repositories.InspectionBilling
             //               && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
             //               && c.CallSno == Convert.ToInt16(Callsno)
             //               && c.ConsigneeCd == Convert.ToInt32(Consignee)
+
             query = from c in context.T18CallDetails
                     join p in context.T15PoDetails on c.CaseNo equals p.CaseNo
                     join u in context.T04Uoms on p.UomCd equals u.UomCd
-                    //join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
-                    //from intermediate in intermediateGroup.DefaultIfEmpty()
+                    join i in context.IcIntermediates on c.CaseNo equals i.CaseNo into intermediateGroup
+                    from intermediate in intermediateGroup.DefaultIfEmpty()
                     where c.ItemSrnoPo == p.ItemSrno && c.CaseNo == p.CaseNo && p.UomCd == u.UomCd
                        && c.CaseNo == Caseno
                        && c.CallRecvDt == Convert.ToDateTime(Callrecvdt)
@@ -1777,10 +1778,14 @@ namespace IBS.Repositories.InspectionBilling
                         //QtyPassed = (intermediate.QtyPassed != 0) ? intermediate.QtyPassed : c.QtyPassed,
                         //QtyRejected = (intermediate.QtyRejected != 0) ? intermediate.QtyRejected : c.QtyRejected,
                         //QtyDue = (intermediate.QtyDue != 0) ? intermediate.QtyDue : c.QtyDue,
-                        QtyToInsp = (c.QtyToInsp != 0) ? c.QtyToInsp : c.QtyToInsp,
-                        QtyPassed = (c.QtyPassed != 0) ? c.QtyPassed : c.QtyPassed,
-                        QtyRejected = (c.QtyRejected != 0) ? c.QtyRejected : c.QtyRejected,
-                        QtyDue = (c.QtyDue != 0) ? c.QtyDue : c.QtyDue,
+                        QtyToInsp = intermediate.QtyToInsp == 0 || intermediate.QtyToInsp == null ? c.QtyToInsp : intermediate.QtyToInsp,
+                        QtyPassed = intermediate.QtyPassed == 0 || intermediate.QtyPassed == null ? c.QtyPassed : intermediate.QtyPassed,
+                        QtyRejected = intermediate.QtyRejected == 0 || intermediate.QtyRejected == null ? c.QtyRejected == null || c.QtyRejected == 0 ? 0 : c.QtyRejected : intermediate.QtyRejected == null || intermediate.QtyRejected == 0 ? 0 : intermediate.QtyRejected,
+                        QtyDue = intermediate.QtyDue == 0 || intermediate.QtyDue == null ? c.QtyDue == null || c.QtyDue == 0 ? 0 : c.QtyDue : intermediate.QtyDue == null || intermediate.QtyDue == 0 ? 0 : intermediate.QtyDue,
+                        //QtyToInsp = (c.QtyToInsp != 0) ? c.QtyToInsp : c.QtyToInsp,
+                        //QtyPassed = (c.QtyPassed != 0) ? c.QtyPassed : c.QtyPassed,
+                        //QtyRejected = (c.QtyRejected != 0) ? c.QtyRejected : c.QtyRejected,
+                        //QtyDue = (c.QtyDue != 0) ? c.QtyDue : c.QtyDue,
                         Rate = p.Rate,
                         SalesTaxPer = p.SalesTaxPer,
                         SalesTax = p.SalesTax,
@@ -2570,10 +2575,21 @@ namespace IBS.Repositories.InspectionBilling
                         model.QtyOrdered = CDetails.c.QtyOrdered;
                         model.ItemSrnoPo = CDetails.c.ItemSrnoPo;
                         model.ItemDescPo = CDetails.c.ItemDescPo;
-                        model.QtyToInsp = (CDetails.intermediate.QtyToInsp != 0) ? CDetails.intermediate.QtyToInsp : CDetails.c.QtyToInsp;
-                        model.QtyPassed = (CDetails.intermediate.QtyPassed != 0) ? CDetails.intermediate.QtyPassed : CDetails.c.QtyPassed;
-                        model.QtyRejected = (CDetails.intermediate.QtyRejected != 0) ? CDetails.intermediate.QtyRejected : CDetails.c.QtyRejected;
-                        model.QtyDue = (CDetails.intermediate.QtyDue != 0) ? CDetails.intermediate.QtyDue : CDetails.c.QtyDue;
+                        if (CDetails.intermediate != null)
+                        {
+                            model.QtyToInsp = (CDetails.intermediate.QtyToInsp != 0) ? CDetails.intermediate.QtyToInsp == null || CDetails.intermediate.QtyToInsp == 0 ? 0 : CDetails.intermediate.QtyToInsp : CDetails.c.QtyToInsp == null || CDetails.c.QtyToInsp == 0 ? 0 : CDetails.c.QtyToInsp;
+                            model.QtyPassed = (CDetails.intermediate.QtyPassed != 0) ? CDetails.intermediate.QtyPassed == null || CDetails.intermediate.QtyPassed == 0 ? 0 : CDetails.intermediate.QtyPassed : CDetails.c.QtyPassed == null || CDetails.c.QtyPassed == 0 ? 0 : CDetails.c.QtyPassed;
+                            model.QtyRejected = (CDetails.intermediate.QtyRejected != 0) ? CDetails.intermediate.QtyRejected == null || CDetails.intermediate.QtyRejected == 0 ? 0 : CDetails.intermediate.QtyRejected : CDetails.c.QtyRejected == null || CDetails.c.QtyRejected == 0 ? 0 : CDetails.c.QtyRejected;
+                            model.QtyDue = (CDetails.intermediate.QtyDue != 0) ? CDetails.intermediate.QtyDue == null || CDetails.intermediate.QtyDue == 0 ? 0 : CDetails.intermediate.QtyDue : CDetails.c.QtyDue == null || CDetails.c.QtyDue == 0 ? 0 : CDetails.c.QtyDue;
+                        }
+                        else
+                        {
+                            model.QtyToInsp = CDetails.c.QtyToInsp == null || CDetails.c.QtyToInsp == 0 ? 0 : CDetails.c.QtyToInsp;
+                            model.QtyPassed = CDetails.c.QtyPassed == null || CDetails.c.QtyPassed == 0 ? 0 : CDetails.c.QtyPassed;
+                            model.QtyRejected = CDetails.c.QtyRejected == null || CDetails.c.QtyRejected == 0 ? 0 : CDetails.c.QtyRejected;
+                            model.QtyDue = CDetails.c.QtyDue == null || CDetails.c.QtyDue == 0 ? 0 : CDetails.c.QtyDue;
+                        }
+
                         //model.QtyToInsp = CDetails.c.QtyToInsp;
                         //model.QtyPassed = CDetails.c.QtyPassed;
                         //model.QtyRejected = CDetails.c.QtyRejected;
@@ -2603,10 +2619,11 @@ namespace IBS.Repositories.InspectionBilling
                         //model.QtyPassed = (CDetails.intermediate.QtyPassed != 0) ? CDetails.intermediate.QtyPassed : CDetails.c.QtyPassed;
                         //model.QtyRejected = (CDetails.intermediate.QtyRejected != 0) ? CDetails.intermediate.QtyRejected : CDetails.c.QtyRejected;
                         //model.QtyDue = (CDetails.intermediate.QtyDue != 0) ? CDetails.intermediate.QtyDue : CDetails.c.QtyDue;
-                        model.QtyToInsp = CDetails_C.c.QtyToInsp;
-                        model.QtyPassed = CDetails_C.c.QtyPassed;
-                        model.QtyRejected = CDetails_C.c.QtyRejected;
-                        model.QtyDue = CDetails_C.c.QtyDue;
+                        model.QtyToInsp = CDetails_C.c.QtyToInsp == null || CDetails_C.c.QtyToInsp == 0 ? 0 : CDetails_C.c.QtyToInsp;
+                        model.QtyPassed = CDetails_C.c.QtyPassed == null || CDetails_C.c.QtyPassed == 0 ? 0 : CDetails_C.c.QtyPassed;
+                        model.QtyRejected = CDetails_C.c.QtyRejected == null || CDetails_C.c.QtyRejected == 0 ? 0 : CDetails_C.c.QtyRejected;
+                        model.QtyDue = CDetails_C.c.QtyDue == null || CDetails_C.c.QtyDue == 0 ? 0 : CDetails_C.c.QtyDue;
+                        
                         model.Rate = CDetails_C.p.Rate;
                         model.SalesTaxPer = CDetails_C.p.SalesTaxPer;
                         model.SalesTax = CDetails_C.p.SalesTax;
@@ -2653,27 +2670,55 @@ namespace IBS.Repositories.InspectionBilling
         {
             string ID = "";
             var CallDetails = context.T18CallDetails.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
-            if (CallDetails != null)
+            var IcIntermediates = context.IcIntermediates.Where(x => x.CaseNo == CaseNo && x.CallRecvDt == CallRecvDt && x.CallSno == CallSno && x.ItemSrnoPo == ItemSrnoPo).FirstOrDefault();
+            if(IcIntermediates == null)
             {
-                CallDetails.ItemDescPo = model.ItemDescPo;
-                CallDetails.QtyToInsp = model.QtyToInsp;
-                CallDetails.QtyPassed = model.QtyPassed;
-                CallDetails.QtyRejected = model.QtyRejected;
-                CallDetails.QtyDue = model.QtyDue;
-                CallDetails.Updatedby = model.UserId;
-                CallDetails.Updateddate = DateTime.Now.Date;
-
-                context.SaveChanges();
-                ID = Convert.ToString(CallDetails.ItemSrnoPo);
-
-                var PODetails = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrnoPo && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
-                if (PODetails != null)
+                if (CallDetails != null)
                 {
-                    PODetails.OtherCharges = model.OtherCharges;
-                    context.SaveChanges();
-                }
+                    CallDetails.ItemDescPo = model.ItemDescPo;
+                    CallDetails.QtyToInsp = model.QtyToInsp;
+                    CallDetails.QtyPassed = model.QtyPassed;
+                    CallDetails.QtyRejected = model.QtyRejected;
+                    CallDetails.QtyDue = model.QtyDue;
+                    CallDetails.Updatedby = model.UserId;
+                    CallDetails.Updateddate = DateTime.Now.Date;
 
+                    context.SaveChanges();
+                    ID = Convert.ToString(CallDetails.ItemSrnoPo);
+
+                    var PODetails = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrnoPo && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                    if (PODetails != null)
+                    {
+                        PODetails.OtherCharges = model.OtherCharges;
+                        context.SaveChanges();
+                    }
+                }
             }
+            else
+            {
+                if (IcIntermediates != null)
+                {
+                    IcIntermediates.ItemDescPo = model.ItemDescPo;
+                    IcIntermediates.QtyToInsp = model.QtyToInsp;
+                    IcIntermediates.QtyPassed = model.QtyPassed;
+                    IcIntermediates.QtyRejected = model.QtyRejected;
+                    IcIntermediates.QtyDue = model.QtyDue;
+                    //IcIntermediates.Updatedby = model.UserId;
+                    IcIntermediates.Updateddate = DateTime.Now.Date;
+
+                    context.SaveChanges();
+                    ID = Convert.ToString(IcIntermediates.ItemSrnoPo);
+
+                    var PODetails = context.T15PoDetails.Where(x => x.CaseNo == CaseNo && x.ItemSrno == ItemSrnoPo && x.ConsigneeCd == Convert.ToInt32(model.Consignee)).FirstOrDefault();
+                    if (PODetails != null)
+                    {
+                        PODetails.OtherCharges = model.OtherCharges;
+                        context.SaveChanges();
+                    }
+                }
+            }
+            
+            
             return ID;
         }
 

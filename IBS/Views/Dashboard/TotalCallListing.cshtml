@@ -223,27 +223,27 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     },
-                    { data: "CaseNo", title: "Case No" },
+                    { data: "CaseNo", title: "Case No", width: '15%' },
                     {
-                        data: "CallRecvDt", title: "Call Recv Date", render: function (data, type, row) {
+                        data: "CallRecvDt", title: "Call Recv Date", width: '10%', render: function (data, type, row) {
                             if (type === "display" || type === "filter") {
                                 return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
                             }
                             return data;
                         }
                     },
-                    { data: "CallSno", title: "Call Sno" },
-                    { data: "IC_NO", title: "IC NO." },
+                    { data: "CallSno", title: "Call Sno", width: '10%' },
+                    { data: "IC_NO", title: "IC NO.", width: '30%' },
                     {
-                        data: "IC_DT", title: "IC Date", render: function (data, type, row) {
+                        data: "IC_DT", title: "IC Date", width: '15%', render: function (data, type, row) {
                             if (type === "display" || type === "filter") {
                                 return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
                             }
                             return data;
                         }
                     },
-                    { data: "BKNO", title: "Book No." },
-                    { data: "SETNO", title: "Set No." },
+                    { data: "BKNO", title: "Book No.", width: '10%' },
+                    { data: "SETNO", title: "Set No.", width: '10%' },
                 ]
             }
             InitializeDatatable();

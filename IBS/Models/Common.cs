@@ -8,16 +8,7 @@ using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using Newtonsoft.Json;
 using System.Globalization;
-using IBS.Controllers;
-using Humanizer.Localisation;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Linq;
-using System.Collections.Generic;
-using static IBS.Helper.Enums;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Security.Principal;
-using DocumentFormat.OpenXml.InkML;
 using QRCoder;
 using System.Drawing;
 
@@ -54,9 +45,7 @@ namespace IBS.Models
         public static string GetFullAddress(string address1, string address2, string address3, string address4, string address5, string PostCode)
         {
             List<string> strArray = new List<string> { address1, address2, address3, address4, address5, PostCode };
-
             string fullAddress = string.Join(", ", strArray.Where(m => !string.IsNullOrEmpty(m)).ToList());
-
             return fullAddress;
         }
 
@@ -2497,16 +2486,28 @@ namespace IBS.Models
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> dropDownDTOs = new List<SelectListItem>();
             List<SelectListItem> dropList = new List<SelectListItem>();
-            dropList = (from a in ModelContext.V06Consignees
-                        where a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
-                        a.ConsigneeCd.ToString() == consignee.ToString() && a.Status == null
-                        orderby a.Consignee
-                        select
-                   new SelectListItem
-                   {
-                       Text = Convert.ToString(a.ConsigneeCd + "-" + a.Consignee),
-                       Value = Convert.ToString(a.ConsigneeCd)
-                   }).ToList();
+            //dropList = (from a in ModelContext.V06Consignees
+            //            where (a.Consignee.Trim().ToUpper().StartsWith(consignee.Trim().ToUpper()) ||
+            //            a.ConsigneeCd.ToString() == consignee.ToString()) && a.Status == null
+            //            orderby a.Consignee
+            //            select
+            //       new SelectListItem
+            //       {
+            //           Text = Convert.ToString(a.ConsigneeCd + "-" + a.Consignee),
+            //           Value = Convert.ToString(a.ConsigneeCd)
+            //       }).ToList();
+
+            OracleParameter[] par = new OracleParameter[2];
+            par[0] = new OracleParameter("P_consignee", OracleDbType.Varchar2, consignee, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP_Get_Purchaser_For_DropDown", par, 1);
+            DataTable dt = ds.Tables[0];
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                dropList = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            }
+            
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
@@ -2636,20 +2637,31 @@ namespace IBS.Models
             List<SelectListItem> dropList = new List<SelectListItem>();
             if (VENDOR != null)
             {
-                dropList = (from v in ModelContext.T05Vendors
-                            join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
-                            where v.VendCityCd == c.CityCd && v.VendName != null
-                            && (v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                            || v.VendAdd1.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                            || c.Location.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
-                            || c.City.Trim().ToUpper().StartsWith(VENDOR.ToUpper() ))
-                            orderby v.VendName
-                            select
-                       new SelectListItem
-                       {
-                           Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
-                           Value = Convert.ToString(v.VendCd),
-                       }).ToList();
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
+                OracleParameter[] par = new OracleParameter[2];
+                par[0] = new OracleParameter("p_vend_cd", OracleDbType.Varchar2, VENDOR != "" ? VENDOR : DBNull.Value, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("GET_VENDOR_DETAILSForDropDown", par, 1);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                    dropList = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }).ToList();
+                }
+
+                //dropList = (from v in ModelContext.T05Vendors
+                //            join c in ModelContext.T03Cities on v.VendCityCd equals (c.CityCd)
+                //            where v.VendCityCd == c.CityCd && v.VendName != null
+                //            && (v.VendName.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                //            || v.VendAdd1.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                //            || c.Location.Trim().ToUpper().StartsWith(VENDOR.ToUpper())
+                //            || c.City.Trim().ToUpper().StartsWith(VENDOR.ToUpper()))
+                //            orderby v.VendName
+                //            select
+                //       new SelectListItem
+                //       {
+                //           Text = Convert.ToString(v.VendName) + "/" + Convert.ToString(v.VendAdd1) + "/" + Convert.ToString(c.Location) + "/" + c.City,
+                //           Value = Convert.ToString(v.VendCd),
+                //       }).ToList();
             }
             if (dropList.Count > 0)
             {
@@ -3328,10 +3340,6 @@ namespace IBS.Models
                     model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 }
 
-                //var obj = (from of in context.V12BillPayingOfficers
-                //             where SqlMethods.Like(of.Bpo.ToUpper().Trim(), SBPO + "%") ||
-                //                    of.BpoCd == SBPO.Trim()
-                //             select of).ToList();
                 objdata = (from a in model
                            select
                       new SelectListItem
@@ -3339,18 +3347,6 @@ namespace IBS.Models
                           Text = a.Text,
                           Value = a.Value
                       }).ToList();
-
-
-                //var obj = (from of in context.V12BillPayingOfficers
-                //           where of.Bpo.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper()) || of.BpoCd.Trim().ToUpper().StartsWith(SBPO.Trim().ToUpper())
-                //           select of).ToList();
-                //objdata = (from a in obj
-                //           select
-                //      new SelectListItem
-                //      {
-                //          Text = a.BpoCd + "-" + a.Bpo,
-                //          Value = a.BpoCd
-                //      }).ToList();
             }
             return objdata;
         }
@@ -3598,29 +3594,17 @@ namespace IBS.Models
             List<SelectListItem> objdata = new List<SelectListItem>();
             if (ConsigneeSearch != null && ConsigneeSearch != "")
             {
-                //ModelContext context = new(DbContextHelper.GetDbContextOptions());
-                //var obj = (from of in context.V06Consignees
-                //           where of.Consignee.Trim().ToUpper().StartsWith(ConsigneeSearch.ToUpper())
-                //           select of).ToList();
-
-                List<SelectListItem> model = new();
+                ModelContext context = new(DbContextHelper.GetDbContextOptions());
                 OracleParameter[] par = new OracleParameter[2];
-                par[0] = new OracleParameter("p_searchTerm", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
-                par[1] = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-                var ds = DataAccessDB.GetDataSet("GetConsigneeData", par, 1);
+                par[0] = new OracleParameter("P_consignee", OracleDbType.Varchar2, ConsigneeSearch, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                var ds = DataAccessDB.GetDataSet("SP_Get_Purchaser_For_DropDown", par, 1);
+                DataTable dt = ds.Tables[0];
                 if (ds != null && ds.Tables.Count > 0)
                 {
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
-                    model = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    objdata = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 }
-
-                objdata = (from a in model
-                           select
-                      new SelectListItem
-                      {
-                          Text = a.Text,
-                          Value = a.Value
-                      }).ToList();
             }
             return objdata;
         }
@@ -5205,7 +5189,7 @@ namespace IBS.Models
                        select new SelectListItem
                        {
                            Value = c.Id.ToString(),
-                           Text = c.Status                           
+                           Text = c.Status
                        }).ToList();
             //obj.Insert(0, new SelectListItem { Text = "All", Value = "All" });
             return obj;
@@ -5227,7 +5211,7 @@ namespace IBS.Models
         {
             List<SelectListItem> textValueDropDownStaff = new List<SelectListItem>() {
                 new SelectListItem() { Text = "Technical", Value = "T" },
-                new SelectListItem() { Text = "Non Technical", Value = "N" },                
+                new SelectListItem() { Text = "Non Technical", Value = "N" },
             };
             return textValueDropDownStaff.ToList();
         }

@@ -144,7 +144,7 @@ namespace IBS.Repositories
                         select new SelectListItem
                         {
                             Value = bpo.BpoCd.ToString(),
-                            Text = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                            Text = bpo.BpoCd.ToString() +'-'+ bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
                         }).ToList();
             }
             else
@@ -158,7 +158,7 @@ namespace IBS.Repositories
                             select new SelectListItem
                             {
                                 Value = bpo.BpoCd.ToString(),
-                                Text = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                                Text = bpo.BpoCd.ToString() + '-' + bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
                             }).ToList();
                 }
                 else
@@ -169,7 +169,7 @@ namespace IBS.Repositories
                             select new SelectListItem
                             {
                                 Value = bpo.BpoCd.ToString(),
-                                Text = bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                                Text = bpo.BpoCd.ToString() + '-' + bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
                             }).ToList();
                 }
             }

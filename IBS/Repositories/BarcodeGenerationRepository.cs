@@ -83,7 +83,8 @@ namespace IBS.Repositories
 
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.INSPECTOR_CUSTOMER).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.INSPECTOR_CUSTOMER).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.BARCODE).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();

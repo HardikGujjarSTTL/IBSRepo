@@ -251,6 +251,7 @@ namespace IBS.Repositories
             else
             {
                 role.RoleId = Convert.ToInt32(model.RoleId);
+                role.UserMasterId = Convert.ToInt32(model.User_ID);
                 role.Updatedby = Convert.ToInt32(model.Updatedby);
                 role.Updateddate = DateTime.Now;
                 context.SaveChanges();

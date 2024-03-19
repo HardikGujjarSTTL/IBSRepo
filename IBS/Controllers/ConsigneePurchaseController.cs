@@ -81,7 +81,7 @@ namespace IBS.Controllers
                     consigneePurchaseRepository.SaveDetails(model);
                     AlertAddSuccess("Record Updated Successfully.");
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Manage");
             }
             catch (Exception ex)
             {

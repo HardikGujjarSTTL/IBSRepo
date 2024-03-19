@@ -339,6 +339,24 @@
                 setItemVal();
             });
 
+            $("#LAB_TST_RECT_DT").change(function () {
+                debugger
+                var day = Call_Recv_Dt.substring(0, 2);
+                var month = Call_Recv_Dt.substring(3, 5);
+                var year = Call_Recv_Dt.substring(6, 10);
+                var CallDt = day + "/" + month + "/" + year;
+                var CurrDt = $("#LAB_TST_RECT_DT").val();
+
+                var callDate = new Date(CallDt.split("/").reverse().join("-"));
+                var currentDate = new Date(CurrDt.split("/").reverse().join("-"));
+
+                if (callDate > currentDate) {
+                    $("#LAB_TST_RECT_DT").val("");
+                    ShowHideMsgNew(false, "Not less than Call Received Date.");
+                }
+                
+            });
+
             AcceptedFun();
             GetVisitsChanges();
 
