@@ -458,7 +458,7 @@
             var CUM_QTY_PREV_PASSED = $("#CUM_QTY_PREV_PASSED").val();
             var OfferPassQty = parseInt(CUM_QTY_PREV_OFFERED) - parseInt(CUM_QTY_PREV_PASSED);
             var PassQtyOrder = parseInt(QTY_ORDERED) - parseInt(CUM_QTY_PREV_PASSED);
-            var QtyDuePending = parseInt(QTY_PASSED) - parseInt(PassQtyOrder)
+            var QtyDuePending = parseInt(PassQtyOrder) - parseInt(QTY_PASSED);
             $("#QTY_DUE").val(QtyDuePending);
             
         });
