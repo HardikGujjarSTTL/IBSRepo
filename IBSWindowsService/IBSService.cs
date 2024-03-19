@@ -32,9 +32,9 @@ namespace IBSWindowsService
         {
 
             string token = CallAuthenticate();
-            GetPOList(token);
+            //GetPOList(token);
             //GetPOMAList(token);
-            //GetBillsStatus(token);
+            GetBillsStatus(token);
 
             //InitializeComponent();
         }
@@ -147,13 +147,7 @@ namespace IBSWindowsService
                     {
                         if (model != null)
                         {
-                            // INSERT Data Start
-                            OracleParameter[] par = new OracleParameter[3];
-                            par[0] = new OracleParameter("P_RLY", OracleDbType.Varchar2, model.RLY, ParameterDirection.Input);
-                            par[1] = new OracleParameter("P_POKEY", OracleDbType.Varchar2, model.POKEY, ParameterDirection.Input);
-                            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
-                            var ds = GetDataSet("SP_INSERT_POHDR_FROMAPI", par, 1);
-                            // INSERT Data End
+                            
 
                             string apiUrl1 = "https://ireps.gov.in/immsapi/purchase/getPODetails";
                             object input1 = new
@@ -189,6 +183,42 @@ namespace IBSWindowsService
                             {
                                 List<PoDetail> pODetailModels = response1.data.PoDtl;
                                 PoHdr pOHdr = response1.data.PoHdr;
+
+                                if (pOHdr != null)
+                                {
+                                    // INSERT Data Start
+                                    OracleParameter[] par = new OracleParameter[28];
+                                    par[0] = new OracleParameter("p_CASE_NO", OracleDbType.Varchar2, pOHdr.CASE_NO, ParameterDirection.Input);
+                                    par[1] = new OracleParameter("p_PURCHASER_CD", OracleDbType.Varchar2, pOHdr.PURCHASER_CD, ParameterDirection.Input);
+                                    par[2] = new OracleParameter("p_IMMS_PURCHASER_CODE", OracleDbType.Varchar2, pOHdr.IMMS_PURCHASER_CODE, ParameterDirection.Input);
+                                    par[3] = new OracleParameter("p_IMMS_PURCHASER_DETAIL", OracleDbType.Varchar2, pOHdr.IMMS_PURCHASER_DETAIL, ParameterDirection.Input);
+                                    par[4] = new OracleParameter("p_STOCK_NONSTOCK", OracleDbType.Varchar2, pOHdr.STOCK_NONSTOCK, ParameterDirection.Input);
+                                    par[5] = new OracleParameter("p_RLY_NONRLY", OracleDbType.Varchar2, pOHdr.RLY_NONRLY, ParameterDirection.Input);
+                                    par[6] = new OracleParameter("p_PO_OR_LETTER", OracleDbType.Varchar2, pOHdr.PO_OR_LETTER, ParameterDirection.Input);
+                                    par[7] = new OracleParameter("p_PO_NO", OracleDbType.Varchar2, pOHdr.PO_NO, ParameterDirection.Input);
+                                    par[8] = new OracleParameter("p_L5NO_PO", OracleDbType.Varchar2, pOHdr.L5NO_PO, ParameterDirection.Input);
+                                    par[9] = new OracleParameter("p_PO_DT", OracleDbType.Date, pOHdr.PO_DT != null ? (object)Convert.ToDateTime(pOHdr.PO_DT) : DBNull.Value , ParameterDirection.Input);
+                                    par[10] = new OracleParameter("p_RECV_DT", OracleDbType.Date, pOHdr.RECV_DT != null ? (object)Convert.ToDateTime(pOHdr.RECV_DT) : DBNull.Value , ParameterDirection.Input);
+                                    par[11] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, pOHdr.VEND_CD, ParameterDirection.Input);
+                                    par[12] = new OracleParameter("p_IMMS_VENDOR_CODE", OracleDbType.Varchar2, pOHdr.IMMS_VENDOR_CODE, ParameterDirection.Input);
+                                    par[13] = new OracleParameter("p_VENDOR_DETAILS", OracleDbType.Varchar2, pOHdr.VENDOR_DETAILS, ParameterDirection.Input);
+                                    par[14] = new OracleParameter("p_FIRM_DETAILS", OracleDbType.Varchar2, pOHdr.FIRM_DETAILS, ParameterDirection.Input);
+                                    par[15] = new OracleParameter("p_RLY_CD", OracleDbType.Varchar2, pOHdr.RLY_CD, ParameterDirection.Input);
+                                    par[16] = new OracleParameter("p_RLY_SHORTNAME", OracleDbType.Varchar2, pOHdr.RLY_SHORTNAME, ParameterDirection.Input);
+                                    par[17] = new OracleParameter("p_REGION_CODE", OracleDbType.Varchar2, pOHdr.REGION_CODE, ParameterDirection.Input);
+                                    par[18] = new OracleParameter("p_REMARKS", OracleDbType.Varchar2, pOHdr.REMARKS, ParameterDirection.Input);
+                                    par[19] = new OracleParameter("p_BILL_PAY_OFF", OracleDbType.Varchar2, pOHdr.BILL_PAY_OFF, ParameterDirection.Input);
+                                    par[20] = new OracleParameter("p_BILL_PAY_OFF_NAME", OracleDbType.Varchar2, pOHdr.BILL_PAY_OFF_NAME, ParameterDirection.Input);
+                                    par[21] = new OracleParameter("p_USER_ID", OracleDbType.Varchar2, pOHdr.USER_ID, ParameterDirection.Input);
+                                    par[22] = new OracleParameter("p_DATETIME", OracleDbType.Date, pOHdr.DATETIME != null ? (object)Convert.ToDateTime(pOHdr.DATETIME) : DBNull.Value, ParameterDirection.Input);
+                                    par[23] = new OracleParameter("p_INSPECTING_AGENCY", OracleDbType.Varchar2, pOHdr.INSPECTING_AGENCY, ParameterDirection.Input);
+                                    par[24] = new OracleParameter("p_POI_CD", OracleDbType.Varchar2, pOHdr.POI_CD, ParameterDirection.Input);
+                                    par[25] = new OracleParameter("p_PO_STATUS", OracleDbType.Varchar2, pOHdr.PO_STATUS, ParameterDirection.Input);
+                                    par[26] = new OracleParameter("p_IMMS_POKEY", OracleDbType.Varchar2, model.POKEY, ParameterDirection.Input);
+                                    par[27] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                                    var ds = GetDataSet("SP_INSERT_POHDR_FROMAPI", par, 1);
+                                    // INSERT Data End
+                                }
                                 if (pODetailModels != null)
                                 {
                                     foreach (var item in pODetailModels)
@@ -409,7 +439,7 @@ namespace IBSWindowsService
 
         public void GetBillsStatus(string token)
         {
-            string apiUrl = "https://trial.ireps.gov.in/immsapi/rites/getBillsStatus";
+            string apiUrl = "https://ireps.gov.in/immsapi/rites/getBillsStatus";
 
             object input = new
             {

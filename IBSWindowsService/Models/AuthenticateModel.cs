@@ -91,6 +91,7 @@ namespace IBSWindowsService.Models
         public string INSPECTING_AGENCY { get; set; }
         public string POI_CD { get; set; }
         public string PO_STATUS { get; set; }
+        public string IMMS_POKEY { get; set; }
     }
     public class PoDetailResponseData
     {

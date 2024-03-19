@@ -31,7 +31,7 @@ namespace IBS.Models
 
         public decimal? BasicValue { get; set; }
 
-        [Required(ErrorMessage = "GST/Sale Tax(%) is required")]
+        //[Required(ErrorMessage = "GST/Sale Tax(%) is required")]
         public decimal? SalesTaxPer { get; set; }
 
         public decimal? SalesTax { get; set; }
