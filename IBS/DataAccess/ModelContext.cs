@@ -695,6 +695,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<WriteOffMaster> WriteOffMasters { get; set; }
 
+    public virtual DbSet<YourDesiredTableNameHereNameHereHereNameHere> YourDesiredTableNameHereNameHereHereNameHeres { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -5082,7 +5084,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("INSPECTING_AGENCY");
             entity.Property(e => e.L5noPo)
-                .HasMaxLength(5)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("L5NO_PO");
             entity.Property(e => e.PoDt)
@@ -7106,7 +7108,7 @@ public partial class ModelContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("BILL_NO");
             entity.Property(e => e.BillResentCount)
-                .HasPrecision(2)
+                .HasPrecision(6)
                 .HasColumnName("BILL_RESENT_COUNT");
             entity.Property(e => e.Amount)
                 .HasColumnType("NUMBER(12,2)")
@@ -14520,7 +14522,7 @@ public partial class ModelContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("FULL_PART");
             entity.Property(e => e.GstinType)
-                .HasMaxLength(10)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("GSTIN_TYPE");
             entity.Property(e => e.IcDt)
@@ -22385,46 +22387,37 @@ public partial class ModelContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.Createdby)
                 .HasPrecision(6)
-                .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("CREATEDBY");
             entity.Property(e => e.Createddate)
-                .ValueGeneratedOnAdd()
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("CREATEDDATE");
             entity.Property(e => e.Isdeleted)
                 .HasPrecision(2)
-                .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("ISDELETED");
             entity.Property(e => e.RoleId)
                 .HasPrecision(6)
-                .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("ROLE_ID");
             entity.Property(e => e.Updatedby)
                 .HasPrecision(6)
-                .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("NULL")
                 .HasColumnName("UPDATEDBY");
             entity.Property(e => e.Updateddate)
-                .ValueGeneratedOnAdd()
                 .HasColumnType("TIMESTAMP(6) WITH TIME ZONE")
                 .HasColumnName("UPDATEDDATE");
             entity.Property(e => e.UserId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .ValueGeneratedOnAdd()
                 .IsFixedLength()
                 .HasColumnName("USER_ID");
             entity.Property(e => e.UserMasterId)
                 .HasPrecision(13)
-                .ValueGeneratedOnAdd()
                 .HasColumnName("USER_MASTER_ID");
             entity.Property(e => e.Usertype)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .ValueGeneratedOnAdd()
                 .HasColumnName("USERTYPE");
         });
 
@@ -26641,6 +26634,24 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Createddate)
                 .HasColumnType("DATE")
                 .HasColumnName("CREATEDDATE");
+        });
+
+        modelBuilder.Entity<YourDesiredTableNameHereNameHereHereNameHere>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("YOUR_DESIRED_TABLE_NAME_HERE_NAME_HERE_HERE_NAME_HERE");
+
+            entity.Property(e => e.Age)
+                .HasColumnType("NUMBER")
+                .HasColumnName("AGE");
+            entity.Property(e => e.Id)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ID");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
         });
         modelBuilder.HasSequence("AUDIT_SEQ");
         modelBuilder.HasSequence("BARCODE_SEQ");
