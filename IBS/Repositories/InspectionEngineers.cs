@@ -185,6 +185,14 @@ namespace IBS.Repositories
             string status = "";
             int code = new int();
 
+            var T101IeClusters = (from T101 in context.T101IeClusters where T101.IeCode == model.IeCd select T101).ToList();
+            //var ClusterCode = T101IeClusters.FirstOrDefault();
+            //var ClustCount = context.T101IeClusters.Where(x => x.ClusterCode == ClusterCode.ClusterCode && x.DepartmentCode == ClusterCode.DepartmentCode).Count();
+
+            //if (ClustCount >= 1)
+            //{
+            //    return status = "2";
+            //}
             if (model.IeCd == 0)
             {
                 int count = context.T09Ies.Where(t09 => t09.IeRegion == model.IeRegion && (t09.IeSname == model.IeSname || t09.IeEmpNo == model.IeEmpNo)).Count();
@@ -286,7 +294,6 @@ namespace IBS.Repositories
                 }
             }
 
-            var T101IeClusters = (from T101 in context.T101IeClusters where T101.IeCode == model.IeCd select T101).ToList();
             if (T101IeClusters.Count > 0 && T101IeClusters != null)
             {
                 context.T101IeClusters.RemoveRange(T101IeClusters);

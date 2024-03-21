@@ -2507,7 +2507,7 @@ namespace IBS.Models
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 dropList = JsonConvert.DeserializeObject<List<SelectListItem>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
-            
+
             if (dropList.Count > 0)
             {
                 dropDownDTOs.AddRange(dropList);
@@ -2741,8 +2741,9 @@ namespace IBS.Models
 
             List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
                                              where t99.RegionCode == GetRegionCode && t99.DepartmentName == Dept
-                                             orderby t99.ClusterName
-
+                                             && !(from t101 in ModelContext.T101IeClusters
+                                                  select t101.ClusterCode).Contains(t99.ClusterCode)
+                                             orderby t99.ClusterCode ascending
                                              select new SelectListItem
                                              {
                                                  Text = t99.ClusterName + "-" + t99.GeographicalPartition,
@@ -2750,10 +2751,21 @@ namespace IBS.Models
 
                                              }).ToList();
 
+            //List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
+            //                                 where t99.RegionCode == GetRegionCode && t99.DepartmentName == Dept
+            //                                 orderby t99.ClusterName
+
+            //                                 select new SelectListItem
+            //                                 {
+            //                                     Text = t99.ClusterName + "-" + t99.GeographicalPartition,
+            //                                     Value = Convert.ToString(t99.ClusterCode)
+
+            //                                 }).ToList();
+
             return contacts;
         }
 
-        
+
 
         public static List<SelectListItem> GetItemSuperForm(string CaseNo, string CallDate, string CallSNo)
         {
@@ -3995,6 +4007,7 @@ namespace IBS.Models
         {
             ModelContext context = new(DbContextHelper.GetDbContextOptions());
             List<SelectListItem> city = (from a in context.Roles
+                                         where a.Isdeleted != Convert.ToSByte(true)
                                          select
                                     new SelectListItem
                                     {
