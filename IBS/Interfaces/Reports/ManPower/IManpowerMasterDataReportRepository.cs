@@ -7,5 +7,7 @@ namespace IBS.Interfaces.Reports.ManPower
         DTResult<ManpowerModel> GetManpowerMasterReportData(DTParameters dtParameters);
 
         ProjectModel FindByID(int id);
+
+        List<IEAndCallReport> GetIEAndCallReport(string P_FROMDATE, string P_TODATE);
     }
 }

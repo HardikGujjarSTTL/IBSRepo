@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.Reports.ManPower
 {
-    public class ManpoerListOfInspectingEngineersReportController : Controller
+    public class ManpoerListOfInspectingEngineersReportController : BaseController
     {
         private readonly IManpowerMasterDataReportRepository manpowerMasterDataReportRepository;
         public ManpoerListOfInspectingEngineersReportController(IManpowerMasterDataReportRepository _manpowerMasterDataReportRepository)

@@ -3989,7 +3989,7 @@ namespace IBS.Models
                                          select
                                     new SelectListItem
                                     {
-                                        Text = a.Name,
+                                        Text = a.UserId +" - "+ a.Name,
                                         Value = Convert.ToString(a.Id)
                                     }).ToList();
             return city;
@@ -4003,7 +4003,7 @@ namespace IBS.Models
                                          select
                                     new SelectListItem
                                     {
-                                        Text = a.Name,
+                                        Text = a.UserId + " - " + a.Name,
                                         Value = Convert.ToString(a.Id)
                                     }).ToList();
             return city;

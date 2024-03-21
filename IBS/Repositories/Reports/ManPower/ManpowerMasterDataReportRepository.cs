@@ -75,7 +75,7 @@ namespace IBS.Repositories.Reports.ManPower
             dTResult.recordsTotal = query.Count();
 
             if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.EmpName).ToLower().Contains(searchBy.ToLower()) 
+                query = query.Where(w => Convert.ToString(w.EmpName).ToLower().Contains(searchBy.ToLower())
                 || w.EmpNo.ToLower().Contains(searchBy.ToLower())
                 || w.Desig.ToLower().Contains(searchBy.ToLower())
                 || w.Working.ToLower().Contains(searchBy.ToLower())
@@ -115,7 +115,7 @@ namespace IBS.Repositories.Reports.ManPower
                     string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                     list = JsonConvert.DeserializeObject<List<ProjectDetailsReport>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 }
-                model.lstprojectDetailsReports= list;
+                model.lstprojectDetailsReports = list;
 
                 var query = (from a in context.T116ManpowerMasters
                              join d in context.T117ManpowerDetails on a.Id equals d.Manpowerid
@@ -133,6 +133,22 @@ namespace IBS.Repositories.Reports.ManPower
                                  Desig = rd.RDesignation,
                              }).ToList();
                 model.lstManpowerModels = query;
+            }
+            return model;
+        }
+
+        public List<IEAndCallReport> GetIEAndCallReport(string P_FROMDATE, string P_TODATE)
+        {
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("P_FROMDATE", OracleDbType.Date, Convert.ToDateTime(P_FROMDATE), ParameterDirection.Input);
+            par[1] = new OracleParameter("P_TODATE", OracleDbType.Date, Convert.ToDateTime(P_TODATE), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = DataAccessDB.GetDataSet("SP__Get_IEAndCallReport", par, 1);
+            List<IEAndCallReport> model = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                model = JsonConvert.DeserializeObject<List<IEAndCallReport>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
             return model;
         }

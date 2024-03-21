@@ -66,4 +66,18 @@ namespace IBS.Models
         public int Others { get; set; }
         public int Total { get; set; }
     }
+
+    public class IEAndCallReport
+    {
+        public string RIO { get; set; }
+        public int Mechanical { get; set; }
+        public int Electrical { get; set; }
+        public int Civil { get; set; }
+        public int Metallurgy { get; set; }
+        public int Textiles { get; set; }
+        public int PowerEngineering { get; set; }
+        public int TotalNoofIEs { get; set; }
+        public decimal TotalNoofcalls { get; set; }
+        public decimal NoofcallsperIEduringtheperiod { get; set; }
+    }
 }
