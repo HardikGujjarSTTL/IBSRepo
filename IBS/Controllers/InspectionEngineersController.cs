@@ -69,7 +69,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<InspectionEngineersModel> dTResult = inspectionEngineers.GetInspectionEngineersList(dtParameters);
+            DTResult<InspectionEngineersModel> dTResult = inspectionEngineers.GetInspectionEngineersList(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -98,20 +98,27 @@ namespace IBS.Controllers
                 string i = inspectionEngineers.DetailsInsertUpdate(model);
                 if (i != "Exists")
                 {
-                    #region File Upload Profile Picture
-                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                    if (i == "2")
                     {
-
-                        int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEFullSignature };
-                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEFullSignature), env, iDocument, "IEFullSignature", i, DocumentIds);
-
-                        int[] DocumentIds2 = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEInitials };
-                        DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEInitials), env, iDocument, "IEInitials", i, DocumentIds2);
+                        msg = "Cluster and Department Already Existing.";
+                        return Json(new { status = false, responseText = msg });
                     }
-                    #endregion
+                    else
+                    {
+                        #region File Upload Profile Picture
+                        if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
+                        {
 
-                    return Json(new { status = true, responseText = msg });
+                            int[] DocumentIds = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEFullSignature };
+                            List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                            DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEFullSignature), env, iDocument, "IEFullSignature", i, DocumentIds);
+
+                            int[] DocumentIds2 = { (int)Enums.DocumentCategory_AdminUserUploadDoc.IEInitials };
+                            DocumentHelper.SaveFiles(i, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.IEInitials), env, iDocument, "IEInitials", i, DocumentIds2);
+                        }
+                        #endregion
+                        return Json(new { status = true, responseText = msg });
+                    }
                 }
                 else if (i == "0")
                 {
@@ -231,6 +238,23 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
+
+        [HttpGet]
+        public IActionResult ClusterDepartmentwise(string IeDepartment)
+        {
+            try
+            {
+                List<SelectListItem> ClusterLst = Common.ClusterDepartmentwise(GetRegionCode, IeDepartment);
+                return Json(new { status = true, list = ClusterLst });
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "InspectionEngineers", "GetIeCity", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
+
+
 
         [HttpGet]
         public IActionResult GetMatch(int IeCd)
