@@ -244,7 +244,7 @@ namespace IBS.Controllers.CallAPI
                                 parameters[93] = new OracleParameter("P_INVOICE_SUPP_DOCS", OracleDbType.Varchar2, model.INVOICE_SUPP_DOCS, ParameterDirection.Input);
                                 parameters[94] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
                                 var ds = DataAccessDB.GetDataSet("SP_INSERT_Get_AllBills_FROMAPI", parameters, 2);
-                                //// need to create new SP for SP_INSERT_Get_AllBills_FROMAPI
+                                
                             }
                         }
                     }

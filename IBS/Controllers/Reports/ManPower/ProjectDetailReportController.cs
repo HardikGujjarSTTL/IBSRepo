@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers.Reports.ManPower
 {
-    public class ProjectDetailReportController : Controller
+    public class ProjectDetailReportController : BaseController
     {
         private readonly IManpowerMasterDataReportRepository manpowerMasterDataReportRepository;
         private readonly IDocument iDocument;
@@ -51,11 +51,5 @@ namespace IBS.Controllers.Reports.ManPower
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-
-        public string GetIPAddress()
-        {
-            string IPAddress = this.HttpContext.Connection.RemoteIpAddress.ToString();
-            return IPAddress;
-        }
     }
 }

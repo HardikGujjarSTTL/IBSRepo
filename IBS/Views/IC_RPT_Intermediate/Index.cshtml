@@ -354,7 +354,7 @@
                     $("#LAB_TST_RECT_DT").val("");
                     ShowHideMsgNew(false, "Not less than Call Received Date.");
                 }
-                
+
             });
 
             AcceptedFun();
@@ -417,10 +417,10 @@
             var SetNo = $('#SET_NO').val();
 
             $.get("@Url.Action("GetReportData", "IC_RPT_Intermediate")", { CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo }, function (response) {
-                if (response.IsDigitalSignatureConfig){
+                if (response.IsDigitalSignatureConfig) {
                     abc(response.responseText, "test.pdf");
                 }
-                else{
+                else {
                     downloadPDF(response.responseText);
                 }
             });
@@ -453,6 +453,11 @@
         $("#btnSave").click(function () {
             if ($("#CONSIGNEE_CD").val() == "0" || $("#CONSIGNEE_CD").val() == "") {
                 ShowHideMsgNew(false, "Please select consignee !");
+                return;
+            }
+
+            if ("@Model.Region" == "C" && $("#MAN_TYPE").val() == null) {
+                ShowHideMsgNew(false, "Please select Consignee Manufacture Type !");
                 return;
             }
 
@@ -831,10 +836,10 @@
                         if ("@Model.Region" == "C") {
                             $("#MAN_TYPE").val(response.MAN_TYPE);
                             lstman();
-                            $("#MAN_TYPE").css("display", "none"); //false
+                            $("#MAN_TYPE").css("display", ""); //true
                         }
                         else {
-                            $("#MAN_TYPE").css("display", ""); //true
+                            $("#MAN_TYPE").css("display", "none"); //false
                         }
                         $("#CONSIGNEE_DESC").val(response.CONSIGNEE_DESC);
                         $("#BPO_DESC").val(response.BPO_DESC);

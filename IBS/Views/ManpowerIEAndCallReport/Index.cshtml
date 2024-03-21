@@ -1,0 +1,57 @@
+﻿@model IBS.Models.ProjectModel
+@{
+    ViewData["Title"] = "I.Es and calls Report";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>I.Es and calls Report</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="reference">From Date</label>
+                    <input type="text" class="input datepicker" id="txtFromDate" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="reference">To Date</label>
+                    <input type="text" class="input datepicker" id="txtToDate" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="FillDetails();">search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div id="dvDetail">
+            @* <partial name="_IEAndCallReport" /> *@
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function FillDetails() {
+            var txtFromDate = $("#txtFromDate").val();
+            var txtToDate = $("#txtToDate").val();
+            let myObject = { P_FROMDATE: txtFromDate, P_TODATE: txtToDate };
+            $.post("@Url.Action("FillDetails", "ManpowerIEAndCallReport")", $.param(myObject), function (response) {
+                if (response != null) {
+                    $("#dvDetail").html("");
+                    $("#dvDetail").html(response);
+                }
+            });
+        }
+    </script>
+}

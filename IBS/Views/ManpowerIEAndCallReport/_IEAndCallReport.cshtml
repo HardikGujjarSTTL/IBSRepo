@@ -1,0 +1,58 @@
+﻿@model List<IBS.Models.IEAndCallReport>
+
+@if (Model != null)
+{
+    <div class="task-inner row">
+        <table class="borderTable">
+            <thead>
+                <tr>
+                    <th>RIO</th>
+                    <th>No. of I.Es(Mech.)</th>
+                    <th>No. of I.Es(Elect.)</th>
+                    <th>No. of I.Es(Civil)</th>
+                    <th>No. of I.Es (Metallurgy)</th>
+                    <th>No. of I.Es(Textiles)</th>
+                    <th>No. of I.Es(Power Engineering)</th>
+                    <th>Total No. of I.Es</th>
+                    <th>Total No. of calls</th>
+                    <th>No. of calls per I.E during the period</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td align="center">@item.RIO</td>
+                            <td align="center">@item.Mechanical</td>
+                            <td align="left">@item.Electrical</td>
+                            <td align="left">@item.Civil</td>
+                            <td align="left">@item.Metallurgy</td>
+                            <td align="left">@item.Textiles</td>
+                            <td align="left">@item.PowerEngineering</td>
+                            <td align="left">@item.TotalNoofIEs</td>
+                            <td align="left">@item.TotalNoofcalls</td>
+                            <td align="left">@item.NoofcallsperIEduringtheperiod</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10" align="center">No record found</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+}
+else
+{
+    <div style="text-align:center;">
+        No record found
+    </div>
+}
+
