@@ -2738,6 +2738,23 @@ namespace IBS.Models
         public static List<SelectListItem> GetClusterByIE(string GetRegionCode, string Dept)
         {
             ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
+            List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
+                                             where t99.RegionCode == GetRegionCode && t99.DepartmentName == Dept
+                                             orderby t99.ClusterName
+
+                                             select new SelectListItem
+                                             {
+                                                 Text = t99.ClusterName + "-" + t99.GeographicalPartition,
+                                                 Value = Convert.ToString(t99.ClusterCode)
+
+                                             }).ToList();
+
+            return contacts;
+        }
+
+        public static List<SelectListItem> ClusterDepartmentwise(string GetRegionCode, string Dept)
+        {
+            ModelContext ModelContext = new(DbContextHelper.GetDbContextOptions());
 
             List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
                                              where t99.RegionCode == GetRegionCode && t99.DepartmentName == Dept
@@ -2750,17 +2767,6 @@ namespace IBS.Models
                                                  Value = Convert.ToString(t99.ClusterCode)
 
                                              }).ToList();
-
-            //List<SelectListItem> contacts = (from t99 in ModelContext.T99ClusterMasters
-            //                                 where t99.RegionCode == GetRegionCode && t99.DepartmentName == Dept
-            //                                 orderby t99.ClusterName
-
-            //                                 select new SelectListItem
-            //                                 {
-            //                                     Text = t99.ClusterName + "-" + t99.GeographicalPartition,
-            //                                     Value = Convert.ToString(t99.ClusterCode)
-
-            //                                 }).ToList();
 
             return contacts;
         }

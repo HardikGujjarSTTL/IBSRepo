@@ -190,7 +190,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <label>Cluster :</label>
-                    @Html.DropDownListFor(model => model.ClusterID, new SelectList(IBS.Models.Common.GetClusterByIE(Model.IeRegion, Model.IeDepartment) , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(model => model.ClusterID, new SelectList(IBS.Models.Common.ClusterDepartmentwise(Model.IeRegion, Model.IeDepartment), "Value", "Text"), "--Select--")
                     <span class="text-danger" id="spnErrorlstCluster"></span>
                 </div>
                 <div class="col-md-2 mb-3 btnAlign">
@@ -429,7 +429,7 @@
             $("#ClusterID").empty();
             $("#ClusterID").append($('<option value="">--Select--</option>'));
 
-            $.get("@Url.Action("GetClusterByIE", "InspectionEngineers")", { IeDepartment: $("#IeDepartment").val() }, function (response) {
+            $.get("@Url.Action("ClusterDepartmentwise", "InspectionEngineers")", { IeDepartment: $("#IeDepartment").val() }, function (response) {
                 if (response != null) {
                     debugger
                     $("#ClusterID").empty();
