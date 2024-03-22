@@ -147,8 +147,6 @@ namespace IBSWindowsService
                     {
                         if (model != null)
                         {
-                            
-
                             string apiUrl1 = "https://ireps.gov.in/immsapi/purchase/getPODetails";
                             object input1 = new
                             {
@@ -197,8 +195,8 @@ namespace IBSWindowsService
                                     par[6] = new OracleParameter("p_PO_OR_LETTER", OracleDbType.Varchar2, pOHdr.PO_OR_LETTER, ParameterDirection.Input);
                                     par[7] = new OracleParameter("p_PO_NO", OracleDbType.Varchar2, pOHdr.PO_NO, ParameterDirection.Input);
                                     par[8] = new OracleParameter("p_L5NO_PO", OracleDbType.Varchar2, pOHdr.L5NO_PO, ParameterDirection.Input);
-                                    par[9] = new OracleParameter("p_PO_DT", OracleDbType.Date, pOHdr.PO_DT != null ? (object)Convert.ToDateTime(pOHdr.PO_DT) : DBNull.Value , ParameterDirection.Input);
-                                    par[10] = new OracleParameter("p_RECV_DT", OracleDbType.Date, pOHdr.RECV_DT != null ? (object)Convert.ToDateTime(pOHdr.RECV_DT) : DBNull.Value , ParameterDirection.Input);
+                                    par[9] = new OracleParameter("p_PO_DT", OracleDbType.Date, pOHdr.PO_DT != null ? (object)Convert.ToDateTime(pOHdr.PO_DT) : DBNull.Value, ParameterDirection.Input);
+                                    par[10] = new OracleParameter("p_RECV_DT", OracleDbType.Date, pOHdr.RECV_DT != null ? (object)Convert.ToDateTime(pOHdr.RECV_DT) : DBNull.Value, ParameterDirection.Input);
                                     par[11] = new OracleParameter("p_VEND_CD", OracleDbType.Varchar2, pOHdr.VEND_CD, ParameterDirection.Input);
                                     par[12] = new OracleParameter("p_IMMS_VENDOR_CODE", OracleDbType.Varchar2, pOHdr.IMMS_VENDOR_CODE, ParameterDirection.Input);
                                     par[13] = new OracleParameter("p_VENDOR_DETAILS", OracleDbType.Varchar2, pOHdr.VENDOR_DETAILS, ParameterDirection.Input);
@@ -268,7 +266,6 @@ namespace IBSWindowsService
                     }
                 }
             }
-
         }
 
         public void GetPOMAList(string token)
@@ -321,7 +318,6 @@ namespace IBSWindowsService
 
                             SyncWebClient client1 = new SyncWebClient();
                             client1.Headers["Method"] = "POST";
-
                             client1.Headers["Content-type"] = "application/json";
                             string inputJson1 = JsonConvert.SerializeObject(input1);
                             client1.Encoding = Encoding.UTF8;
@@ -426,7 +422,6 @@ namespace IBSWindowsService
                                         par1[23] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
 
                                         var ds1 = GetDataSet("SP_INSERT_MMP_POMA_HDR_DETAIL_FROMAPI", par1, 1);
-
                                     }
                                     // INSERT Data End
                                 }
@@ -479,15 +474,15 @@ namespace IBSWindowsService
                         foreach (BillsStatusModel model in model2)
                         {
                             // BillsStatus Save logic
-                            OracleParameter[] par = new OracleParameter[21];
+                            OracleParameter[] par = new OracleParameter[24];
                             par[0] = new OracleParameter("P_BILL_NO", OracleDbType.Varchar2, model.BILL_NO, ParameterDirection.Input);
                             par[1] = new OracleParameter("P_IC_NO", OracleDbType.Varchar2, model.IC_NO, ParameterDirection.Input);
-                            par[2] = new OracleParameter("P_IC_DT", OracleDbType.Date, !string.IsNullOrEmpty(model.IC_DT) ? (object)Convert.ToDateTime(model.IC_DT) : DBNull.Value , ParameterDirection.Input);
+                            par[2] = new OracleParameter("P_IC_DT", OracleDbType.Date, !string.IsNullOrEmpty(model.IC_DT) ? (object)Convert.ToDateTime(model.IC_DT) : DBNull.Value, ParameterDirection.Input);
                             par[3] = new OracleParameter("P_INVOICENO", OracleDbType.Varchar2, model.INVOICENO, ParameterDirection.Input);
                             par[4] = new OracleParameter("P_CO6_NO", OracleDbType.Varchar2, model.CO6_NO, ParameterDirection.Input);
-                            par[5] = new OracleParameter("P_CO6_DATE", OracleDbType.Date, !string.IsNullOrEmpty(model.CO6_DATE) ? (object)Convert.ToDateTime(model.CO6_DATE) : DBNull.Value , ParameterDirection.Input);
+                            par[5] = new OracleParameter("P_CO6_DATE", OracleDbType.Date, !string.IsNullOrEmpty(model.CO6_DATE) ? (object)Convert.ToDateTime(model.CO6_DATE) : DBNull.Value, ParameterDirection.Input);
                             par[6] = new OracleParameter("P_CO6_STATUS", OracleDbType.Varchar2, model.CO6_STATUS, ParameterDirection.Input);
-                            par[7] = new OracleParameter("P_CO6_STATUS_DATE", OracleDbType.Date, !string.IsNullOrEmpty(model.CO6_STATUS_DATE) ? (object)Convert.ToDateTime(model.CO6_STATUS_DATE) : DBNull.Value , ParameterDirection.Input);
+                            par[7] = new OracleParameter("P_CO6_STATUS_DATE", OracleDbType.Date, !string.IsNullOrEmpty(model.CO6_STATUS_DATE) ? (object)Convert.ToDateTime(model.CO6_STATUS_DATE) : DBNull.Value, ParameterDirection.Input);
                             par[8] = new OracleParameter("P_PASSED_AMT", OracleDbType.Varchar2, model.PASSED_AMT, ParameterDirection.Input);
                             par[9] = new OracleParameter("P_DEDUCTED_AMT", OracleDbType.Varchar2, model.DEDUCTED_AMT, ParameterDirection.Input);
                             par[10] = new OracleParameter("P_NET_AMT", OracleDbType.Varchar2, model.NET_AMT, ParameterDirection.Input);
@@ -500,7 +495,10 @@ namespace IBSWindowsService
                             par[17] = new OracleParameter("P_BILL_RESENT_COUNT", OracleDbType.Varchar2, model.BILL_RESENT_COUNT, ParameterDirection.Input);
                             par[18] = new OracleParameter("P_IRFC_FUNDED", OracleDbType.Varchar2, model.IRFC_FUNDED, ParameterDirection.Input);
                             par[19] = new OracleParameter("P_INVOICE_SUPP_DOCS", OracleDbType.Varchar2, model.INVOICE_SUPP_DOCS, ParameterDirection.Input);
-                            par[20] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+                            par[20] = new OracleParameter("P_INVOICEDATE", OracleDbType.Date, !string.IsNullOrEmpty(model.INVOICEDATE) ? (object)Convert.ToDateTime(model.INVOICEDATE) : DBNull.Value, ParameterDirection.Input);
+                            par[21] = new OracleParameter("P_CASE_NO", OracleDbType.Varchar2, model.CASE_NO, ParameterDirection.Input);
+                            par[22] = new OracleParameter("P_AU", OracleDbType.Varchar2, model.AU, ParameterDirection.Input);
+                            par[23] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
                             var ds1 = GetDataSet("SP_INSERT_RITES_BILL_DTLS_FROMAPI", par, 1);
                         }
                     }
@@ -549,6 +547,5 @@ namespace IBSWindowsService
             }
             return ds;
         }
-
     }
 }
