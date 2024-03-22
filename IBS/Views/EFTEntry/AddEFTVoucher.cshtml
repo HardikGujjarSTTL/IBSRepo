@@ -19,206 +19,173 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-       
-            <form data-ajax="true" asp-antiforgery="true" asp-controller="EFTEntry" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmEftDetails">
-                <div class="accordion-body">
-                    <div class="row my-0">
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Voucher No</label>
-                            <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="300" data-date-format="dd-mm-yyyy" />
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Voucher Date</label>
-                            <input type="text" class="input datepicker" asp-for="VCHR_DT" maxlength="300" />
-                            <span asp-validation-for="VCHR_DT" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Bank Code/Cash</label>
-                            @Html.DropDownListFor(model => model.BANK_CD, Common.GetBankCode(), new { id = "bankDropdown" })
-                            <span asp-validation-for="BANK_CD" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">EFT No</label>
-                            <input type="text" id="Chq_No" class="input" asp-for="CHQ_NO">
-                            @*  <input type="text" id="Chq_lbl" value="CASH" class="input" readonly="true">*@
-
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">EFT Date<span class="text-danger"></label>
-                            <input type="text" id="Chq_Date" class="input datepicker" asp-for="CHQ_DT" mode maxlength="300" />
-
-       
-                        </div>
-
-                        <div id="BankNameDropdown" class="col-md-4 mb-4">
-                            <label for="Reference">Bank Name/Cash</label>
-                            @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { id = "BankNameDropdown" })
-                            <span asp-validation-for="BANK_NAME" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <label for="Reference">Amount</label>
-                            <input type="text" class="input" asp-for="AMOUNT" maxlength="300" />
-                            <span asp-validation-for="AMOUNT" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Sample No</label>
-                            <input type="text" class="input" asp-for="SAMPLE_NO" maxlength="4">
-
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Account Code</label>
-                            @Html.DropDownListFor(model => model.ACC_CD, Common.GetAccountCode(), new { id="AccCD" })
-                        </div>
-
-                        <div id="txtCSNO" class="col-md-4 mb-3">
-                            <label for="Reference">Case No</label>
-                            <input type="text" class="input" id="CSNO" asp-for="CASE_NO">
-                            <br></br>
-                        <button type="button" class="commonBtn" onclick="ButtonClick();">Select BPO</button>
-                            <span asp-validation-for="CASE_NO" class="text-danger"></span>
-
-                        </div>
-                        <div id="txtBPO" class="col-md-4 mb-3">
-                            <label for="Reference">BPO</label>
-                            <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
-                            <br></br>
-                        <button type="button" class="commonBtn" onclick="ButtonClick()">Select BPO</button>
-                            <span asp-validation-for="BPO_CD" class="text-danger"></span>
-
-                        </div>
-
-                        <div id="lstBPO" class="col-md-4 mb-3" style="display:none">
-                            @* <label  for="Reference">BPO List</label>
-                            @Html.DropDownListFor(model => model.BPO_CD, Common., new { id="listBPO" })*@
-                            <label for="Reference">BPO</label>
-                            <select id="SelectedBPO" class="form-control">
-
-                                @* @if(Model.BPOList != null){
-                                @foreach (var bpo in Model.BPOList)
-                                {
-                                <option value="@bpo.value">@bpo.text</option>
-                                }
-                                }*@
-                            </select>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="Reference">Narration</label>
-                            <input type="text" class="input" id="txtNarrat" asp-for="NARRATION" maxlength="9">
-
-                        </div>
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="EFTEntry" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmEftDetails">
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Voucher No</label>
+                        <input type="text" asp-for="VCHR_NO" placeholder="Voucher No. will appear here." readonly="true" maxlength="300" data-date-format="dd-mm-yyyy" />
                     </div>
-
-                    <div class="savenext-btn">
-@*                        <a asp-controller="AddRecieptVoucher" asp-action="Index" class="reset-btn">Cancel</a>
-*@                        <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Voucher Date</label>
+                        <input type="text" class="input datepicker" asp-for="VCHR_DT" maxlength="300" />
+                        <span asp-validation-for="VCHR_DT" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Bank Code/Cash</label>
+                        @Html.DropDownListFor(model => model.BANK_CD, Common.GetBankCode(), new { id = "bankDropdown" })
+                        <span asp-validation-for="BANK_CD" class="text-danger"></span>
                     </div>
                 </div>
-            </form>
-        
+                <h3 class="heading3">Voucher Details</h3>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">EFT No</label>
+                        <input type="text" id="Chq_No" class="input" asp-for="CHQ_NO" placeholder="EFT Number">
+
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">EFT Date<span class="text-danger"></label>
+                        <input type="text" id="Chq_Date" class="input datepicker" asp-for="CHQ_DT" placeholder="DD/MM/YYYY" />
+                    </div>
+                    <div id="BankNameDropdown" class="col-md-4 mb-3">
+                        <label for="Reference">Bank Name/Cash</label>
+                        @Html.DropDownListFor(model => model.BANK_NAME, Common.GetBank(), new { id = "BankNameDropdown" })
+                        <span asp-validation-for="BANK_NAME" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Amount</label>
+                        <input type="text" class="input" asp-for="AMOUNT" maxlength="20" placeholder="Number" />
+                        <span asp-validation-for="AMOUNT" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Sample No</label>
+                        <input type="text" class="input" asp-for="SAMPLE_NO" maxlength="4" placeholder="Sample Number">
+                        <span asp-validation-for="SAMPLE_NO" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Account Code</label>
+                        @Html.DropDownListFor(model => model.ACC_CD, Common.GetAccountCode(), new { id = "AccCD" })
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div id="txtCSNO" class="col-md-4 mb-3">
+                        <label for="Reference">Case No</label>
+                        <input type="text" class="input" id="CSNO" asp-for="CASE_NO" placeholder="Case Number">
+                        <span asp-validation-for="CASE_NO" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div id="txtBPO" class="col-md-2 mb-3">
+                        <label for="Reference">BPO Code</label>
+                        <input type="text" id="bpoCD" class="input" asp-for="BPO_CD">
+                        @* <span asp-validation-for="BPO_CD" class="text-danger"></span> *@
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="savenext-btn" style="margin-top: 31px;">
+                            <button type="button" class="save-btn active" onclick="ButtonClick()"><span class="fa fa-plus"></span> Select BPO</button>
+                        </div>
+                    </div>
+                    <div id="lstBPO" class="col-md-8 mb-3">
+                        <label for="Reference">Bill Paying Officer</label>
+                        @* <select id="SelectedBPO" class="form-control">
+                        </select> *@
+                        @Html.DropDownListFor(model => model.BPO_CD, new SelectList(IBS.Models.Common.GetBillPayingOfficer(), "Value", "Text"), "--Select--", new { @onchange = "GetBPO();" })
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-md-4 mb-3">
+                        <label for="Reference">Narration</label>
+                        @* <input type="text" class="input" id="txtNarrat" asp-for="NARRATION"> *@
+                        <textarea class="input" id="txtNarrat" asp-for="NARRATION" maxlength="500"> </textarea>
+                    </div>
+                </div>
+
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="Save();">Save</button>
+                </div>
+            </div>
+        </form>
+
     </div>
 </section>
 
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#VCHR_DT").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            $("#bankDropdown").prop("disabled", "disabled");
+            var selectedValue = $("#AccCD").val();
+            if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
+                $("#txtCSNO").show();
+                $("#txtNarrat").show();
+            } else {
+                $("#txtCSNO").hide();
+                $("#txtNarrat").show();
+            }
+        });
 
+        function Save() {
+            $('select').prop('disabled', false);
+            $("#frmEftDetails").submit();
+        }
+
+        $("#AccCD").on("change", function () {
             var selectedValue = $("#AccCD").val();
             if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
                 $("#txtCSNO").show();
                 $("#txtBPO").hide();
-                $("#lstBPO").css("display", "none");
+                // $("#lstBPO").css("display", "none");
                 $("#txtNarrat").show();
             } else {
                 $("#txtCSNO").hide();
-                $("#lstBPO").css("display", "none");
+                // $("#lstBPO").hide();
                 $("#txtNarrat").show();
                 $("#txtBPO").show();
+                // $("#lstBPO").css("display", "none");
             }
-
         });
-        function Save() {
-            debugger;
 
-            $("#frmEftDetails").submit();
+        function GetBPO() {
+            var BpoCode = $("#BPO_CD").val();
+            $("#bpoCD").val(BpoCode);
+        }
+
+        function ButtonClick() {
+            var BpoCode = $("#bpoCD").val();
+            $("#BPO_CD").val(BpoCode);
+            // var AccCD = $("#AccCD").val();
+            // var txtBPO = $("#txtBPO").val();
+            // var lstBPO = $("#lstBPO").val();
+            // var listBPO = $("#listBPO").val();
+            // var txtCSNO = $("#CSNO").val();
+            // $.ajax({
+            //     url: '/AddRecieptVoucher/ButtonClick',
+            //     type: "POST",
+            //     dataType: "JSON",
+            //     data: { AccCD: AccCD, txtBPO: txtBPO, listBPO: listBPO, txtCSNO: txtCSNO },
+
+            //     success: function (success) {
+            //         $("#txtNarrat").val(success.Narrt);
+            //         $("#lstBPO").css("display", "block");
+            //         for (i = 0; i < success.BPOList.length; i++) {
+            //             var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
+            //             $("#SelectedBPO").append(data);
+            //         }
+            //     }
+            // });
 
         }
+
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = "/EFTEntry/AddEFTVoucher";
         }
-
-
-
-        // Hide/show BPO details based on lstACD selection
-        $("#AccCD").on("change", function () {
-            debugger;
-            var selectedValue = $("#AccCD").val();
-            if (selectedValue === "2709" || selectedValue === "2210" || selectedValue === "2212") {
-                $("#txtCSNO").show();
-                $("#txtBPO").hide();
-                $("#lstBPO").css("display", "none");
-                $("#txtNarrat").show();
-            } else {
-                $("#txtCSNO").hide();
-                $("#lstBPO").hide();
-                $("#txtNarrat").show();
-                $("#txtBPO").show();
-                $("#lstBPO").css("display", "none");
-            }
-        });
-
-        // Handle BPO selection
-        $("#lstBPO").on("change", function () {
-
-        });
-
-
-        function ButtonClick() {
-
-            var AccCD = $("#AccCD").val();
-            var txtBPO = $("#txtBPO").val();
-            var lstBPO = $("#lstBPO").val();
-            var listBPO = $("#listBPO").val();
-            var txtCSNO = $("#CSNO").val();
-            $.ajax({
-                url: '/AddRecieptVoucher/ButtonClick',
-                type: "POST",
-                dataType: "JSON",
-                data: { AccCD: AccCD, txtBPO: txtBPO, listBPO: listBPO, txtCSNO: txtCSNO },
-
-                success: function (success) {
-
-                    //alert("buttonclicked");
-                    // console.log(success);
-                    $("#txtNarrat").val(success.Narrt);
-                    $("#lstBPO").css("display", "block");
-
-                    for (i = 0; i < success.BPOList.length; i++) {
-
-                        // var data = '<option value="' + success.BPCodes[i].Text + '">' + success.BPCodes[i].Value + '</option>'
-                        var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
-                        $("#SelectedBPO").append(data);
-
-                    }
-
-                }
-
-            });
-
-        }
-
-
-
     </script>
 }

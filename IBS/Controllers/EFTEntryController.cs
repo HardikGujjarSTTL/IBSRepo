@@ -53,7 +53,9 @@ namespace IBS.Controllers
                 string i = EFTEntryRepository.VoucherDetailsSave(model, GetUserInfo.Region.ToString());
                 if (i != "" || i != null)
                 {
-                    return Json(new { status = true, responseText = msg });
+                    //return Json(new { status = true, responseText = msg });
+                    AlertAddSuccess("Record Updated Successfully.");
+                    return RedirectToAction("EFTEntry");
                 }
             }
 
