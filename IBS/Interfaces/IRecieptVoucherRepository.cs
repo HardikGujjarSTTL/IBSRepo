@@ -5,7 +5,7 @@ namespace IBS.Interfaces
 {
     public interface IRecieptVoucherRepository
     {
-        public DTResult<RecieptVoucherModel> GetVoucherList(DTParameters dtParameters);
+        public DTResult<RecieptVoucherModel> GetVoucherList(DTParameters dtParameters,string Region);
 
         public RecieptVoucherModel FindByID(string VoucherNo);
 
@@ -22,5 +22,7 @@ namespace IBS.Interfaces
         public bool SaveDetails(RecieptVoucherModel model);
 
         public string GenerateVoucherNo(string Region, DateTime VoucherDate);
+
+        public int ChequeExist(string ChequeNo, DateTime ChequeDate, int Bank_Cd);
     }
 }

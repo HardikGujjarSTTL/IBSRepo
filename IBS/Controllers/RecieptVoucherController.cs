@@ -109,7 +109,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<RecieptVoucherModel> dTResult = recieptVoucherRepository.GetVoucherList(dtParameters);
+            DTResult<RecieptVoucherModel> dTResult = recieptVoucherRepository.GetVoucherList(dtParameters, Region);
             return Json(dTResult);
         }
 
@@ -119,6 +119,11 @@ namespace IBS.Controllers
             List<VoucherDetailsModel> lst = GetLstVoucherDetailsModel;
             VoucherDetailsModel obj = new VoucherDetailsModel();
 
+            int ExistRecord = recieptVoucherRepository.ChequeExist(ChequeNo, ChequeDate, Bank_Cd);
+            if(ExistRecord >= 1)
+            {
+                return Json(new { status = 0, responseText = "Cheque No. and Cheque Date are already existing in current bank." });
+            }
             if (lst == null) lst = new List<VoucherDetailsModel>();
 
             if (IsAdd)

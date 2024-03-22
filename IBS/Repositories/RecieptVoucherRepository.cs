@@ -46,7 +46,7 @@ namespace IBS.Repositories
             return model;
         }
 
-        public DTResult<RecieptVoucherModel> GetVoucherList(DTParameters dtParameters)
+        public DTResult<RecieptVoucherModel> GetVoucherList(DTParameters dtParameters, string Region)
         {
             DTResult<RecieptVoucherModel> dTResult = new() { draw = 0 };
             IQueryable<RecieptVoucherModel>? query = null;
@@ -60,7 +60,7 @@ namespace IBS.Repositories
             {
                 orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
                 if (string.IsNullOrEmpty(orderCriteria)) orderCriteria = "VCHR_DT";
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "desc";
             }
             else
             {
@@ -70,7 +70,8 @@ namespace IBS.Repositories
 
             lstQuery = (from t24 in context.T24Rvs
                         join t94 in context.T94Banks on t24.BankCd equals t94.BankCd
-                        where t24.Isdeleted != 1
+                        where t24.Isdeleted != 1 && t24.VchrNo.StartsWith(Region)
+                        orderby t24.VchrDt descending
                         select new RecieptVoucherModel
                         {
                             VCHR_NO = t24.VchrNo,
@@ -144,7 +145,7 @@ namespace IBS.Repositories
                         select new SelectListItem
                         {
                             Value = bpo.BpoCd.ToString(),
-                            Text = bpo.BpoCd.ToString() +'-'+ bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
+                            Text = bpo.BpoCd.ToString() + '-' + bpo.BpoName + "/" + (bpo.BpoAdd != null ? bpo.BpoAdd + "/" : "") + (city.Location != null ? city.City + "/" + city.Location : city.City) + "/" + bpo.BpoRly
                         }).ToList();
             }
             else
@@ -424,6 +425,12 @@ namespace IBS.Repositories
 
             return ss + query.ToString("000");
 
+        }
+
+        public int ChequeExist(string ChequeNo, DateTime ChequeDate, int Bank_Cd)
+        {
+            int cnt = context.T25RvDetails.Where(x => x.BankCd == Bank_Cd && x.ChqNo == ChequeNo && x.ChqDt == ChequeDate).Count();
+            return cnt;
         }
     }
 }
