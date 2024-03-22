@@ -117,7 +117,7 @@
             // var Bkno = $("#Bkno").val();
             // var Setno = $("#Setno").val();
             debugger
-            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB" || $("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
+            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
                 $(".BookSet").hide();
                 if ($("#CancellationStatus").val() == "1") {
                     $("#btnAddNew").hide();
@@ -132,12 +132,12 @@
             const urlParams = new URLSearchParams(window.location.search);
             const Bkno = urlParams.get('Bkno');
             const Setno = urlParams.get('Setno');
-            if (Bkno != null && Setno != null) {
-                $("#btnAddNew").hide();
-            }
-            else {
-                $("#btnAddNew").show();
-            }
+            // if (Bkno != null && Setno != null) {
+            //     $("#btnAddNew").hide();
+            // }
+            // else {
+            //     $("#btnAddNew").show();
+            // }
 
             // $("#Callrecvdt").datepicker({
             //     changeMonth: true,
@@ -333,7 +333,7 @@
                 return false;
             }
 
-            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB" || $("#Callstatus").val() == "R" || $("#Callstatus").val() == "RB") {
+            if ($("#Callstatus").val() == "C" || $("#Callstatus").val() == "CB") {
                 if (Caseno != "" && Callrecvdt != null && Callsno != "") {
                     window.location.href = '@Url.Action("InspectionDetails", "InspectionCert")' + '?CaseNo=' + Caseno + "&CallRecvDt=" + Callrecvdt + "&CallSno=" + Callsno + "&Bkno=" + Bkno + "&Setno=" + Setno + "&ActionType=M";
                 }

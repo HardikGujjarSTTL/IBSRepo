@@ -215,6 +215,10 @@
                 GetVoucherDetails();
                 ClearControlVoucherDetails();
             }
+            else
+            {
+                ShowHideMsg("warning", response.responseText);
+            }
         });
     }
 

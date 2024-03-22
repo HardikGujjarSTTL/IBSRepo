@@ -18,7 +18,7 @@
         public double AMOUNT_ADJUSTED { get; set; }
         public double SUSPENSE_AMT { get; set; }
         public string NARRATION { get; set; }
-        public string SAMPLE_NO { get; set; }
+        public string? SAMPLE_NO { get; set; }
         public DateTime POST_DT { get; set; }
         public string STATUS { get; set; }
         public string BPO_CD { get; set; }
