@@ -36,34 +36,22 @@ namespace IBS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorization("EFTEntry", "EFTEntry", "edit")]
-
-        public IActionResult VoucherDetailsSave(EFTEntryModel model)
+        public IActionResult AddEFTVoucher(EFTEntryModel model)
         {
             try
             {
-                string msg = "Voucher Inserted Successfully.";
-
                 if (model.VCHR_NO != "")
                 {
-                    msg = "Voucher Updated Successfully.";
-
-                }
-                //model.Createdby = UserId;
-                //int i = contractRepository.ContractDetailsInsertUpdate(model);
-                string i = EFTEntryRepository.VoucherDetailsSave(model, GetUserInfo.Region.ToString());
-                if (i != "" || i != null)
-                {
-                    //return Json(new { status = true, responseText = msg });
+                    string i = EFTEntryRepository.VoucherDetailsSave(model, GetUserInfo.Region.ToString());
                     AlertAddSuccess("Record Updated Successfully.");
                     return RedirectToAction("EFTEntry");
                 }
             }
-
             catch (Exception ex)
             {
-                // Common.AddException(ex.ToString(), ex.Message.ToString(), "Contract", "ContractDetailsSave", 1, GetIPAddress());
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "EFTEntry", "AddEFTVoucher", 1, GetIPAddress());
             }
-            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            return View(model);
         }
 
         [Authorization("EFTEntry", "EFTEntry", "view")]

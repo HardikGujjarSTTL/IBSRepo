@@ -19,7 +19,8 @@
 </div>
 <section class="@clsView">
     <div class="task-listinput">
-        <form data-ajax="true" asp-antiforgery="true" asp-controller="EFTEntry" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmEftDetails">
+        @* <form data-ajax="true" asp-antiforgery="true" asp-controller="EFTEntry" asp-action="VoucherDetailsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmEftDetails"> *@
+        <form role="form" asp-controller="EFTEntry" asp-action="AddEFTVoucher" id="frmEftDetails">
             <div class="accordion-body">
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
@@ -63,7 +64,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Sample No</label>
                         <input type="text" class="input" asp-for="SAMPLE_NO" maxlength="4" placeholder="Sample Number">
-                        <span asp-validation-for="SAMPLE_NO" class="text-danger"></span>
+                        @* <span asp-validation-for="SAMPLE_NO" class="text-danger"></span> *@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Account Code</label>
@@ -100,7 +101,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Narration</label>
                         @* <input type="text" class="input" id="txtNarrat" asp-for="NARRATION"> *@
-                        <textarea class="input" id="txtNarrat" asp-for="NARRATION" maxlength="500"> </textarea>
+                        <textarea class="input" id="txtNarrat" asp-for="NARRATION" maxlength="60"> </textarea>
                     </div>
                 </div>
 
@@ -132,7 +133,10 @@
 
         function Save() {
             $('select').prop('disabled', false);
-            $("#frmEftDetails").submit();
+            // $("#frmEftDetails").submit();
+            if ($("#frmEftDetails").valid()) {
+                $("#frmEftDetails").submit();
+            }
         }
 
         $("#AccCD").on("change", function () {
