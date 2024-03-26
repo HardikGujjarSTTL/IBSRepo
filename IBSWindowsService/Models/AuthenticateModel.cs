@@ -215,6 +215,7 @@ namespace IBSWindowsService.Models
         public string IC_NO { get; set; }
         public string IC_DT { get; set; }
         public string INVOICENO { get; set; }
+        public string INVOICEDATE { get; set; }
         public string CO6_NO { get; set; }
         public string CO6_DATE { get; set; }
         public string CO6_STATUS { get; set; }
@@ -231,6 +232,8 @@ namespace IBSWindowsService.Models
         public string BILL_RESENT_COUNT { get; set; }
         public string IRFC_FUNDED { get; set; }
         public string INVOICE_SUPP_DOCS { get; set; }
+        public string CASE_NO { get; set; }
+        public string AU { get; set; }
     }
     public class BillsStatusResponse
     {
