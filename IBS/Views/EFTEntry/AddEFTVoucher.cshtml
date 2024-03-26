@@ -93,7 +93,7 @@
                         <label for="Reference">Bill Paying Officer</label>
                         @* <select id="SelectedBPO" class="form-control">
                         </select> *@
-                        @Html.DropDownListFor(model => model.BPO_CD, new SelectList(IBS.Models.Common.GetBillPayingOfficer(), "Value", "Text"), "--Select--", new { @onchange = "GetBPO();" })
+                        @Html.DropDownListFor(model => model.BPO_CD, new SelectList(IBS.Models.Common.GetBillPayingOfficerUsingSBPO(@Model.BPO_CD), "Value", "Text"), "--Select--", new { @onchange = "GetBPO();" })
                     </div>
                 </div>
 
@@ -160,30 +160,49 @@
             $("#bpoCD").val(BpoCode);
         }
 
+        // function ButtonClick() {
+        //     var BpoCode = $("#bpoCD").val();
+        //     $("#BPO_CD").val(BpoCode);
+        //     // var AccCD = $("#AccCD").val();
+        //     // var txtBPO = $("#txtBPO").val();
+        //     // var lstBPO = $("#lstBPO").val();
+        //     // var listBPO = $("#listBPO").val();
+        //     // var txtCSNO = $("#CSNO").val();
+        //     // $.ajax({
+        //     //     url: '/AddRecieptVoucher/ButtonClick',
+        //     //     type: "POST",
+        //     //     dataType: "JSON",
+        //     //     data: { AccCD: AccCD, txtBPO: txtBPO, listBPO: listBPO, txtCSNO: txtCSNO },
+
+        //     //     success: function (success) {
+        //     //         $("#txtNarrat").val(success.Narrt);
+        //     //         $("#lstBPO").css("display", "block");
+        //     //         for (i = 0; i < success.BPOList.length; i++) {
+        //     //             var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
+        //     //             $("#SelectedBPO").append(data);
+        //     //         }
+        //     //     }
+        //     // });
+
+        // }
+
         function ButtonClick() {
-            var BpoCode = $("#bpoCD").val();
-            $("#BPO_CD").val(BpoCode);
-            // var AccCD = $("#AccCD").val();
-            // var txtBPO = $("#txtBPO").val();
-            // var lstBPO = $("#lstBPO").val();
-            // var listBPO = $("#listBPO").val();
-            // var txtCSNO = $("#CSNO").val();
-            // $.ajax({
-            //     url: '/AddRecieptVoucher/ButtonClick',
-            //     type: "POST",
-            //     dataType: "JSON",
-            //     data: { AccCD: AccCD, txtBPO: txtBPO, listBPO: listBPO, txtCSNO: txtCSNO },
-
-            //     success: function (success) {
-            //         $("#txtNarrat").val(success.Narrt);
-            //         $("#lstBPO").css("display", "block");
-            //         for (i = 0; i < success.BPOList.length; i++) {
-            //             var data = '<option value="' + success.BPOList[i].value + '">' + success.BPOList[i].text + '</option>'
-            //             $("#SelectedBPO").append(data);
-            //         }
-            //     }
-            // });
-
+            var SBPO = $("#bpoCD").val();
+            $.ajax({
+                url: '@Url.Action("getBPO", "AdministratorPurchaseOrder")?SBPO=' + SBPO,
+                type: 'GET',
+                cache: false,
+                data: '{}',
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#BPO_CD").html("");
+                    $.each(response.list, function (index, value) {
+                        $("#BPO_CD").append("<option value=" + value.Value + " >" + value.Text + "</option>");
+                    });
+                }
+            });
         }
 
         completed = function (response) {
