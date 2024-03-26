@@ -12,6 +12,7 @@ namespace IBS.Models
 
         public DateTime? PoDt { get; set; }
 
+        [Required(ErrorMessage = "Item Description is required")]
         public string? ItemDesc { get; set; }
 
         [Required(ErrorMessage = "Consignee is required")]
