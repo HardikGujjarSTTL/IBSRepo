@@ -1496,29 +1496,29 @@ namespace IBS.Repositories.Vendor
                 else if (model.CaseNo.ToString().Substring(0, 1) == "C") { sender = "CR"; }
                 else { sender = "RITES"; }
 
-                var query = from t09 in context.T09Ies
-                            join t08 in context.T08IeControllOfficers
-                            on t09.IeCoCd equals t08.CoCd into t08Group
-                            from t08 in t08Group.DefaultIfEmpty()
-                            where t09.IeCd == model.IeCd
-                            select new
-                            {
-                                IE_NAME = t09.IeName.Trim().Substring(0, Math.Min(t09.IeName.Trim().Length, 20)),
-                                IE_PHONE_NO = t09.IePhoneNo.Trim().Substring(0, Math.Min(t09.IePhoneNo.Trim().Length, 10)),
-                                CO_PHONE_NO = t08 != null ? t08.CoPhoneNo.Trim().Substring(0, Math.Min(t08.CoPhoneNo.Trim().Length, 10)) : ""
-                            };
+                var query = (from t09 in context.T09Ies
+                             join t08 in context.T08IeControllOfficers
+                             on t09.IeCoCd equals t08.CoCd into t08Group
+                             from t08 in t08Group.DefaultIfEmpty()
+                             where t09.IeCd == model.IeCd
+                             select new
+                             {
+                                 IE_NAME = t09.IeName.Trim().Substring(0, Math.Min(t09.IeName.Trim().Length, 20)),
+                                 IE_PHONE_NO = t09.IePhoneNo.Trim().Substring(0, Math.Min(t09.IePhoneNo.Trim().Length, 10)),
+                                 CO_PHONE_NO = t08 != null ? t08.CoPhoneNo.Trim().Substring(0, Math.Min(t08.CoPhoneNo.Trim().Length, 10)) : ""
+                             }).FirstOrDefault();
 
-                var result = query.FirstOrDefault();
+                //var result = query.FirstOrDefault();
 
-                if (result != null)
+                if (query != null)
                 {
-                    wIEName = result.IE_NAME;
-                    wIEMobile = result.IE_PHONE_NO;
-                    wIEMobile_for_SMS = result.IE_PHONE_NO;
-                    wCOMobile = result.CO_PHONE_NO;
+                    wIEName = query.IE_NAME;
+                    wIEMobile = query.IE_PHONE_NO;
+                    wIEMobile_for_SMS = query.IE_PHONE_NO;
+                    wCOMobile = query.CO_PHONE_NO;
                 }
 
-                var queryNew = from v in context.T05Vendors
+                var queryNew = (from v in context.T05Vendors
                                join c in context.T03Cities
                                on v.VendCityCd equals c.CityCd
                                where v.VendCd == model.MfgCd
@@ -1526,14 +1526,14 @@ namespace IBS.Repositories.Vendor
                                {
                                    VEND_NAME = v.VendName.Substring(0, Math.Min(v.VendName.Length, 30)).Replace("&", "AND"),
                                    VEND_TEL = v.VendContactTel1.Trim().Substring(0, Math.Min(v.VendContactTel1.Trim().Length, 10))
-                               };
+                               }).FirstOrDefault();
 
-                var resultNew = queryNew.FirstOrDefault();
+                //var resultNew = queryNew.FirstOrDefault();
 
-                if (resultNew != null)
+                if (queryNew != null)
                 {
-                    wVendor = resultNew.VEND_NAME;
-                    wVendMobile = resultNew.VEND_TEL;
+                    wVendor = queryNew.VEND_NAME;
+                    wVendMobile = queryNew.VEND_TEL;
                 }
 
                 if (wCOMobile != "") { wIEMobile = wIEMobile + "," + wCOMobile; }

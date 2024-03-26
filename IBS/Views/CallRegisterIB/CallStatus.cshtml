@@ -248,17 +248,17 @@
 
                     <div class="accordion-body CallRejected" style="overflow-x: auto;">
                         <div class="row my-0">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-8 mb-3">
                                 <label for="Reference">Consignee : </label>
                                 @Html.DropDownList("consigneeFirmDropdown", new SelectList(Model.ConsigneeFirmList, "Value", "Text"), new { @id = "consigneeFirmDropdown" })
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-2 mb-3">
                                 <label for="Reference">Book No : </label>
                                 <input type="text" asp-for="DocBkNo" onkeypress="return isNumber(event)" maxlength="4">
                                 <span asp-validation-for="DocBkNo" class="text-danger"></span>
 
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-2 mb-3">
                                 <label for="Reference">Set No : </label>
                                 <input type="text" asp-for="DocSetNo" onkeypress="return isNumber(event)" maxlength="3" onchange="DocSetNoChanged()">
                                 <span asp-validation-for="DocSetNo" class="text-danger"></span>
