@@ -4710,6 +4710,13 @@ namespace IBS.Models
             return EnumUtility<List<TextValueDropDownDTO>>.GetEnumDropDownStringValue(typeof(Enums.CallsStatus)).ToList();
         }
 
+        public static int GetBankIDUsingName(string BankName)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            int id= context.T94Banks.Where(x => x.BankName == BankName).Select(x => x.BankCd).FirstOrDefault();
+            return id;
+        }
+
         public static string ConvertDateTimeFormat(this DateTime dt)
         {
             return dt.ToString(Common.CommonDateTimeFormat);

@@ -247,7 +247,15 @@ namespace IBS.Controllers
                                         ID = ID,
                                         CHQ_NO = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 1].Value.ToString() : "",
                                         CHQ_DT = worksheet.Cells[row, 1].Value != null ? DateTime.FromOADate(long.Parse(worksheet.Cells[row, 2].Value.ToString())) : DateTime.Now.Date,
-                                        AMOUNT = worksheet.Cells[row, 1].Value != null ? Convert.ToDecimal(worksheet.Cells[row, 3].Value) : null
+                                        AMOUNT = worksheet.Cells[row, 1].Value != null ? Convert.ToDecimal(worksheet.Cells[row, 3].Value) : null,
+                                        BANK_NAME = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 4].Value.ToString() : "",
+                                        BANK_CD = worksheet.Cells[row, 1].Value != null && worksheet.Cells[row, 4].Value.ToString() != null ? Common.GetBankIDUsingName(worksheet.Cells[row, 4].Value.ToString()) : 0,
+                                        BPO_NAME = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 5].Value.ToString() : "",
+                                        BPO_CD= worksheet.Cells[row, 1].Value != null && worksheet.Cells[row, 5].Value.ToString() != null ? worksheet.Cells[row, 5].Value.ToString().Split(new string[] { " - " }, StringSplitOptions.None)[0] : "",
+                                        ACC_NAME = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 6].Value.ToString() : "",
+                                        ACC_CD = worksheet.Cells[row, 1].Value != null && worksheet.Cells[row, 6].Value.ToString() != null ? Convert.ToInt32(worksheet.Cells[row, 6].Value.ToString().Split(':')[1].Trim()) : 0,
+                                        CASE_NO = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 7].Value.ToString() : "",
+                                        NARRATION = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 8].Value.ToString() : "",
                                     };
                                     lst.Add(data);
                                 }
