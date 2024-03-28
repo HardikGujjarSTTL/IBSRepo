@@ -19,7 +19,7 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="VCHR_DT">Voucher Date</label>
-                <input type="text" class="datepicker" asp-for="VCHR_DT" placeholder="DD/MM/YYYY" />
+                <input type="text" class="datepicker" asp-for="VCHR_DT" placeholder="DD/MM/YYYY" onblur="check_date(VCHR_DT);" />
             </div>
             <div class="col-md-4 mb-3">
                 <label for="BANK_CD">Bank/Cash</label>

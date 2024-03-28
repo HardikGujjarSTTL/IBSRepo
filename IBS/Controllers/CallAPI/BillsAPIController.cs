@@ -8,6 +8,10 @@ using IBS.Models;
 using Oracle.ManagedDataAccess.Client;
 using IBS.Helper;
 using System.Data;
+using PuppeteerSharp;
+using IBS.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using DocumentFormat.OpenXml.InkML;
 
 namespace IBS.Controllers.CallAPI
 {
@@ -23,6 +27,7 @@ namespace IBS.Controllers.CallAPI
         {
             try
             {
+                InsertLog("Start : GetPassedBills", "");
                 string token = CallAuthenticate();
                 string apiUrl = "https://ireps.gov.in/immsapi/rites/getPassedBills";
                 object input = new
@@ -59,6 +64,7 @@ namespace IBS.Controllers.CallAPI
                     List<PassedBillsModel> data = response.data;
                     if (data.Count > 0)
                     {
+                        InsertLog("Data Count GetPassedBills : " + data.Count, "");
                         foreach (PassedBillsModel model in data)
                         {
                             if (model != null)
@@ -85,7 +91,8 @@ namespace IBS.Controllers.CallAPI
                                 par1[18] = new OracleParameter("P_IRFC_FUNDED", OracleDbType.Varchar2, model.IRFC_FUNDED, ParameterDirection.Input);
                                 par1[19] = new OracleParameter("P_INVOICE_SUPP_DOCS", OracleDbType.Varchar2, model.INVOICE_SUPP_DOCS, ParameterDirection.Input);
                                 par1[20] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
-                                var ds = DataAccessDB.GetDataSet("SP_UPDATE_Get_Passed_Bills_FROMAPI", par1, 2);
+                                //var ds = DataAccessDB.GetDataSet("SP_UPDATE_Get_Passed_Bills_FROMAPI", par1, 1);
+                                var ds = GetDataSet("SP_UPDATE_Get_Passed_Bills_FROMAPI", par1, 1);
                             }
                         }
                     }
@@ -93,11 +100,13 @@ namespace IBS.Controllers.CallAPI
                 }
                 else
                 {
+                    InsertLog("Data Count GetPassedBills : " + response.data.Count, "");
                     return Json(new { status = true, responseText = "Data not found." });
                 }
             }
             catch (Exception ex)
             {
+                InsertLog("Error IN GetPassedBills", ex.ToString());
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "BillsAPI", "GetPassedBills", 1, "");
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
@@ -107,6 +116,7 @@ namespace IBS.Controllers.CallAPI
         {
             try
             {
+                InsertLog("Start : GetAllBills", "");
                 string token = CallAuthenticate();
                 string apiUrl = "https://ireps.gov.in/immsapi/rites/getAllBills";
                 object input = new
@@ -143,6 +153,7 @@ namespace IBS.Controllers.CallAPI
                     List<AllBillsModel> data = response.data;
                     if (data.Count > 0)
                     {
+                        InsertLog("Data Count GetAllBills : " + data.Count, "");
                         foreach (AllBillsModel model in data)
                         {
                             if (model != null)
@@ -243,8 +254,9 @@ namespace IBS.Controllers.CallAPI
                                 parameters[92] = new OracleParameter("P_IRFC_FUNDED", OracleDbType.Varchar2, model.IRFC_FUNDED, ParameterDirection.Input);
                                 parameters[93] = new OracleParameter("P_INVOICE_SUPP_DOCS", OracleDbType.Varchar2, model.INVOICE_SUPP_DOCS, ParameterDirection.Input);
                                 parameters[94] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
-                                var ds = DataAccessDB.GetDataSet("SP_INSERT_Get_AllBills_FROMAPI", parameters, 2);
-                                
+                                //var ds = DataAccessDB.GetDataSet("SP_INSERT_Get_AllBills_FROMAPI", parameters, 1);
+                                var ds = GetDataSet("SP_INSERT_Get_AllBills_FROMAPI1", parameters, 1);
+
                             }
                         }
                     }
@@ -252,11 +264,13 @@ namespace IBS.Controllers.CallAPI
                 }
                 else
                 {
+                    InsertLog("Data Count GetAllBills : " + response.data.Count, "");
                     return Json(new { status = true, responseText = "Data not found." });
                 }
             }
             catch (Exception ex)
             {
+                InsertLog("Error IN GetAllBills", ex.ToString());
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "BillsAPI", "GetPassedBills", 1, "");
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
@@ -310,6 +324,96 @@ namespace IBS.Controllers.CallAPI
             }
 
             return "";
+        }
+
+        public static bool InsertLog(string P_Name, string P_ERROR)
+        {
+            OracleParameter[] par1 = new OracleParameter[3];
+            par1[0] = new OracleParameter("P_Name", OracleDbType.Varchar2, P_Name, ParameterDirection.Input);
+            par1[1] = new OracleParameter("P_ERROR", OracleDbType.Varchar2, P_ERROR, ParameterDirection.Input);
+            par1[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            var ds = GetDataSet("SP_Insert_APICallLog", par1, 1);
+            return true;
+        }
+
+        public static DataSet GetDataSet(string procedurename, OracleParameter[] par, int Tablecount)
+        {
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            DataSet ds = new DataSet();
+            try
+            {
+                var cmd = context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = procedurename;
+                if (par != null && par.Length > 0)
+                {
+                    foreach (var item in par)
+                    {
+                        cmd.Parameters.Add(item);
+                    }
+                }
+
+                context.Database.OpenConnection();
+
+                string[] tableNames = new string[Tablecount];
+                for (int i = 0; i < Tablecount; i++)
+                {
+                    DataTable dt = new DataTable();
+                    dt.TableName = "Table" + i.ToString();
+                    tableNames[i] = dt.TableName;
+                }
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    ds.Load(reader, LoadOption.OverwriteChanges, tableNames);
+                }
+                context.Database.CloseConnection();
+
+            }
+            catch (Exception ex)
+            {
+                InsertLogGetDataSet("GetDataSet : " + procedurename, ex.ToString());
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            return ds;
+        }
+
+        public static DataSet InsertLogGetDataSet(string P_Name, string P_ERROR)
+        {
+            DataSet ds = new DataSet();
+            OracleParameter[] par = new OracleParameter[3];
+            par[0] = new OracleParameter("P_Name", OracleDbType.Varchar2, P_Name, ParameterDirection.Input);
+            par[1] = new OracleParameter("P_ERROR", OracleDbType.Varchar2, P_ERROR, ParameterDirection.Input);
+            par[2] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            ModelContext context = new(DbContextHelper.GetDbContextOptions());
+            var cmd = context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "SP_Insert_APICallLog";
+            if (par != null && par.Length > 0)
+            {
+                foreach (var item in par)
+                {
+                    cmd.Parameters.Add(item);
+                }
+            }
+
+            context.Database.OpenConnection();
+
+            string[] tableNames = new string[1];
+            for (int i = 0; i < 1; i++)
+            {
+                DataTable dt = new DataTable();
+                dt.TableName = "Table" + i.ToString();
+                tableNames[i] = dt.TableName;
+            }
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                ds.Load(reader, LoadOption.OverwriteChanges, tableNames);
+            }
+            context.Database.CloseConnection();
+            return ds;
         }
     }
 }

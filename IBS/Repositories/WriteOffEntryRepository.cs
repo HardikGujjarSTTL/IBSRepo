@@ -15,7 +15,7 @@ namespace IBS.Repositories
         {
             this.context = context;
         }
-        public DTResult<WriteOffEntryModel> GetWriteOfEntryList(DTParameters dtParameters)
+        public DTResult<WriteOffEntryModel> GetWriteOfEntryList(DTParameters dtParameters, string Region)
         {
             DTResult<WriteOffEntryModel> dTResult = new() { draw = 0 };
             IQueryable<WriteOffEntryModel>? query = null;
@@ -61,14 +61,15 @@ namespace IBS.Repositories
 
                 DataSet ds;
 
-                OracleParameter[] par = new OracleParameter[7];
+                OracleParameter[] par = new OracleParameter[8];
                 par[0] = new OracleParameter("p_frm_dt", OracleDbType.Varchar2, FrmDt, ParameterDirection.Input);
                 par[1] = new OracleParameter("p_to_dt", OracleDbType.Varchar2, ToDt, ParameterDirection.Input);
                 par[2] = new OracleParameter("p_bpo_CD", OracleDbType.Varchar2, BPOName, ParameterDirection.Input);
-                par[3] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
-                par[4] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
-                par[5] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
-                par[6] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[3] = new OracleParameter("p_Region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+                par[4] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+                par[5] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+                par[6] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+                par[7] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
                 ds = DataAccessDB.GetDataSet("GetWriteOffEntryDetails", par, 2);
 
@@ -84,6 +85,7 @@ namespace IBS.Repositories
                         BillAmtRec = Convert.ToDecimal(row["AMOUNT_RECEIVED"]),
                         BillAmtClr = Convert.ToDecimal(row["BILL_AMT_CLEARED"]),
                         WRITE_OFF_AMT = (row["WRITE_OFF_AMT"] != DBNull.Value) ? Convert.ToDecimal(row["WRITE_OFF_AMT"]) : 0,
+                        Outstanding_AMT= Convert.ToDecimal(row["Outstanding_AMT"])
                     }).ToList();
 
                     query = list.AsQueryable();

@@ -17,6 +17,8 @@
         public Decimal BillAmtClr { get; set; }
 
         public Decimal WRITE_OFF_AMT { get; set; }
+
+        public Decimal Outstanding_AMT { get; set; }
     }
 
     public class UpdateDataModel

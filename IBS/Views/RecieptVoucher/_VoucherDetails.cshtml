@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-3 mb-3">
         <label for="txtChequeDate">Cheque/NEFT/UTR no. Date. <i class="text-danger">*</i></label>
-        <input type="text" class="datepicker" id="txtChequeDate" placeholder="DD/MM/YYYY"  />
+        <input type="text" class="datepicker" id="txtChequeDate" placeholder="DD/MM/YYYY" onblur="check_date(txtChequeDate);" />
         <span class="text-danger field-validation-error" id="spnErrorChequeDate"></span>
     </div>
     <div class="col-md-3 mb-3">

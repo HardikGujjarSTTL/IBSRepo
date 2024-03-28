@@ -6090,7 +6090,7 @@ END SP_GET_ProjectDetailsReport;
 
 -------------------
 
-CREATE OR REPLACE PROCEDURE SP_INSERT_POHDR_FROMAPI (
+create or replace PROCEDURE SP_INSERT_POHDR_FROMAPI (
     p_CASE_NO IN VARCHAR2,
     p_PURCHASER_CD IN VARCHAR2,
     p_IMMS_PURCHASER_CODE IN VARCHAR2,
@@ -6129,7 +6129,7 @@ BEGIN
     INSERT INTO IMMS_RITES_PO_HDR (
         PO_ID,
         IMMS_POKEY,
-        RITES_CASE_NO,
+        --RITES_CASE_NO,
         PURCHASER_CD,
         IMMS_PURCHASER_CD,
         IMMS_PURCHASER_DETAIL,
@@ -6157,8 +6157,8 @@ BEGIN
         --PO_STATUS
     ) VALUES (
         v_PoId,
-        p_IMMS_POKEY,
-        p_CASE_NO,
+        p_CASE_NO, --p_IMMS_POKEY,
+        --p_CASE_NO,
         p_PURCHASER_CD,
         p_IMMS_PURCHASER_CODE,
         p_IMMS_PURCHASER_DETAIL,
@@ -6187,7 +6187,7 @@ BEGIN
     );
 
     OPEN p_Result FOR
-    SELECT PO_ID FROM IMMS_RITES_PO_HDR WHERE IMMS_PURCHASER_CD = p_IMMS_PURCHASER_CODE AND RITES_CASE_NO = p_CASE_NO AND ROWNUM = 1;
+    SELECT PO_ID FROM IMMS_RITES_PO_HDR WHERE IMMS_POKEY = p_CASE_NO AND ROWNUM = 1;
 END;
 
 
@@ -6242,7 +6242,7 @@ END;
 
 -----------------
 
-CREATE OR REPLACE PROCEDURE SP_INSERT_MMP_POMA_HDR_FROMAPI (
+create or replace PROCEDURE SP_INSERT_MMP_POMA_HDR_FROMAPI (
     P_RLY IN VARCHAR2,
     P_MAKEY IN VARCHAR2,
     P_MAKEY_DATE IN DATE,
@@ -6282,7 +6282,16 @@ CREATE OR REPLACE PROCEDURE SP_INSERT_MMP_POMA_HDR_FROMAPI (
 )
 AS
     v_PoId NUMBER;
+    v_count NUMBER;
 BEGIN
+    SELECT COUNT(*) INTO v_count FROM MMP_POMA_HDR WHERE RLY = P_RLY AND MAKEY = P_MAKEY ;
+    IF v_count > 0 THEN
+         --DBMS_OUTPUT.PUT_LINE('Condition is true!'); 
+        OPEN p_Result FOR
+        SELECT RLY FROM MMP_POMA_HDR WHERE RLY = P_RLY AND MAKEY = P_MAKEY  AND ROWNUM = 1;
+        RETURN;
+    END IF;
+    
     INSERT INTO MMP_POMA_HDR (
         RLY,
         MAKEY,
@@ -6389,7 +6398,17 @@ create or replace PROCEDURE SP_INSERT_MMP_POMA_HDR_DETAIL_FROMAPI (
 )
 AS
     v_OID NUMBER;
+     v_count NUMBER;
 BEGIN
+    
+    SELECT COUNT(*) INTO v_count FROM MMP_POMA_DTL WHERE rly = P_RLY AND makey = P_MAKEY AND slno = P_SLNO;
+    IF v_count > 0 THEN
+         --DBMS_OUTPUT.PUT_LINE('Condition is true!'); 
+        OPEN p_Result FOR
+        SELECT RLY FROM MMP_POMA_DTL WHERE rly = P_RLY AND makey = P_MAKEY AND slno = P_SLNO AND ROWNUM = 1;
+        RETURN;
+    END IF;
+    
     INSERT INTO MMP_POMA_DTL (
         rly,makey,slno,ma_fld,ma_fld_descr,old_value,
         new_value,new_value_ind,new_value_flag,pl_no,po_sr,
@@ -6404,7 +6423,7 @@ BEGIN
     );
 
     OPEN p_Result FOR
-    SELECT P_RLY FROM MMP_POMA_DTL WHERE RLY = P_RLY AND MAKEY = P_MAKEY AND ROWNUM = 1;
+    SELECT P_RLY FROM MMP_POMA_DTL WHERE rly = P_RLY AND makey = P_MAKEY AND slno = P_SLNO AND ROWNUM = 1;
 END;
 
 
@@ -6679,7 +6698,7 @@ create or replace PROCEDURE SP_UPDATE_Get_Passed_Bills_FROMAPI (
 ) AS
     v_OID NUMBER;
 BEGIN
-    
+
     UPDATE RITES_BILL_DTLS
     SET
         ic_no = P_IC_NO,
@@ -6698,15 +6717,16 @@ BEGIN
         co7_no = P_CO7_NO,
         co7_date = P_CO7_DATE,
         payment_dt = P_PAYMENT_DT,
-        bill_resent_count = P_BILL_RESENT_COUNT,
+        --bill_resent_count = P_BILL_RESENT_COUNT,
         irfc_funded = P_IRFC_FUNDED,
         invoice_supp_docs = P_INVOICE_SUPP_DOCS
     WHERE
-        bill_no = P_BILL_NO;
+        bill_no = P_BILL_NO 
+        and bill_resent_count = P_BILL_RESENT_COUNT;
 
 
     OPEN p_Result FOR
-    SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = P_BILL_NO AND ROWNUM = 1;
+    SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = P_BILL_NO and bill_resent_count = P_BILL_RESENT_COUNT AND ROWNUM = 1;
 END;
 
 ---------------
@@ -6963,11 +6983,11 @@ AS
 BEGIN
 
 --DBMS_OUTPUT.PUT_LINE(TO_DATE(p_INVOICEDATE)); 
-    SELECT COUNT(*) INTO v_count FROM RITES_BILL_DTLS WHERE bill_no = p_BILL_NO AND bill_resent_count = p_BILL_RESENT_COUNT;
+    SELECT COUNT(*) INTO v_count FROM RITES_BILL_DTLS WHERE BILL_NO = p_BILL_NO AND BILL_RESENT_COUNT = p_BILL_RESENT_COUNT;
     IF v_count > 0 THEN
          --DBMS_OUTPUT.PUT_LINE('Condition is true!'); 
         OPEN p_Result FOR
-        SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = p_BILL_NO AND ROWNUM = 1;
+        SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = p_BILL_NO AND BILL_RESENT_COUNT = P_BILL_RESENT_COUNT AND ROWNUM = 1;
         RETURN;
     END IF;
 
@@ -7162,7 +7182,7 @@ BEGIN
     );
 
     OPEN p_Result FOR
-    SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = p_BILL_NO AND ROWNUM = 1;
+    SELECT BILL_NO FROM RITES_BILL_DTLS WHERE BILL_NO = p_BILL_NO AND BILL_RESENT_COUNT = P_BILL_RESENT_COUNT AND ROWNUM = 1;
 END;
 
 
@@ -7231,3 +7251,104 @@ END;
 
 
 ---------------
+
+create or replace PROCEDURE SP_GET_INTER_UNIT_TRANSFER 
+(
+  P_BANK_CD IN VARCHAR2 
+, P_CHQNO IN VARCHAR2 
+, P_CHQDATE IN VARCHAR2 
+, P_REGION IN VARCHAR2
+, P_RESULT_CURSOR OUT SYS_REFCURSOR 
+) AS 
+BEGIN
+    OPEN P_RESULT_CURSOR FOR
+    select  T24.VCHR_NO,
+            T24.VCHR_DT VCHR_DT,
+            T25.SNO,
+            T25.CHQ_NO,
+            to_char(T25.CHQ_DT,'dd/mm/yyyy')CHQ_DT,
+            T25.BANK_CD,
+            NVL2(T25.BPO_CD,(B.BPO_CD||'-'||B.BPO_NAME||'/'||NVL2(B.BPO_ADD,B.BPO_ADD||'/','')||NVL2(C.LOCATION,C.CITY||'/'||C.LOCATION,C.CITY)||'/'||B.BPO_RLY),T25.NARRATION) BPO,
+            --NVL(T25.AMOUNT,0) AMOUNT,
+            CASE 
+                WHEN NVL(T25.AMOUNT,0) < 0 THEN 0 
+                ELSE NVL(T25.AMOUNT,0) 
+            END AS AMOUNT,
+            NVL(T25.AMT_TRANSFERRED,0)AMT_TRANSFERRED,
+            NVL(T25.SUSPENSE_AMT,0)SUSPENSE_AMT 
+    from T24_RV T24,T25_RV_DETAILS T25, T12_BILL_PAYING_OFFICER B,T03_CITY C 
+    where T24.VCHR_NO= T25.VCHR_NO 
+    AND T25.BPO_CD=B.BPO_CD(+) 
+    AND B.BPO_CITY_CD=C.CITY_CD(+)
+    AND T25.CHQ_NO = P_CHQNO
+    AND T25.BANK_CD = P_BANK_CD
+    and T25.CHQ_DT=to_date(P_CHQDATE,'dd/mm/yyyy') 
+    and substr(T24.VCHR_NO,1,1)=P_REGION;
+END SP_GET_INTER_UNIT_TRANSFER;
+
+----------------------
+
+create or replace PROCEDURE GetWriteOffEntryDetails(
+    p_frm_dt IN VARCHAR2,
+    p_to_dt IN VARCHAR2,
+    p_bpo_CD IN VARCHAR2,
+    p_Region IN VARCHAR2,
+    p_page_start NUMBER,
+    p_page_end NUMBER,
+    P_RESULT_CURSOR OUT SYS_REFCURSOR,
+    p_result_records OUT SYS_REFCURSOR
+)
+AS
+      total_records NUMBER;
+BEGIN
+
+SELECT COUNT(*) INTO total_records 
+    FROM
+    T26_CHEQUE_POSTING T26
+    JOIN T22_BILL T22 ON T26.BILL_NO = T22.BILL_NO
+    WHERE NVL(WRITE_OFF_AMT, 0) = 0
+        AND (p_bpo_CD IS NULL OR T26.BPO_CD = p_bpo_CD)
+        AND (p_frm_dt IS NULL OR T26.CHQ_DT BETWEEN TO_DATE(p_frm_dt, 'dd/mm/yyyy') AND TO_DATE(p_to_dt, 'dd/mm/yyyy'))
+        AND T22.AMOUNT_RECEIVED <> T22.BILL_AMOUNT
+        AND SUBSTR(T22.CASE_NO, 1, 1) =p_Region;
+        
+     OPEN p_result_records FOR SELECT total_records as total_records FROM DUAL;
+    
+     OPEN P_RESULT_CURSOR FOR
+     SELECT * FROM (SELECT ROWNUM AS rnum, t.* FROM (
+   SELECT T22.BILL_NO, T22.BILL_DT, T22.BILL_AMOUNT, T22.AMOUNT_RECEIVED, T22.BILL_AMT_CLEARED, T22.WRITE_OFF_AMT, T26.CHQ_DT, T26.BPO_CD
+    FROM T26_CHEQUE_POSTING T26
+    JOIN T22_BILL T22 ON T26.BILL_NO = T22.BILL_NO
+    WHERE NVL(WRITE_OFF_AMT, 0) = 0
+        AND (p_bpo_CD IS NULL OR T26.BPO_CD = p_bpo_CD)
+        AND (p_frm_dt IS NULL OR T26.CHQ_DT BETWEEN TO_DATE(p_frm_dt, 'dd/mm/yyyy') AND TO_DATE(p_to_dt, 'dd/mm/yyyy'))
+        AND T22.AMOUNT_RECEIVED <> T22.BILL_AMOUNT
+        AND SUBSTR(T22.CASE_NO, 1, 1) =p_Region
+ )t where ROWNUM <= p_page_end) WHERE rnum >= p_page_start;
+
+END;
+
+---------------------------
+
+
+        
+ CREATE TABLE APICallLog (
+      ID    NUMBER(6,0) NOT NULL,
+      Name  VARCHAR2(4000 BYTE),
+      ERROR  VARCHAR2(4000 BYTE),
+      CreatedDate  TIMESTAMP(6) WITH TIME ZONE
+  );
+ALTER TABLE APICallLog ADD (
+  CONSTRAINT APICallLog_pk PRIMARY KEY (ID));
+CREATE SEQUENCE APICallLog_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCACHE
+  NOCYCLE;
+
+ALTER TABLE APICallLog
+    MODIFY ID  NUMBER(6,0) DEFAULT APICallLog_seq.nextval;
+
+------------------
+

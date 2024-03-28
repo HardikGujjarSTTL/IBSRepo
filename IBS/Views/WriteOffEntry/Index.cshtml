@@ -17,7 +17,15 @@
             </div>
             <div class="col-md-2 mb-4">
                 <label for="Reference">BPO Name</label>
-                @Html.DropDownList("BPOName", new SelectList(IBS.Models.Common.GetBPOByRegion(@ViewBag.Region), "Value", "Text"),"--Select--" , new { id = "BPOName" })
+                @Html.DropDownList(
+                         "BPOName", // Name attribute for the dropdown list
+                         new SelectList(IBS.Models.Common.GetBPOByRegion("AA"), "Value", "Text"), // Items source
+                         "--Select--", // Default option
+                         new { id = "BPOName", @class = "select2" } // HTML attributes
+                         )
+
+
+                @* @Html.DropDownList("BPOName", new SelectList(IBS.Models.Common.GetBPOByRegion(@ViewBag.Region), "Value", "Text"),"--Select--" , new { id = "BPOName" }) *@
             </div>
             <div class="col-md-3 mb-4">
                 <div class="savenext-btn">
@@ -39,6 +47,7 @@
                         <th>Bill Amount(A)</th>
                         <th>Amount Already Recieved Thru Cheque/EFT</th>
                         <th>Total Amount Cleared(B)</th>
+                        <th>Outstanding Balance</th>
                         <th>Write-off Amount</th>
                     </tr>
                 </thead>
@@ -61,6 +70,7 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script type="text/javascript">
+
 
         function btnsearch(){
             InitializeDatatable();
@@ -100,10 +110,12 @@
                 contentType: false,
                 success: function (response) {
                     if (response.success) {
-                        setTimeout(function () {
-                            var redirecturl = "@Url.Action("Index", "WriteOffEntry")";
-                            window.location.href = redirecturl;
-                        }, 2000);
+                        // setTimeout(function () {
+                        //     var redirecturl = "@Url.Action("Index", "WriteOffEntry")";
+                        //     window.location.href = redirecturl;
+                            
+                        // }, 2000);
+                        InitializeDatatable();
                     }
                 },
                 error: function (xhr, textStatus, errorThrown) {
@@ -160,6 +172,7 @@
                     { data: "BillAmt" },
                     { data: "BillAmtRec" },
                     { data: "BillAmtClr" },
+                    { data: "Outstanding_AMT" },
                     {
                         data: "WRITE_OFF_AMT",
                         targets: [1, 2],
@@ -213,6 +226,47 @@
         function clearErrorMessage(inputId) {
             $('#' + inputId).text('').hide();
         }
+
+        $(document).ready(function () {
+            $('#BPOName').select2({
+                ajax: {
+                    url: '@Url.Action("getBPO", "WriteOffEntry")',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            SBPO: params.term || ''
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.data
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
+        });
+
+        // function BindBPO(Acc_cd, BpoType, BPO_cd) {
+        //     $("#ddlBPO").empty();
+        //     if (BPO_cd == "") {
+        //         $("#ddlBPO").append($('<option value="">--Select--</option>'));
+        //     }
+
+        //     $.get("@Url.Action("getBPO", "AdministratorPurchaseOrder")", { Acc_cd, BpoType, BPO_cd }, function (response) {
+        //         if (response != null) {
+        //             $("#ddlBPO").empty();
+        //             if (BPO_cd == "") {
+        //                 $("#ddlBPO").append($('<option value="">--Select--</option>'));
+        //             }
+        //             $.each(response, function (ind, val) {
+        //                 $("#ddlBPO").append($('<option></option>').val(val.Value).html(val.Text));
+        //             });
+        //         }
+        //     });
+        // }
 
     </script>
 }
