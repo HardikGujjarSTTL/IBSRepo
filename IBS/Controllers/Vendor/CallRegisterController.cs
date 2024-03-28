@@ -8,12 +8,15 @@ namespace IBS.Controllers.Vendor
     {
         #region Variables
         private readonly ICallRegisterRepository callregisterRepository;
-        #endregion
+        
         public CallRegisterController(ICallRegisterRepository _callregisterRepository)
         {
             callregisterRepository = _callregisterRepository;
         }
 
+        #endregion
+
+        #region View
         public IActionResult Index(string CaseNo, string CallRecvDt, string CallSNo)
         {
             CallRegisterModel model = new();
@@ -24,13 +27,6 @@ namespace IBS.Controllers.Vendor
             }
 
             return View(model);
-        }
-
-        [HttpPost]
-        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
-        {
-            DTResult<CallRegisterModel> dTResult = callregisterRepository.GetDataList(dtParameters, UserName);
-            return Json(dTResult);
         }
 
         public IActionResult Manage(string CaseNo, string CallRecvDt, int CallSNo, int ItemSrNoPo)
@@ -45,6 +41,26 @@ namespace IBS.Controllers.Vendor
             return View(model);
         }
 
+        #endregion
+
+        #region Load Data Table
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DTParameters dtParameters)
+        {
+            DTResult<CallRegisterModel> dTResult = callregisterRepository.GetDataList(dtParameters, UserName);
+            return Json(dTResult);
+        }
+
+        [HttpPost]
+        public IActionResult LoadTableDetails([FromBody] DTParameters dtParameters)
+        {
+            DTResult<CallRegisterModel> dTResult = callregisterRepository.GetCallDetailsList(dtParameters);
+            return Json(dTResult);
+        }
+
+        #endregion
+
+        #region Other Events
         public IActionResult GetModifyClick(string CaseNo, string CallRecvDt, int CallSNo)
         {
             DTResult<CallRegisterModel> dTResult = callregisterRepository.FindByModifyDetail(CaseNo, CallRecvDt, CallSNo, UserName);
@@ -57,13 +73,9 @@ namespace IBS.Controllers.Vendor
             return Json(dTResult);
         }
 
-        [HttpPost]
-        public IActionResult LoadTableDetails([FromBody] DTParameters dtParameters)
-        {
-            DTResult<CallRegisterModel> dTResult = callregisterRepository.GetCallDetailsList(dtParameters);
-            return Json(dTResult);
-        }
+        #endregion
 
+        #region Data Save
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DetailsSave(CallRegisterModel model)
@@ -91,6 +103,6 @@ namespace IBS.Controllers.Vendor
             return Json(new { success = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-
+        #endregion
     }
 }
