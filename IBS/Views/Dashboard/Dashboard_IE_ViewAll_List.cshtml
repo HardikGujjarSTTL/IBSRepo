@@ -1,6 +1,14 @@
 ﻿@model DashboardModel
 @{
-    ViewData["Title"] = "Dashboard_IE_ViewAll_List";
+    @if (Model.ActionType == "PC")
+    {
+        ViewData["Title"] = "Pending_Call_List";
+    }
+    else 
+    @if (Model.ActionType == "IFI")
+    {
+        ViewData["Title"] = "INSTRUCTIONS_FOR_IE ";
+    }
 }
 
 <div class="list-inner">
@@ -30,7 +38,7 @@
     </div>
     <div class="row my-0">
         <div class="col-md-12 mb-3">
-            <div class="savenext-btn">
+            <div class="savenext-btn btnAlign">
                 <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
             </div>
         </div>

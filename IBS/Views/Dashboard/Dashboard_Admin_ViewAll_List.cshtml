@@ -1,6 +1,24 @@
 ﻿@model DashboardModel
 @{
-    ViewData["Title"] = "IE_Dashboard_Detail";
+    var type = ViewContext.HttpContext.Request.Query["Type"].First();
+    var title = "";
+    if (type == "CHP")
+    {
+        title = "Clients with Highest Payments";
+    }
+    else if (type == "CHO")
+    {
+        title = "Clients with Highest Outstading";
+    }
+    else if (type == "OPC")
+    {
+        title = "Oldest Pending Cases";
+    }
+    else if (type == "OJC")
+    {
+        title = "Oldest JI cases";
+    }
+    ViewData["Title"] = title;
 }
 
 <div class="list-inner">
@@ -14,27 +32,32 @@
 
 <div class="accordion-body" id="body">
     <div class="row my-0">
-        <input asp-for="ActionType" hidden />
-        <div class="col-md-3 mb-3">
+        <input type="hidden" asp-for="ActionType" />
+        <input type="hidden" asp-for="Region" />
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
                 <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">To</label>
                 <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="savenext-btn">
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Region</label>
+                @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion().Where(x=>x.Value == Model.Region), new { })
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="savenext-btn btnAlign">
                 <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
 
 <section class="table-section">
@@ -71,12 +94,18 @@
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.start));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", financialYearDates.end));
 
-            debugger
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
+            const region = urlParams.get('Region');
             $("#ActionType").val(type);
+            $("#Region").val(region);
             if (type == "CHP" || type == "CHO") {
-                $("#spnHeading").text("No. of Clients with Highest Payments. ");
+                if (type == "CHP") {
+                    $("#spnHeading").text("No. of Clients with Highest Payments");
+                } else {
+                    $("#spnHeading").text("No. of Clients with Highest Outstading");
+                }
+
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -89,7 +118,13 @@
                     { data: "Value", title: " Value (₹)" },
                 ]
             } else if (type == "OPC" || type == "OJC") {
-                $("#spnHeading").text("No. of Oldest Pending Cases. ");
+                if (type == "OPC") {
+                    $("#spnHeading").text("No. of Oldest Pending Cases. ");
+                }
+                else {
+                    $("#spnHeading").text("No. of Oldest JI Cases. ");
+                }
+
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -111,12 +146,13 @@
                 ]
             }
             InitializeDatatable();
-        });        
+        });
 
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var TypeOfList = $("#ActionType").val();
+            var Region = $("#Region").val();
 
             $("#dtList").DataTable({
                 stateSave: false,
@@ -135,7 +171,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, TypeOfList
+                            FromDate, ToDate, TypeOfList, Region
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);

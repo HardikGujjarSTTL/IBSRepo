@@ -22,7 +22,6 @@ namespace IBS.Models
         public int VEND_CD { get; set; }
         public string CONSIGNEE { get; set; }
         public int? CONSIGNEE_CD { get; set; }
-       // public byte? CONSIGNEECD { get; set; }
         public string Item { get; set; }
         public int Item_Srno_no { get; set; }
         public DateTime? FromDate { get; set; }
@@ -33,7 +32,7 @@ namespace IBS.Models
         public DateTime? NCRDate { get; set; }
         public DateTime? Date { get; set; }
         [NotMapped]
-        public string? IeCd { get; set; }
+        public int? IeCd { get; set; }
         public byte? Ie_Cd { get; set; }
         public DateTime? CALL_RECV_DT { get; set; }
         public DateTime CALLRECVDT { get; set; }
@@ -47,6 +46,7 @@ namespace IBS.Models
         public string? UserID { get; set; }
         public string JsonData { get; set; }
         public string rdononc { get; set; }
+        public string NCRCodeText { get; set; }
         public string msg { get; set; }
 
         public List<Remarks> lstRemark { get; set; }

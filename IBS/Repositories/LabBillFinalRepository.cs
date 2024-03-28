@@ -3,12 +3,8 @@ using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -107,7 +103,7 @@ namespace IBS.Repositories
                         OracleParameter[] par = new OracleParameter[2];
                         par[0] = new OracleParameter("p_invoice_no", OracleDbType.Varchar2, BillNo[i], ParameterDirection.Input);
                         par[1] = new OracleParameter("p_new_invoice_dt", OracleDbType.Date, ss, ParameterDirection.Input);
-                        
+
                         var ds = DataAccessDB.ExecuteNonQuery("UpdateInvoiceDateAndFinalize", par, 1);
                     }
                 }

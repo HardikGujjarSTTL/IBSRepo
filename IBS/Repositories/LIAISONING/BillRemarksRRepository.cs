@@ -2,16 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories
 {
@@ -26,7 +19,7 @@ namespace IBS.Repositories
         public DTResult<BillRemarksModel> GetBills(DTParameters dtParameters, string OrgType, string Org, IWebHostEnvironment webHostEnvironment)
         {
 
-            
+
             DTResult<BillRemarksModel> dTResult = new() { draw = 0 };
             IQueryable<BillRemarksModel>? query = null;
 
@@ -34,7 +27,7 @@ namespace IBS.Repositories
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
 
-            
+
             if (dtParameters.Order != null)
             {
                 // in this example we just default sort on the 1st column
@@ -52,15 +45,15 @@ namespace IBS.Repositories
                 orderCriteria = "BILL_NO";
                 orderAscendingDirection = true;
             }
-            
-           
+
+
             OracleParameter[] par = new OracleParameter[3];
             par[0] = new OracleParameter("P_BPO_T", OracleDbType.NVarchar2, OrgType, ParameterDirection.Input);
             par[1] = new OracleParameter("P_BPO_R", OracleDbType.NVarchar2, Org, ParameterDirection.Input);
             par[2] = new OracleParameter("CUR_OUT", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_BILL_INFO", par, 2);
-            
+
             List<BillRemarksModel> modelList = new List<BillRemarksModel>();
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
@@ -69,14 +62,14 @@ namespace IBS.Repositories
 
 
                     BillRemarksModel model = new BillRemarksModel
-                    {                        
+                    {
                         BILL_NO = Convert.ToString(row["bill_no"]),
                         BILL_AMOUNT = Convert.ToString(row["BILL_AMOUNT"]),
                         AU = Convert.ToString(row["AU"]),
                         LO_REMARKS = Convert.ToString(row["LO_REMARKS"]),
                         BPO_TYPE = Convert.ToString(row["BPO_TYPE"]),
                         BPO_RLY = Convert.ToString(row["BPO_RLY"]),
-                        
+
                     };
 
                     modelList.Add(model);
@@ -118,7 +111,7 @@ namespace IBS.Repositories
 
             //using (var dbContext = context.Database.GetDbConnection())
             //{
-                
+
             //}
 
             //return dTResult;
@@ -137,7 +130,7 @@ namespace IBS.Repositories
                     {
                         cmd.Parameters.Add(new OracleParameter("LO_REMARKS", OracleDbType.NVarchar2)).Value = BillRemarksModel.LO_REMARKS;
                         cmd.Parameters.Add(new OracleParameter("BILL_NO", OracleDbType.NVarchar2)).Value = BillRemarksModel.BILL_NO;
-                        
+
                         cmd.ExecuteNonQuery();
                         conn.Close();
                     }

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using static IBS.Helper.Enums;
 
 namespace IBS.Repositories.Vendor
 {
@@ -84,9 +83,14 @@ namespace IBS.Repositories.Vendor
             string VendorAddress = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorAddress"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorAddress"]) : "";
             string VendorCity = !string.IsNullOrEmpty(dtParameters.AdditionalValues["VendorCity"]) ? Convert.ToString(dtParameters.AdditionalValues["VendorCity"]) : "";
 
+            //OracleParameter[] par = new OracleParameter[4];
+            //par[0] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            //par[1] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            //par[2] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
+            //par[3] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
+            //var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 2);
             OracleParameter[] par = new OracleParameter[1];
             par[0] = new OracleParameter("p_Result", OracleDbType.RefCursor, ParameterDirection.Output);
-
             var ds = DataAccessDB.GetDataSet("GET_VENDOR_DATA", par, 1);
 
             List<VendorlistModel> model = new List<VendorlistModel>();
@@ -97,6 +101,15 @@ namespace IBS.Repositories.Vendor
             }
 
             query = model.AsQueryable();
+
+            //int recordsTotal = 0;
+            //if (ds != null && ds.Tables[1].Rows.Count > 0)
+            //{
+            //    recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            //}
+            //dTResult.recordsTotal = recordsTotal;
+
+            
 
             dTResult.recordsTotal = query.Count();
 
@@ -109,8 +122,10 @@ namespace IBS.Repositories.Vendor
 
             if (dtParameters.Length == -1) dtParameters.Length = query.Count();
 
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
+            //dTResult.draw = dtParameters.Draw;
 
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
@@ -148,7 +163,7 @@ namespace IBS.Repositories.Vendor
                     VendGstno = model.GSTNO,
                     VendTanno = model.TANNO,
                     VendPanno = model.PANNO,
-                    VendPwd = model.VendCd.ToString(),
+                    VendPwd = Common.getEncryptedText("Rites123", "301ae92bb2bc7599"),
                     UserId = model.UserId,
                     Datetime = DateTime.Now.Date,
                     Createdby = model.Createdby,
@@ -193,9 +208,9 @@ namespace IBS.Repositories.Vendor
 
                     context.SaveChanges();
                 }
-
             }
-            UserUpdate(model);
+            //UserUpdate(model);
+            RoleEntry(model);
             return model.VendCd;
         }
 
@@ -212,6 +227,28 @@ namespace IBS.Repositories.Vendor
                 ID = "0";
             }
             return ID;
+        }
+        public void RoleEntry(VendorMasterModel model)
+        {
+            var UserDetails = context.UserMasters.Where(x => x.UserId == Convert.ToString(model.VendCd)).FirstOrDefault();
+            if (UserDetails == null)
+            {
+                UserMaster User = new();
+                User.UserId = Convert.ToString(model.VendCd);
+                User.Name = model.VendName;
+                User.UserType = "VENDOR";
+                User.Createddate = DateTime.Now.Date;
+                User.Createdby = model.UserId;
+
+                context.UserMasters.Add(User);
+                context.SaveChanges();
+            }
+            else
+            {
+                UserDetails.Name = model.VendName;
+                //UserDetails.Createdby = model.UserId;
+                context.SaveChanges();
+            }
         }
 
         public void UserUpdate(VendorMasterModel model)

@@ -1,6 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
-using System.Data;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
@@ -8,7 +6,7 @@ namespace IBS.Interfaces
     {
 
         DTResult<SuperSurpirseFormModel> GetSuperFormData(DTParameters dtParameters, string Regin);
-        SuperSurpirseFormModel LoadSuperData(SuperSurpirseFormModel SuperSurpirseFormModel, string Case_No, string CallDt, string CallSNo);       
+        SuperSurpirseFormModel LoadSuperData(SuperSurpirseFormModel SuperSurpirseFormModel, string Case_No, string CallDt, string CallSNo);
         bool Save(SuperSurpirseFormModel SuperSurpirseFormModel);
 
     }

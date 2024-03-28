@@ -121,7 +121,7 @@
             });
 
             function InitializeDatatable() {
-                debugger
+                
                 var caseno = $("#caseno").val();
                 var pono = $("#pono").val();
                 var podt = $("#podt").val();
@@ -157,7 +157,7 @@
                     serverSide: true,
                     destroy: true,
                     paging: true,
-                    searching: true,
+                    searching: false,
                     ajax: {
                         url: ajaxUrl,
                         type: "POST",
@@ -243,7 +243,7 @@
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.BPO_NAME, value: item.BPO_NAME };
+                                return { text: item.BPO_NAME, value: item.BPO_NAME };
                             }))
 
                         }
@@ -263,7 +263,7 @@
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.CONSIGNEE, value: item.CONSIGNEE };
+                                return { text: item.CONSIGNEE, value: item.CONSIGNEE };
                             }))
                         }
                     })
@@ -282,7 +282,7 @@
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                                return { text: item.VEND_NAME, value: item.VEND_NAME };
                             }))
                         }
                     })

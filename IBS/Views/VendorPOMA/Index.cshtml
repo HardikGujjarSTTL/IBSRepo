@@ -100,7 +100,7 @@
         $(function () {
             setDefaultDate();
             InitializeDatatable();
-            debugger
+            
             MaStatus();
 
             //var recordCount = $("#dtList").DataTable().rows().count();
@@ -342,10 +342,10 @@
             var CaseNo = $("#CASE_NO").val();
             var MaNo = $("#MA_NO").val();
             var MaDt = $("#MA_DT").val();
-            debugger
+            
             var urlParams = new URLSearchParams(window.location.search);
             var MaStatus = urlParams.get('MaStatus');
-            debugger
+            
             $.ajax({
                 url: '@Url.Action("GetMatchModify", "VendorPOMA")',
                 type: "GET",
@@ -408,11 +408,11 @@
             var MaNo = $("#MA_NO").val();
             var MaDt = $("#MA_DT").val();
             //var MaSNo = $("#MA_SNO").val();
-           debugger
+           
             var urlParams = new URLSearchParams(window.location.search);
             var MaStatus = urlParams.get('MaStatus');
             var MaSNo = urlParams.get('MaSNo');
-            debugger
+            
             $.ajax({
                 url: '@Url.Action("GetMatchModify", "VendorPOMA")',
                 type: "GET",

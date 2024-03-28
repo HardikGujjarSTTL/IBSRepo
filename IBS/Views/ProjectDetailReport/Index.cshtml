@@ -1,0 +1,46 @@
+﻿@model IBS.Models.ProjectModel
+@{
+    ViewData["Title"] = "Project Detail Report";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Project Detail Report</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3">
+                <div class="input-search">
+                    <label for="Reference">Project Name</label>
+                    @Html.DropDownListFor(model => model.ProjectName, new SelectList(IBS.Models.Common.GetProjectName(), "Value", "Text"), "--Select--", new { @onChange = "FillProjectDetails();" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div id="dvProjectDetail">
+            @* <partial name="_ProjectDetailReport" /> *@
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function FillProjectDetails() {
+            var ProjectName = $('#ProjectName').val();
+            let myObject = { ProjectName};
+            $.post("@Url.Action("FillProjectDetails", "ProjectDetailReport")", $.param(myObject), function (response) {
+                if (response != null) {
+                    $("#dvProjectDetail").html("");
+                    $("#dvProjectDetail").html(response);
+                }
+
+            });
+        }
+    </script>
+}

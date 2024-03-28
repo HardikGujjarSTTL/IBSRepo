@@ -21,6 +21,7 @@
         <form data-ajax="true" asp-antiforgery="true" asp-controller="DEOCRISPurchesOrderMAWCaseNo" asp-action="DeoCrisPOMasterSave" data-ajax-method="post" data-ajax-complete="completed" id="frmDeoCrisPO">
             <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
             <input type="hidden" id="hdnType" />
+            <input type="hidden" id="IMMS_RLY_CD" name="IMMS_RLY_CD" value="@Model.IMMS_RLY_CD" />
 
             <div class="accordion-body">
                 <div class="row my-0">
@@ -130,8 +131,8 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Last 5 digit of PO</label>
-                        <input type="text" class="input" asp-for="L5noPo">
-                        <span asp-validation-for="L5noPo" class="text-danger"></span>
+                        <input type="text" class="input" asp-for="L5NO_PO">
+                        <span asp-validation-for="L5NO_PO" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Inspection Agency/PO Cancelled</label>
@@ -159,6 +160,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <input type="text" class="input" asp-for="POI_CD">
+                        @* <span asp-validation-for="POI_CD" class="text-danger"></span> *@
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="savenext-btn">
@@ -184,7 +186,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Remarks</label>
                         <textarea class="input" asp-for="REMARKS" maxlength="500"> </textarea>
-                        <span asp-validation-for="REMARKS" class="text-danger"></span>
+                        @* <span asp-validation-for="REMARKS" class="text-danger"></span> *@
                     </div>
                     <div class="col-md-4 mb-3">
                         <button type="button" id="btnBPO" class="btn btn-primary formSubBtn" onclick="SaveRemarks();" style="margin-top: 33px;">Save Remarks</button>
@@ -575,6 +577,11 @@
             var IMMS_POKEY = '@Model.IMMS_POKEY';
             var IMMS_RLY_CD = '@Model.IMMS_RLY_CD';
             var REMARKS = $("#REMARKS").val();
+            if(REMARKS == '')
+            {
+                ShowHideMsgNew(false, 'The Remarks field is required.');
+                return;
+            }
             $.ajax({
                 url: '@Url.Action("UpdateREMARKS", "DEOCRISPurchesOrderMAWCaseNo")?REMARKS=' + REMARKS + "&IMMS_POKEY=" + IMMS_POKEY + "&IMMS_RLY_CD=" + IMMS_RLY_CD,
                 type: 'POST',

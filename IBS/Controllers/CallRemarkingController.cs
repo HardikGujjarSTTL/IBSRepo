@@ -1,8 +1,6 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
 namespace IBS.Controllers
 {
@@ -56,7 +54,7 @@ namespace IBS.Controllers
                     model.CaseNos = formCollection["checkedCaseNos"];
                 }
 
-                model.RemInitBy = USER_ID.Substring(0, 8);
+                model.RemInitBy = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
 
                 callRemarkingRepository.SaveDetails(model);
 
@@ -80,6 +78,8 @@ namespace IBS.Controllers
         public IActionResult CallRemarkingListForApproval([FromBody] DTParameters dtParameters)
         {
             dtParameters.AdditionalValues.Add("UserId", Convert.ToString(UserId));
+            //dtParameters.AdditionalValues.Add("UserId", Convert.ToString(USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID));
+            
             dtParameters.AdditionalValues.Add("Region", Region);
             DTResult<PendingCallsListModel> dTResult = callRemarkingRepository.GetCallRemarkingListForApproval(dtParameters);
             return Json(dTResult);
@@ -111,7 +111,7 @@ namespace IBS.Controllers
                     model.DtInspDesire = DateTime.Now.Date;
                 }
 
-                model.UserId = USER_ID.Substring(0, 8);
+                model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID; 
 
                 if (model.Action == "Approve")
                 {

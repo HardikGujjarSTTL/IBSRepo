@@ -1,13 +1,8 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
 //using CrystalDecisions.Shared;
-using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -22,19 +17,19 @@ namespace IBS.Controllers
             LabPostingReportRepository = _LabPostingReportRepository;
             _webHostEnvironment = webHostEnvironment;
         }
-        
+
         public IActionResult LabPostingReport()
         {
-            
+
             return View();
-        }        
+        }
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
             string Regin = GetRegionCode;
-            DTResult<LabPostingReport> dTResult = LabPostingReportRepository.labPostingReport(dtParameters, Regin);          
+            DTResult<LabPostingReport> dTResult = LabPostingReportRepository.labPostingReport(dtParameters, Regin);
             return Json(dTResult);
         }
-        
+
     }
 }

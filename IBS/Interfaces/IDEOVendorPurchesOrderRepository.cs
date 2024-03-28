@@ -4,6 +4,6 @@ namespace IBS.Interfaces
 {
     public interface IDEOVendorPurchesOrderRepository
     {
-        DTResult<DEOVendorPurchesOrderModel> GetDataList(DTParameters dtParameters, string GetRegionCode);
+        DTResult<DEOVendorPurchesOrderModel> GetDataList(DTParameters dtParameters, string GetRegionCode, string RootHostName);
     }
 }

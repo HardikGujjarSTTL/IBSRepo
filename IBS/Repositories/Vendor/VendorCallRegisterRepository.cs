@@ -1,15 +1,17 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Dynamic;
-using System.Net;
-using System.Net.Mail;
-using System.Xml;
+using System.Drawing;
+
+//using System.Net;
+//using System.Net.Mail;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace IBS.Repositories.Vendor
@@ -17,10 +19,14 @@ namespace IBS.Repositories.Vendor
     public class VendorCallRegisterRepository : IVendorCallRegisterRepository
     {
         private readonly ModelContext context;
+        private readonly IConfiguration config;
+        private readonly ISendMailRepository pSendMailRepository;
 
-        public VendorCallRegisterRepository(ModelContext context)
+        public VendorCallRegisterRepository(ModelContext context, IConfiguration _config, ISendMailRepository _pSendMailRepository)
         {
             this.context = context;
+            this.config = _config;
+            pSendMailRepository = _pSendMailRepository;
         }
 
         public string CNO, DT, Action, CSNO, cstatus, wFOS;
@@ -53,7 +59,7 @@ namespace IBS.Repositories.Vendor
             return model;
         }
 
-        public VenderCallRegisterModel FindByID(string ActionType, string CaseNo, DateTime? CallRecvDt, int CallSno, string FOS, string UserName)
+        public VenderCallRegisterModel FindByID(string ActionType, string CaseNo, DateTime? CallRecvDt, int CallSno, string FOS, string UserName, string Region)
         {
             VenderCallRegisterModel model = new();
             //string CallRDt = Convert.ToDateTime(CallRecvDt).ToString("dd-MM-yyyy");
@@ -63,7 +69,8 @@ namespace IBS.Repositories.Vendor
             {
                 T17CallRegister user = context.T17CallRegisters.Where(X => X.CaseNo == CaseNo && X.CallRecvDt == Convert.ToDateTime(CallRecvDt)).FirstOrDefault();
 
-                var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date).Count();
+                //var count = context.T17CallRegisters.Where(x => x.CaseNo == CaseNo && x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date).Count();
+                var count = context.T17CallRegisters.Where(x => x.CallRecvDt.Date == Convert.ToDateTime(CallRecvDt).Date && x.RegionCode == Convert.ToString(Region)).Count();
 
                 model.CallSno = count + 1;
 
@@ -815,6 +822,9 @@ namespace IBS.Repositories.Vendor
                 }
                 #endregion
             }
+
+            send_Vendor_Email(model);
+            send_IE_smsAsync(model);
             return ID;
         }
 
@@ -1231,7 +1241,13 @@ namespace IBS.Repositories.Vendor
                         if (callStatusCount >= 0)
                         {
                             int countcalls = callStatusCount;
-                            var ieCallMarking = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                            //var ieCallMarking = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                            var ieCallMarking = (from t09 in context.T09Ies
+                                                 join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                 from t48 in t48Group.DefaultIfEmpty()
+                                                 where t09.IeCd == ieCode
+                                                 && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                 select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
                             if (Convert.ToInt32(ieCode) == 0)
                             {
                                 strval = 0;
@@ -1256,7 +1272,13 @@ namespace IBS.Repositories.Vendor
                                 }
                                 else
                                 {
-                                    var altIe = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIe).FirstOrDefault();
+                                    //var altIe = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIe).FirstOrDefault();
+                                    var altIe = (from t09 in context.T09Ies
+                                                 join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                 from t48 in t48Group.DefaultIfEmpty()
+                                                 where t09.IeCd == ieCode
+                                                 && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                 select new { t09.AltIe }).FirstOrDefault().AltIe;
                                     if (altIe != null)
                                     {
                                         int Alt_ieCode = Convert.ToInt32(altIe);
@@ -1274,7 +1296,13 @@ namespace IBS.Repositories.Vendor
                                         if (callStatusCount1 >= 0)
                                         {
                                             int countcalls123 = callStatusCount1;
-                                            var ieCallMarking1 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                                            //var ieCallMarking1 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                                            var ieCallMarking1 = (from t09 in context.T09Ies
+                                                                  join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                  from t48 in t48Group.DefaultIfEmpty()
+                                                                  where t09.IeCd == ieCode
+                                                                  && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                  select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
 
                                             if (Alt_ieCode == 0)
                                             {
@@ -1302,7 +1330,13 @@ namespace IBS.Repositories.Vendor
                                                     }
                                                     else
                                                     {
-                                                        var altIeTwo = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeTwo).FirstOrDefault();
+                                                        //var altIeTwo = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeTwo).FirstOrDefault();
+                                                        var altIeTwo = (from t09 in context.T09Ies
+                                                                        join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                        from t48 in t48Group.DefaultIfEmpty()
+                                                                        where t09.IeCd == ieCode
+                                                                        && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                        select new { t09.AltIeTwo }).FirstOrDefault().AltIeTwo;
                                                         if (altIeTwo != null)
                                                         {
                                                             //    strval = 0;
@@ -1324,7 +1358,13 @@ namespace IBS.Repositories.Vendor
                                                             if (callStatusCount2 >= 0)
                                                             {
                                                                 int countcalls1234 = callStatusCount2;
-                                                                var ieCallMarking2 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_TWO).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                                                                //var ieCallMarking2 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_TWO).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                                                                var ieCallMarking2 = (from t09 in context.T09Ies
+                                                                                      join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                                      from t48 in t48Group.DefaultIfEmpty()
+                                                                                      where t09.IeCd == Alt_ieCode_TWO
+                                                                                      && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                                      select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
                                                                 if (Convert.ToInt32(Alt_ieCode_TWO) == 0)
                                                                 {
                                                                     strval = 0;
@@ -1351,7 +1391,13 @@ namespace IBS.Repositories.Vendor
                                                                         }
                                                                         else
                                                                         {
-                                                                            var altIeThree = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeThree).FirstOrDefault();
+                                                                            //var altIeThree = context.T09Ies.Where(ie => ie.IeCd == ieCode).Select(ie => ie.AltIeThree).FirstOrDefault();
+                                                                            var altIeThree = (from t09 in context.T09Ies
+                                                                                              join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                                              from t48 in t48Group.DefaultIfEmpty()
+                                                                                              where t09.IeCd == ieCode
+                                                                                              && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                                              select new { t09.AltIeThree }).FirstOrDefault().AltIeThree;
                                                                             if (altIeThree != null)
                                                                             {
                                                                                 int Alt_ieCode_THREE = Convert.ToInt32(altIeThree);
@@ -1369,7 +1415,13 @@ namespace IBS.Repositories.Vendor
                                                                                 if (callStatusCount3 >= 0)
                                                                                 {
                                                                                     int countcalls1233 = callStatusCount3;
-                                                                                    var ieCallMarking3 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_THREE).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                                                                                    //var ieCallMarking3 = context.T09Ies.Where(ie => ie.IeCd == Alt_ieCode_THREE).Select(ie => ie.IeCallMarking).FirstOrDefault();
+                                                                                    var ieCallMarking3 = (from t09 in context.T09Ies
+                                                                                                          join t48 in context.T48NiIeWorkPlans on t09.IeCd equals t48.IeCd into t48Group
+                                                                                                          from t48 in t48Group.DefaultIfEmpty()
+                                                                                                          where t09.IeCd == Alt_ieCode_THREE
+                                                                                                          && (t48.NiWorkDt == null || (t48.NiWorkDt != DateTime.Now.Date && t48.NiWorkDt < DateTime.Now.Date))
+                                                                                                          select new { t09.IeCallMarking }).FirstOrDefault().IeCallMarking;
                                                                                     if (Alt_ieCode_THREE == 0)
                                                                                     {
                                                                                         strval = 0;
@@ -1488,17 +1540,20 @@ namespace IBS.Repositories.Vendor
                 if (wVendMobile != "") { wIEMobile = wIEMobile + "," + wVendMobile; }
                 string message = "RITES LTD - QA Call Marked, IE-" + wIEName + ",Contact No.:" + wIEMobile_for_SMS + ",RLY-" + model.Rly + ",PO-" + model.PoNo + ",DT- " + model.PoDt + ", Firm Name-" + wVendor + ", Call Sno - " + model.CallSno + ",DT- " + model.CallRecvDt + "- RITES/" + sender;
 
-                using (HttpClient client = new HttpClient())
+                if (Convert.ToString(config.GetSection("MailConfig")["SendSMS"]) == "1")
                 {
-                    string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wIEMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string baseurl = $"http://apin.onex-aura.com/api/sms?key=QtPr681q&to={wIEMobile}&from=RITESI&body={message}&entityid=1501628520000011823&templateid=1707161588918541674";
 
-                    HttpResponseMessage response = await client.GetAsync(baseurl);
-                    response.EnsureSuccessStatusCode(); // Ensure a successful response
+                        HttpResponseMessage response = await client.GetAsync(baseurl);
+                        response.EnsureSuccessStatusCode(); // Ensure a successful response
 
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseBody);
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine(responseBody);
 
-                    sms = "success";
+                        sms = "success";
+                    }
                 }
             }
             catch (Exception ex)
@@ -1510,15 +1565,30 @@ namespace IBS.Repositories.Vendor
 
         public string send_Vendor_Email(VenderCallRegisterModel model)
         {
+            string MailID = Convert.ToString(config.GetSection("MailConfig")["MailID"]);
+            string MailPass = Convert.ToString(config.GetSection("MailConfig")["MailPass"]);
+            string MailSmtpClient = Convert.ToString(config.GetSection("MailConfig")["MailSmtpClient"]);
+
             string email = "";
             string Case_Region = model.CaseNo.ToString().Substring(0, 1);
             string wRegion = "";
-            string sender = "";
 
-            if (Case_Region == "N") { wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665"; sender = "nrinspn@rites.com"; }
-            else if (Case_Region == "S") { wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359"; sender = "srinspn@rites.com"; }
-            else if (Case_Region == "E") { wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704"; sender = "erinspn@rites.com"; }
-            else if (Case_Region == "W") { wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>"; sender = "wrinspn@rites.com"; }
+            if (Case_Region == "N")
+            {
+                wRegion = "NORTHERN REGION <BR>12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 <BR>Phone : +918800018691-95 <BR>Fax : 011-22024665";
+            }
+            else if (Case_Region == "S")
+            {
+                wRegion = "SOUTHERN REGION <BR>CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 <BR>Phone : 044-28292807/044- 28292817 <BR>Fax : 044-28290359";
+            }
+            else if (Case_Region == "E")
+            {
+                wRegion = "EASTERN REGION <BR>CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  <BR>Fax : 033-22348704";
+            }
+            else if (Case_Region == "W")
+            {
+                wRegion = "WESTERN REGION <BR>5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT,NARIMAN POINT,MUMBAI-400021 <BR>Phone : 022-68943400/68943445 <BR>";
+            }
             else if (Case_Region == "C") { wRegion = "Central Region"; }
 
             var result = (from t13 in context.T13PoMasters
@@ -1555,7 +1625,7 @@ namespace IBS.Repositories.Vendor
                                VendEmail = t05.VendEmail,
                                MfgCd = t17.MfgCd,
                                DtInspDesire = t17.DtInspDesire
-                           }).FirstOrDefault(); ;
+                           }).FirstOrDefault();
 
             string manu_mail = "";
             int mfg_cd = 0;
@@ -1670,6 +1740,7 @@ namespace IBS.Repositories.Vendor
                 mail_body = mail_body + "The inspection call has been assigned to Inspecting Engineer Sh. " + ie_name + ", Contact No. " + ie_phone + ", Email ID: " + ie_email + ". Based on the current workload with the IE, Inspection is likely to be attended on or before " + dateto_attend + " or next working day (In case the above date happens to be a holiday) and Inspection certificate is likely to issued by " + date_to_ic + ". Dates are subject to last minute changes due to  exigencies of work and overriding Client priorities. <br> Name of Controlling Manager of concerned IE Sh.: " + co_name + ", Contact No." + co_mobile + ". <br>Offered Material as per registration should be readily available on the indicated date along with all related documents and internal test reports. Inspection is proposed to be conducted as per inspection plan: <a href='http://rites.ritesinsp.com/RBS/MASTER_ITEMS_CHECKSHEETS/" + item_cd + ".RAR'>Inspection Plan</a>.<br><a href='http://rites.ritesinsp.com/RBS/Guidelines for Vendors.pdf'>Guidelines for Vendors</a>.<br>For Inspection related information please visit : http://ritesinsp.com. <br> For any correspondence in future, please quote Case No. only. <br><br> Thanks for using RITES Inspection Services. <br> NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE).<br><br>" + wRegion + ".";
             }
             mail_body = mail_body + "<br><br> THIS IS AN AUTO GENERATED EMAIL. PLEASE DO NOT REPLY. USE EMAIL GIVEN IN THE REGION ADDRESS.";
+            string sender = "";
             if (Case_Region == "N")
             {
                 sender = "nrinspn@rites.com";
@@ -1691,117 +1762,153 @@ namespace IBS.Repositories.Vendor
                 sender = "crinspn@rites.com";
             }
 
+            bool isSend = false;
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(manu_mail);
-                //mail.Bcc.Add("nrinspn@gmail.com");
-                //mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Bcc.Add("bhavesh.rathod@silvertouch.com");
-                mail.From = new MailAddress("bhavesh.rathod@silvertouch.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true;
-                mail.Body = mail_body;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
 
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-                                                                                                                   // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    //MailMessage mail = new MailMessage();
+                    //mail.To.Add(manu_mail);
+                    //mail.Bcc.Add("nrinspn@gmail.com");
+                    //mail.From = new MailAddress("nrinspn@gmail.com");
+                    //mail.Subject = "Your Call for Inspection By RITES";
+                    //mail.IsBodyHtml = true;
+                    //mail.Body = mail_body;
+
+                    //// Create a SmtpClient
+                    //SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    //smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                    //                                                                  // Send the email
+                    //try
+                    //{
+                    //    smtpClient.Send(mail);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    // Handle the exception (log, display error message, etc.)
+                    //}
+                    //finally
+                    //{
+                    //    // Dispose of resources
+                    //    mail.Dispose();
+                    //    smtpClient.Dispose();
+                    //}
                 }
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
-                mail.To.Add(vend_email);
-                mail.To.Add(manu_mail);
-                //mail.Bcc.Add("nrinspn@gmail.com");
-                //mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Bcc.Add("bhavesh.rathod@silvertouch.com");
-                mail.From = new MailAddress("bhavesh.rathod@silvertouch.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = vend_email + ";" + manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
 
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+                    //// Create a MailMessage object
+                    //MailMessage mail = new MailMessage();
+                    //mail.To.Add(vend_email);
+                    ////mail.To.Add(manu_mail);
+                    ////mail.Bcc.Add("nrinspn@gmail.com");
+                    //mail.From = new MailAddress(sender);
+                    //mail.Subject = "Your Call for Inspection By RITES";
+                    //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    //mail.Body = mail_body;
 
-                // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    //// Create a SmtpClient
+                    //SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    //smtpClient.Credentials = new NetworkCredential(MailPass, MailID); // If authentication is required
+
+                    //// Send the email
+                    //try
+                    //{
+                    //    smtpClient.Send(mail);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    // Handle the exception (log, display error message, etc.)
+                    //}
+                    //finally
+                    //{
+                    //    // Dispose of resources
+                    //    mail.Dispose();
+                    //    smtpClient.Dispose();
+                    //}
                 }
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                // Create a MailMessage object
-                MailMessage mail = new MailMessage();
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    //sendMailModel.To = vend_email + ";" + manu_mail;
+                    if (vend_email == "")
+                    {
+                        sendMailModel.To = manu_mail;
+                    }
+                    else if (manu_mail == "")
+                    {
+                        sendMailModel.To = vend_email;
+                    }
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
 
-                if (string.IsNullOrEmpty(vend_email))
-                {
-                    mail.To.Add(manu_mail);
-                }
-                else if (string.IsNullOrEmpty(manu_mail))
-                {
-                    mail.To.Add(vend_email);
-                }
-                else
-                {
-                    mail.To.Add(vend_email);
-                    mail.To.Add(manu_mail);
-                }
+                    //// Create a MailMessage object
+                    //MailMessage mail = new MailMessage();
 
-                //mail.Bcc.Add("nrinspn@gmail.com");
-                //mail.From = new MailAddress("nrinspn@gmail.com");
-                mail.Bcc.Add("bhavesh.rathod@silvertouch.com");
-                mail.From = new MailAddress("bhavesh.rathod@silvertouch.com");
-                mail.Subject = "Your Call for Inspection By RITES";
-                mail.IsBodyHtml = true; // Set to true if the body contains HTML content
-                mail.Body = mail_body;
+                    //if (string.IsNullOrEmpty(vend_email))
+                    //{
+                    //    mail.To.Add(manu_mail);
+                    //}
+                    //else if (string.IsNullOrEmpty(manu_mail))
+                    //{
+                    //    mail.To.Add(vend_email);
+                    //}
+                    //else
+                    //{
+                    //    mail.To.Add(vend_email);
+                    //    mail.To.Add(manu_mail);
+                    //}
 
-                // Create a SmtpClient
-                SmtpClient smtpClient = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
-
-                // Send the email
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail.Dispose();
-                    smtpClient.Dispose();
+                    ////mail.Bcc.Add("nrinspn@gmail.com");
+                    //mail.From = new MailAddress(sender);
+                    //mail.Subject = "Your Call for Inspection By RITES";
+                    //mail.IsBodyHtml = true; // Set to true if the body contains HTML content
+                    //mail.Body = mail_body;
+                    //// Create a SmtpClient
+                    //SmtpClient smtpClient = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    //smtpClient.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
+                    //// Send the email
+                    //try
+                    //{
+                    //    smtpClient.Send(mail);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    // Handle the exception (log, display error message, etc.)
+                    //}
+                    //finally
+                    //{
+                    //    // Dispose of resources
+                    //    mail.Dispose();
+                    //    smtpClient.Dispose();
+                    //}
                 }
             }
 
@@ -1825,39 +1932,52 @@ namespace IBS.Repositories.Vendor
                                     }).FirstOrDefault();
             if (controllingEmail != "")
             {
-                MailMessage mail2 = new MailMessage();
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    // sender for local mail testing
+                    sendMailModel.From = sender;
+                    sendMailModel.To = controllingEmail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    if (ie_email != "")
+                    {
+                        sendMailModel.CC = ie_email;
+                    }
+                    sendMailModel.Subject = "Your Call (" + manufacturerInfo.manu_name + " - " + manufacturerInfo.manu_add + ") for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
 
-                mail2.To.Add(controllingEmail);
-                //mail2.Bcc.Add("nrinspn@gmail.com");
-                mail2.Bcc.Add("bhavesh.rathod@silvertouch.com");
-                if (!string.IsNullOrEmpty(ie_email))
-                {
-                    mail2.CC.Add(ie_email);
-                }
-                //mail2.From = new MailAddress("nrinspn@gmail.com");
-                mail2.From = new MailAddress("bhavesh.rathod@silvertouch.com");
-                mail2.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
-                mail2.IsBodyHtml = true;
-                mail2.Body = mail_body;
+                    //MailMessage mail2 = new MailMessage();
+                    //mail2.To.Add(controllingEmail);
+                    ////mail2.Bcc.Add("nrinspn@gmail.com");
+                    //if (!string.IsNullOrEmpty(ie_email))
+                    //{
+                    //    mail2.CC.Add(ie_email);
+                    //}
+                    //mail2.From = new MailAddress(sender);
+                    //mail2.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
+                    //mail2.IsBodyHtml = true;
+                    //mail2.Body = mail_body;
 
-                // Create a SmtpClient
-                SmtpClient smtpClient2 = new SmtpClient("10.60.50.81"); // Set your SMTP server address
-                smtpClient2.Credentials = new NetworkCredential("bhavesh.rathod@silvertouch.com", "RB_rathod@123"); // If authentication is required
+                    //// Create a SmtpClient
+                    //SmtpClient smtpClient2 = new SmtpClient(MailSmtpClient); // Set your SMTP server address
+                    //smtpClient2.Credentials = new NetworkCredential(MailID, MailPass); // If authentication is required
 
-                try
-                {
-                    smtpClient2.Send(mail2);
-                    email = "success";
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception (log, display error message, etc.)
-                }
-                finally
-                {
-                    // Dispose of resources
-                    mail2.Dispose();
-                    smtpClient2.Dispose();
+                    //try
+                    //{
+                    //    smtpClient2.Send(mail2);
+                    //    email = "success";
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    // Handle the exception (log, display error message, etc.)
+                    //}
+                    //finally
+                    //{
+                    //    // Dispose of resources
+                    //    mail2.Dispose();
+                    //    smtpClient2.Dispose();
+                    //}
                 }
             }
             return email;
@@ -2067,7 +2187,7 @@ namespace IBS.Repositories.Vendor
             string dp = "";
             if (model.InspectingAgency == "R" || model.InspectingAgency == "U")
             {
-                var maxExtDelvDt = context.T15PoDetails.Where(T15 => T15.CaseNo == CaseNo).Max(T15 => (DateTime?)T15.ExtDelvDt);
+                var maxExtDelvDt = context.T15PoDetails.Where(T15 => T15.CaseNo == CaseNo).Max(T15 => T15.ExtDelvDt);
 
                 string resultDt = maxExtDelvDt != null ? maxExtDelvDt.Value.ToString("dd/MM/yyyy") : "01/01/2001";
                 string ext_delv_dt = "";

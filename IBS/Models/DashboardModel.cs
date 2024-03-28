@@ -31,7 +31,7 @@
 
         public int StageRejectionCount { get; set; }
 
-        public int DSCExpiryDateCount { get; set; }
+        public string DSCExpiryDateCount { get; set; }
 
         public int NCIsuedAgainstIECount { get; set; }
 
@@ -136,8 +136,10 @@
         public string LastYearSectorBillingSummary1 { get; set; }
         public string LastYearSectorBillingSummary2 { get; set; }
         public string LastYearSectorBillingSummary3 { get; set; }
-        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling { get; set; } = new List<Sector_Billing_Model>();                
+        public List<Sector_Billing_Model> lstLastThreeYearSectorBilling { get; set; } = new List<Sector_Billing_Model>();
         #endregion
+
+        public string Region { get; set; }
     }
 
     public class IEList
@@ -432,7 +434,7 @@
         public string CaseNo { get; set; }  
         public DateTime CallRecvDt { get; set; }  
         public DateTime? PoDt { get; set; }  
-        public byte? CallInstallNo { get; set; }  
+        public int? CallInstallNo { get; set; }  
         public int CallSno { get; set; }  
         public string CallStatus { get; set; }  
         public string CallLetterNo { get; set; }  

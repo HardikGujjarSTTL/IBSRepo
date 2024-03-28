@@ -3,96 +3,96 @@
 @{
     string Role_Cd = ViewBag.RoleCD;
 }
-    <input type="hidden" id="hdnBPOType" value="" />
-    <input type="hidden" id="hdnID" value="" />
-    <h3 class="heading3">Voucher Details</h3>
-    <div class="row my-0">
-        <div class="col-md-3 mb-3">
+<input type="hidden" id="hdnBPOType" value="" />
+<input type="hidden" id="hdnID" value="" />
+<h3 class="heading3">Voucher Details</h3>
+<div class="row my-0">
+    <div class="col-md-3 mb-3">
         <label for="txtChequeNo">Cheque/NEFT/UTR no. <i class="text-danger">*</i></label>
-        <input type="text" class="input" id="txtChequeNo" onkeypress="return isNumberWithDot(event)" />
-            <span class="text-danger field-validation-error" id="spnErrorChequeNo"></span>
-        </div>
-        <div class="col-md-3 mb-3">
-        <label for="txtChequeDate">Cheque/NEFT/UTR no. Date. <i class="text-danger">*</i></label>
-            <input type="text" class="datepicker" id="txtChequeDate" placeholder="DD/MM/YYYY" />
-            <span class="text-danger field-validation-error" id="spnErrorChequeDate"></span>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="ddlBank">Bank/Cash</label>
-            @Html.DropDownList("ddlBank_Cd", Common.GetBankNames())
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="txtAmount">Amount <i class="text-danger">*</i></label>
-            <input type="text" class="input" id="txtAmount" onkeypress="return isNumberWithDot(event)" />
-            <span class="text-danger field-validation-error" id="spnErrorAmount"></span>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="txtSampleNo">Sample No</label>
-            <input type="text" class="input" id="txtSampleNo" />
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="ddlAccountCode">Account Code</label>
-            @Html.DropDownList("ddlAccountCode", Common.GetAccountCode(Role_Cd), new { @onchange = "onchangeAccountCode();" })
-        </div>
-        <div class="col-md-3 mb-3" id="dvCaseNo" style="display: none;">
-        <label for="txtCaseNo">Case No <i class="text-danger">*</i></label> <br />
-            <input type="text" class="input" id="txtCaseNo" onchange="onchangeCaseNo();" />
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="ddlAccountCode">BPO <i class="text-danger">*</i></label> <br />
-            <select id="ddlBPO" name="ddlBPO" style="width: 100%;">
-                <option value="">--Select--</option>
-            </select>
-            <span class="text-danger field-validation-error" id="spnErrorBPO"></span>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="txtNarration">Narration</label>
-            <textarea class="input" id="txtNarration" maxlength="50"></textarea>
-        </div>
-        <div class="savenext-btn">
-        <button id="btnAdd" type="button" class="save-btn active" onclick="SaveVoucherDetails();">Add Cheque</button>
-            <a href="#clear" class="reset-btn">Clear</a>
-            <button id="btnUploadExcel" type="button" class="save-btn active" onclick="onclickUploadExcel();">Upload Excel</button>
-        </div>
+        <input type="text" class="input" id="txtChequeNo" onkeypress="return isNumberWithDot(event)" maxlength="12"/>
+        <span class="text-danger field-validation-error" id="spnErrorChequeNo"></span>
     </div>
-    <div class="task-listinput" style="margin-top: 10px;">
-        <div class="dash-table" style="max-height: 500px; overflow: auto">
-            <table id="dtVoucherDetails" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
+    <div class="col-md-3 mb-3">
+        <label for="txtChequeDate">Cheque/NEFT/UTR no. Date. <i class="text-danger">*</i></label>
+        <input type="text" class="datepicker" id="txtChequeDate" placeholder="DD/MM/YYYY"  />
+        <span class="text-danger field-validation-error" id="spnErrorChequeDate"></span>
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="ddlBank">Bank/Cash</label>
+        @Html.DropDownList("ddlBank_Cd", Common.GetBankNames())
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="txtAmount">Amount <i class="text-danger">*</i></label>
+        <input type="text" class="input" id="txtAmount" onkeypress="return isNumberWithDot(event)" maxlength="10" />
+        <span class="text-danger field-validation-error" id="spnErrorAmount"></span>
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="txtSampleNo">Sample No</label>
+        <input type="text" class="input" id="txtSampleNo" maxlength="4" />
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="ddlAccountCode">Account Code</label>
+        @Html.DropDownList("ddlAccountCode", Common.GetAccountCode(Role_Cd), new { @onchange = "onchangeAccountCode();" })
+    </div>
+    <div class="col-md-3 mb-3" id="dvCaseNo" style="display: none;">
+        <label for="txtCaseNo">Case No <i class="text-danger">*</i></label> <br />
+        <input type="text" class="input" id="txtCaseNo" onchange="onchangeCaseNo();" />
+    </div>
+    <div class="col-md-3 mb-3">
+        <label for="ddlAccountCode">BPO <i class="text-danger">*</i></label> <br />
+        <select id="ddlBPO" name="ddlBPO" style="width: 100%;">
+            <option value="">--Select--</option>
+        </select>
+        <span class="text-danger field-validation-error" id="spnErrorBPO"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="txtNarration">Narration</label>
+        <textarea class="input" id="txtNarration" maxlength="50"></textarea>
+    </div>
+    <div class="savenext-btn">
+        <button id="btnAdd" type="button" class="save-btn active" onclick="SaveVoucherDetails();">Add Cheque</button>
+        <a href="#clear" class="reset-btn">Clear</a>
+        <button id="btnUploadExcel" type="button" class="save-btn active" onclick="onclickUploadExcel();">Upload Excel</button>
+    </div>
+</div>
+<div class="task-listinput" style="margin-top: 10px;">
+    <div class="dash-table" style="max-height: 500px; overflow: auto">
+        <table id="dtVoucherDetails" class="table-responsive">
+            <thead>
+                <tr>
+                    <th>#</th>
                     <th>Cheque/NEFT/UTR no.</th>
                     <th>Cheque/NEFT/UTR no. Date.</th>
-                        <th>Amount</th>
-                        <th>Bank/Cash</th>
-                        <th>BPO</th>
-                        <th>Account</th>
-                        <th>Case No</th>
-                        <th>Narration</th>
-                        <th class="dt-align-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Count > 0)
+                    <th>Amount</th>
+                    <th>Bank/Cash</th>
+                    <th>BPO</th>
+                    <th>Account</th>
+                    <th>Case No</th>
+                    <th>Narration</th>
+                    <th class="dt-align-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
                     {
-                        foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.ID</td>
-                                <td>@item.CHQ_NO</td>
-                                <td>@item.Display_CHQ_DT</td>
-                                <td>@item.AMOUNT</td>
-                                <td>@item.BANK_NAME</td>
-                                <td>@item.BPO_NAME</td>
-                                <td>@item.ACC_NAME</td>
-                                <td>@item.CASE_NO</td>
-                                <td>@item.NARRATION</td>
-                                <td>
-                                    <div align="center" class="reportIcon actionCenter">
-                                        <a id="btnEdit" class="edit" href="javascript:void(0);" onclick="GetVoucherDetailsByID(@item.ID);"><i class="fa fa-pencil" title="Edit"></i></a>
-                                        <a id="btnDelete" class="delete" href="javascript:void(0);" onclick="DeleteVoucherDetailsByID(@item.ID);"><i class="fa fa-trash" title="Delete" style="margin:10px;"></i></a>
-                                    </div>
-                                </td>
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.CHQ_NO</td>
+                            <td>@item.Display_CHQ_DT</td>
+                            <td>@item.AMOUNT</td>
+                            <td>@item.BANK_NAME</td>
+                            <td>@item.BPO_CD - @item.BPO_NAME</td>
+                            <td>@item.ACC_NAME</td>
+                            <td>@item.CASE_NO</td>
+                            <td>@item.NARRATION</td>
+                            <td>
+                                <div align="center" class="reportIcon actionCenter">
+                                    <a id="btnEdit" class="edit" href="javascript:void(0);" onclick="GetVoucherDetailsByID(@item.ID);"><i class="fa fa-pencil" title="Edit"></i></a>
+                                    <a id="btnDelete" class="delete" href="javascript:void(0);" onclick="DeleteVoucherDetailsByID(@item.ID);"><i class="fa fa-trash" title="Delete" style="margin:10px;"></i></a>
+                                </div>
+                            </td>
                         </tr>
                     }
                 }
@@ -103,39 +103,39 @@
                     </tr>
                 }
             </tbody>
-            </table>
-        </div>
+        </table>
     </div>
-    <div id="modalUploadExcel" class="modal" role="dialog">
-        <div class="modal-dialog modal-s" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Excel</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row my-0">
-                        <div class="col-md-12 mb-3">
-                            <label for="file">Select Excel File:</label>
-                            <input type="file" name="file" id="VoucherDetailsFile" accept=".xlsx" required />
-                        </div>
-                        <div class="savenext-btn">
-                            <button type="button" class="save-btn active" data-id="" onclick="onclickUploadAndProcess();">Upload and Process</button>
-                            <a href="~/ReadWriteData/SampleFiles/ReceiptVoucher.xlsx" class="reset-btn">Download Sample File</a>
-                        </div>
+</div>
+<div id="modalUploadExcel" class="modal" role="dialog">
+    <div class="modal-dialog modal-s" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Excel</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <label for="file">Select Excel File:</label>
+                        <input type="file" name="file" id="VoucherDetailsFile" accept=".xlsx" required />
+                    </div>
+                    <div class="savenext-btn">
+                        <button type="button" class="save-btn active" data-id="" onclick="onclickUploadAndProcess();">Upload and Process</button>
+                        <a href="~/ReadWriteData/SampleFiles/ReceiptVoucher.xlsx" class="reset-btn">Download Sample File</a>
                     </div>
                 </div>
-                <div class="modal-footer">
-                </div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>
+</div>
 
 
 <script type="text/javascript">
-    
+
     $(function () {
         $(".datepicker").datepicker({
             changeMonth: true,
@@ -276,7 +276,7 @@
                         $("#dvCaseNo").css("display", "block");
                         BindBPO(0, "", response.responseText.BPO_CD);
                     }
-                    else{
+                    else {
                         $("#dvCaseNo").css("display", "none");
                         BindBPO(response.responseText.ACC_CD, response.responseText.BPO_TYPE, "");
                     }
@@ -313,7 +313,7 @@
         var url = '@Url.Action("UploadExcelFile", "RecieptVoucher")';
         $.ajax({
             //url: '/RecieptVoucher/UploadExcelFile',
-            url:url,
+            url: url,
             type: "POST",
             processData: false,
             data: formData,

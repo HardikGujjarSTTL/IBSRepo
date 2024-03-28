@@ -1,0 +1,146 @@
+﻿@model IBS.Models.BillRaisedModel
+<style>
+    .borderTable td:nth-child(3), .borderTable th:nth-child(3),.borderTable td:nth-child(11), .borderTable th:nth-child(11){width:100px;}
+    .borderTable td:nth-child(7), .borderTable th:nth-child(7){width:50px;}
+</style>
+<div>
+    @if (Model.BillSummary == "M")
+    {
+        <h3 class="center">Download documents for rly invoices for the period : <span class="orangeText">@Model.FromMonthName - @Model.FromYr</span> @Model.Region</h3>
+    }
+    else
+    {
+        <h3 class="center">Download documents for rly invoices for the period : <span class="orangeText">@Convert.ToDateTime(@Model.FromDt).ToString("dd/MM/yyyy") - @Convert.ToDateTime(@Model.ToDt).ToString("dd/MM/yyyy")</span> @Model.Region</h3>
+    }
+    <div class="tableOuter">
+        <table class="borderTable" cellpadding="0" cellspacing="0" id="dtList">
+            <tbody>
+                <tr>
+                    <td colspan='22'>
+                        @*<h5 align='center'>@Model.Region</h5>*@
+                        @*<h5 align='center'>Client Wise Billing Summary For the Month @Model.MonthName - @Model.FromYr</h5>*@
+                    </td>
+                </tr>
+
+                <tr>
+                    <th width="23px" valign="top" align="center"><b>Sr. No.</b></th>
+                    <th width="37px" valign="top" align="center"><b>RLY</b></th>
+                    <th width="30px" valign="top" align="center"><b>PO No.</b></th>
+                    <th width="37px" valign="top" align="center"><b>PO Dt</b></th>
+                    <th width="37px" valign="top" align="center"><b>Case No.</b></th>
+                    <th width="25px" valign="top" align="center"><b>PO or Letter</b></th>
+                    <th width="20px" valign="top" align="center"><b>BPO Name</b></th>
+                    <th width="45px" valign="top" align="center"><b>Bill No.</b></th>
+                    <th width="40px" valign="top" align="center"><b>Bill Dt.</b></th>
+                    <th width="52px" valign="top" align="center"><b>Invoice No.</b></th>
+                    <th width="18px" valign="top" align="center"><b>AU</b></th>
+                    <th width="50px" valign="top" align="center"><b>IC No.</b></th>
+                    <th width="35px" valign="top" align="center"><b>IC Date</b></th>
+                    <th width="23px" valign="top" align="center"><b>BK No.</b></th>
+                    <th width="20px" valign="top" align="center"><b>Set No.</b></th>
+                    <th width="30px" valign="top" align="center"><b>Bill Amount</b></th>
+                    <th width="35px" valign="top" align="center"><b>Outstanding Amt</b></th>
+                    <th width="35px" valign="top" align="center"><b>Digital Bill Gen Date</b></th>
+                    <th width="25px" valign="top" align="center"><b>Digital Invoice</b></th>
+                    <th width="20px" valign="top" align="center"><b>Digital IC</b></th>
+                    <th width="20px" valign="top" align="center"><b>PO</b></th>
+                    <th width="20px" valign="top" align="center"><b>Invoice Supp Docs</b></th>
+                </tr>
+                @if (Model != null && Model.lstBillRailway.Count > 0)
+                {
+                    int SrNo = 1;
+
+                    @foreach (var item in Model.lstBillRailway)
+                    {
+                        <tr>
+                            <td align="center">@SrNo</td>
+                            <td align="center">@item.BPO_RLY</td>
+                            <td align="left">@item.PO_NO</td>
+                            <td align="center">@item.PO_DT</td>
+                            <td align="center">@item.CASE_NO</td>
+                            <td align="center">@item.PO_OR_LETTER</td>
+                            <td align="center">@item.BPO_NAME</td>
+                            <td align="center">@item.BILL_NO</td>
+                            <td align="center">@item.BILL_DT</td>
+                            <td align="center">@item.INVOICE_NO</td>
+                            <td align="left">@item.AU_DESC</td>
+                            <td align="left">@item.IC_NO</td>
+                            <td align="center">@item.IC_DT</td>
+                            <td align="center">@item.BK_NO</td>
+                            <td align="center">@item.SET_NO</td>
+                            <td align="right">@item.BILL_AMOUNT</td>
+                            <td align="right">@item.AMOUNT_OUTSTANDING</td>
+                            <td align="center"><b>@item.DIG_BILL_GEN_DATE</td>
+                            @if (@item.ONLINE_INVOICE != null)
+                            {
+                                <td align="center">
+
+                                    <a href=@item.ONLINE_INVOICE target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>INVOICE</h5></a>
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td align="center"><b></b></td>
+                            }
+                            @if (@item.IC_PHOTO != null)
+                            {
+                                var fpath1 = Model.FilePath3 + "/" + @item.IC_PHOTO + ".pdf";
+                                var Fpath2 = Model.FilePath3 + "/ReadWriteData/BILL_IC/" + @item.IC_PHOTO + ".pdf";
+                                if (System.IO.File.Exists(fpath1) == true)
+                                {
+                                    <td align="left">
+
+                                        <a href=@Fpath2 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>IC</h5></a>
+
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td align="left"></td>
+                                }
+                            }
+                            else
+                            {
+                                <td align="left"></td>
+                            }
+
+
+                            @if (@item.PO_SOURCE == "C")
+                            {
+                                string po_source = "https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/" + @item.PO_YR + "/" + @item.IMMS_RLY_CD + "/" + @item.PO_NO + ".pdf";
+                                <td align="left">
+
+                                    <a href=@po_source target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>VIEW PO</h5></a>
+
+                                </td>
+                            }
+                            else
+                            {
+                                var fpath_po = Model.FilePath2 + "/" + @item.CASE_NO + ".pdf";
+                                var Fpath = Model.FilePath1 + "/ReadWriteData/CASE_NO/" + @item.CASE_NO + ".pdf";
+                                if (System.IO.File.Exists(fpath_po) == true)
+                                {
+                                    <td align="left">
+
+                                        <a href=@Fpath target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'>VIEW PO</h5></a>
+
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td align="left">
+                                    </td>
+                                }
+
+                            }
+
+                            <td align="left">@item.INVOICE_SUPP_DOCS</td>
+                        </tr>
+                        SrNo++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

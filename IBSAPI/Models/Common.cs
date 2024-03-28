@@ -87,19 +87,35 @@ namespace IBSAPI.Models
 
         public static string getEncryptedText(string _dencryptedText, string UniqueId)
         {
-            string key = "GM2SO0DB2MD0TECV";
+            //string key = "GM2SO0DB2MD0TECV";
             string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
-            String UniqueIdKey = UniqueId + key;
+            //String UniqueIdKey = UniqueId + key;
+            String UniqueIdKey = UniqueId;
 
             String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
-            String encIv = CryptLib.getHashSha256(iv, 16);
+            //String encIv = CryptLib.getHashSha256(iv, 16);
 
             CryptLib _crypt = new CryptLib();
 
-            return _crypt.encrypt(_dencryptedText, encUniqueIdKey, encIv);
+            return _crypt.encrypt(_dencryptedText, encUniqueIdKey, iv.Substring(0, 16));
         }
 
         public static string getDecryptedText(string _encryptedText, string UniqueId)
+        {
+            //string key = "GM2SO0DB2MD0TECV";
+            string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
+            //String UniqueIdKey = UniqueId + key;
+            String UniqueIdKey = UniqueId;
+
+            String encUniqueIdKey = CryptLib.getHashSha256(UniqueIdKey, 32);
+            //String encIv = CryptLib.getHashSha256(iv, 16);
+
+            CryptLib _crypt = new CryptLib();
+
+            return _crypt.decrypt(_encryptedText, encUniqueIdKey, iv.Substring(0, 16));
+        }
+
+        public static string getEncryptedText1(string _dencryptedText, string UniqueId)
         {
             string key = "GM2SO0DB2MD0TECV";
             string iv = "GTC2SRE0DAN2MIT0TNECIRNG";
@@ -110,7 +126,7 @@ namespace IBSAPI.Models
 
             CryptLib _crypt = new CryptLib();
 
-            return _crypt.decrypt(_encryptedText, encUniqueIdKey, encIv);
+            return _crypt.encrypt(_dencryptedText, encUniqueIdKey, encIv);
         }
 
         public static void AddException(string exception, string exceptionmsg, string ControllerName, string ActionName, int CreatedBy, string CreatedIP)

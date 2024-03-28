@@ -5,18 +5,10 @@ using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Drawing;
-using System.Dynamic;
 using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories.Inspection_Billing
 {
@@ -25,11 +17,14 @@ namespace IBS.Repositories.Inspection_Billing
         private readonly ModelContext context;
         private readonly IConfiguration configuration;
         private readonly ISendMailRepository pSendMailRepository;
-        public CallMarkedOnlineRepository(ModelContext context, IConfiguration configuration, ISendMailRepository pSendMailRepository)
+        private readonly IConfiguration config;
+
+        public CallMarkedOnlineRepository(ModelContext context, IConfiguration configuration, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.configuration = configuration;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
         public DTResult<CallMarkedOnlineModel> Get_Call_Marked_Online(DTParameters dtParameters, string Region)
         {
@@ -39,11 +34,19 @@ namespace IBS.Repositories.Inspection_Billing
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-            string Date = "";
+            string Date = "", FromDate = "", ToDate = "";
             int RDB1 = 0, RDB2 = 0, RDB3 = 0;
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Date"]))
             {
                 Date = Convert.ToString(dtParameters.AdditionalValues["Date"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["FromDate"]))
+            {
+                FromDate = Convert.ToString(dtParameters.AdditionalValues["FromDate"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["ToDate"]))
+            {
+                ToDate = Convert.ToString(dtParameters.AdditionalValues["ToDate"]);
             }
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["Rdb1"]))
             {
@@ -84,32 +87,45 @@ namespace IBS.Repositories.Inspection_Billing
             Date = Date.ToString() == "" ? string.Empty : Date.ToString();
 
             DateTime p_date = Convert.ToDateTime(Date);
-
-            OracleParameter[] par = new OracleParameter[6];
+            //DateTime p_Fromdate, p_Todate;
+            //if (!string.IsNullOrEmpty(FromDate))
+            //{
+            //    p_Fromdate = Convert.ToDateTime(FromDate);
+            //}
+            //if (!string.IsNullOrEmpty(ToDate))
+            //{
+            //    p_Todate = Convert.ToDateTime(ToDate);
+            //}
+            OracleParameter[] par = new OracleParameter[8];
             par[0] = new OracleParameter("P_DATE", OracleDbType.Date, p_date, ParameterDirection.Input);
-            par[1] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
-            par[2] = new OracleParameter("P_RDB1", OracleDbType.Int16, RDB1, ParameterDirection.Input);
-            par[3] = new OracleParameter("P_RDB2", OracleDbType.Int16, RDB2, ParameterDirection.Input);
-            par[4] = new OracleParameter("P_RDB3", OracleDbType.Int16, RDB3, ParameterDirection.Input);
-            par[5] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[1] = new OracleParameter("p_Fromdate", OracleDbType.Date, string.IsNullOrEmpty(FromDate) ? null : Convert.ToDateTime(FromDate), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_Todate", OracleDbType.Date, string.IsNullOrEmpty(ToDate) ? null : Convert.ToDateTime(ToDate), ParameterDirection.Input);
+            par[3] = new OracleParameter("P_REGION", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[4] = new OracleParameter("P_RDB1", OracleDbType.Int16, RDB1, ParameterDirection.Input);
+            par[5] = new OracleParameter("P_RDB2", OracleDbType.Int16, RDB2, ParameterDirection.Input);
+            par[6] = new OracleParameter("P_RDB3", OracleDbType.Int16, RDB3, ParameterDirection.Input);
+            par[7] = new OracleParameter("P_RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
             var ds = DataAccessDB.GetDataSet("SP_GET_CALL_MARKED_ONLINE_NEW", par, 1);
             DataTable dt = ds.Tables[0];
-            List<CallMarkedOnlineModel> list = dt.AsEnumerable().Select(row => new CallMarkedOnlineModel
+            List<CallMarkedOnlineModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
             {
-                CASE_NO = Convert.ToString(row["CASE_NO"]),
-                CALL_RECV_DT = Convert.ToString(row["CALL_RECV_DT"]),
-                CALL_INSTALL_NO = Convert.ToString(row["CALL_INSTALL_NO"]),
-                CALL_SNO = Convert.ToString(row["CALL_SNO"]),
-                DATE_TIME = Convert.ToString(row["DATE_TIME"]),
-                CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
-                CALL_LETTER_NO = Convert.ToString(row["CALL_LETTER_NO"]),
-                REMARKS = Convert.ToString(row["REMARKS"]),
-                PO_NO = Convert.ToString(row["PO_NO"]),
-                PO_DT = Convert.ToString(row["PO_DT"]),
-                VENDOR = Convert.ToString(row["VENDOR"]),
-                IE_NAME = Convert.ToString(row["IE_NAME"])
-            }).ToList();
-
+                list = dt.AsEnumerable().Select(row => new CallMarkedOnlineModel
+                {
+                    CASE_NO = Convert.ToString(row["CASE_NO"]),
+                    CALL_RECV_DT = Convert.ToString(row["CALL_RECV_DT"]),
+                    CALL_INSTALL_NO = Convert.ToString(row["CALL_INSTALL_NO"]),
+                    CALL_SNO = Convert.ToString(row["CALL_SNO"]),
+                    DATE_TIME = Convert.ToString(row["DATE_TIME"]),
+                    CALL_STATUS = Convert.ToString(row["CALL_STATUS"]),
+                    CALL_LETTER_NO = Convert.ToString(row["CALL_LETTER_NO"]),
+                    REMARKS = Convert.ToString(row["REMARKS"]),
+                    PO_NO = Convert.ToString(row["PO_NO"]),
+                    PO_DT = Convert.ToString(row["PO_DT"]),
+                    VENDOR = Convert.ToString(row["VENDOR"]),
+                    IE_NAME = Convert.ToString(row["IE_NAME"])
+                }).ToList();
+            }
             query = list.AsQueryable();
 
             dTResult.recordsTotal = ds.Tables[0].Rows.Count; //query.ToList().Count(); //ds.Tables[0].Rows.Count;
@@ -176,7 +192,7 @@ namespace IBS.Repositories.Inspection_Billing
                 FINAL_OR_STAGE = Convert.ToString(row["FINAL_OR_STAGE"])
             }).FirstOrDefault();
 
-            if (ds.Tables[1].Rows.Count > 0)
+            if (ds.Tables[0].Rows.Count > 0 && ds.Tables[1].Rows.Count > 0)
             {
                 model.PREV_CALL_1 = (Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) != null && Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) != "") ? Convert.ToString(ds.Tables[1].Rows[0]["CALL"]) : null;
                 model.PREV_CALL_2 = (Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) != null && Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) != "") ? Convert.ToString(ds.Tables[1].Rows[1]["CALL"]) : null;
@@ -335,19 +351,19 @@ namespace IBS.Repositories.Inspection_Billing
                                 .Where(x => x.CaseNo == model.CASE_NO && x.CallRecvDt == callRecvDt && x.CallSno == Convert.ToInt32(model.CALL_SNO))
                                 .Select(x => x).FirstOrDefault();
 
-                    if(_data != null)
+                    if (_data != null)
                     {
                         _data.Remarks = model.REMARKS;
                         _data.IeCd = IE;
                         _data.ClusterCode = Convert.ToInt32(model.IE_NAME);
                         _data.CoCd = Convert.ToInt32(Co.Value);
-                        _data.UserId = uModel.UserName.Substring(0, 8);
+                        _data.UserId = uModel.UserName.Length > 8 ? uModel.UserName.Substring(0, 8) : uModel.UserName;
                         _data.DepartmentCode = model.DEPT_DROPDOWN;
                         _data.Datetime = DateTime.Now;
                         _data.Updatedby = Convert.ToString(uModel.UserID);
                         _data.Updateddate = DateTime.Now;
                         context.SaveChanges();
-                    }                    
+                    }
 
                     if (cl_exist == 0)
                     {
@@ -834,18 +850,8 @@ namespace IBS.Repositories.Inspection_Billing
             //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = sender;
-                sendMailModel.To = manu_mail;
-                sendMailModel.Bcc = BCC;
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
-            }
-            else if (vend_cd != mfg_cd)
-            {
-                if (vend_email == "")
+                bool isSend = false;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = sender;
@@ -853,30 +859,56 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.Bcc = BCC;
                     sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
+                }
+            }
+            else if (vend_cd != mfg_cd)
+            {
+                if (vend_email == "")
+                {
+                    bool isSend = false;
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = manu_mail;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
                 else if (manu_mail == "")
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.From = sender;
-                    sendMailModel.To = vend_email;
-                    sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
-                    sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    bool isSend = false;
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = vend_email;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Test"; //"Your Call for Inspection By RITES"
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
                 else
                 {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.From = sender;
-                    sendMailModel.To = vend_email + "," + manu_mail;
-                    sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Your Call for Inspection By RITES";
-                    sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
+                    bool isSend = false;
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = vend_email + "," + manu_mail;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
             }
             return email;
@@ -950,29 +982,8 @@ namespace IBS.Repositories.Inspection_Billing
             //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = sender;
-                sendMailModel.To = manu_mail;
-                sendMailModel.Bcc = BCC;
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
-            }
-            else if (vend_cd != mfg_cd)
-            {
-                if (vend_email != "")
-                {
-                    SendMailModel sendMailModel = new SendMailModel();
-                    sendMailModel.From = sender;
-                    sendMailModel.To = vend_email;
-                    sendMailModel.Bcc = BCC;
-                    sendMailModel.Subject = "Your Call for Inspection By RITES";
-                    sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                    email = isSend == true ? "Success" : "Error";
-                }
-                else if (manu_mail != "")
+                bool isSend = false;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
                     SendMailModel sendMailModel = new SendMailModel();
                     sendMailModel.From = sender;
@@ -980,8 +991,41 @@ namespace IBS.Repositories.Inspection_Billing
                     sendMailModel.Bcc = BCC;
                     sendMailModel.Subject = "Your Call for Inspection By RITES";
                     sendMailModel.Message = mail_body;
-                    bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
                     email = isSend == true ? "Success" : "Error";
+                }
+            }
+            else if (vend_cd != mfg_cd)
+            {
+                if (vend_email != "")
+                {
+                    bool isSend = false;
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = vend_email;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
+                }
+                else if (manu_mail != "")
+                {
+                    bool isSend = false;
+                    if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                    {
+                        SendMailModel sendMailModel = new SendMailModel();
+                        sendMailModel.From = sender;
+                        sendMailModel.To = manu_mail;
+                        sendMailModel.Bcc = BCC;
+                        sendMailModel.Subject = "Your Call for Inspection By RITES";
+                        sendMailModel.Message = mail_body;
+                        isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                        email = isSend == true ? "Success" : "Error";
+                    }
                 }
             }
             return email;
@@ -1213,43 +1257,55 @@ namespace IBS.Repositories.Inspection_Billing
             //manu_mail = "neha.gehlot@silvertouch.com";
             if (vend_cd == mfg_cd && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = sender;
-                sendMailModel.To = manu_mail;
-                sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
+                bool isSend = false;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = sender;
+                    sendMailModel.To = manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
+                }
             }
             else if (vend_cd != mfg_cd && vend_email != "" && manu_mail != "")
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = "nrinspn@gmail.com";
-                sendMailModel.To = vend_email + "," + manu_mail;
-                sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
+                bool isSend = false;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+                {
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = "nrinspn@gmail.com";
+                    sendMailModel.To = vend_email + "," + manu_mail;
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
+                }
             }
             else if (vend_cd != mfg_cd && (vend_email == "" || manu_mail == ""))
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = "nrinspn@gmail.com";
-                if (vend_email == "")
+                bool isSend = false;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    sendMailModel.To = manu_mail;
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = "nrinspn@gmail.com";
+                    if (vend_email == "")
+                    {
+                        sendMailModel.To = manu_mail;
+                    }
+                    else if (manu_mail == "")
+                    {
+                        sendMailModel.To = vend_email;
+                    }
+                    sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
                 }
-                else if (manu_mail == "")
-                {
-                    sendMailModel.To = vend_email;
-                }
-                sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
             }
 
             var controlling_email = (from t08 in context.T08IeControllOfficers
@@ -1280,18 +1336,22 @@ namespace IBS.Repositories.Inspection_Billing
 
             if (!string.IsNullOrEmpty(controlling_email))
             {
-                SendMailModel sendMailModel = new SendMailModel();
-                sendMailModel.From = "nrinspn@gmail.com";
-                sendMailModel.To = controlling_email;
-                if (ie_email != "")
+                bool isSend = false;
+                if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
                 {
-                    sendMailModel.CC = ie_email;
+                    SendMailModel sendMailModel = new SendMailModel();
+                    sendMailModel.From = "nrinspn@gmail.com";
+                    sendMailModel.To = controlling_email;
+                    if (ie_email != "")
+                    {
+                        sendMailModel.CC = ie_email;
+                    }
+                    //sendMailModel.Bcc = "nrinspn@gmail.com";
+                    sendMailModel.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
+                    sendMailModel.Message = mail_body;
+                    isSend = pSendMailRepository.SendMail(sendMailModel, null);
+                    email = isSend == true ? "Success" : "Error";
                 }
-                //sendMailModel.Bcc = "nrinspn@gmail.com";
-                sendMailModel.Subject = "Your Call (" + manu_name + " - " + manu_add + ") for Inspection By RITES";
-                sendMailModel.Message = mail_body;
-                bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
-                email = isSend == true ? "Success" : "Error";
             }
             return email;
         }

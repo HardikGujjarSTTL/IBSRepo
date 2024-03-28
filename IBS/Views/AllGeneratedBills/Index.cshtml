@@ -1,0 +1,417 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>All Generated Bills</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="accordion-body">
+        <div class="task-inner row">
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" id="FromDt" maxlength="100" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" maxlength="100" id="ToDt" style="text-transform: uppercase;" placeholder="DD/MM/YYYY">
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Choose Region</label>
+                    @Html.DropDownList("InspRegion", new SelectList(IBS.Models.Common.FeedBackRegion(), "Value", "Text"), "--Select--", new { @id = "InspRegion" })
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">Client Type</label>
+                    @Html.DropDownList("ClientType", new SelectList(IBS.Models.Common.ClientWiseBPO(), "Value", "Text"), new { @id = "ClientType" })
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="reference">
+                    <label for="Reference">LOA</label>
+                    @Html.DropDownList("LOA", new SelectList(IBS.Models.Common.LOA(), "Value", "Text"), new { @id = "LOA" })
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <ul class="radioListForm mt-5">
+                    <li id="dvAllRly">
+                        <input type="radio" id="AllRly" name="ClientWise" value="AllRly">
+                        <label for="AllRly">All Railway</label>
+                    </li>
+                    <li id="dvPerClient">
+                        <input type="radio" id="PerClient" name="ClientWise" value="PerClient">
+                        <label for="PerClient">Particular Client</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="PerBPO" name="ClientWise" value="PerBPO">
+                        <label for="PerBPO">Particular BPO</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3" id="ClientName">
+                <label for="Reference">Choose Client</label>
+                @Html.DropDownList("RailwayCD", new SelectList(IBS.Models.Common.GetRailway(), "", "Value"), "--Select--", new { @id = "RailwayCD" })
+            </div>
+            <div class="col-md-3" id="BPOName">
+                <label for="Reference">Enter BPO Name</label>
+                <input type="text" id="BPO_Name" name="BPOName">
+            </div>
+
+        </div>
+        <div class="row my-0">
+            <div class="col-md-12 mCreate_Bill_Demob-4 text-center">
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active" onclick="CreateBill()">Create Bill</button>
+                    <button type="button" class="save-btn active" onclick="BtnGetBill()">Get Bill</button>
+                    <button type="button" class="save-btn active" onclick="BtnReturnBill()">Return Bill</button>
+                    <button type="button" class="reset-btn" onclick="BtnClear()">Clear Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtGB" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sr.No.</th>
+                            <th>Invoice No.</th>
+                            <th>Invoice Region</th>
+                            <th>Invoice Date</th>
+                            <th>PDF</th>
+                            <th>File Size</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        var Region = "@ViewBag.Region";
+        var Cnt = 0;
+        var xmlLength = 0;
+
+        $(document).ready(function () {
+            $("#ClientName").hide();
+            $("#BPOName").hide();
+            $('#AllRly').prop('checked', true);
+            $("#InspRegion").val(Region);
+
+            $(document).ajaxSend(function () {
+                $(".overlayLoader").hide();
+            });
+        });
+
+        $('#AllRly').change(function () {
+            $("#ClientName").hide();
+            $("#BPOName").hide();
+        });
+
+        $('#PerClient').change(function () {
+            $("#ClientName").show();
+            $("#BPOName").hide();
+        });
+
+        $('#PerBPO').change(function () {
+            $("#ClientName").hide();
+            $("#BPOName").show();
+        });
+
+        $('#ClientType').change(function () {
+            var CT = $("#ClientType").val();
+            if (CT != "R") {
+                $("#dvAllRly").hide();
+                $("#dvPerClient").hide();
+                $("#ClientName").hide();
+                $("#BPOName").hide();
+            } else {
+                $("#dvAllRly").show();
+                $("#dvPerClient").show();
+                $("#ClientName").hide();
+                $("#BPOName").hide();
+            }
+
+        });
+
+        function BtnClear() {
+            $("#BPO_Name").val('');
+            $("#RailwayCD").val('');
+            $("#LOA").val('');
+            $("#ClientType").val('');
+            $("#InspRegion").val('');
+            $("#ToDt").val('');
+            $("#FromDt").val('');
+            $("#dtGB").val('');
+            $('#AllRly').prop('checked', true);
+            $("#ClientName").hide();
+            $("#BPOName").hide();
+            $("#dvAllRly").show();
+        }
+
+        function BtnReturnBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
+
+            var fromdata = {
+                FromDate: $("#FromDt").val(),
+                ToDate: $("#ToDt").val(),
+                REGION_CODE: $("#InspRegion").val(),
+                LOA: $("#LOA").val(),
+                CLIENT_NAME: $("#RailwayCD").val(),
+                BPO_NAME: $("#BPO_Name").val(),
+                CLIENT_TYPE: $("#ClientType").val(),
+                RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
+            };
+            $(".overlayLoader1").show();
+            $.ajax({
+                url: "@Url.Action("ReturnBill", "AllGeneratedBills")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(fromdata),
+                success: function (response) {
+                    if (response.status == 1) {
+                        var listXml = response.list;
+                        for (i = 0; i < listXml.length; i++) {
+                            var data = listXml[i];
+                            $.post("@Url.Action("GeneratePDF", "AllGeneratedBills")", { "model": data }, function (exeResponse) {
+                                if (exeResponse.status = 1) {
+                                    DigitalSign(exeResponse.xmlDetail, exeResponse.Bill_No);
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        ShowHideMsgNew(false, "No Data Found");
+                        $(".overlayLoader1").hide();
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            }).done(function (result) {
+            });
+        }
+
+        function BtnGetBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
+            InitializeDatatable();
+        }
+
+        function Validation() {
+            var type = false;
+            if ($("#FromDt").val() && $("#ToDt").val()) {
+                type = true;
+            }
+            return type;
+        }
+
+        function InitializeDatatable() {
+
+            var FromDate = $("#FromDt").val();
+            var ToDate = $("#ToDt").val();
+            var Region = $("#InspRegion").val();
+            var LOA = $("#LOA").val();
+            var ClientName = $("#RailwayCD").val();
+            var BPOName = $("#BPO_Name").val();
+            var ClientType = $("#ClientType").val();
+
+            var ajaxUrl = "@Url.Action("LoadTable")";
+
+            $("#dtGB").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: ajaxUrl,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            "FromDate": FromDate,
+                            "ToDate": ToDate,
+                            "Region": Region,
+                            "LOA": LOA,
+                            "ClientName": ClientName,
+                            "BPOName": BPOName,
+                            "ClientType": ClientType
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    },
+                },
+                columns: [
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "BILL_NO" },
+                    { data: "REGION_CODE" },
+                    {
+                        data: "BILL_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+
+                            var downloadLink = data.RelativePath;
+                            return '<td width="10%" valign="top" align="center">' +
+                                '<div class="center"><a href="' + downloadLink + '" target="_blank" class="btn"><span class="fa fa-file-pdf-o"></span></a></div>' +
+                                '</td>';
+                        }
+                    },
+                    { data: "FileSize" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var BILL_NO = data.BILL_NO;
+                            var REGION_CODE = data.REGION_CODE;
+
+                            var html = '<div class="center">';
+                            html += '<a onclick="Delete(\'' + BILL_NO + '\', \'' + REGION_CODE + '\'); return false;" href="javascript:void(0);" id="' + BILL_NO + '" class="btn">';
+                            html += '<i class="fa fa-trash Permission_Delete" title="Delete"></i>';
+                            html += '</a></div>';
+
+                            return html;
+                        }
+                    },
+
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function Delete(BILL_NO, REGION_CODE) {
+            var url = '@Url.Action("Delete", "AllGeneratedBills")';
+            url = url + "?BILL_NO=" + BILL_NO + "&REGION_CODE=" + REGION_CODE;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+        // Create Bill With Digital Signature
+        function CreateBill() {
+            if (!Validation()) {
+                ShowHideMsgNew(false, "Please select Date.");
+                return;
+            }
+
+            var fromdata = {
+                FromDate: $("#FromDt").val(),
+                ToDate: $("#ToDt").val(),
+                REGION_CODE: $("#InspRegion").val(),
+                LOA: $("#LOA").val(),
+                CLIENT_NAME: $("#RailwayCD").val(),
+                BPO_NAME: $("#BPO_Name").val(),
+                CLIENT_TYPE: $("#ClientType").val(),
+                RailwayChk: $("#AllRly").is(":checked") == true ? "true" : "false"
+            };
+            $(".overlayLoader1").show();
+            $.ajax({
+                url: "@Url.Action("Create_Bill", "AllGeneratedBills")",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(fromdata),
+                success: function (response) {
+                    if (response.status == 1) {
+                        var listXml = response.list;
+                        xmlLength = listXml.length;
+                        for (i = 0; i < listXml.length; i++) {
+                            var data = listXml[i];
+                            $.post("@Url.Action("GeneratePDF", "AllGeneratedBills")", { "model": data }, function (exeResponse) {
+                                if (exeResponse.status = 1) {
+                                    DigitalSign(exeResponse.xmlDetail, exeResponse.Bill_No);
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        ShowHideMsgNew(false, "No Data Found");
+                        $(".overlayLoader1").hide();
+                    }
+                },
+                error: function (error) {
+                    //console.log(error);
+                }
+            }).done(function (result) {
+            });
+        }
+
+        // Add Digital Signature in PDF.
+        function DigitalSign(xmldata, Bill_No) {
+            $.ajax({
+                url: "http://127.0.0.1:1620",
+                type: 'POST',
+                data: { response: xmldata },
+                success: function (exeResponse) {
+                    var status = $(exeResponse).find("status").text();
+                    var pdf = $(exeResponse).find("data").text();
+                    Cnt = Cnt + 1;
+                    if (status == "ok") {
+                        pdf = $(exeResponse).find("data").text();
+                        $.post("@Url.Action("UploadSignedPdf", "AllGeneratedBills")", { "base64SignedPdf": pdf, "Bill_No": Bill_No }, function (exeResponse) {
+                            if (Cnt == xmlLength) {
+                                $(".overlayLoader1").hide();
+                                ShowHideMsg("success", "Digital signed successfully!!");
+                            }
+                        });
+                        //console.log("Bill_No = " + Bill_No);
+                        //console.log("===========OK=============");
+                    }
+                    else {
+                        if (Cnt == xmlLength){
+                            $(".overlayLoader1").hide();
+                            ShowHideMsg("error", "Digital signed unsuccessfully!!");
+                        }
+                        //console.log("PDF = " + pdf);
+                        //console.log("Bill_No = " + Bill_No);
+                        //console.log("===========FAIL=============");
+                    }
+                },
+            });
+        }
+    </script>
+}

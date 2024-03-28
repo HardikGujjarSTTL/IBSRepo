@@ -133,7 +133,7 @@
                 serverSide: true,
                 destroy: true,
                 paging: true,
-                searching: true,
+                searching: false,
                 ajax: {// Ajax Filter
                     url: '@Url.Action("PaymentList", "SearchPayments")',
                     type: "POST",
@@ -162,7 +162,7 @@
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
-                            debugger
+                            
                             var ChqNo = data.CHQ_NO;
                             var ChqDt = moment(data.CHQ_DT).format("DD/MM/YYYY");
                             var BankName = data.BANK_CD;
@@ -232,7 +232,7 @@
                 dataType: 'json',
                 data: { AMOUNT: AMOUNT, NARRATION: NARRATION, CASE_NO: CASE_NO, BANK_NAME: BANK_NAME, CHQ_DT: CHQ_DT, CHQ_NO: CHQ_NO },
                 success: function (data) {
-                    debugger;
+                    
                     var tableBody = $('#tableBody');
                     tableBody.empty();
                     for (i = 0; i < data.data.length; i++) {

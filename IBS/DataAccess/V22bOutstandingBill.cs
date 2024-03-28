@@ -45,6 +45,8 @@ public partial class V22bOutstandingBill
 
     public string? PoOrLetter { get; set; }
 
+    public string? StockNonstock { get; set; }
+
     public int? VendCd { get; set; }
 
     public string? VendName { get; set; }

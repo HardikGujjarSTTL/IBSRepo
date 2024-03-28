@@ -32,4 +32,6 @@ public partial class T79CentralQoinsp
     public DateTimeOffset? Updateddate { get; set; }
 
     public byte? Isdeleted { get; set; }
+
+    public string? Grade { get; set; }
 }

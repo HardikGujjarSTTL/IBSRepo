@@ -5,7 +5,9 @@ namespace IBS.Models
     public class InterUnit_TransferModel
     {
         public string VCHR_NO { get; set; }
-        public string VCHR_DT { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? VCHR_DT { get; set; }
         public int SNO { get; set; }
         public string CHQ_NO { get; set; }
         public string CHQ_DT { get; set; }
@@ -18,8 +20,12 @@ namespace IBS.Models
 
 
         public string JV_NO { get; set; }
-        public string JV_DT { get; set; }
-        public string TXTV_DT { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? JV_DT { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? TXTV_DT { get; set; }
 
         public InterUnitTransferRegionModel Transfer { get; set; }
         public List<InterUnitTransferRegionModel> lstUnitTransfer { get; set; }
@@ -45,7 +51,9 @@ namespace IBS.Models
         public string AMOUNT { get; set; }
         public string NARRATION { get; set; }
         public string IU_ADV_NO { get; set; }
-        public string IU_ADV_DT { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? IU_ADV_DT { get; set; }
         public string ACTION { get; set; }
         public string lblIUAMT { get; set; }
     }

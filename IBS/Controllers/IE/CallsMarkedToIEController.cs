@@ -1,13 +1,15 @@
-﻿using IBS.DataAccess;
+﻿using IBS.Filters;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using IBS.Models.Reports;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using IBS.Helper;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers.IE
 {
+    [Authorization]
     public class CallsMarkedToIEController : BaseController
     {
         #region Variables
@@ -35,6 +37,7 @@ namespace IBS.Controllers.IE
             model.FilePath2 = CaseNoPath;
             model.FilePath3 = LabPath;
 
+            GlobalDeclaration.CallsMarked = model;
             return View(model);
         }
 
@@ -44,6 +47,56 @@ namespace IBS.Controllers.IE
 
             DTResult<CallsMarkedToIEModel> dTResult = callmarksRepository.GetDataList(dtParameters, GetRegionCode, Convert.ToString(UserId), GetIeCd);
             return Json(dTResult);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string ReportType)
+        {
+            string htmlContent = string.Empty;
+
+            if (ReportType == "C")
+            {
+                CallsMarkedToIEModel model = GlobalDeclaration.CallsMarked;
+                htmlContent = await this.RenderViewToStringAsync("/Views/CallsMarkedToIE/CallsMarkedToIE.cshtml", model);
+            }
+            else if (ReportType == "V")
+            {
+                CallsMarkedToIEModel model = GlobalDeclaration.CallsMarked;
+                htmlContent = await this.RenderViewToStringAsync("/Views/CallsMarkedToIE/CallsMarkedToIE.cshtml", model);
+            }
+            else if (ReportType == "I")
+            {
+                CallsMarkedToIEModel model = GlobalDeclaration.CallsMarked;
+                htmlContent = await this.RenderViewToStringAsync("/Views/CallsMarkedToIE/CallsMarkedToIE.cshtml", model);
+            }
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null,
+                //ExecutablePath = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+            }).ConfigureAwait(false);
+
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
         }
     }
 }

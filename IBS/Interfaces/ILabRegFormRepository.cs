@@ -1,5 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
@@ -16,6 +15,6 @@ namespace IBS.Interfaces
         bool InsertDataDetails(LABREGISTERModel LABREGISTERModel);
         bool InsertLabReg(LABREGISTERModel LABREGISTERModel);
         bool PrintInvoice(string RegNo, LABREGISTERModel LABREGISTERModel);
-        bool PostAmount(LABREGISTERModel LABREGISTERModel);      
+        bool PostAmount(LABREGISTERModel LABREGISTERModel);
     }
 }

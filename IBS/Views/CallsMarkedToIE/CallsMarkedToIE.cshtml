@@ -50,29 +50,29 @@
             <table id="dtList" class="borderTable" cellpadding="0" cellspacing="0" style="font-size: smaller;">
                 <tbody>
                     <tr>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana"></font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Approval for CM</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor Name</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">New Vendor</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Purchaser</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Delv Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Insp Desire Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Serial no.</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Document(if any).</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case No./View PO</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po source</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Remarks</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po No.</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Po Date</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Contact Person</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Contact Person Phone No.</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">User(other then ie)</font></b></th>
-                        <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Last Updation Date</font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font  face="Verdana"></font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font face="Verdana"></font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font face="Verdana"></font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Approval for CM</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Vendor Name</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">New Vendor</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Purchaser</font></b></th>
+                        <th width="150px;" valign="top" align="center"><b><font  face="Verdana">Item</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Delv Date</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Insp Desire Date</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Call Date</font></b></th>
+                        <th width="30px;" valign="top" align="center"><b><font  face="Verdana">Call Serial no.</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Call Document(if any).</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Case No./View PO</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Po source</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Status</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Remarks</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Po No.</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Po Date</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Contact Person</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Contact Person Phone No.</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">User(other then ie)</font></b></th>
+                        <th width="50px;" valign="top" align="center"><b><font  face="Verdana">Last Updation Date</font></b></th>
                     </tr>
                     @if (Model != null && Model.ReportLstNew != null && Model.ReportLstNew.Count > 0)
                     {
@@ -85,10 +85,10 @@
 
                             wHistory = Url.Action("CaseHistory", "CallMarkedOnline") + "?CASE_NO=" + @item.CASE_NO + "&ActionType=CHI&type=C";
 
-                            callDocAny = $"../ReadWriteData/CALLS_DOCUMENTS/{item.CASE_NO}-{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{item.CALL_SNO}.PDF";
-                            CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{item.PO_YR}/{item.IMMS_RLY_CD}/{item.PO_NO}.PDF";
+                            callDocAny = $"../ReadWriteData/CALLS_DOCUMENTS/{item.CASE_NO}-{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{item.CALL_SNO}.pdf";
+                            CasePODoc = $"https://www.ireps.gov.in/ireps/etender/pdfdocs/MMIS/PO/{item.PO_YR}/{item.IMMS_RLY_CD}/{item.PO_NO}.pdf";
 
-                            DocU = $"../ReadWriteData/LAB/{item.CASE_NO}_{item.CALL_SNO}_{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}.PDF";
+                            DocU = $"../ReadWriteData/LAB/{item.CASE_NO}_{item.CALL_SNO}_{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(6, 4)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(0, 2)}{Convert.ToDateTime(item.CALL_RECV_DT).ToString("dd/MM/yyyy").Substring(3, 2)}.pdf";
 
                             CallStausF = $"{item.CALL_STATUS_FULL}";
                             D1 = $"{item.CALL_STATUS_FULL}";
@@ -103,7 +103,7 @@
                                 else
                                 {
                                     CallStausF += "\nSample Not Recieved in Lab.";
-                                        D1 += "\nSample Not Recieved in Lab.";
+                                    D1 += "\nSample Not Recieved in Lab.";
                                 }
                                 if (item.PAYMENT_RECIEPT != 0)
                                 {
@@ -119,14 +119,14 @@
                                 }
                             }
 
-                            if (item.NEWVENDOR == "Y")
+                            @* if (item.NEWVENDOR == "Y")
                             {
                                 NewVendor = "Yes";
                             }
                             else
                             {
                                 NewVendor = "";
-                            }
+                            } *@
                             if (item.COUNT > 0)
                             {
                                 ItemDescPo = item.ITEM_DESC_PO + "<span color='#FF00CC'> and more items as per call</span>";
@@ -135,65 +135,81 @@
                             {
                                 ItemDescPo = item.ITEM_DESC_PO;
                             }
-                            if (item.VEND_CD == item.MFG_CD)
+                            @* if (item.VEND_CD == item.MFG_CD)
                             {
                                 wVendor = item.VENDOR;
                             }
                             else
                             {
                                 wVendor = $"{item.VENDOR} At {item.MANUFACTURER}";
-                            }
+                            } *@
                             <tr>
                                 @if (item.CM_APPROVAL == "A" || item.CALL_STATUS != "M")
                                 {
-                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wSelect>Select</a></font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wPrint>Print</a></font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana"><a href=@wHistory>History</a></font></td>
+                                    <td align="center" colspan="1"><a href=@wSelect>Select</a></td>
+                                    <td align="center" colspan="1"><a href=@wPrint>Print</a></td>
+                                    <td align="center" colspan="1"><a href=@wHistory>History</a></td>
 
-                                    <td align="center"><font size="1" face="Verdana" color='#FF00CC'>Approved by CM</font></td>
+                                    <td align="center"><font  face="Verdana" color='#FF00CC'>Approved by CM</font></td>
                                 }
                                 else
                                 {
-                                    <td align="center" colspan="1"><font size="2" face="Verdana">Select</font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana">Print</font></td>
-                                    <td align="center" colspan="1"><font size="2" face="Verdana">History</font></td>
+                                    <td align="center" colspan="1">Select</td>
+                                    <td align="center" colspan="1">Print</td>
+                                    <td align="center" colspan="1">History</td>
 
-                                    <td align="center"><font size="1" face="Verdana" color='#FF0000'>Waiting for CM approval</font></td>
+                                    <td align="center"><font  face="Verdana" color='#FF0000'>Waiting for CM approval</font></td>
                                 }
-                                <td align="center"><font size="1" face="Verdana">@wVendor</font></td>
-                                <td align="center"><font size="1" face="Verdana">@NewVendor</font></td>
-                                <td align="center"><font size="1" face="Verdana">item.CONSIGNEE</font></td>
+                                @if (item.VEND_CD == item.MFG_CD)
+                                {
+                                    <td align="center"><font  face="Verdana">@item.VENDOR</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font  face="Verdana">@item.VENDOR</font> <font  face="Verdana" color='#FF00CC'> At </font> <font  face="Verdana" font color='#3333FF'>@item.MANUFACTURER</font></td>
+                                }
+
+                                @if (item.NEWVENDOR == "Y")
+                                {
+                                    <td align="center"><font  face="Verdana" color=crimson>Yes</font></td>
+                                }
+                                else
+                                {
+                                    <td align="center"><font  face="Verdana"></font></td>
+                                }
+                                
+                                <td align="center"><font  face="Verdana">@item.CONSIGNEE</font></td>
                                 <td align="center">
 
-                                    @if (item.COUNT > 0)
+                                    @if (item.COUNT > 1)
                                     {
-                                        <font size="1" face="Verdana">
+                                        <font  face="Verdana">
                                             @item.ITEM_DESC_PO
                                         </font>
-                                        <font size="1" face="Verdana" color='#FF00CC'>and more items as per call</font>
+                                        <font  face="Verdana" color='#FF00CC'>and more items as per call</font>
                                     }
                                     else
                                     {
-                                        <font size="1" face="Verdana">
+                                        <font  face="Verdana">
                                             @item.ITEM_DESC_PO
                                         </font>
                                     }
                                 </td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.EXT_DELV_DT).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.INSP_DESIRE_DT).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.CALL_MARK_DT).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.EXT_DELV_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.INSP_DESIRE_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.CALL_MARK_DT).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@item.CALL_SNO</font></td>
                                 @if (System.IO.File.Exists(@callDocAny))
                                 {
-                                    <td align="center"><font size="2" face="Verdana"><a href=@callDocAny target="_blank">Call Documents</a></font></td>
+                                    <td align="center"><font  face="Verdana"><a href=@callDocAny target="_blank">Call Documents</a></font></td>
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="2" face="Verdana"></font></td>
+                                    <td align="center"><font  face="Verdana"></font></td>
                                 }
                                 @if (item.PO_SOURCE == "C")
                                 {
-                                    <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc>@item.CASE_NO</a></font></td>
+                                    <td align="center"><font size="2" face="Verdana"><a href=@CasePODoc target="_blank">@item.CASE_NO</a></font></td>
                                 }
                                 else
                                 {
@@ -204,28 +220,28 @@
                                     if (System.IO.File.Exists(fpath1) == true)
                                     {
                                         <td align="center">
-                                            <font size="1" face="Verdana">
-                                                <a href=@Fpath11 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
+                                            <font  face="Verdana">
+                                                <a href=@Fpath11 target="_blank" Font-Names='Verdana'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
                                             </font>
                                         </td>
                                     }
                                     else if (System.IO.File.Exists(fpath2) == true)
                                     {
                                         <td align="center">
-                                            <font size="1" face="Verdana">
-                                                <a href=@Fpath22 target="_blank" Font-Names='Verdana' Font-Size='1'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
+                                            <font  face="Verdana">
+                                                <a href=@Fpath22 target="_blank" Font-Names='Verdana'><h5 align='center'><font face='Verdana'>@item.CASE_NO</font></h5></a>
                                             </font>
                                         </td>
                                     }
                                     else
                                     {
-                                        <td align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
+                                        <td align="center"><font  face="Verdana">@item.CASE_NO</font></td>
                                     }
 
                                 }
-                                <td align="center"><font size="1" face="Verdana">@item.SOURCE</font></td>
+                                <td align="center"><font  face="Verdana">@item.SOURCE</font></td>
 
-                                @* <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td> *@
+                                @* <td align="center"><font  face="Verdana" color=@item.COLOUR>@CallStausF</font></td> *@
 
                                 @if (item.CALL_STATUS == "U")
                                 {
@@ -233,26 +249,26 @@
                                     var Fpath1 = Model.FilePath1 + "/ReadWriteData/LAB/" + item.CASE_NO + "_" + item.CALL_SNO + "_" + Convert.ToDateTime(item.CALL_RECV_DT).ToString("yyyyddMM") + ".pdf";
                                     if (System.IO.File.Exists(fpath123) == true)
                                     {
-                                        <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit" target="_blank">Lab Report</a><br />@D2</font></td>
+                                        <td align="center"><font  face="Verdana" color=@item.COLOUR>@D1 <a href=@DocU class="edit" target="_blank">Lab Report</a><br />@D2</font></td>
                                     }
                                     else
                                     {
-                                        <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@D1 <br />@D2</font></td>
+                                        <td align="center"><font  face="Verdana" color=@item.COLOUR>@D1 <br />@D2</font></td>
                                     }
-                                    
+
                                 }
                                 else
                                 {
-                                    <td align="center"><font size="1" face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
+                                    <td align="center"><font  face="Verdana" color=@item.COLOUR>@CallStausF</font></td>
                                 }
 
-                                <td align="center"><font size="1" face="Verdana">@item.REMARKS</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.PO_DATE).ToString("dd/MM/yyyy")</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.MFG_PERS</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.MFG_PHONE</font></td>
-                                <td align="center"><font size="1" face="Verdana">@item.USER_ID</font></td>
-                                <td align="center"><font size="1" face="Verdana">@Convert.ToDateTime(@item.DATETIME).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@item.REMARKS</font></td>
+                                <td align="center"><font  face="Verdana">@item.PO_NO</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.PO_DATE).ToString("dd/MM/yyyy")</font></td>
+                                <td align="center"><font  face="Verdana">@item.MFG_PERS</font></td>
+                                <td align="center"><font  face="Verdana">@item.MFG_PHONE</font></td>
+                                <td align="center"><font  face="Verdana">@item.USER_ID</font></td>
+                                <td align="center"><font  face="Verdana">@Convert.ToDateTime(@item.DATETIME).ToString("dd/MM/yyyy")</font></td>
                             </tr>
                         }
                     }
@@ -273,11 +289,9 @@
 <script src="~/js/html2pdf.bundle.min.js"></script>
 <script src="~/js/site.js"></script>
 
-
 <script type="text/javascript">
 
     $(function () {
-        //InitializeDatatable();
         setDefaultDate();
     });
 
@@ -286,101 +300,6 @@
         var todate = new Date();
         $('#FromDate').text(moment(fromdate.setMonth(fromdate.getMonth())).format('@Common.CommonDateFormateForJS'));
         $('#ToDate').text(moment(todate.setMonth(todate.getMonth() - 1)).format('@Common.CommonDateFormateForJS'));
-    }
-
-    function InitializeDatatable() {
-        var PType = $("#PType").val();
-        $("#dtUser").DataTable({
-            stateSave: false,// Design Assets
-            autoWidth: true,
-            scrollX: true,
-            scrollCollapse: true,
-            processing: true, // ServerSide Setups
-            serverSide: true,
-            destroy: true,
-            paging: true,// Paging Setups
-            searching: true,// Searching Setups
-            ajax: {// Ajax Filter
-                url: "@Url.Action("LoadTable")",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: function (d) {
-                    var AdditionalValues = {
-                        PType: PType
-                    };
-                    d.AdditionalValues = AdditionalValues;
-                    return JSON.stringify(d);
-                }
-            },
-
-            columns: [// Columns Setups
-                {
-                    data: '', orderable: false, width: '5%',
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                { data: "Vendor" },
-                { data: "NewVendor" },
-                { data: "Consignee" },
-                { data: "ItemDescPo" },
-                {
-                    data: "ExtDelvDt",
-                    render: function (data, type, row) {
-                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                        }
-                        return data;
-                    }
-                },
-                {
-                    data: "InspDesireDt",
-                    render: function (data, type, row) {
-                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                        }
-                        return data;
-                    }
-                },
-                {
-                    data: "CallMarkDt",
-                    render: function (data, type, row) {
-                        if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
-                            return data != null && data != "" ? moment(data).format("DD-MM-YYYY") : "";
-                        }
-                        return data;
-                    }
-                },
-                { data: "CallSno" },
-                { data: "callDocAny" },
-                { data: "PoSource" },
-                { data: "PoSource" },
-                { data: "CallStatus" },
-                { data: "Remarks" },
-                { data: "PoNo" },
-                { data: "PoDate" },
-                { data: "MfgPers" },
-                { data: "MfgPhone" },
-                { data: "UserId" },
-                { data: "Datetime" },
-                //{
-                //    data: null, orderable: false,
-                //    render: function (data, type, row) {
-                //        var CaseNo = data.CaseNo;
-                //        var MaNo = data.MaNo;
-                //        var MaDtc = data.MaDtc;
-                //        var MaSno = data.MaSno;
-                //        var editUrl = '@Url.Action("Manage", "MAapprove")?CaseNo=' + CaseNo + "&MaNo=" + MaNo + "&MaDtc=" + MaDtc + "&MaSno=" + MaSno;
-                //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                //        html += '</div>';
-                //        return html;
-                //    }
-                //},
-                //{ data: "MaStatus" },
-            ],
-            "order": [[0, "asc"]]
-        });
     }
 
     var fileName = '';
@@ -396,7 +315,12 @@
     });
 
     $("#btnPrint").click(function () {
-        generatePdf(true);
+        //generatePdf(true);
+
+        var content = document.getElementById('dvReportViewer');
+        content.style.display = 'block'; 
+        window.print();
+        content.style.display = 'none';
     });
 
     $("#btnExportToPdf").click(function () {
@@ -406,7 +330,6 @@
         var url = '@Url.Action("Index", "Dashboard")';
         window.location.href = url;
     });
-
 
     $("#btnExportToExcel").click(function () {
         var html = $('#dvReportViewer').html();
@@ -421,35 +344,78 @@
         e.preventDefault();
     });
 
+    // function generatePdf(isPrint) {
+    //     var element = document.getElementById('dvReportViewer');
+
+    //     element.style.width = "1100px";
+
+    //     const options = {
+    //         margin: 0,
+    //         filename: getExportFileName(fileName) + '.pdf',
+    //         image: { type: 'jpeg', quality: 1 },
+    //         html2canvas: {
+    //             scale: 4,
+    //             useCORS: true
+    //         },
+    //         jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+    //     };
+
+    //     if (isPrint) {
+    //         html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
+    //             pdfObj.autoPrint();
+    //             window.open(pdfObj.output('bloburl'), '_blank');
+    //         });
+    //     }
+    //     else {
+    //         html2pdf().set(options).from(element).save();
+    //     }
+
+    //     setTimeout(function () {
+    //         element.style.width = "100%";
+    //     }, 1000);
+    // }
+
     function generatePdf(isPrint) {
-        var element = document.getElementById('dvReportViewer');
-
-        element.style.width = "1100px";
-
-        const options = {
-            margin: 0,
-            filename: getExportFileName(fileName) + '.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-                scale: 4,
-                useCORS: true
+        const urlParams = new URLSearchParams(window.location.search);
+        const ReportType = urlParams.get('type');
+        
+        $.ajax({
+            url: "@Url.Action("GeneratePDF", "CallsMarkedToIE")",
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            data: { ReportType: ReportType },
+            xhrFields: {
+                responseType: 'blob'
             },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+            success: function (result) {
+                var url = window.URL.createObjectURL(result);
+                if (isPrint) {
+                    iframe = document.createElement('iframe');
+                    document.body.appendChild(iframe);
 
-        if (isPrint) {
-            html2pdf().set(options).from(element).toPdf().get('pdf').then(function (pdfObj) {
-                pdfObj.autoPrint();
-                window.open(pdfObj.output('bloburl'), '_blank');
-            });
-        }
-        else {
-            html2pdf().set(options).from(element).save();
-        }
-
-        setTimeout(function () {
-            element.style.width = "100%";
-        }, 1000);
+                    iframe.style.display = 'none';
+                    iframe.src = url;
+                    iframe.onload = function () {
+                        setTimeout(function () {
+                            iframe.focus();
+                            iframe.contentWindow.print();
+                        }, 1);
+                    };
+                }
+                else {
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = getExportFileName(fileName) + '.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
     }
-
+    
 </script>

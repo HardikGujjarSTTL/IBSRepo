@@ -1,0 +1,71 @@
+﻿@model IBS.Models.HolidayDetailModel
+@{
+    ViewData["Title"] = "Manage Holiday Detail";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Holiday Detail Manage</h2>
+    </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="HolidayMaster" asp-action="Index" class="formBtn"><span class="fa fa-plus"></span> View List</a>
+    </div>
+</div>
+<div class="task-listinput">
+    <form role="form" asp-controller="HolidayMaster" asp-action="HolidayDetailSave" id="frmHolidayDetail">
+        <input type="hidden" asp-for="ID" />
+        <div class="accordion-body">
+            <div class="task-inner row">
+                <div class="col-md-2">
+                    <div class="input-search">
+                        <label for="HOLIDAY_ID">Financial Year</label>
+                        @Html.DropDownListFor(Model => Model.HOLIDAY_ID, new SelectList(IBS.Models.Common.GetHolidayMaster(Model.REGION), "Value", "Text"),"--Select--")
+                        <span asp-validation-for="HOLIDAY_ID" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-search">
+                        <label for="HOLIDAY_DT">Holiday Date</label>
+                        <input type="text" class="datepicker" asp-for="HOLIDAY_DT" placeholder="DD/MM/YYYY" />
+                        <span asp-validation-for="HOLIDAY_DT" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-search">
+                        <label for="HOLIDAY_DESC">Holiday Description</label>
+                        <input type="text" class="input" asp-for="HOLIDAY_DESC" />
+                        <span asp-validation-for="HOLIDAY_DESC" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="savenext-btn btnAlign">
+                        <button type="submit" class="save-btn active" onclick="SubmitHolidayDetailData();" id="btnSave">Save</button>
+                        <button type="button" class="reset-btn" onclick="CLearControls();">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        var Role = "@ViewBag.Role";
+        function SubmitHologramToIE() {
+            if ($("#frmHolidayDetail").valid()) {
+                $("#frmHolidayDetail").submit();
+            }
+        }
+        completed = function (response) {
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                setTimeout(function () {
+                    window.location.href = '@Url.Action("Index", "HolidayMaster")';
+                }, 1000)
+            }
+        };                
+    </script>
+}

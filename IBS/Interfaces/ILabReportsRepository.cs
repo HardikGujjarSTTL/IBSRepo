@@ -1,6 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
-using System.Data;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
@@ -12,5 +10,6 @@ namespace IBS.Interfaces
         public LabReportsModel OnlinePaymentReport(string ReportType, string wFrmDtO, string wToDt, string Regin);
         public LabReportsModel LabInvoiceReport(string ReportType, string wFrmDtO, string wToDt, string Regin);
         public LabReportsModel LabSamplePaymentReport(string ReportType, string wFrmDtO, string wToDt, string Regin, string lstStatus, string rdbrecvdt);
+        public LabReportsModel BarcodeReport(string ReportType, string wFrmDtO, string wToDt, string Regin);
     }
 }

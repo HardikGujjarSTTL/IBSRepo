@@ -4,20 +4,13 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Configuration;
 using System.Data;
-using System.Runtime.CompilerServices;
 
 namespace IBSReports
 {
     public partial class _Default : System.Web.UI.Page
     {
-        #region "Declarations.."
-
         OracleConnection conn1 = new OracleConnection(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString);
         protected CrystalDecisions.Web.CrystalReportViewer cri;
-
-        #endregion
-
-        #region "Properites.."
 
         public string RptFlag
         {
@@ -33,8 +26,6 @@ namespace IBSReports
                 }
             }
         }
-
-        #endregion
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -230,15 +221,19 @@ namespace IBSReports
                     string SetNo = Request.QueryString["SetNo"].ToString();
 
                     rd = IC_RPT.IC_Report(CaseNO, Call_Recv_Dt, CallSNo, Consignee_CD, Region, BkNo, SetNo, out dsCustom);
+
                     System.IO.Stream st = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                     System.IO.MemoryStream s = new System.IO.MemoryStream();
+
                     CopyStream(st, s);
+
                     Response.Clear();
                     Response.Buffer = true;
                     Response.AddHeader("content-disposition", String.Format("inline; filename={0}", "ICReport.pdf"));
                     Response.ContentType = "application/pdf";
                     Response.BinaryWrite(s.ToArray());
                     Response.End();
+
                     s.Close();
                     s = null;
                 }

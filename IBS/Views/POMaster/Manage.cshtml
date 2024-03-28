@@ -37,6 +37,7 @@
                             Kindly enter the Case No. if this PO/Offer Letter is already registered in any other region, and click on Submit button
                         </label>
                     </div>
+
                     <div class="col-md-4 mb-3">
                         <input type="text" class="input" id="txtCaseNo" />
                     </div>
@@ -45,6 +46,17 @@
                     </div>
 
                 </div>
+
+                <div id="dvrefno" class="row my-0" style="display:none">
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">
+                            Reference No.: <span style="color:red" id="lblRefno"></span>
+                        </label>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                    </div>
+                </div>
+
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Railway/Non-Railway<i class="text-danger">*</i></label>
@@ -61,7 +73,7 @@
 
                                 <span asp-validation-for="RlyCd" class="text-danger"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="dvRlyCdDesc" style="display:none;">
                                 <label for="txtBPO_RLY">&nbsp;</label><br />
                                 <input type="text" class="input" asp-for="RlyCdDesc" maxlength="300">
                             </div>
@@ -73,7 +85,7 @@
                         <span asp-validation-for="RegionCode" class="text-danger"></span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="Reference">Stock / Non-Stock (For Railways Only)<i class="text-danger">*</i></label>
+                        <label for="Reference">Stock / Non-Stock (For Railways Only)<i class="text-danger"></i></label>
                         @Html.DropDownListFor(model => model.StockNonstock, new SelectList(IBS.Models.Common.StockNonstock(), "Value", "Text"), "--Select--")
                         <span asp-validation-for="StockNonstock" class="text-danger"></span>
                     </div>
@@ -232,7 +244,9 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
 
+
         $(document).ready(function () {
+
             $('#PoDt').datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -247,6 +261,19 @@
             if ('@Model.CaseNo' != null && '@Model.CaseNo' != '') {
                 FillEditedData();
             }
+
+
+          
+            if (sessionStorage.getItem("caseNo") === null || sessionStorage.getItem("caseNo") === "undefined" || sessionStorage.getItem("caseNo") === '') {
+                $("#dvrefno").hide();
+            }
+            else {
+                $('#lblRefno').html(sessionStorage.getItem("caseNo"));
+                sessionStorage.setItem("caseNo", '');
+                $("#dvrefno").show();
+            }
+
+
         });
 
         function FillEditedData() {
@@ -254,8 +281,13 @@
             setTimeout(function () {
                 $('#RlyCd').val('@Model.RlyCd');
                 $('#PoiCd').val('@Model.PoiCd');
+                if ('@Model.RlyCd' == "0" || '@Model.RlyCd' == "") {
+                    $("#dvRlyCdDesc").css("display", "block");
+                }
             }, 2000);
-            FillPurchaserCdForEdit('@Model.PurchaserCd');
+            if ('@Model.PurchaserCd' != null && '@Model.PurchaserCd' != "0") {
+                FillPurchaserCdForEdit('@Model.PurchaserCd');
+            }
             fill_manufacturer('@Model.PoiCd');
             if ('@Model.PoiCd' != "" && '@Model.PoiCd' != "0") {
                 GetManufVEND('@Model.PoiCd');
@@ -263,6 +295,7 @@
         }
 
         function FillAgencyClient(types) {
+
             var RlyNonrly = $("#RlyNonrly").val();
             $.ajax({
                 url: '@Url.Action("GetAgencyClient", "POMaster")?RlyNonrly=' + RlyNonrly,
@@ -287,6 +320,15 @@
                     fill_consignee_purcher();
                 }, 2000);
             }
+            setTimeout(function () {
+                var RlyCd = $("#RlyCd").val();
+                if (RlyCd == null || RlyCd == "0" || RlyCd == "") {
+                    $("#dvRlyCdDesc").css("display", "block");
+                }
+                else {
+                    $("#dvRlyCdDesc").css("display", "none");
+                }
+            }, 100);
         }
 
         function RlyCd_Changed() {
@@ -328,6 +370,12 @@
                     });
                 }
             });
+            if (RlyCd == "0" || RlyCd == "") {
+                $("#dvRlyCdDesc").css("display", "block");
+            }
+            else {
+                $("#dvRlyCdDesc").css("display", "none");
+            }
         }
 
         function RegionCode_Changed() {
@@ -565,6 +613,7 @@
                 }
             }
             if ($("#frmPOMaster").valid()) {
+                debugger;
                 if (!SaveSingleDocuments("tab-1")) { return; }
                 $("#frmPOMaster").submit();
             }
@@ -578,8 +627,11 @@
         completed = function (response) {
             var res = response.responseJSON;
             ShowHideMsgNew(res.status, res.responseText);
-            if (res.status) {
-                window.location.href = '@Url.Action("Index", "POMaster")';
+            if (res.status) {              
+                sessionStorage.setItem("caseNo", res.CaseNo);
+
+                //window.location.href = '@Url.Action("Index", "POMaster")';
+                window.location.href = '@Url.Action("Manage", "POMaster")?CaseNo=' + res.CaseNo;
             }
         };
 

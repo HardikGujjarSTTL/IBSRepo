@@ -1,4 +1,5 @@
-﻿<div>
+﻿@using IBS.Helper;
+<div>
     <div class="list-inner">
         <div class="tast-list">
             <h2>Online Consignee Rejections</h2>
@@ -10,6 +11,8 @@
                 <table id="dtcomplaintapproval" class="table-responsive nowrap">
                     <thead>
                         <tr>
+                            <th>Action</th>
+                            <th></th>
                             <th>Registration No.</th>
                             <th>Registration Date</th>
                             <th>Consignee Name</th>
@@ -25,7 +28,7 @@
                             <th>Value of Qty Rejected</th>
                             <th>Reason for Rejection</th>
                             <th>Remarks</th>
-                            <th>Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +72,31 @@
                     }
                 },
                 columns: [
+                    
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var TEMP_COMPLAINT_ID = data.TEMP_COMPLAINT_ID;
+                            var SetNo = data.SetNo;
+                            var BKNo = data.BKNo;
+                            var CaseNo = data.CaseNo;
+                            var editUrl = "@Url.Action("Manage", "ComplaintApproval")" + "?SetNo=" + encodeURIComponent(SetNo) + "&BKNo=" + encodeURIComponent(BKNo) + "&CaseNo=" + encodeURIComponent(CaseNo) + "&TEMP_COMPLAINT_ID=" + encodeURIComponent(TEMP_COMPLAINT_ID);
+                            //var editUrl = '@Url.Action("Manage", "ComplaintApproval")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var COMP_DOC = data.COMP_DOC;
+                            // var html = "<a target='_blank' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints))/" + COMP_DOC.trim() + ".PDF' Id='DocUpload_" + COMP_DOC + "'>Download <span class='fa fa-download'></span></a> "
+                            var html = "<a target='_blank' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.OnlineComplaints))/" + COMP_DOC.trim() + ".PDF' Id='DocUpload_" + COMP_DOC + "'>" + COMP_DOC + "</a> "
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     { data: "TEMP_COMPLAINT_ID" },
                     {
                         data: "TempComplaintDt",
@@ -101,22 +129,22 @@
                     { data: "RejectionReason" },
                     { data: "Remarks" },
                   
-                    {
-                        data: null, orderable: false,
-                        render: function (data, type, row) {
-                            var TEMP_COMPLAINT_ID = data.TEMP_COMPLAINT_ID;
-                            var SetNo = data.SetNo;
-                            var BKNo = data.BKNo;
-                            var CaseNo = data.CaseNo;
-                            var editUrl = "@Url.Action("Manage","ComplaintApproval")" + "?SetNo=" + encodeURIComponent(SetNo) + "&BKNo=" + encodeURIComponent(BKNo) + "&CaseNo=" + encodeURIComponent(CaseNo) + "&TEMP_COMPLAINT_ID=" + encodeURIComponent(TEMP_COMPLAINT_ID);
-                            //var editUrl = '@Url.Action("Manage", "ComplaintApproval")/' + id;
-                            var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '</div>';
-                            return html;
-                        }
-                    },
+                    // {
+                    //     data: null, orderable: false,
+                    //     render: function (data, type, row) {
+                    //         var TEMP_COMPLAINT_ID = data.TEMP_COMPLAINT_ID;
+                    //         var SetNo = data.SetNo;
+                    //         var BKNo = data.BKNo;
+                    //         var CaseNo = data.CaseNo;
+                    //         var editUrl = "@Url.Action("Manage","ComplaintApproval")" + "?SetNo=" + encodeURIComponent(SetNo) + "&BKNo=" + encodeURIComponent(BKNo) + "&CaseNo=" + encodeURIComponent(CaseNo) + "&TEMP_COMPLAINT_ID=" + encodeURIComponent(TEMP_COMPLAINT_ID);
+                    //         //var editUrl = '@Url.Action("Manage", "ComplaintApproval")/' + id;
+                    //         var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                    //         html += '</div>';
+                    //         return html;
+                    //     }
+                    // },
                 ],
-                "order": [[0, "asc"]],
+                "order": [[2, "asc"]],
                 "initComplete": function (settings, json) {
                     $("#dtcomplaintapproval").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
                 },

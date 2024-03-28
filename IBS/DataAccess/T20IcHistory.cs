@@ -84,4 +84,6 @@ public partial class T20IcHistory
     public string? Actionuserid { get; set; }
 
     public int Id { get; set; }
+
+    public string? GstinType { get; set; }
 }

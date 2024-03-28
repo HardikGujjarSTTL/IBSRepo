@@ -42,13 +42,13 @@
                         @Html.DropDownListFor(model => model.VendApproval, new SelectList(IBS.Models.Common.VendorApproval() , "Value", "Text"),"--Select--")
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="VendApprovalFr">Approval Period From</label>
+                        <label for="VendApprovalFr">Approval Period From <i class="text-danger">*</i></label>
                         <input type="text" class="datepicker" asp-for="VendApprovalFr" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
                         <span asp-validation-for="VendApprovalFr" class="text-danger"></span>
 
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="VendApprovalTo">Approval Period To</label>
+                        <label for="VendApprovalTo">Approval Period To <i class="text-danger">*</i></label>
                         <input type="text" class="datepicker" asp-for="VendApprovalTo" placeholder="DD/MM/YYYY" data-rule-requiredifVendApproval="true">
                         <span asp-validation-for="VendApprovalTo" class="text-danger"></span>
                     </div>
@@ -102,18 +102,18 @@
                 </div>
                 <div class="row my-0">
                     <div class="col-md-4 mb-3">
-                        <label for="GSTNO">GST No.<i class="text-danger">*</i></label>
+                        <label for="GSTNO">GST No.@* <i class="text-danger">*</i> *@</label>
                         <input type="text" class="input" asp-for="GSTNO" maxlength="15">
-                        <span asp-validation-for="GSTNO" class="text-danger"></span>
+                        @* <span asp-validation-for="GSTNO" class="text-danger"></span> *@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="TanNo">TAN No.</label>
                         <input type="text" class="input" asp-for="TANNO" maxlength="10">
                     </div>  
                     <div class="col-md-4 mb-3">
-                        <label for="PanNo">PAN No.<i class="text-danger">*</i></label>
+                        <label for="PanNo">PAN No.@* <i class="text-danger">*</i> *@</label>
                         <input type="text" class="input" asp-for="PANNO" maxlength="10">
-                        <span asp-validation-for="PANNO" class="text-danger"></span>
+                        @* <span asp-validation-for="PANNO" class="text-danger"></span> *@
                     </div>
                 </div>
                 <div class="row my-0">
@@ -188,7 +188,7 @@
 
         function SubmitVendorData() {
             if ($("#frmVendor").valid()) {
-                if (!SaveDocuments()) { return; }
+                SaveDocuments();
                 $("#frmVendor").submit();
             }
         }

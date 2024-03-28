@@ -7,49 +7,50 @@
             <table class="borderTable" cellpadding="0" cellspacing="0">
                 <tbody>
                     <tr>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">JI SNO</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Date of Receipt of Complaint</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Particulars of Consignee</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">PO No. & Date</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Name of Inspecting Region</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Inspecting Engineer</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Controlling Manager</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">DIC No & Date</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Book No / Set No.</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Description of Material</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Quantity Inspected</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Quantity Rejected</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Rejected Material Value</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Reason Of Complaint</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">IE Remarks (If Any)</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Date of JI</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">Conclusion of JI</font></b></th>
-                        <th width="15%" valign="top" align="center"><b><font size="1" face="Verdana">JI Outcome/Status</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">JI SNO</font></b></th>
+                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Date of Receipt of Complaint</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Particulars of Consignee</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">PO No. & Date</font></b></th>
+                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Name of Inspecting Region</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Inspecting Engineer</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Controlling Manager</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">DIC No & Date</font></b></th>
+                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Book No / Set No.</font></b></th>
+                        <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
+                        <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Description of Material</font></b></th>
+                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Quantity Inspected</font></b></th>
+                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Quantity Rejected</font></b></th>
+                        <th width="4%" valign="top" align="center"><b><font size="1" face="Verdana">Rejected Material Value</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Reason Of Complaint</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">IE Remarks (If Any)</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Date of JI</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">Conclusion of JI</font></b></th>
+                        <th width="5%" valign="top" align="center"><b><font size="1" face="Verdana">JI Outcome/Status</font></b></th>
                     </tr>
                     @if (Model != null && Model.lstconsignee.Count > 0)
                     {
                     @foreach (var item in Model.lstconsignee)
                         {
                             <tr>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JiSno</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ComplaintDate</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Consignee</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.InspRegion</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ie_name</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.IC_NO</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.BK_NO</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.ItemDesc</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.QtyOffered</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.QtyRejected</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.rejectionValue</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.RejectionReason</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.Remarks</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JIDate</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.NoJiOther</font></td>
-                                <td width="15%" valign="top" align="Left"><font size="1" face="Verdana">@item.JiStatusDesc</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.JiSno</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.ComplaintDate</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.Consignee</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.PO_NO</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.InspRegion</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.ie_name</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.CoName</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.IC_NO</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.BK_NO</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.VEND_NAME</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.ItemDesc</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.QtyOffered</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.QtyRejected</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.rejectionValue</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.RejectionReason</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.Remarks</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.JIDate</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.NoJiOther</font></td>
+                                <td valign="top" align="Left"><font size="1" face="Verdana">@item.JiStatusDesc</font></td>
                             </tr>
                         }
                     }

@@ -93,6 +93,46 @@ namespace IBS.Helper
             }
         }
 
+        public List<ProjectDetailsModel> lstProjectDetails
+        {
+            get
+            {
+                string ProjectDetails = httpContextAccessor.HttpContext.Session.GetString("sessionProductDetailsModel");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(ProjectDetails))
+                {
+                    List<ProjectDetailsModel> ProjectDetailsModels = JsonSerializer.Deserialize<List<ProjectDetailsModel>>(ProjectDetails);
+
+                    if (ProjectDetailsModels != null)
+                        return ProjectDetailsModels;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionProductDetailsModel", JsonSerializer.Serialize(value));
+            }
+        }
+
+        public List<ContractEntryList> lstContractEntryList
+        {
+            get
+            {
+                string ContractEntry = httpContextAccessor.HttpContext.Session.GetString("sessionContractEntryList");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(ContractEntry))
+                {
+                    List<ContractEntryList> ContractEntryModels = JsonSerializer.Deserialize<List<ContractEntryList>>(ContractEntry);
+
+                    if (ContractEntryModels != null)
+                        return ContractEntryModels;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionContractEntryList", JsonSerializer.Serialize(value));
+            }
+        }
+
         public List<InterUnitTransferRegionModel> lstInterUnitTransferRegionModel
         {
             get
@@ -130,6 +170,25 @@ namespace IBS.Helper
             set
             {
                 httpContextAccessor.HttpContext.Session.SetString("sessionPO_AmendmentsModel", JsonSerializer.Serialize(value));
+            }
+        }
+        public List<ManpowerDetailModel> lstManpowerDetailModel
+        {
+            get
+            {
+                string IECluster = httpContextAccessor.HttpContext.Session.GetString("sessionManpowerDetailModel");
+                if (httpContextAccessor.HttpContext.Session != null && !string.IsNullOrWhiteSpace(IECluster))
+                {
+                    List<ManpowerDetailModel> ManpowerDetails = JsonSerializer.Deserialize<List<ManpowerDetailModel>>(IECluster);
+
+                    if (ManpowerDetails != null)
+                        return ManpowerDetails;
+                }
+                return null;
+            }
+            set
+            {
+                httpContextAccessor.HttpContext.Session.SetString("sessionManpowerDetailModel", JsonSerializer.Serialize(value));
             }
         }
     }

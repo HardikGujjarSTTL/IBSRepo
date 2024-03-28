@@ -1,13 +1,10 @@
-﻿using IBS.Interfaces.Reports.Billing;
+﻿using IBS.Helper;
+using IBS.Interfaces.Reports.Billing;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Web;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using IBS.Helper;
+using PuppeteerSharp.Media;
+using PuppeteerSharp;
 
 namespace IBS.Controllers.Reports.Billing
 {
@@ -82,7 +79,25 @@ namespace IBS.Controllers.Reports.Billing
             {
                 model.Title = "Returned Bills yet to be Submitted to CRIS (Under Testing)";
             }
+            else if (ActionType == "CNoteInvoice")
+            {
+                model.Title = "Credit Note Invoices";
+            }
 
+            return View(model);
+        }
+
+        public IActionResult Manage(BillRaisedModel model)
+        {
+            //BillRaisedModel model = new BillRaisedModel();
+            if (model.ReportType == "RlyBills")
+            {
+                model.ReportTitle = "Railway online bills";
+            }
+            else if(model.ReportType == "RBNRS")
+            {
+                model.ReportTitle = "Returned Bills yet to be Submitted to CRIS (Under Testing)";
+            }
             return View(model);
         }
         #endregion
@@ -91,6 +106,7 @@ namespace IBS.Controllers.Reports.Billing
         public IActionResult BillingClientReport(int FromMn, int FromYr, int ToMn, int ToYr, string ActionType, string rdo)
         {
             BillRaisedModel model = billraisedRepository.GetBillingClient(FromMn, FromYr, ToMn, ToYr, ActionType, rdo, Region);
+            GlobalDeclaration.BillRaised = model; 
             return View(model);
         }
         #endregion
@@ -99,22 +115,37 @@ namespace IBS.Controllers.Reports.Billing
         public IActionResult BillingSectorReport(int FromMn, int FromYr, int ToMn, int ToYr, string ActionType, string rdo, string IncRites)
         {
             BillRaisedModel model = billraisedRepository.GetBillingSector(FromMn, FromYr, ToMn, ToYr, ActionType, rdo, Region, IncRites);
+            GlobalDeclaration.BillRaised = model;
             return View(model);
         }
         #endregion
 
         #region Railway Online Report
-        public IActionResult RailwayOnlineReport(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType, string chkRegion)
+        //public IActionResult RailwayOnlineReport(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType, string chkRegion)
+        //{
+        //    string Fpath = $"{Request.Scheme}://{Request.Host}";
+        //    var CaseNoPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
+        //    var BillICPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.BILLIC);
+        //    BillRaisedModel model = billraisedRepository.GetRailwayOnline(ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, ActionType, Region, chkRegion);
+        //    GlobalDeclaration.BillRaised = model;
+        //    model.FilePath1 = Fpath;
+        //    model.FilePath2 = CaseNoPath;
+        //    model.FilePath3 = BillICPath;
+        //    return View(model);
+        //}
+
+        public IActionResult RailwayOnlineReport_Partial(string ClientType, string rdoSummary, string BpoRly, string rdoBpo, int FromMn, int FromYr, DateTime? FromDt, DateTime? ToDt, string ActionType, string chkRegion)
         {
             string Fpath = $"{Request.Scheme}://{Request.Host}";
             var CaseNoPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.CaseNo);
             var BillICPath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.BILLIC);
             BillRaisedModel model = billraisedRepository.GetRailwayOnline(ClientType, rdoSummary, BpoRly, rdoBpo, FromMn, FromYr, FromDt, ToDt, ActionType, Region, chkRegion);
+            GlobalDeclaration.BillRaised = model;
 
             model.FilePath1 = Fpath;
             model.FilePath2 = CaseNoPath;
             model.FilePath3 = BillICPath;
-            return View(model);
+            return PartialView(model);
         }
 
         [HttpGet]
@@ -150,13 +181,90 @@ namespace IBS.Controllers.Reports.Billing
         }
         #endregion
 
-        #region Bill Cris Reports
+        #region Bill Not Cris Reports
         public IActionResult BillsNotCrisReport(DateTime FromDate, DateTime ToDate, string chkRegion, string ClientType, string lstAU, string actiontype, string rdbPRly, string rdbPAU)
         {
             BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, Region, rdbPRly, rdbPAU);
+            GlobalDeclaration.BillRaised = model;
+            return View(model);
+        }
+
+        public IActionResult BillsNotCrisReport_Partial(DateTime FromDate, DateTime ToDate, string chkRegion, string ClientType, string lstAU, string actiontype, string rdbPRly, string rdbPAU)
+        {
+            BillRaisedModel model = billraisedRepository.GetBillsNotCris(FromDate, ToDate, chkRegion, ClientType, lstAU, actiontype, Region, rdbPRly, rdbPAU);
+            GlobalDeclaration.BillRaised = model;
+            return PartialView(model);
+        }
+        #endregion
+
+
+        #region Client Report
+        public IActionResult CNoteInvoiceReport(DateTime? CnoteFromDt, DateTime? CnoteToDt, string ActionType)
+        {
+            BillRaisedModel model = billraisedRepository.GetCNoteInvoice(CnoteFromDt, CnoteToDt, ActionType, Region);
+            GlobalDeclaration.BillRaised = model;
             return View(model);
         }
         #endregion
 
+        [HttpPost]
+        public async Task<IActionResult> GeneratePDF(string ReportType)
+        {
+            string htmlContent = string.Empty;
+            if (ReportType == "BillingClientReport")
+            {
+                BillRaisedModel model = GlobalDeclaration.BillRaised;
+                htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillingClientReport.cshtml", model);
+            }
+            else if(ReportType == "BillingSectorReport")
+            {
+                BillRaisedModel model = GlobalDeclaration.BillRaised;
+                htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillingSectorReport.cshtml", model);
+            }
+            else if (ReportType == "RBNRS")  //(ReportType == "BillsNotCrisReport")
+            {
+                BillRaisedModel model = GlobalDeclaration.BillRaised;
+                //htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillsNotCrisReport.cshtml", model);
+                htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/BillsNotCrisReport_Partial.cshtml", model);
+            }
+            else if(ReportType == "RlyBills")
+            {
+                BillRaisedModel model = GlobalDeclaration.BillRaised;
+                //htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/RailwayOnlineReport.cshtml", model);
+                htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/RailwayOnlineReport_Partial.cshtml", model);
+                
+            }
+            else if(ReportType == "CNoteInvoiceReport")
+            {
+                BillRaisedModel model = GlobalDeclaration.BillRaised;
+                htmlContent = await this.RenderViewToStringAsync("/Views/BillingReports/CNoteInvoiceReport.cshtml", model);
+            }
+
+            await new BrowserFetcher().DownloadAsync();
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                DefaultViewport = null
+            });
+            await using var page = await browser.NewPageAsync();
+            await page.EmulateMediaTypeAsync(MediaType.Screen);
+            await page.SetContentAsync(htmlContent);
+
+            string cssPath = env.WebRootPath + "/css/report.css";
+
+            AddTagOptions bootstrapCSS = new AddTagOptions() { Path = cssPath };
+            await page.AddStyleTagAsync(bootstrapCSS);
+
+            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            {
+                Landscape = true,
+                Format = PaperFormat.Letter,
+                PrintBackground = true
+            });
+
+            await browser.CloseAsync();
+
+            return File(pdfContent, "application/pdf", Guid.NewGuid().ToString() + ".pdf");
+        }
     }
 }

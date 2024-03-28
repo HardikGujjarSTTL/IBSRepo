@@ -31,7 +31,7 @@
             </div>
             <div class="row my-0">
                 <div class="col-md-6 mb-3">
-                    @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsigneeUsingConsignee(@Model.ConsigneeCd) , "Value", "Text"),"--Select--", new{ @onChange="Loadvendor_status();",@style="margin-top: 33px;"})
+                    @Html.DropDownListFor(model => model.ConsigneeCd, new SelectList(IBS.Models.Common.GetConsigneeSearch(Convert.ToString(@Model.ConsigneeCd)), "Value", "Text"), "--Select--", new { @onChange = "Loadvendor_status();", @style = "margin-top: 33px;" })
                 </div>
             </div>
             <div class="row my-0">

@@ -1,7 +1,7 @@
 ﻿@model IBS.Models.Statement_IeVendorWiseModel
 
 <div>
-    @* <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></font></p> *@
+    @* <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></p> *@
    @* <h3 class="center">(@ViewBag.Region)</h3>*@
 
 
@@ -18,23 +18,23 @@
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
-                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor Name</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Purchaser</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Item</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Engineer Deputed</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Engineer Contact No.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">PO No.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">PO Date</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Case No</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Status</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Holofram OR Other</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">View IC</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Contact Person</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Serial No.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Controlling Manager</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Remarks</font></b></th>
+                    <th  valign="top" align="center"><b>S.NO.</b></th>
+                    <th  valign="top" align="center"><b>Vendor Name</b></th>
+                    <th  valign="top" align="center"><b>Purchaser</b></th>
+                    <th  valign="top" align="center"><b>Item</b></th>
+                    <th  valign="top" align="center"><b>Call Date</b></th>
+                    <th  valign="top" align="center"><b>Engineer Deputed</b></th>
+                    <th  valign="top" align="center"><b>Engineer Contact No.</b></th>
+                    <th  valign="top" align="center"><b>PO No.</b></th>
+                    <th  valign="top" align="center"><b>PO Date</b></th>
+                    <th  valign="top" align="center"><b>Case No</b></th>
+                    <th  valign="top" align="center"><b>Status</b></th>
+                    <th  valign="top" align="center"><b>Holofram OR Other</b></th>
+                    <th  valign="top" align="center"><b>View IC</b></th>
+                    <th  valign="top" align="center"><b>Contact Person</b></th>
+                    <th  valign="top" align="center"><b>Call Serial No.</b></th>
+                    <th  valign="top" align="center"><b>Controlling Manager</b></th>
+                    <th  valign="top" align="center"><b>Remarks</b></th>
 
                 </tr>
                 @if (Model != null && Model.statement_IeVendorWiseModels.Count > 0)
@@ -44,23 +44,23 @@
                     {
 
                         <tr>
-                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
-                            <td width="25%" valign="top" align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.VEND_CD</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.ITEM_DESC_PO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_DATE</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_PHONE_NO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_NO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.PO_DT</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_STATUS</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.Hologram</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.ICPhoto</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CONSIGNEE</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.REMARK</font></td>
+                            <td  valign="top" align="Left">@serialNumber</td>
+                            <td  valign="top" align="center">@item.VENDOR</td>
+                            <td  valign="top" align="center">@item.VEND_CD</td>
+                            <td  valign="top" align="center">@item.ITEM_DESC_PO</td>
+                            <td  valign="top" align="center">@item.CALL_DATE</td>
+                            <td  valign="top" align="center">@item.IE_NAME</td>
+                            <td  valign="top" align="center">@item.IE_PHONE_NO</td>
+                            <td  valign="top" align="center">@item.PO_NO</td>
+                            <td  valign="top" align="center">@item.PO_DT</td>
+                            <td  valign="top" align="center">@item.CASE_NO</td>
+                            <td  valign="top" align="center">@item.CALL_STATUS</td>
+                            <td  valign="top" align="center">@item.Hologram</td>
+                            <td  valign="top" align="center">@item.ICPhoto</td>
+                            <td  valign="top" align="center">@item.CO_NAME</td>
+                            <td  valign="top" align="center">@item.CALL_SNO</td>
+                            <td  valign="top" align="center">@item.CONSIGNEE</td>
+                            <td  valign="top" align="center">@item.REMARK</td>
                         </tr>
                         serialNumber++;
                     }

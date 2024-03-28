@@ -6,9 +6,9 @@ namespace IBS.Models
     {
         [Required(ErrorMessage = "Client is required")]
         public string Clients { get; set; }
-        [Required(ErrorMessage = "Weight is required")]
+        [Required(ErrorMessage = "Section is required")]
         public string Weights { get; set; }
-        [Required(ErrorMessage = "Height is required")]
+        [Required(ErrorMessage = "Length is required")]
         public string QoiLengths { get; set; }
         [Required(ErrorMessage = "Accepted Quantity(mt) is required")]
         public long Accepted { get; set; }
@@ -37,5 +37,8 @@ namespace IBS.Models
 
         public byte? Isdeleted { get; set; }
         public bool IsEdited { get; set; }
+
+        //[Required(ErrorMessage = "Grade is required")]
+        public string? Grade { get; set; }
     }
 }

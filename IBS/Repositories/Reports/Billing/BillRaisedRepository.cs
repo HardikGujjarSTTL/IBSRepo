@@ -1,20 +1,10 @@
-﻿using Humanizer;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Reports.Billing;
 using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Drawing;
-using System.Globalization;
-using static IBS.Helper.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.IO;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace IBS.Repositories.Reports.Billing
 {
@@ -411,6 +401,46 @@ namespace IBS.Repositories.Reports.Billing
                 }
                 model.lstBillCrisSubmitted = lstBillCrisSubmitted;
             }
+            return model;
+        }
+
+        public BillRaisedModel GetCNoteInvoice(DateTime? CnoteFromDt, DateTime? CnoteToDt, string ActionType, string Region)
+        {
+            BillRaisedModel model = new();
+            List<CNoteInvoiceModel> lstCNoteInvoice = new();
+
+            model.CnoteFromDt = CnoteFromDt;
+            model.CnoteToDt = CnoteToDt;
+            model.ActionType = ActionType;
+            model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("wFromDt", OracleDbType.Date, CnoteFromDt, ParameterDirection.Input);
+            par[1] = new OracleParameter("wToDt", OracleDbType.Date, CnoteToDt, ParameterDirection.Input);
+            par[2] = new OracleParameter("pRegion", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[3] = new OracleParameter("ref_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            var ds = DataAccessDB.GetDataSet("GET_CNOTEINVOICE_SUMMARY", par, 1);
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                lstCNoteInvoice = JsonConvert.DeserializeObject<List<CNoteInvoiceModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    model.CASE_NO = Convert.ToString(ds.Tables[0].Rows[0]["CASE_NO"]);
+                    model.BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["BILL_NO"]);
+                    model.BILL_DT = Convert.ToString(ds.Tables[0].Rows[0]["BILL_DT"]);
+                    model.BILL_AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["BILL_AMOUNT"]);
+                    model.BILL_AMT_CLEARED = Convert.ToDecimal(ds.Tables[0].Rows[0]["BILL_AMT_CLEARED"]);
+                    model.CNTOTE_AMOUNT = Convert.ToString(ds.Tables[0].Rows[0]["CNTOTE_AMOUNT"]);
+                    model.CR_BILL_NO = Convert.ToString(ds.Tables[0].Rows[0]["CR_BILL_NO"]);
+                    model.CR_BILL_DT = Convert.ToString(ds.Tables[0].Rows[0]["CR_BILL_DT"]);
+                    model.CR_BILL_AMOUNT = Convert.ToDecimal(ds.Tables[0].Rows[0]["CR_BILL_AMOUNT"]);
+                    model.CR_BILL_AMT_CLEARED = Convert.ToDecimal(ds.Tables[0].Rows[0]["CR_BILL_AMT_CLEARED"]);
+                }
+            }
+            model.lstCNoteInvoice = lstCNoteInvoice;
             return model;
         }
 

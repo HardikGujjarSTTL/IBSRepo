@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -20,7 +19,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult PaymentList([FromBody] DTParameters dtParameters)
         //public IActionResult PaymentList(string AMOUNT , string CASE_NO , string CHQ_NO , string BANK_NAME, string NARRATION, string CHQ_DT, string ACC_CD)
-            {
+        {
             //DTParameters dtParameters = new DTParameters();
             //var Region = Region;
             //int Role = UserId;

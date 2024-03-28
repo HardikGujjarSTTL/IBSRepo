@@ -2,13 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using NuGet.Protocol.Core.Types;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace IBS.Controllers
 {
@@ -23,6 +18,10 @@ namespace IBS.Controllers
         public IActionResult Index()
         {
             string Region = SessionHelper.UserModelDTO.Region;
+            int? IE = SessionHelper.UserModelDTO.IeCd == 0 ? (int?)null : SessionHelper.UserModelDTO.IeCd;
+            int? CoCd = SessionHelper.UserModelDTO.CoCd == 0 ? (int?)null : SessionHelper.UserModelDTO.CoCd;
+            ViewBag.IeCd = IE;
+            ViewBag.Co_Cd = CoCd;
             ViewBag.Regions = Region;
             return View();
         }
@@ -30,7 +29,11 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters);
+            DTResult<NCRRegister> dTResult = nCRRegisterRepository.GetDataList(dtParameters,Region, SessionHelper.UserModelDTO.LoginType);
+            foreach (var item in dTResult.data)
+            {
+                item.IeCd = SessionHelper.UserModelDTO.IeCd == 0 ? null : SessionHelper.UserModelDTO.IeCd;
+            }
             return Json(dTResult);
         }
 
@@ -157,9 +160,9 @@ namespace IBS.Controllers
             }
             return Json(NCRCode);
         }
-        
+
         [HttpPost]
-        public IActionResult GetItem(string CaseNo,string BKNo,string SetNo)
+        public IActionResult GetItem(string CaseNo, string BKNo, string SetNo)
         {
             var json = "";
             try
@@ -172,9 +175,9 @@ namespace IBS.Controllers
             }
             return Json(json);
         }
-        
+
         [HttpPost]
-        public IActionResult GetQtyByItem(string CaseNo, string CALLRECVDT, string CALLSNO,string ItemSno)
+        public IActionResult GetQtyByItem(string CaseNo, string CALLRECVDT, string CALLSNO, string ItemSno)
         {
             var json = "";
             try

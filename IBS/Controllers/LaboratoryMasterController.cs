@@ -1,10 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -35,7 +32,7 @@ namespace IBS.Controllers
         {
             LaboratoryMstModel model = new();
 
-            if (LabID >0)
+            if (LabID > 0)
             {
                 model = LaboratoryMstRepository.FindByID(LabID);
             }
@@ -50,10 +47,10 @@ namespace IBS.Controllers
             try
             {
                 string msg = "Laboratory Inserted Successfully.";
-                
+
                 if (model.LabId > 0)
                 {
-                    msg = "Laboratory Updated Successfully.";                   
+                    msg = "Laboratory Updated Successfully.";
                 }
                 model.UserId = Convert.ToString(UserId);
                 int i = LaboratoryMstRepository.LabDetailsInsertUpdate(model);

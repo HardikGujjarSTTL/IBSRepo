@@ -3,9 +3,14 @@
 @{
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
+<div class="overlayLoader1" style="display: none">
+    <div class="loaderHolder">
+        <div class="lds-dual-ring"></div>
+    </div>
+</div>
 <div class="loginForm">
     <h2 class="heading1 bold">OTP Verification</h2>
-    <form data-ajax="true" asp-antiforgery="true" asp-controller="Home" asp-action="OTPProceed" data-ajax-method="post" data-ajax-complete="completed" id="frmOTP">
+    <form data-ajax="true" asp-antiforgery="true" data-ajax-method="post" id="frmOTP">
         <input type="hidden" asp-for="UserName" />
         <input type="hidden" asp-for="DecryptUserName" />
         <input type="hidden" asp-for="UserType" />
@@ -21,7 +26,7 @@
         </div>
         <div class="row my-3">
             <div class="col-md-12">
-                <button type="button" id="btnSubmit" class="btn btnGreen" onclick="Loginsubmit()">Submit OTP</button>
+                <button type="button" id="btnSubmit" class="btn btnGreen">Submit OTP</button>
             </div>
         </div>
         <div class="row m-0">
@@ -29,7 +34,7 @@
                 <p class="m-0 dividerLine">
                     <a id="btnRegenerateOTP" class="registerLink" asp-controller="Home" asp-action="RegenerateOTP" asp-route-UserName="@Model.DecryptUserName" asp-route-UserType="@Model.UserType" style="display: none">Regenerate OTP</a>
                     <br />
-                    <a class="registerLink" asp-controller="Home" asp-action="Index">Back to Login</a>
+                    <a class="registerLink" asp-controller="Home" asp-action="Index"><span class="fa fa-long-arrow-left"></span> Back to Login</a>
                 </p>
             </div>
         </div>
@@ -44,18 +49,74 @@
 
         $(document).keypress(function (e) {
             if (e.which == 13) {
-                $('#frmOTP').submit();
+                $("#btnSubmit").trigger("click");
             }
         });
 
-        function Loginsubmit() {
-            if ($("#frmOTP").valid()) {
-                $("#frmOTP").submit();
-            }
+        $("#btnSubmit").click(function () {
+            var formData = new FormData($("#frmOTP")[0]);
+            $(".overlayLoader1").show();
+
+            $.ajax({
+                url: "@Url.Action("OTPProceed", "Home")",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (exeResponse) {
+                    if (exeResponse.status && exeResponse.responseText != "") {
+                        DigitalSign(exeResponse);
+                    }
+                    else if (exeResponse.status && exeResponse.responseText == "") {
+                        oCompleted(exeResponse);
+                        $(".overlayLoader1").hide();
+                    }
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        function DigitalSign(response) {
+            var xmldata = response.responseText;
+            $.ajax({
+                url: "http://127.0.0.1:1620",
+                type: 'POST',
+                data: { response: xmldata },
+                success: function (exeResponse) {
+                    var status = $(exeResponse).find("status").text();
+
+                    if (status == "ok") {
+                        var encodedData = $(exeResponse).find("data").text();
+                        var decodedData = atob(encodedData);
+                        var expiryDateMatch = decodedData.match(/<attribute\s+name="Expiry Date">\s*<!\[CDATA\[(.*?)\]\]>\s*<\/attribute>/);
+                        var DSC_Exp_DT = expiryDateMatch ? expiryDateMatch[1] : null;
+
+                        $.post("@Url.Action("DigitalSignatureStatus", "Home")", { DSC_Exp_DT: DSC_Exp_DT }, function (response) {
+                            if (response.status == true) {
+                                oCompleted(response);
+                                $(".overlayLoader1").hide();
+                            } else {
+                                ShowHideMsgNew(response.status, response.responseText);
+                                $(".overlayLoader1").hide();
+                            }
+                        });
+                    }
+                    else {
+                        ShowHideMsgNew(false, "Kindly Attached Certificate!!");
+                        $(".overlayLoader1").hide();
+                    }
+                },
+                error: function (error) {
+                    ShowHideMsgNew(false, "Kindly Attached Certificate or Make sure Digital Signature Server is running!!");
+                    $(".overlayLoader1").hide();
+                }
+            });
         }
 
-        completed = function (response) {
-            var res = response.responseJSON;
+        function oCompleted(response) {
+            var res = response;
             if (res.status) {
                 if (res.RoleName != null && res.RoleName != "") {
                     if (res.RoleName.toLowerCase() == "admin") {
@@ -82,7 +143,7 @@
                     else if (res.RoleName.toLowerCase() == "cm-d&a incharge") {
                         window.location.href = '@Url.Action("CMDAR", "Dashboard")';
                     }
-                    else if (res.RoleName.toLowerCase() == "cm-dfo") {
+                    else if (res.RoleName.toLowerCase() == "sh m gopi cm-dfo") {
                         window.location.href = '@Url.Action("CMDFO", "Dashboard")';
                     }
                     else if (res.RoleName.toLowerCase() == "cm-ji incharge") {
@@ -102,7 +163,7 @@
             else {
                 ShowHideMsgNew(res.status, res.responseText);
             }
-        };
+        }
 
         var countdown = 0;
 

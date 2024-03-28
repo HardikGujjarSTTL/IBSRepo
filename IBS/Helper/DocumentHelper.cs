@@ -46,10 +46,20 @@ namespace IBS.Helpers
                     item.UniqueFileName = FilePreFix + "_" + item.UniqueFileName;
                 }
 
+                if(item.DocumentCategoryID == (int)Enums.DocumentCategory.ICPhotoDigSign || item.DocumentCategoryID == (int)Enums.DocumentCategory.UploadTestPlan ||
+                    item.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue1 || item.DocumentCategoryID == (int)Enums.DocumentCategory.UploadICAnnexue2)
+                {
+                    item.UniqueFileName = FilePreFix;
+                }
+
                 if (SpecificFileName != "")
                 {
                     string fileExtension = Path.GetExtension(item.UniqueFileName);
                     item.UniqueFileName = SpecificFileName + fileExtension;
+                    if(item.Documentid == 12)
+                    {
+                        item.UniqueFileName = SpecificFileName + "_R" + fileExtension;
+                    }
                     //TempPath = Path.Combine(TempFilePath, item.UniqueFileName);
                 }
 
@@ -207,5 +217,6 @@ namespace IBS.Helpers
 
         //    return true;
         //}
+
     }
 }

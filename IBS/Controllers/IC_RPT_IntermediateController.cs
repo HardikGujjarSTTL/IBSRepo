@@ -1,5 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
@@ -16,6 +15,7 @@ namespace IBS.Controllers
         SessionHelper objSessionHelper = new SessionHelper();
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration config;
+
         public IC_RPT_IntermediateController(IIC_RPT_IntermediateRepository _iC_RPT_IntermediateRepository, IWebHostEnvironment _env, IConfiguration _config)
         {
             iC_RPT_IntermediateRepository = _iC_RPT_IntermediateRepository;
@@ -34,12 +34,13 @@ namespace IBS.Controllers
             //var Call_SNO = "3";
             //var CONSIGNEE_CD = "39";
             //var ACTIONAR = "A";
-            
+
             var CASE_NO = "";
             var Call_Recv_dt = "";
             var Call_SNO = "";
             var CONSIGNEE_CD = "";
             var ACTIONAR = "";
+
             if (Convert.ToString(Request.Query["CASE_NO"]) == null || Convert.ToString(Request.Query["CALL_RECV_DT"]) == null)
             {
                 CASE_NO = "";
@@ -126,7 +127,6 @@ namespace IBS.Controllers
             return Json(VisitDate);
         }
 
-
         public IActionResult FillItems(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
         {
             var model = iC_RPT_IntermediateRepository.FillItems(Case_No, Call_Recv_Dt, Call_SNo, Consignee_Cd);
@@ -138,7 +138,6 @@ namespace IBS.Controllers
             var model = iC_RPT_IntermediateRepository.GetDetails(Case_No, Call_Recv_Dt, Call_SNo, ITEM_SRNO_PO, Consignee_Cd);
             return Json(model);
         }
-
 
         public IActionResult SetAccepted(string Case_No, string Call_Recv_Dt, string Call_SNo, string Consignee_Cd)
         {
@@ -213,7 +212,7 @@ namespace IBS.Controllers
                 model.Date = Date;
                 model.IECD = Convert.ToString(Iecd);
                 lstPoAhm.ForEach(x => x.IECD = Convert.ToString(Iecd));
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Insert");
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm, "Insert");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Added Successfully." });
@@ -225,6 +224,7 @@ namespace IBS.Controllers
             }
             return Json(new { status = false, responseText = "Looks Like Something Went Wrong. Some Error Occurs..." });
         }
+
         public IActionResult DeletePOAmendment(string CaseNo, string PO_NO, string Sno)
         {
             int res = 0;
@@ -240,7 +240,7 @@ namespace IBS.Controllers
 
                 var data = lstPoAhm.Where(x => x.Sno == Sno).Select(x => x).FirstOrDefault();
                 lstPoAhm.Remove(data);
-                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm,"Delete");
+                res = iC_RPT_IntermediateRepository.SaveAmendment(CaseNo, PO_NO, model, lstPoAhm, "Delete");
                 if (res > 0)
                 {
                     return Json(new { status = true, responseText = "PO Amendment Record Delete Successfully." });
@@ -261,11 +261,199 @@ namespace IBS.Controllers
                 using (StreamWriter writetext = new StreamWriter(Path.Combine(env.WebRootPath + "/IC_XML/" + filename + ".xml")))
                 {
                     writetext.WriteLine(xmlResp);
-
                 }
-                //Response.Write(filename);                
             }
             return Json(filename);
         }
+
+        public async Task<IActionResult> GetReportData(string CaseNO, string Call_Recv_Dt, string CallSNo, string Consignee_CD, string Region, string BkNo, string SetNo)
+        {
+            try
+            {
+                string base64String = string.Empty;
+
+                var webServiceUrl = config.GetSection("AppSettings")["ReportUrl"];
+                webServiceUrl = webServiceUrl.Replace("Default.aspx", "WebService1.asmx");
+
+                string methodName = "GetReportData";
+
+                var formData = new Dictionary<string, string>
+                {
+                    { "CaseNO", CaseNO },
+                    { "Call_Recv_Dt", Call_Recv_Dt },
+                    { "CallSNo", CallSNo },
+                    { "Consignee_CD", Consignee_CD },
+                    { "Region", Region },
+                    { "BkNo", BkNo },
+                    { "SetNo", SetNo },
+                };
+
+                using (var httpClient = new HttpClient())
+                {
+                    var encodedFormData = new FormUrlEncodedContent(formData);
+
+                    var response = await httpClient.PostAsync($"{webServiceUrl}/{methodName}", encodedFormData);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.LoadXml(responseContent);
+
+                        base64String = xmlDoc.InnerText.Replace("\"", "");
+                    }
+                }
+
+                bool IsDigitalSignatureConfig = Convert.ToBoolean(config.GetSection("AppSettings")["IsDigitalSignatureConfig"]);
+
+                if (IsDigitalSignatureConfig && !string.IsNullOrEmpty(base64String))
+                {
+                    string xmlData = GenerateDigitalSignatureXML(base64String);
+
+                    return Json(new { status = 1, responseText = xmlData, IsDigitalSignatureConfig = 1 });
+                }
+                else if (!IsDigitalSignatureConfig && !string.IsNullOrEmpty(base64String))
+                {
+                    return Json(new { status = 1, responseText = base64String, IsDigitalSignatureConfig = 0 });
+                }
+                else
+                {
+                    return Json(new { status = 0, responseText = "Something went wrong!!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = 0, responseText = ex.Message.ToString() });
+            }
+
+        }
+
+        public string GenerateDigitalSignatureXML(string base64String)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlNode docNode = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+            doc.AppendChild(docNode);
+
+            XmlNode requestNode = doc.CreateElement("request");
+            doc.AppendChild(requestNode);
+
+            XmlNode commandNode = doc.CreateElement("command");
+            commandNode.AppendChild(doc.CreateTextNode("pkiNetworkSign"));
+            requestNode.AppendChild(commandNode);
+
+            XmlNode tsNode = doc.CreateElement("ts");
+            string tym = DateTime.Now.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz");
+            tsNode.AppendChild(doc.CreateTextNode(tym));
+            requestNode.AppendChild(tsNode);
+            Random random = new Random();
+            string otp = Convert.ToString(random.Next(1000, 9999));
+
+            XmlNode txnNode = doc.CreateElement("txn");
+            txnNode.AppendChild(doc.CreateTextNode(otp));
+            requestNode.AppendChild(txnNode);
+
+            XmlNode certNode = doc.CreateElement("certificate");
+            requestNode.AppendChild(certNode);
+
+            XmlNode nameNode1 = doc.CreateElement("attribute");
+            XmlAttribute nameNode1Attr = doc.CreateAttribute("name");
+            nameNode1Attr.Value = "CN";
+            nameNode1.Attributes.Append(nameNode1Attr);
+            certNode.AppendChild(nameNode1);
+
+            XmlNode nameNode2 = doc.CreateElement("attribute");
+            XmlAttribute nameNode2Attr = doc.CreateAttribute("name");
+            nameNode2Attr.Value = "O";
+            nameNode2.Attributes.Append(nameNode2Attr);
+            certNode.AppendChild(nameNode2);
+
+            XmlNode nameNode3 = doc.CreateElement("attribute");
+            XmlAttribute nameNode3Attr = doc.CreateAttribute("name");
+            nameNode3Attr.Value = "OU";
+            nameNode3.Attributes.Append(nameNode3Attr);
+            certNode.AppendChild(nameNode3);
+
+            XmlNode nameNode4 = doc.CreateElement("attribute");
+            XmlAttribute nameNode4Attr = doc.CreateAttribute("name");
+            nameNode4Attr.Value = "T";
+            nameNode4.Attributes.Append(nameNode4Attr);
+            certNode.AppendChild(nameNode4);
+
+            XmlNode nameNode5 = doc.CreateElement("attribute");
+            XmlAttribute nameNode5Attr = doc.CreateAttribute("name");
+            nameNode5Attr.Value = "E";
+            nameNode5.Attributes.Append(nameNode5Attr);
+            certNode.AppendChild(nameNode5);
+
+            XmlNode nameNode6 = doc.CreateElement("attribute");
+            XmlAttribute nameNode6Attr = doc.CreateAttribute("name");
+            nameNode6Attr.Value = "SN";
+            nameNode6.Attributes.Append(nameNode6Attr);
+            certNode.AppendChild(nameNode6);
+
+            XmlNode nameNode7 = doc.CreateElement("attribute");
+            XmlAttribute nameNode7Attr = doc.CreateAttribute("name");
+            nameNode7Attr.Value = "CA";
+            nameNode7.Attributes.Append(nameNode7Attr);
+            certNode.AppendChild(nameNode7);
+
+            XmlNode nameNode8 = doc.CreateElement("attribute");
+            XmlAttribute nameNode8Attr = doc.CreateAttribute("name");
+            nameNode8Attr.Value = "TC";
+            nameNode8.Attributes.Append(nameNode8Attr);
+            nameNode8.AppendChild(doc.CreateTextNode("SG"));
+            certNode.AppendChild(nameNode8);
+
+            XmlNode nameNode9 = doc.CreateElement("attribute");
+            XmlAttribute nameNode9Attr = doc.CreateAttribute("name");
+            nameNode9Attr.Value = "AP";
+            nameNode9.Attributes.Append(nameNode9Attr);
+            nameNode9.AppendChild(doc.CreateTextNode("1"));
+            certNode.AppendChild(nameNode9);
+
+            XmlNode nameNode10 = doc.CreateElement("attribute");
+            XmlAttribute nameNode10Attr = doc.CreateAttribute("name");
+            nameNode10Attr.Value = "VD";
+            nameNode10.Attributes.Append(nameNode10Attr);
+            certNode.AppendChild(nameNode10);
+
+            XmlNode fileNode = doc.CreateElement("file");
+            requestNode.AppendChild(fileNode);
+
+            XmlNode nameNode11 = doc.CreateElement("attribute");
+            XmlAttribute nameNode11Attr = doc.CreateAttribute("name");
+            nameNode11Attr.Value = "type";
+            nameNode11.Attributes.Append(nameNode11Attr);
+            nameNode11.AppendChild(doc.CreateTextNode("pdf"));
+            fileNode.AppendChild(nameNode11);
+
+            XmlNode pdfNode = doc.CreateElement("pdf");
+            requestNode.AppendChild(pdfNode);
+
+            XmlNode pageNode = doc.CreateElement("page");
+            pageNode.AppendChild(doc.CreateTextNode("1"));
+            pdfNode.AppendChild(pageNode);
+
+            XmlNode coodNode = doc.CreateElement("cood");
+            coodNode.AppendChild(doc.CreateTextNode("400,45"));
+            pdfNode.AppendChild(coodNode);
+
+            XmlNode sizeNode = doc.CreateElement("size");
+            sizeNode.AppendChild(doc.CreateTextNode("165,60"));
+
+            pdfNode.AppendChild(sizeNode);
+
+            XmlNode dataNode = doc.CreateElement("data");
+            dataNode.AppendChild(doc.CreateTextNode(base64String));
+            requestNode.AppendChild(dataNode);
+
+            StringWriter sw = new StringWriter();
+            XmlTextWriter tx = new XmlTextWriter(sw);
+            doc.WriteTo(tx);
+
+            return sw.ToString();
+        }
+
     }
 }

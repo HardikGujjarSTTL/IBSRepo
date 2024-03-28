@@ -42,14 +42,19 @@ namespace IBS.Controllers
                     if (model.Id == 0)
                     {
                         model.Createdby = UserId;
-                        model.UserId = USER_ID.Substring(0, 8);
-                        railwaysDirectoryRepository.SaveDetails(model);
+                        model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
+                        var res = railwaysDirectoryRepository.SaveDetails(model);
+                        if(res < 0)
+                        {
+                            AlertAlreadyExist("Railway Code already exists !!");
+                            return View(model);
+                        }
                         AlertAddSuccess("Record Added Successfully.");
                     }
                     else
                     {
                         model.Updatedby = UserId;
-                        model.UserId = USER_ID.Substring(0, 8);
+                        model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                         railwaysDirectoryRepository.SaveDetails(model);
                         AlertAddSuccess("Record Updated Successfully.");
                     }

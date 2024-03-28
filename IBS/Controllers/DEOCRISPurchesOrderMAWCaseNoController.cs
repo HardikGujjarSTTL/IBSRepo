@@ -1,10 +1,8 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Security.Policy;
 
 namespace IBS.Controllers
 {
@@ -14,11 +12,13 @@ namespace IBS.Controllers
         #region Variables
         private readonly IDEOCRISPurchesOrderWCaseNoRepository purchesorderRepository;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
         #endregion
-        public DEOCRISPurchesOrderMAWCaseNoController(IDEOCRISPurchesOrderWCaseNoRepository _purchesorderRepository, ISendMailRepository _pSendMailRepository)
+        public DEOCRISPurchesOrderMAWCaseNoController(IDEOCRISPurchesOrderWCaseNoRepository _purchesorderRepository, ISendMailRepository _pSendMailRepository, IConfiguration _config)
         {
             purchesorderRepository = _purchesorderRepository;
             pSendMailRepository = _pSendMailRepository;
+            this.config = _config;
         }
         [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
         public IActionResult Index()
@@ -184,7 +184,7 @@ namespace IBS.Controllers
                 bool objRet = purchesorderRepository.DetailsUpdate(model);
                 if (objRet == true)
                 {
-                    return Json(new { status = true, responseText = msg});
+                    return Json(new { status = true, responseText = msg });
                 }
             }
             catch (Exception ex)
@@ -288,14 +288,18 @@ namespace IBS.Controllers
             {
                 sender = "ritescqa@rites.com";
             }
-            SendMailModel sendMailModel = new SendMailModel();
-            // sender for local mail testing
-            sender = "hardiksilvertouch007@outlook.com";
-            sendMailModel.From = sender;
-            sendMailModel.To = vendorEmail;
-            sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
-            sendMailModel.Message = mail_body;
-            bool isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            bool isSend = false;
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+            {
+                SendMailModel sendMailModel = new SendMailModel();
+                // sender for local mail testing
+                sender = "hardiksilvertouch007@outlook.com";
+                sendMailModel.From = sender;
+                sendMailModel.To = vendorEmail;
+                sendMailModel.Subject = "Case No. allocated against PO registered by you on our Portal.";
+                sendMailModel.Message = mail_body;
+                isSend = pSendMailRepository.SendMail(sendMailModel, null);
+            }
             return isSend;
         }
 
@@ -368,7 +372,7 @@ namespace IBS.Controllers
 
 
         [Authorization("DEOCRISPurchesOrderMAWCaseNo", "Index", "view")]
-        public IActionResult PODetails(string IMMS_POKEY,string IMMS_RLY_CD)
+        public IActionResult PODetails(string IMMS_POKEY, string IMMS_RLY_CD)
         {
             DEO_CRIS_PurchesOrderModel model = new();
             model = purchesorderRepository.FindByID(IMMS_POKEY, IMMS_RLY_CD);
@@ -398,7 +402,7 @@ namespace IBS.Controllers
             {
                 string msg = "PO Master Details Updated Successfully.";
                 model.Updatedby = UserId;
-                model.UserId =Convert.ToString(UserId);
+                model.UserId = Convert.ToString(UserId);
                 int i = purchesorderRepository.POMasterSubDetailsInsertUpdate(model);
                 if (i > 0)
                 {

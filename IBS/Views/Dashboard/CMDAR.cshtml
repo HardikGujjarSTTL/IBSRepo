@@ -4,6 +4,9 @@
     <h2 class="alignLeft">
         CM/D & AR Dashboard
     </h2>
+    <div class="list-btn" style="width:16%;">
+        @Html.DropDownListFor(model => model.Region, Common.GetDashboardRegion(), new { @class = "formBtn viewall-btn", @onChange = "OnChangeRegion();" })
+    </div>
 </div>
 <div class="admindashboard-section">
     <div class="admindashboard-wrap">
@@ -36,20 +39,20 @@
             </div>
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <a class="viewall" href="@Url.Action("CMDARListing", "Dashboard", new { Type = "CCR" })">
-                <div class="dashboard-box das3Client">
-                    <div class="dash-total">
-                        <div class="dash-count">
-                            <div class="total-amount">@Model.ConsigneeCompaintCount</div>
+                    <div class="dashboard-box das3Client">
+                        <div class="dash-total">
+                            <div class="dash-count">
+                                <div class="total-amount">@Model.ConsigneeCompaintCount</div>
+                            </div>
+                            <div class="total-inner">
+                                No. of Consignee Complaints<br /> Closed at RITES' End
+                            </div>
                         </div>
-                        <div class="total-inner">
-                            No. of Consignee Complaints<br /> Closed at RITES' End
-                        </div>
+                        <div class="total-icons"><img src="~/images/no-of-consignee-complaints-closed-rites-icon.svg" alt="Inspection Completed"> </div>
                     </div>
-                    <div class="total-icons"><img src="~/images/no-of-consignee-complaints-closed-rites-icon.svg" alt="Inspection Completed"> </div>
-                </div>
                 </a>
             </div>
-        
+
             <div class="col-md-6 col-lg-4 col-xxl-4">
                 <div class="dashboard-box das4Client">
                     <div class="dash-total">
@@ -77,7 +80,7 @@
                     <div class="total-icons"><img src="~/images/no-pending-charges-sheets-icon.svg" alt="Inspection Requests"> </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -188,3 +191,14 @@
         <a class="viewall" href="@Url.Action("Dashboard_CMGeneral_ViewAll_List", "Dashboard")">View All</a>
     </div>
 </section>
+
+@section scripts {
+    <script>
+        function OnChangeRegion() {
+            var Region = $("#Region").val();
+            var url = '@Url.Action("CMDAR", "Dashboard")?Regions=' + Region;
+            $(".overlayLoader").show();
+            window.location.href = url;
+        }
+    </script>
+}

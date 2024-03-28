@@ -1,0 +1,79 @@
+﻿@model IBS.Models.FinanceReportModel
+
+@{
+    ViewData["Title"] = "Reports";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>@Model.Title</h2>
+    </div>
+</div>
+
+<div class="task-listinput">
+    <div class="accordion-body">
+        <form role="form" asp-controller="FinanceReports" asp-action="Index" id="frmDetail">
+            <input type="hidden" id="hdnBank" name="hdnBank" />
+            <div class="task-inner row my-0">
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="FromDate">For The Period From</label>
+                        <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorFromDate"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-search">
+                        <label for="ToDate">To</label>
+                        <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
+                        <span class="text-danger field-validation-error" id="spnErrorToDate"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="savenext-btn btnAlign">
+                        <button type="button" class="save-btn active" id="btnSearch">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+        $("#btnSearch").click(function () {
+            debugger
+            $("#spnErrorFromDate").html("");
+            $("#spnErrorToDate").html("");
+
+            var IsValid = true;
+
+            if ($("#FromDate").val() == "") {
+                $("#spnErrorFromDate").html("The From Date field is required.");
+                IsValid = false;
+            }
+            if ($("#ToDate").val() == "") {
+                $("#spnErrorToDate").html("The To Date field is required.");
+                IsValid = false;
+            }
+
+            if (!IsValid) return;
+
+            var FromDate = moment($('#FromDate').datepicker('getDate')).format("YYYY-MM-DD");
+            var ToDate = moment($('#ToDate').datepicker('getDate')).format("YYYY-MM-DD");
+            const urlParams = new URLSearchParams(window.location.search);
+            const AccCd = urlParams.get('AccCd');
+
+            let myObject = { FromDate, ToDate, AccCd};
+
+            var url = '@Url.Action("FinanceReport", "FinanceReports")?' + $.param(myObject);
+            window.open(url, '_blank');
+
+        });
+    </script>
+}

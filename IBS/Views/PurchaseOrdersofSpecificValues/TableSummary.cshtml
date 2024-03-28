@@ -37,44 +37,44 @@
         <input type="button" class="commonBtn" value="Export To PDF" id="btnExportToPdf" />
         <input type="button" class="commonBtn" value="Export To Excel" id="btnExportToExcel" />
     </p>
-    <div id="dvReportViewer">
+    <div id="dvReportViewer" style="margin-left:5px;margin-right:5px;">
         <h3 class="heading3">@ViewBag.Region</h3>
         <ul class="reportLabelList">
             <li><span class="labelName">@ViewBag.Title</span></li>
         </ul>
         <table class="borderTable">
-        <thead>
-            <tr>
-                <th width="50%"><b>Client</b></th>
-                <th width="15%"><b>No. of PO's</b></th>
-                <th width="35%"><b>Value</b></th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                double wTotPO = 0, wTotPOValue = 0;
-            }
-            @if (Model != null && Model.Count > 0)
-            {
-                foreach (var item in Model)
-                {
-                    wTotPO = wTotPO + Convert.ToDouble(item.No_OF_PO);
-                    wTotPOValue = wTotPOValue + Convert.ToDouble(item.PO_VALUE);
-                    <tr>
-                        <td>@item.CLIENT</td>
-                                <td>@item.No_OF_PO</td>
-                        <td>@item.PO_VALUE</td>
-                    </tr>
-
+            <thead>
+                <tr>
+                    <th width="50%"><b>Client</b></th>
+                    <th width="15%"><b>No. of PO's</b></th>
+                    <th width="35%"><b>Value</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    double wTotPO = 0, wTotPOValue = 0;
                 }
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        wTotPO = wTotPO + Convert.ToDouble(item.No_OF_PO);
+                        wTotPOValue = wTotPOValue + Convert.ToDouble(item.PO_VALUE);
+                        <tr>
+                            <td>@item.CLIENT</td>
+                            <td>@item.No_OF_PO</td>
+                            <td>@item.PO_VALUE</td>
+                        </tr>
+
+                    }
                     <tr>
                         <td><font face="Verdana"><B>Total</B></font></td>
                         <td>@wTotPO.ToString("N2")</td>
                         <td>@wTotPOValue.ToString("N2")</td>
                     </tr>
-            }
+                }
             </tbody>
-    </table>
+        </table>
     </div>
     <div class="overlayLoader" style="display: none">
         <div class="loaderHolder">

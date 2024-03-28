@@ -64,4 +64,6 @@ public partial class V55LabInvoice
     public string? BillFinalised { get; set; }
 
     public string? InvSCity { get; set; }
+
+    public DateTimeOffset? DigBillGenDt { get; set; }
 }

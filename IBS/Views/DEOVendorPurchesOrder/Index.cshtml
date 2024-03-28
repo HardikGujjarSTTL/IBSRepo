@@ -10,6 +10,27 @@
             <h2>PURCHASE ORDER SUBMITTED BY VENDORS AWAITING ALLOCATION OF CASE NUMBER</h2>
         </div>
     </div>
+    <div class="accordion-body">
+        <div class="row my-0">
+            <div class="col-md-2 mb-3">
+                <label for="reference">Ref No.</label>
+                <input type="text" class="input" id="txtCaseNumber" autocomplete="on" placeholder="REF. NUMBER">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="reference">PO/Offer Letter No.</label>
+                <input type="text" class="input" id="txtPONumber" placeholder="PO/OFFER LETTER NO.">
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="reference">PO Date</label>
+                <input type="text" class="input datepicker" id="txtPODate" placeholder="DD/MM/YYYY">
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="savenext-btn" style="margin-top: 31px;">
+                    <button type="button" class="save-btn active" onclick="Search();">search</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <section class="table-section">
         <div class="task-listinput">
             <div class="dash-table">
@@ -40,7 +61,7 @@
 <div id="EditCaseNoModal" class="modal" tabindex="-1" role="dialog">
 </div>
 
-@section scripts{
+@section scripts {
 
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
@@ -50,19 +71,23 @@
         $(function () {
             InitializeDatatable();
         });
-
+        function Search() {
+            InitializeDatatable();
+        }
         function InitializeDatatable() {
-
+            var CaseNo = $("#txtCaseNumber").val();
+            var PoNo = $("#txtPONumber").val();
+            var PoDt = $("#txtPODate").val();
             $("#dtList").DataTable({
                 stateSave: false,// Design Assets
                 autoWidth: true,
-               // scrollX: true,
+                // scrollX: true,
                 scrollCollapse: true,
                 processing: true, // ServerSide Setups
                 serverSide: true,
                 destroy: true,
                 paging: true,// Paging Setups
-                searching: true,// Searching Setups
+                searching: false,// Searching Setups
                 ajax: {// Ajax Filter
                     url: "@Url.Action("LoadTable")",
                     type: "POST",
@@ -70,6 +95,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
+                            CaseNo: CaseNo, PoNo: PoNo, PoDt: PoDt
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -115,7 +141,7 @@
                             return html;
                         }
                     },
-                    
+
                     { data: "CaseNo" },
                     { data: "PoNo" },
                     {
@@ -151,12 +177,17 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var CaseNo = data.CaseNo;
-                            var html = "<a target='_blank' class='commonBtn gridBtn' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.VendorPO))/" + CaseNo.trim() + ".PDF' Id='DocUpload_" + CaseNo + "'>Download PO <span class='fa fa-download'></span></a> "
-                            html += '</div>';
+                            var IsFileExist = data.IsFileExist;
+                            var File = data.File;
+                            if (IsFileExist == false) {
+                                var html = "<a target='_blank' class='aTag' style='color: red;'>No DOC</a> ";
+                            }
+                            else if (IsFileExist == true) {
+                                var html = "<a target='_blank' class='commonBtn gridBtn' href='" + File + "' Id='DocUpload_" + CaseNo + "'>Download PO <span class='fa fa-download'></span></a> ";
+                            }
                             return html;
                         }
                     },
-                    
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {
@@ -207,10 +238,9 @@
                     }
                 });
             }
-            else
-            {
+            else {
                 ShowHideMsgNew(false, "PLEASE ENTER 9 CHARACTERS CASE NUMBER!!!");
             }
         }
     </script>
-    }
+}

@@ -2,7 +2,6 @@
 using IBS.Interfaces;
 using IBS.Models;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace IBS.Repositories
 {
@@ -35,7 +34,7 @@ namespace IBS.Repositories
                     join t03 in context.T03Cities on t05.VendCityCd equals t03.CityCd
                     join t09 in context.T09Ies on t47.IeCd equals t09.IeCd
                     join t17 in context.T17CallRegisters on new { t47.CaseNo, t47.CallRecvDt, t47.CallSno } equals new { t17.CaseNo, t17.CallRecvDt, t17.CallSno }
-                    where t47.VisitDt == Convert.ToDateTime(PlanDt)
+                    where t47.VisitDt == Convert.ToDateTime(PlanDt) && t47.RegionCode == Region
                     orderby t03.City, t05.VendName, t47.CallRecvDt, t47.CallSno
                     select new CMDailyWorkPlanModel
                     {

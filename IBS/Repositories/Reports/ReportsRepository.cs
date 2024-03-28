@@ -2,13 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces.Reports;
 using IBS.Models;
-using IBS.Models.Reports;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 
 namespace IBS.Repositories.Reports
@@ -35,7 +31,7 @@ namespace IBS.Repositories.Reports
             {
                 IE_CD = iecd;
             }
-            IE_CD = "782";
+            //IE_CD = "782";
             var startDate = Common.DateConcate(FromDate.ToString());
             var toDate = Common.DateConcate(ToDate.ToString());
             OracleParameter[] par = new OracleParameter[4];
@@ -330,7 +326,7 @@ namespace IBS.Repositories.Reports
 
             foreach (var item in dateList)
             {
-                if(item == "08/09/2018")
+                if (item == "08/09/2018")
                 {
 
                 }
@@ -457,7 +453,7 @@ namespace IBS.Repositories.Reports
             RecieptVoucherModel model = new();
             List<RecieptVoucherModel> lstCons = new();
 
-            
+
             model.Region = EnumUtility<Enums.Region>.GetDescriptionByKey(Region);
 
             OracleParameter[] par = new OracleParameter[4];
@@ -475,7 +471,7 @@ namespace IBS.Repositories.Reports
                 VoucherDate = Convert.ToString(row["vchr_dt"]),
                 AccountNo = Convert.ToString(row["AccountNo"]),
                 AMOUNT = Convert.ToString(row["Amount"]),
-                
+
             }).ToList();
             model.lstBankStatement = lstCons;
             return model;

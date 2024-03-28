@@ -1,7 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace IBS.Repositories
 {

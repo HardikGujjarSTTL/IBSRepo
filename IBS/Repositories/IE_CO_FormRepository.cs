@@ -78,7 +78,7 @@ namespace IBS.Repositories
                     {
                         CoCd = co.CoCd,
                         CoName = co.CoName,
-                        CoDesig = co.CoDesig,   
+                        CoDesig = co.CoDesig,
                         CoDesigName = d.RDesignation,
                         CoPhoneNo = co.CoPhoneNo,
                         CoEmail = co.CoEmail,
@@ -110,6 +110,12 @@ namespace IBS.Repositories
         {
             if (model.CoCd == 0)
             {
+                var Cnt = context.T08IeControllOfficers.Where(x => x.CoName.ToLower() == model.CoName.ToLower() && x.CoDesig == model.CoDesig).Count();
+                if (Cnt > 0)
+                {
+                    return -1;
+                }
+
                 int CoCd = GetMaxCoCd();
                 CoCd += 1;
 
@@ -129,6 +135,36 @@ namespace IBS.Repositories
                 };
 
                 context.T08IeControllOfficers.Add(co);
+                context.SaveChanges();
+
+                T02User user = new()
+                {
+                    UserId = "CM" + CoCd,
+                    UserName = model.CoName,
+                    RitesEmp = "Y",
+                    Region = model.CoRegion,
+                    Password = "WPg3mg2hKkFI3zwp72u8SA==",
+                    Status = model.CoStatus,
+                    CallRemarking = "Y",
+                    Createdby = Convert.ToString(model.Createdby),
+                    Createddate = DateTime.Now,
+                    Migtype = "CM",
+                    Mobile = model.CoPhoneNo,
+                    CoCd = CoCd,
+                    UserEmail = model.CoEmail,
+                };
+                context.T02Users.Add(user);
+                context.SaveChanges();
+
+                UserMaster usermaster = new()
+                {
+                    UserId = "CM" + CoCd,
+                    Name = model.CoName,
+                    UserType = "CM",
+                    Createdby = Convert.ToString(model.Createdby),
+                    Createddate = DateTime.Now,
+                };
+                context.UserMasters.Add(usermaster);
                 context.SaveChanges();
             }
             else

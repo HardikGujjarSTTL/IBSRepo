@@ -1,38 +1,11 @@
-﻿using Humanizer;
-using IBS.Controllers;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
-using IBS.Interfaces.Vendor;
 using IBS.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.DotNet.Scaffolding.Shared.Project;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.VisualBasic;
-using Microsoft.VisualStudio.Web.CodeGeneration;
 using Newtonsoft.Json;
-using NuGet.Protocol.Plugins;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Dynamic;
-using System.Globalization;
-using System.Reflection;
-using System.Security.Cryptography;
-
-using System.Xml.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories
 {
@@ -40,14 +13,16 @@ namespace IBS.Repositories
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public ConsigneeComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public ConsigneeComplaintsRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
 
-        public ConsigneeComplaints FindByID(string CASE_NO,string BK_NO,string SET_NO)
+        public ConsigneeComplaints FindByID(string CASE_NO, string BK_NO, string SET_NO)
         {
             ConsigneeComplaints model = new ConsigneeComplaints();
             DataTable dt = new DataTable();
@@ -92,32 +67,32 @@ namespace IBS.Repositories
             if (ds != null)
             {
                 model.CASE_NO = list[0].CASE_NO;
-                    model.ComplaintDate = list[0].ComplaintDate;
-                    model.PO_DT = list[0].PO_DT;
-                    model.ComplaintId = list[0].ComplaintId;
-                    model.FormattedPO_DT = list[0].PO_DT?.ToString("MM-dd-yyyy");
-                    model.FormattedComplaintDate = list[0].ComplaintDate?.ToString("MM-dd-yyyy");
-                    model.PO_NO = list[0].PO_NO;
-                    model.VEND_NAME = list[0].VEND_NAME;
-                    model.ConsigneeCd = list[0].ConsigneeCd;
-                    model.VendCd = list[0].VendCd;
-                    model.InspRegion = regiondata;
-                    model.BK_NO = list[0].BK_NO;
-                    model.SET_NO = list[0].SET_NO;
-                    model.ie_name = list[0].ie_name;
-                    model.CoName = list[0].CoName;
-                    model.Consignee = list[0].Consignee;
-                    model.FormattedIC_DATE = list[0].FormattedIC_DATE;
-                    model.RejMemoDt = list[0].RejMemoDt;
-                    model.RejMemoNo = list[0].RejMemoNo;
-                    model.Railway = list[0].Railway;
-                    model.IC_NO = list[0].IC_NO;
-                    model.ItemDesc = list[0].ItemDesc;
-                    model.QtyOffered = list[0].QtyOffered;
-                    model.QtyRejected = list[0].QtyRejected;
-                    model.Rate = list[0].Rate;
-                    model.RejectionReason = list[0].RejectionReason;
-                    model.InspectionBy = list[0].InspectionBy;
+                model.ComplaintDate = list[0].ComplaintDate;
+                model.PO_DT = list[0].PO_DT;
+                model.ComplaintId = list[0].ComplaintId;
+                model.FormattedPO_DT = list[0].PO_DT?.ToString("MM-dd-yyyy");
+                model.FormattedComplaintDate = list[0].ComplaintDate?.ToString("MM-dd-yyyy");
+                model.PO_NO = list[0].PO_NO;
+                model.VEND_NAME = list[0].VEND_NAME;
+                model.ConsigneeCd = list[0].ConsigneeCd;
+                model.VendCd = list[0].VendCd;
+                model.InspRegion = regiondata;
+                model.BK_NO = list[0].BK_NO;
+                model.SET_NO = list[0].SET_NO;
+                model.ie_name = list[0].ie_name;
+                model.CoName = list[0].CoName;
+                model.Consignee = list[0].Consignee;
+                model.FormattedIC_DATE = list[0].FormattedIC_DATE;
+                model.RejMemoDt = list[0].RejMemoDt;
+                model.RejMemoNo = list[0].RejMemoNo;
+                model.Railway = list[0].Railway;
+                model.IC_NO = list[0].IC_NO;
+                model.ItemDesc = list[0].ItemDesc;
+                model.QtyOffered = list[0].QtyOffered;
+                model.QtyRejected = list[0].QtyRejected;
+                model.Rate = list[0].Rate;
+                model.RejectionReason = list[0].RejectionReason;
+                model.InspectionBy = list[0].InspectionBy;
             }
             return model;
         }
@@ -219,12 +194,15 @@ namespace IBS.Repositories
             //DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
 
 
-            OracleParameter[] par1 = new OracleParameter[3];
+            OracleParameter[] par1 = new OracleParameter[6];
             par1[0] = new OracleParameter("p_PO_No", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
             par1[1] = new OracleParameter("p_PO_Date", OracleDbType.Varchar2, PoDt, ParameterDirection.Input);
-            par1[2] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            par1[2] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par1[3] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par1[4] = new OracleParameter("p_ResultSet", OracleDbType.RefCursor, ParameterDirection.Output);
+            par1[5] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds2 = DataAccessDB.GetDataSet("GetConsigneeComplaint", par1, 1);
+            var ds2 = DataAccessDB.GetDataSet("GetConsigneeComplaint", par1, 2);
             DataTable dt2 = ds2.Tables[0];
 
             List<ConsigneeComplaints> list = dt2.AsEnumerable().Select(row => new ConsigneeComplaints
@@ -244,18 +222,15 @@ namespace IBS.Repositories
 
             query = list.AsQueryable();
 
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            int recordsTotal = 0;
+            if (ds2 != null && ds2.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds2.Tables[1].Rows[0]["total_records"]);
+            }
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
-
             return dTResult;
         }
 
@@ -289,7 +264,7 @@ namespace IBS.Repositories
 
             string PoNo = "", PoDt = "";
 
-           
+
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
             {
                 PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
@@ -306,12 +281,16 @@ namespace IBS.Repositories
             //DateTime? _PoDt = PoDt == "" ? null : DateTime.ParseExact(PoDt, "dd-MM-yyyy", null);
 
 
-            OracleParameter[] par = new OracleParameter[3];
+            OracleParameter[] par = new OracleParameter[6];
             par[0] = new OracleParameter("p_po_no_param", OracleDbType.Varchar2, PoNo, ParameterDirection.Input);
             par[1] = new OracleParameter("p_po_date_param", OracleDbType.Date, dtPo, ParameterDirection.Input);
-            par[2] = new OracleParameter("RESULT_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[2] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("GetFilteredConsigneeComplaints", par, 1);
+
+            var ds = DataAccessDB.GetDataSet("GetFilteredConsigneeComplaints", par, 2);
             DataTable dt = ds.Tables[0];
 
             ConsigneeComplaints model = new();
@@ -326,18 +305,15 @@ namespace IBS.Repositories
 
             query = list.AsQueryable();
 
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
-           
             return dTResult;
         }
 
@@ -426,7 +402,7 @@ namespace IBS.Repositories
                 {
                     throw ex;
                 }
-               
+
             }
             #endregion
             return Complaintid;
@@ -458,7 +434,7 @@ namespace IBS.Repositories
 
         public string FinalDisposal(ConsigneeComplaints model)
         {
-            if(model.DARPurpose == "I" || model.DARPurpose == "J")
+            if (model.DARPurpose == "I" || model.DARPurpose == "J")
             {
                 var existingRecord = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 
@@ -507,9 +483,9 @@ namespace IBS.Repositories
             return model.ComplaintId;
         }
 
-        public string JIOutCome(ConsigneeComplaints model) 
-        { 
-            if(model.JIDateConclusion != null)
+        public string JIOutCome(ConsigneeComplaints model)
+        {
+            if (model.JIDateConclusion != null)
             {
                 var complaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 
@@ -520,7 +496,7 @@ namespace IBS.Repositories
                     complaint.DefectCd = model.DefectDesc;
                     if (ushort.TryParse(model.JiStatusCd, out ushort parsedValue))
                     {
-                        byte? byteValue = parsedValue > byte.MaxValue ? (byte?)null : (byte)parsedValue;
+                        byte? byteValue = parsedValue > byte.MaxValue ? null : (byte)parsedValue;
                         complaint.JiStatusCd = byteValue;
                     }
                     complaint.Status = model.Status;
@@ -541,7 +517,7 @@ namespace IBS.Repositories
         {
             string Complaintid = "";
 
-            if(model.AcceptRejornot != "C")
+            if (model.AcceptRejornot != "C")
             {
                 if ((model.AcceptRejornot == "Y") && (model.JIInspRegion != ""))
                 {
@@ -569,7 +545,7 @@ namespace IBS.Repositories
 
                 if (model.AcceptRejornot == "Y")
                 {
-                    if(model.JiStatusDesc != "" && model.JiStatusDesc != null)
+                    if (model.JiStatusDesc != "" && model.JiStatusDesc != null)
                     {
                         var complaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == model.ComplaintId);
 
@@ -582,11 +558,11 @@ namespace IBS.Repositories
                             complaint.JiIeCd = byte.Parse(model.InspER);
                             complaint.JiDt = model.JIDate;
                             complaint.JiFixDt = model.JiFixDt;
-                            complaint.UserId = model.UserId; 
+                            complaint.UserId = model.UserId;
                             complaint.Datetime = DateTime.Now;
                             complaint.Updatedby = Convert.ToInt32(model.UserId);
                             complaint.Updateddate = DateTime.Now;
-                            context.SaveChanges(); 
+                            context.SaveChanges();
                         }
                     }
                     else
@@ -811,8 +787,11 @@ namespace IBS.Repositories
                 //SendMailModel.Subject = "Consignee Complaint Has Been Registered for Joint Inspection (JI)";
                 //SendMailModel.Message = mail_body;
             }
-
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            bool isSend = false;
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+            {
+                isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
         }
 
         public void send_Conclusion_Email(ConsigneeComplaints model)
@@ -853,7 +832,7 @@ namespace IBS.Repositories
                         join t09 in context.T09Ies on t20.IeCd equals t09.IeCd
                         join t08 in context.T08IeControllOfficers on t09.IeCoCd equals t08.CoCd
                         where t20.CaseNo == model.CASE_NO && t20.BkNo == model.BK_NO && t20.SetNo == model.SET_NO
-                        select new 
+                        select new
                         {
                             IeName = t09.IeName,
                             IeEmail = t09.IeEmail,
@@ -864,9 +843,9 @@ namespace IBS.Repositories
 
             if (result != null)
             {
-                 ie_name = result.IeName;
-                 ie_email = result.IeEmail;
-                 co_email = result.CoEmail;
+                ie_name = result.IeName;
+                ie_email = result.IeEmail;
+                co_email = result.CoEmail;
             }
 
             string mail_body = $@"Dear Sir,<br><br> Complaint No: {model.ComplaintId}, Dated: {model.ComplaintDate} <br> Consignee: {model.Consignee} <br> PO No. - {model.PO_NO} <br> Book No -  {model.BK_NO} & Set No - {model.SET_NO} <br> Vendor - {model.VEND_NAME} <br> Item- {model.ItemDesc} <br> Rejected Qty - {model.QtyRejected} <br> Rejection Memo No. {model.RejMemoNo} Dated: {model.RejMemoDt} <br> Reason for Rejection - {model.RejectionReason}. <br><br> The JI case No. {model.JiSno} has been concluded as {model.JiStatusDesc}. <br>Details of the case have been uploaded on the following link: <a href='http://rites.ritesinsp.com/RBS/COMPLAINTS_REPORT/{""}'><b>JI Report</b></a> <br> NATIONAL INSPECTION HELP LINE NUMBER: 1800 425 7000 (TOLL FREE). <br><br> {wRegion}.";
@@ -896,7 +875,7 @@ namespace IBS.Repositories
             if (model.CASE_NO.Substring(0, 1) == inspRegionFirstChar)
             {
                 // sender for local mail testing
-                sender = "hardiksilvertouch007@outlook.com";
+                //sender = "hardiksilvertouch007@outlook.com";
                 SendMailModel.CC = cc;
                 SendMailModel.CC = JI_IE;
                 SendMailModel.To = ie_email;
@@ -933,7 +912,7 @@ namespace IBS.Repositories
                 }
 
                 // sender for local mail testing
-                sender = "hardiksilvertouch007@outlook.com";
+                //sender = "hardiksilvertouch007@outlook.com";
                 SendMailModel.CC = ie_email;
                 SendMailModel.CC = co_email;
                 SendMailModel.CC = "nrinspn@gmail.com";
@@ -954,8 +933,11 @@ namespace IBS.Repositories
                 //SendMailModel.Subject = "Consignee Complaint Has Concluded";
                 //SendMailModel.Message = mail_body;
             }
-
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            bool isSend = false;
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+            {
+                isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
         }
     }
 }

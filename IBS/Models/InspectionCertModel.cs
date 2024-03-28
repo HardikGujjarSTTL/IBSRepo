@@ -36,6 +36,22 @@ namespace IBS.Models
 
         public string? Callstatus { get; set; }
 
+        public string? CallCancelStatus { get; set; }
+
+        public int? CallCancelCharges { get; set; }
+
+        public string? CallCancelChargesStatus { get; set; }
+
+        public decimal? CallCancelAmount { get; set; }
+
+        public string CancellationStatus { get; set; }
+
+        public string LocalOutstation { get; set; }
+
+        public decimal? RejectionCharge { get; set; }
+
+        public decimal? RejectMaterialValue { get; set; }
+
         public string Createdby { get; set; }
 
         public DateTime? CreatedDate { get; set; }
@@ -138,7 +154,6 @@ namespace IBS.Models
 
         public string AdvBill { get; set; }
 
-
         public string CertNo { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
@@ -149,7 +164,7 @@ namespace IBS.Models
 
         public string FullPart { get; set; }
 
-        public int NoOfInsp { get; set; }
+        public decimal NoOfInsp { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -167,9 +182,7 @@ namespace IBS.Models
         [DataType(DataType.Date)]
         public DateTime LabTstRectDt { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
-        [DataType(DataType.Date)]
-        public DateTime? OtherInspDt { get; set; }
+        public string OtherInspDt { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
@@ -202,6 +215,8 @@ namespace IBS.Models
         public string City { get; set; }
 
         public string State { get; set; }
+
+        public string StateID { get; set; }
 
         public string SelectRadio { get; set; }
 
@@ -334,7 +349,6 @@ namespace IBS.Models
 
         public string? SapStatus { get; set; }
 
-
         public string chkABill { get; set; }
 
         public string UpdateStatus { get; set; }
@@ -347,6 +361,12 @@ namespace IBS.Models
     {
         public string Caseno { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
+        [DataType(DataType.Date)]
+        public DateTime? Callrecvdt { get; set; }
+
+        public int? Callsno { get; set; }
+
         public string BillNo { get; set; }
 
         public decimal TMValue { get; set; }
@@ -355,11 +375,15 @@ namespace IBS.Models
 
         public decimal? NetFee { get; set; }
 
+        public decimal? BillAmount { get; set; }
+
         public string InvoiceNo { get; set; }
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         [DataType(DataType.Date)]
         public DateTime? BillDt { get; set; }
+
+        public string? Callstatus { get; set; }
     }
 
     public class InspectionCertItemListModel

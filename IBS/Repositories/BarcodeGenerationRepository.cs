@@ -2,17 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using static IBS.Helper.Enums;
 namespace IBS.Repositories
 {
     public class BarcodeGenerationRepository : IBarcodeGeneration
@@ -67,6 +59,8 @@ namespace IBS.Repositories
                     {
                         BARCODE = Convert.ToString(row["BARCODE"]),
                         CASE_NO = Convert.ToString(row["CASE_NO"]),
+                        CALL_RECV_DT = Convert.ToString(row["call_recv_dt"]),
+                        CALL_SNO = Convert.ToInt32(row["call_sno"]),
                         CURRENT_DATE = Convert.ToString(row["CURRENT_DATE"]),
                         INSPECTOR_CUSTOMER = Convert.ToString(row["INSPECTOR_CUSTOMER"]),
                         DESCRIPTION = Convert.ToString(row["DESCRIPTION"]),
@@ -89,7 +83,8 @@ namespace IBS.Repositories
 
             if (!string.IsNullOrEmpty(searchBy))
                 query = query.Where(w => Convert.ToString(w.INSPECTOR_CUSTOMER).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.INSPECTOR_CUSTOMER).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.BARCODE).ToLower().Contains(searchBy.ToLower())
+                || Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
                 );
 
             dTResult.recordsFiltered = query.Count();
@@ -186,7 +181,7 @@ namespace IBS.Repositories
             var CALL_RECV_DT = Convert.ToDateTime(BarcodeGenerate.CALL_RECV_DT).ToString("MM/dd/yyyy");
             var TARGETED_DATE = Convert.ToDateTime(BarcodeGenerate.TARGETED_DATE).ToString("MM/dd/yyyy");
             var CURRENT_DATE = Convert.ToDateTime(BarcodeGenerate.CURRENT_DATE).ToString("MM/dd/yyyy");
-            
+
 
             try
             {
@@ -251,7 +246,7 @@ namespace IBS.Repositories
                 {
                     using (OracleCommand cmd = new OracleCommand("New_BarcodeGenarate", (OracleConnection)conn1))
                     {
-                       
+
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("lab_code", OracleDbType.Varchar2).Value = BarcodeGenerate.Region;
                         OracleParameter outParam = new OracleParameter("transaction_number", OracleDbType.Varchar2, 255);
@@ -268,7 +263,7 @@ namespace IBS.Repositories
             {
                 return BarcodeGenerate.BARCODE;
             }
-            
+
 
             return BarcodeGenerate.BARCODE;
         }
@@ -276,11 +271,9 @@ namespace IBS.Repositories
         {
             string DisID = dtParameters.AdditionalValues?.GetValueOrDefault("DisId");
             DTResult<BarcodeGenerate> dTResult = new() { draw = 0 };
-            IQueryable<BarcodeGenerate>? query = null;
 
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
-            var orderAscendingDirection = true;
 
             //var query1 = (from l in context.TestTables
             //              where l.DisciplineId == Convert.ToInt32(DisID)
@@ -292,7 +285,7 @@ namespace IBS.Repositories
             //                  DISCIPLINE_ID = Convert.ToString(l.DisciplineId),
             //                  QTY = "1"
             //              }).ToList();
-            var query1 = (from l in context.TestTables
+            var query1 = (from l in context.Labratemasters
                           where l.DisciplineId == Convert.ToInt32(DisID)
                           select new BarcodeGenerate
                           {
@@ -405,6 +398,32 @@ namespace IBS.Repositories
                 }
 
             }
+            return true;
+        }
+        public bool SaveBarcodeGenerated(string Barcode, int quantity, string caseno, int callsno, string calldate, string IPADDRESS, string USERID, string CREATEDBY)
+        {
+            calldate = Convert.ToDateTime(calldate).ToString("MM/dd/yyyy");
+            try
+            {
+                //string BarCodeNo = GenerateBarCodeNo(BarcodeGenerate);
+                OracleParameter[] par = new OracleParameter[9];
+                par[0] = new OracleParameter("p_BARCODE_NO", OracleDbType.Varchar2, Barcode, ParameterDirection.Input);
+                par[1] = new OracleParameter("p_QTY", OracleDbType.Int32, quantity, ParameterDirection.Input);
+                par[2] = new OracleParameter("p_CASE_NO", OracleDbType.Varchar2, caseno, ParameterDirection.Input);
+                par[3] = new OracleParameter("p_CALL_SNO", OracleDbType.Int32, callsno, ParameterDirection.Input);
+                par[4] = new OracleParameter("p_CALL_DATE", OracleDbType.Date, calldate, ParameterDirection.Input);
+                par[5] = new OracleParameter("p_CREATEDDATE", OracleDbType.Date, DateTime.Now, ParameterDirection.Input);
+                par[6] = new OracleParameter("p_CREATEDBY", OracleDbType.Varchar2, CREATEDBY, ParameterDirection.Input);
+                par[7] = new OracleParameter("p_USERID", OracleDbType.Varchar2, USERID, ParameterDirection.Input);
+                par[8] = new OracleParameter("p_IPADDRESS", OracleDbType.Varchar2, IPADDRESS, ParameterDirection.Input);
+                var ds = DataAccessDB.ExecuteNonQuery("InsertBarcodeGenerated", par, 1);
+            }
+
+            catch (Exception ex)
+            {
+                return false;
+            }
+
             return true;
         }
     }

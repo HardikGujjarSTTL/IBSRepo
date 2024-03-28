@@ -1,14 +1,10 @@
 ﻿using IBS.Interfaces;
 using IBS.Models;
 using iTextSharp.text.pdf;
-using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
 using System.Drawing.Imaging;
-using System.Text;
-using System.Drawing;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IBS.Controllers
 {
@@ -140,8 +136,9 @@ namespace IBS.Controllers
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
 
-        public IActionResult GenerateBarcode(string Barcode, int quantity)
+        public IActionResult GenerateBarcode(string Barcode, int quantity, string caseno, int callsno, string calldate)
         {
+            SaveBarcodeGenerated(Barcode, quantity, caseno, callsno, calldate);
             List<System.Drawing.Image> images = new List<System.Drawing.Image>();
 
             for (int i = 0; i < quantity; i++)
@@ -152,8 +149,8 @@ namespace IBS.Controllers
                 BarcodeLib.TYPE type = BarcodeLib.TYPE.CODE128B;
 
                 b.Alignment = BarcodeLib.AlignmentPositions.LEFT;
-                b.IncludeLabel = false;
-                b.LabelPosition = BarcodeLib.LabelPositions.BOTTOMLEFT;
+                b.IncludeLabel = true;
+                b.LabelPosition = BarcodeLib.LabelPositions.BOTTOMCENTER;
 
                 int widthPixel = (int)ConvertPointToPixel(barcodeWidth);
                 int HeightPixel = (int)ConvertPointToPixel(barcodeHeight);
@@ -172,7 +169,31 @@ namespace IBS.Controllers
 
             return File(document, "application/pdf", "barcode.pdf");
         }
+        [HttpPost]
+        public IActionResult SaveBarcodeGenerated(string Barcode, int quantity, string caseno, int callsno, string calldate)
+        {
+            string IPADDRESS = this.HttpContext.Connection.RemoteIpAddress.ToString();
+            string USERID = Convert.ToString(UserId);
+            string CREATEDBY = UserName.Trim();
 
+            try
+            {
+                bool dTResult = BarcodeGen.SaveBarcodeGenerated(Barcode, quantity, caseno, callsno, calldate, IPADDRESS, USERID, CREATEDBY);
+                if (dTResult == true)
+                {
+                    return Json(new { status = true, Id = dTResult });
+                }
+                else
+                {
+                    return Json(new { status = false, Id = dTResult });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.AddException(ex.ToString(), ex.Message.ToString(), "BarcodeGeneration", "SaveBarcodeGenerated", 1, GetIPAddress());
+            }
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+        }
         [HttpPost]
         public async Task<IActionResult> GeneratePDF(string htmlContent)
         {
@@ -213,10 +234,14 @@ namespace IBS.Controllers
         {
             using (var ms = new MemoryStream())
             {
-                iTextSharp.text.Rectangle pageSize = new iTextSharp.text.Rectangle(0, 0, barcodeWidth, barcodeHeight);
-                var document = new Document(pageSize, 0, 0, 0, 0);
+                //iTextSharp.text.Rectangle pageSize = new iTextSharp.text.Rectangle(0, 0, barcodeWidth, barcodeHeight);
+                //var document = new Document(pageSize, 0, 0, 0, 0);
 
-                PdfWriter.GetInstance(document, ms).SetFullCompression();
+                //PdfWriter.GetInstance(document, ms).SetFullCompression();
+
+                //document.Open();
+                var document = new iTextSharp.text.Document();
+                PdfWriter pdfWriter = PdfWriter.GetInstance(document, ms);
 
                 document.Open();
 
@@ -224,6 +249,8 @@ namespace IBS.Controllers
                 {
                     var img = iTextSharp.text.Image.GetInstance(ImageToByteArray(image));
                     document.Add(img);
+                    document.NewPage();
+
                 }
 
                 if (document.IsOpen()) document.Close();

@@ -100,8 +100,8 @@
                                 </div>
                             </li>
                             <li>
-                                <a href="#" class="">
-                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                <a href="@Url.Action("Index","Chat")" class="">
+                                    <span class="fa fa-comments"></span>
                                 </a>
                             </li>
                         </ul>
@@ -183,7 +183,6 @@
                         <!--userDetail-->
                     </div>
                     <!--userInformation-->
-                    <div class="navBtn"><a href="#" id="menu-toggle" class="navbar-toggle"><i class="fa fa-bars"></i></a></div>
                 </div>
                 <!--topLinksAndSearch-->
             </header>
@@ -191,8 +190,9 @@
             <!--contentContainer-->
             <div class="contentContainer">
                 <!--leftSidebarNav 1-->
+                <div class="navBtn"><a href="#" id="menu-toggle" class="navbar-toggle"><i class="fa fa-bars"></i></a></div>
                 <aside id="sidebar" class="navbar-default navbar-static-side">
-                    <partial name="Menu"/>
+                    <partial name="Menu" />
                 </aside>
                 <!--leftSidebarNav-->
                 <div class="adminInnerContent">
@@ -212,6 +212,12 @@
     <!--mainContainer-->
     <!--Wrapper-->
     <div class="overlayLoader" style="display: none">
+        <div class="loaderHolder">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+
+    <div class="overlayLoader1" style="display: none">
         <div class="loaderHolder">
             <div class="lds-dual-ring"></div>
         </div>
@@ -256,7 +262,7 @@
                 @:$(".Permission_Delete").css("display", "none");
             }
         }
-                                        }
+                                                        }
 
     </script>
 

@@ -187,7 +187,7 @@ public partial class RitesBillDtl
 
     public string? PoPdf { get; set; }
 
-    public bool BillResentCount { get; set; }
+    public byte BillResentCount { get; set; }
 
     public string? IrfcFunded { get; set; }
 

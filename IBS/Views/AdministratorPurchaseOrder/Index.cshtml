@@ -19,7 +19,7 @@
             <div class="col-md-12">
                 <ul class="radioListForm">
                     <li>
-                        <input type="radio" class="billInvoiceClass" id="rdbRailway" name="Railway" value="Bill_No" onchange="FillRailwayCode()">
+                        <input type="radio" class="billInvoiceClass" id="rdbRailway" checked name="Railway" value="Bill_No" onchange="FillRailwayCode()">
                         <label for="Reference" class="billInvoiceClass">Railway</label><br>
                     </li>
                     <li>
@@ -41,10 +41,10 @@
 
                 </ul>
             </div>
-            </div>
-            <div class="row my-0">
+        </div>
+        <div class="row my-0">
             <div class="col-md-3 mb-3">
-                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetBillPayingOfficer() , "Value", "Text"),"--Select--")
+                @Html.DropDownList("dllRCode", new SelectList(IBS.Models.Common.GetRailwayCode("R"), "Value", "Text"), "--Select--")
             </div>
             <div class="col-md-2 mb-3">
                 <div class="list-btn">
@@ -57,19 +57,19 @@
         <div class="row my-0">
             <div class="col-md-2 mb-3">
                 <label for="reference">Case Number</label>
-                <input type="text" class="input" id="txtCaseNumber" autocomplete="on">
+                <input type="text" class="input" id="txtCaseNumber" autocomplete="on" placeholder="Case Number">
             </div>
             <div class="col-md-3 mb-3">
                 <label for="reference">PO/Offer Letter No.</label>
-                <input type="text" class="input" id="txtPONumber">
+                <input type="text" class="input" id="txtPONumber" placeholder="PO/OFFER LETTER NO.">
             </div>
             <div class="col-md-2 mb-3">
                 <label for="reference">PO Date</label>
-                <input type="text" class="input datepicker" id="txtPODate">
+                <input type="text" class="input datepicker" id="txtPODate" placeholder="DD/MM/YYYY">
             </div>
             <div class="col-md-3 mb-3">
                 <label for="reference">Vendor Name</label>
-                <input type="text" class="input" id="txtVendorName">
+                <input type="text" class="input" id="txtVendorName" placeholder="Vendor Name">
             </div>
             <div class="col-md-2 mb-3">
                 <div class="savenext-btn" style="margin-top: 31px;">
@@ -97,7 +97,7 @@
                             <th>Purchaser Name</th>
                             <th>Inspection By/PO Cancelled</th>
                             <th>View PO</th>
-                            <th>View PO</th>
+                            @* <th>View PO</th> *@
                         </tr>
                     </thead>
                     <tbody>
@@ -109,7 +109,7 @@
 </div>
 <div id="EditPODateModal" class="modal" tabindex="-1" role="dialog">
 </div>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
@@ -122,6 +122,7 @@
             $("#dvdtPOMaster").css("display", "block");
             InitializePOMasterDatatable();
         }
+
         function InitializePOMasterDatatable() {
             var CaseNo = $("#txtCaseNumber").val();
             var PoNo = $("#txtPONumber").val();
@@ -186,27 +187,39 @@
                             return html;
                         }
                     },
-                    
+
                     { data: "CASE_NO" },
                     { data: "PO_NO" },
                     { data: "PO_DT" },
-                    { data: "INSPECTING_AGENCY" },
                     { data: "RLY_CD" },
                     { data: "SOURCE" },
                     { data: "VEND_NAME" },
                     { data: "CONSIGNEE_S_NAME" },
-                    { data: "PO_DOC" },
+                    { data: "INSPECTING_AGENCY" },
+                    // { data: "PO_DOC" },
                     //{ data: "PO_DOC1" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
+                            var PO_DOC = data.PO_DOC;
                             var PO_DOC1 = data.PO_DOC1;
-                            var html = "<a target='_blank' class='aTag' href='@Url.Content(Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO))/" + PO_DOC1 + "' Id='DocUpload_" + PO_DOC1 + "'>Download PO</a> "
-                            html += '</div>';
+                            var IsFileExist = data.IsFileExist;
+                            var IsPO_DOC = data.IsPO_DOC;
+                            var IsPO_DOC1 = data.IsPO_DOC1;
+                            if (IsFileExist == false ) {
+                                var html = "<a target='_blank' class='aTag' style='color: red;'>No DOC</a> ";
+                            }
+                            else if (IsFileExist == true && IsPO_DOC == true) {
+                                var html = "<a target='_blank' class='commonBtn gridBtn' href='" + PO_DOC + "' Id='DocUpload_" + PO_DOC + "'>Download PO <span class='fa fa-download'></span></a> ";
+                                
+                            }
+                            else if (IsFileExist == true && IsPO_DOC1 == true) {
+                                var html = "<a target='_blank' class='commonBtn gridBtn' href='" + PO_DOC1 + "' Id='DocUpload_" + PO_DOC1 + "'>Download PO <span class='fa fa-download'></span></a> ";
+                            }
                             return html;
                         }
                     },
-                    
+
                 ],
                 "order": [[0, "asc"]],
                 "initComplete": function (settings, json) {
@@ -214,7 +227,6 @@
                 },
             });
         }
-
 
         function FillRailwayCode() {
             var type = '';

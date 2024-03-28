@@ -10,4 +10,6 @@ public partial class V12BillPayingOfficer
     public string? Bpo { get; set; }
 
     public string? SapCustCdBpo { get; set; }
+
+    public string? Status { get; set; }
 }

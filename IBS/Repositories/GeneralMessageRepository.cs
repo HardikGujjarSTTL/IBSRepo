@@ -1,14 +1,11 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using IBS.Helper;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {

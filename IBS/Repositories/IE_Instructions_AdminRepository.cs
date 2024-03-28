@@ -1,8 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using System.Drawing;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -40,7 +38,7 @@ namespace IBS.Repositories
         {
             IE_Instructions_AdminModel model = new();
             T72IeMessage message = context.T72IeMessages.Find(MessageId, RegionCode);
-            
+
             DTResult<IE_Instructions_AdminModel> dTResult = new() { draw = 0 };
             IQueryable<IE_Instructions_AdminModel>? query = null;
 
@@ -116,7 +114,7 @@ namespace IBS.Repositories
         public bool Remove(int MessageId, string GetRegionCode)
         {
             var User = context.T72IeMessages.Find(MessageId, GetRegionCode);
-            
+
             if (User == null)
             {
                 return false;
@@ -134,7 +132,7 @@ namespace IBS.Repositories
             int MESSAGE_ID = 0;
             var G_Message = context.T72IeMessages.Find(model.MessageId, Region);
 
-            IE_Instructions_AdminModel objCount = new ();
+            IE_Instructions_AdminModel objCount = new();
             int MessageId = (from l in context.T72IeMessages where l.RegionCode == Region select l).Count();
 
             #region User save

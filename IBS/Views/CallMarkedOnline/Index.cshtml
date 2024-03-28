@@ -23,7 +23,19 @@
             </div>
         </div>
         <div class="row my-0 d-flex align-items-end">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3 rdocall1" style="display:none;">
+                <div class="reference">
+                    <label for="Reference">From Date</label>
+                    <input type="text" class="datepicker" id="txtFromDate" placeholder="DD/MM/YYYY" maxlength="10">
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 rdocall1" style="display:none;">
+                <div class="reference">
+                    <label for="Reference">To Date</label>
+                    <input type="text" class="datepicker" id="txtToDate" maxlength="10" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 rdocall2">
                 <div class="reference">
                     <label for="Reference">Date</label>
                     <input type="text" class="datepicker" id="txtDate" maxlength="100" style="text-transform: uppercase;">
@@ -93,14 +105,29 @@
         $("#txtDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
         setDefaultDate();
 
+        $('input[name="rdbCall"]').change(function () {
+            var selectedValue = $(this).val();
+            
+            if (selectedValue == "Show All Online Calls Marked on") {
+                $(".rdocall1").show();
+                $(".rdocall2").hide();
+            }
+            else {
+                $(".rdocall1").hide();
+                $(".rdocall2").show();
+                $("#txtFromDate").val("");
+                $("#txtToDate").val("");
+            }
+        });
+
         $("#btnSubmit").click(function () {
-            var CurrDate = new Date(); // Current date as a Date object
+            
+            var CurrDate = new Date(); 
             var inputDate = $("#txtDate").val();
 
-            // Parse the input date string with the correct format
             var parts = inputDate.split('/');
             var inputYear = parseInt(parts[2], 10);
-            var inputMonth = parseInt(parts[1], 10) - 1; // Months are zero-based
+            var inputMonth = parseInt(parts[1], 10) - 1; 
             var inputDay = parseInt(parts[0], 10);
 
             var inputDateObj = new Date(inputYear, inputMonth, inputDay);
@@ -123,6 +150,9 @@
 
     function InitializeDatatable() {
         var Date = $("#txtDate").val();
+        var FromDate = $("#txtFromDate").val();
+        var ToDate = $("#txtToDate").val();
+
         var Rdb1 = $("#rdbAllCallMarked").is(':checked') == true ? "1" : "0";
         var Rdb2 = $("#rdbAllCallUnMarked").is(':checked') == true ? "1" : "0";
         var Rdb3 = $("#rdbOnlyCallUnMarked").is(':checked') == true ? "1" : "0";
@@ -130,10 +160,26 @@
         if ($("#rdbAllCallMarked").is(':checked')) { chk_val = 1 }
         if ($("#rdbAllCallUnMarked").is(':checked')) { chk_val = 2 }
         if ($("#rdbOnlyCallUnMarked").is(':checked')) { chk_val = 3 }
+
+        if (Rdb1 == "1") { 
+            if ($("#txtFromDate").val() == "") {
+                ShowHideMsgNew(false, "Please add From Date.");
+                return;
+            }
+            if ($("#txtToDate").val() == "") {
+                ShowHideMsgNew(false, "Please add To Date.");
+                return;
+            }
+            if (FromDate > ToDate)
+            {
+                ShowHideMsgNew(false, "To date is max from date.");
+                return;
+            }
+        }
+
         $("#dtList").DataTable({
             stateSave: false,// Design Assets
             autoWidth: true,
-            //scrollX: true,
             scrollCollapse: false,
             processing: true, // ServerSide Setups
             serverSide: true,
@@ -148,6 +194,8 @@
                 data: function (d) {
                     var AdditionalValues = {
                         "Date": Date,
+                        "FromDate": FromDate,
+                        "ToDate": ToDate,
                         "Rdb1": Rdb1,
                         "Rdb2": Rdb2,
                         "Rdb3": Rdb3

@@ -86,9 +86,12 @@
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var Id = data.BARCODE;
+                            var caseno = data.CASE_NO;
+                            var callsno = data.CALL_SNO;
+                            var calldate = data.CALL_RECV_DT;
                             var qtyInput = '<input type="number" class="text-filter" name="qty" style="height:auto;" id="' + data.QTY + '" value="1" min="1" step="1" oninput="validity.valid||(value=\'1\');" onchange="validateQty(this);"';
                             var printImage = '<img src="@Url.Content("~/images/print.png")" alt="Print" />';
-                            var printLink = '<a href="' + getEditUrl(Id) + '" class="btnicons" style="margin-left:40%;vertical-align:sub;">' + printImage + '</a>';
+                            var printLink = '<a href="' + getEditUrl(Id, caseno, callsno, calldate) + '" class="btnicons" style="margin-left:40%;vertical-align:sub;">' + printImage + '</a>';
                             var html = '<div align="center" class="btnicons">' + printLink + '</div>';
                             return qtyInput + html;
                         }
@@ -99,19 +102,21 @@
             });
         }
 
-        function getEditUrl(Id) {
-            return '@Url.Action("GenerateBarcode", "BarcodeGeneration")' + '?Barcode=' + Id;
-            
-            // var qty = $(this).closest('td').find('input[name="qty"]').val();
-            // var editUrl = '@Url.Action("GenerateBarcode", "BarcodeGeneration")' + '?Barcode=' + Id + '&quantity=' + qty;
-            // return editUrl;
+        function getEditUrl(Id, caseno, callsno, calldate) {
+            //return '@Url.Action("GenerateBarcode", "BarcodeGeneration")' + '?Barcode=' + Id;
+            var baseUrl = '@Url.Action("GenerateBarcode", "BarcodeGeneration")';
+            var fullUrl = baseUrl + '?Barcode=' + Id + '&CaseNo=' + caseno + '&CallSNo=' + callsno + '&CallDate=' + calldate;
+            return fullUrl;
         }
 
         $('#dtbarcode').on('click', 'td a', function (e) {
             e.preventDefault();
             var qty = $(this).closest('td').find('input[name="qty"]').val();
             var Id = $(this).attr('href').split('Barcode=')[1];
-            var editUrl = getEditUrl(Id) + '&quantity=' + qty;
+            var caseno = $(this).attr('href').split('CaseNo=')[2];
+            var callsno = $(this).attr('href').split('CallSNo=')[3];
+            var CallDate = $(this).attr('href').split('CallDate=')[4];
+            var editUrl = getEditUrl(Id, caseno, callsno, CallDate) + '&quantity=' + qty;
             window.location.href = editUrl;
         });
 

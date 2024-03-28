@@ -18,7 +18,7 @@ namespace IBS.Models
 
         public string LikelyDt { get; set; }
         public string Status { get; set; }
-        public string Remarks { get; set; }
+        public string? Remarks { get; set; }
         public string PaymentSlip { get; set; }
         public string PaymentStatus { get; set; }
         public IFormFile UploadLab { get; set; }
@@ -35,6 +35,18 @@ namespace IBS.Models
         public string Hyperlink2 { get; set; }
         public string LabelExist { get; set; }
         public string NO_OF_Register_Per_Day { get; set; }
+
+        public string? DocType { get; set; }
+
+        public string? DocSubType { get; set; }
+
+        public string FileId { get; set; } = null!;
+
+        public string? FileExt { get; set; }
+
+        public string? DocumentName { get; set; }
+
+        public string? DocumentNo { get; set; }
 
     }
 

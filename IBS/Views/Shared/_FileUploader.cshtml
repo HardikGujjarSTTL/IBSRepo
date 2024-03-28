@@ -114,16 +114,16 @@
                         {
                                                                 <input name="UploadFile" type="file" id="@("Brw_" + uniqueId)" onchange="OnFileUpload('@uniqueId', @Model.IBS_DocumentList[i].ID, this, true)"
                                                                        data-filesize="@((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])))"
-                                                                            style="background: #f1f1f1;width: 100%;padding: 8px 20px;padding-right: 20px;font-weight: 400;padding-right: 35px;border-radius: 0;-webkit-border-radius: 0;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
+                                                                            style="width: 100%;padding: 5px 10px;padding-right: 20px;font-weight: 400; border:1px solid #d1d1d1!important; border-radius: 4px;color: #393939;font-family: 'Poppins', sans-serif;font-size: 16px;line-height: 1.5;">
 
-                                                                <label for="@("Brw_" + uniqueId)">
+                                                                <label style="font-size:14px;" for="@("Brw_" + uniqueId)">
                                 @*@(Model.IBS_DocumentList[i].DocumentName)
                                     <span >
                                         @(Model.IBS_DocumentList[i].IsMandatory ? "*" : "")
                                     </span>*@
                                                                     Upload File
                                                                 </label>
-                                                                <span style='font-size: 14px;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
+                                                                <span style='font-size: 14px; font-style:italic;'>File size upto @((Model.IBS_DocumentList[i].MaxContentLengthInKB ?? Convert.ToInt32(ConfigurationManager.AppSettings["MaxContentLengthInKB"])) / 1024) MB (only @Model.IBS_DocumentList[i].AllowedFileExtensions)</span>
                         }
                                             </div>
                                             <div style='color: red; font-size: 14px;' id="@("ValidationMSG_" + uniqueId)"></div>
@@ -462,7 +462,7 @@ else
     }
 
     function OnFileUpload(ControlID, DocumentID, e, IsSignleFile) {
-        debugger
+        
         var files = e.files;
         var filesize = $(e).attr("data-filesize");
         if (files.length > 0) {
@@ -594,7 +594,7 @@ else
 
 
     function HideDocuments(hiddedidString) {
-        //debugger;
+        
         var HiddenIds = hiddedidString.toString().split(',');
         if (HiddenIds.length > 0) {
             var i = 0;
@@ -611,7 +611,7 @@ else
     }
 
     function ShowDocuments(hiddedidString) {
-        //debugger;
+        
         var HiddenIds = hiddedidString.toString().split(',');
         if (HiddenIds.length > 0) {
             var i = 0;

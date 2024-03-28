@@ -1,0 +1,376 @@
+﻿@model IBS.Models.ManpowerModel
+@{
+    string clsView = "";
+    if (Model.ID > 0)
+    {
+        clsView = "Permission_View";
+    }
+    ViewData["Title"] = "Manage Manpower in QA Vertical";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manpower in QA Vertical Entry</h2>
+    </div>
+    <div>
+        <a asp-controller="ManPowerQA" asp-action="Index" class="formBtn viewall-btn">View List</a>
+    </div>
+</div>
+
+<section id="tab-1" class="@clsView">
+    <div class="task-listinput">
+        <form data-ajax="true" asp-antiforgery="true" asp-controller="ManPowerQA" asp-action="ManPowerSave" data-ajax-method="post" data-ajax-complete="completed" id="frmManpower">
+            <input type="hidden" value="@Model.ID" id="ID" name="ID" />
+            <input type="hidden" value="0" id="DetailID" />
+            <div class="accordion-body">
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">RIO</label>
+                        @Html.DropDownListFor(model => model.Region, Common.GetRegionType(), new { })
+                        <span asp-validation-for="Region" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Name of Employee</label>
+                        <input type="text" class="input" asp-for="EmpName">
+                        <span asp-validation-for="EmpName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Employee No</label>
+                        <input type="text" class="input" asp-for="EmpNo">
+                        <span asp-validation-for="EmpNo" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Designation</label>
+                        @Html.DropDownListFor(model => model.Desig, new SelectList(IBS.Models.Common.IEDesignation(), "Value", "Text"), "--Select--")
+                        <span asp-validation-for="Desig" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Cadre</label>
+                        @Html.DropDownListFor(model => model.Cadre, Common.GetRegionType(), new { })
+                        @*<span asp-validation-for="Cadre" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Discipline</label>
+                        @Html.DropDownListFor(model => model.Discp, new SelectList(IBS.Models.Common.IEDepartmentlist(), "Value", "Text"), "--Select--")
+                        <span asp-validation-for="Discp" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Status </label>
+                        @Html.DropDownListFor(model => model.Status, Common.GetManPowerStatus(), new { })
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Birth</label>
+                        <input type="text" class="input datepicker" asp-for="Dob" placeholder="DD/MM/YYYY">
+                        @*<span asp-validation-for="Dob" class="text-danger"></span>*@
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Joining in RITES</label>
+                        <input type="text" class="input datepicker" asp-for="RitesDt" placeholder="DD/MM/YYYY">
+                        @*<span asp-validation-for="RitesDt" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Date of Joining in RIO</label>
+                        <input type="text" class="input datepicker" asp-for="RioDt" placeholder="DD/MM/YYYY">
+                        @*<span asp-validation-for="RioDt" class="text-danger"></span>*@
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Reference">Date of Repatriation /Retirement/Term Completion</label>
+                        <input type="text" class="input datepicker" asp-for="DrrtDt" placeholder="DD/MM/YYYY" width="10%">
+                        @*<span asp-validation-for="DrrtDt" class="text-danger"></span>*@
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="heading3"><span class="fa fa-plus"></span> Add Manpower Detail</h3>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Working</label>
+                        @Html.DropDownListFor(model => model.Working, new SelectList(IBS.Models.Common.GetWorking(), "Value", "Text"), "--Select--")
+                        <span class="text-danger" id="spnWorking"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">Staff</label>
+                        @Html.DropDownListFor(model => model.Staff, new SelectList(IBS.Models.Common.GetStaff(), "Value", "Text"), "--Select--")
+                        <span class="text-danger" id="spnStaff"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Place of posting</label>
+                        <input type="text" class="input" asp-for="PlacePosting">
+                        <span class="text-danger" id="spnPlacePosting"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">Project Name</label>
+                        @Html.DropDownListFor(model => model.ProjectName, new SelectList(IBS.Models.Common.GetProjectName(), "Value", "Text"), "--Select--")
+                        <span class="text-danger" id="spnProjectName"></span>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">
+                            Name of cluster
+                        </label>
+                        <input type="text" class="input" asp-for="Nameofcluster">
+                        <span class="text-danger" id="spnNameofcluster"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="Reference">From Date</label>
+                        <input type="text" class="input datepicker" asp-for="Fromdate" placeholder="DD/MM/YYYY">
+                        <span class="text-danger" id="spnFromdate"></span>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="Reference">To Date</label>
+                        <input type="text" class="input datepicker" asp-for="Todate" placeholder="DD/MM/YYYY">
+                        <span class="text-danger" id="spnTodate"></span>
+                    </div>
+                    <div class="col-md-2 mb-3 btnAlign">
+                        <button type="button" id="AddManpowerDetail" class="formBtn"><span class="fa fa-plus"></span> Add</button>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <div class="col-md-12 mb-3">
+                        <section class="table-section">
+                            <div class="task-listinput">
+                                <div class="dash-table">
+                                    <table id="dtCluster" class="table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Working</th>
+                                                <th>Staff</th>
+                                                <th>Place of Posting</th>
+                                                <th>Project Name</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="savenext-btn">
+                    <button type="button" class="save-btn active Permission_Save" onclick="BtnSave()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div id="modal-delete-conf-valuation-detail" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation!</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this record?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="savenext-btn">
+                    <button type="button" class="reset-btn" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="save-btn active" id="btnDeletevaluationDetail" data-id="">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+         $(function () {
+            InitializeDetailsData();
+        });
+
+        function BtnSave() {
+            if ($("#frmManpower").valid()) {
+                $("#frmManpower").submit();
+            }
+        }
+
+        completed = function (response) {
+            debugger;
+            var res = response.responseJSON;
+            ShowHideMsgNew(res.status, res.responseText);
+            if (res.status) {
+                window.location.href = '@Url.Action("Index", "ManPowerQA")';
+            }
+
+        };
+
+        function validation() {
+            var IsValid = true;
+            if ($("#Working").val() == "") {
+                $("#spnWorking").html("Please select Working.");
+                IsValid = false;
+            }
+            if ($("#Staff").val() == "") {
+                $("#spnStaff").html("Please select Staff.");
+                IsValid = false;
+            }
+            if ($("#PlacePosting").val() == "") {
+                $("#spnPlacePosting").html("Please enter Place of posting.");
+                IsValid = false;
+            }
+            if ($("#Nameofcluster").val() == "") {
+                $("#spnNameofcluster").html("Please enter Name of cluster.");
+                IsValid = false;
+            }
+            if ($("#Fromdate").val() == "") {
+                $("#spnFromdate").html("Please select From date.");
+                IsValid = false;
+            }
+            if ($("#Todate").val() == "") {
+                $("#spnTodate").html("Please select To date.");
+                IsValid = false;
+            }
+            return IsValid;
+        }
+
+        $("#AddManpowerDetail").click(function () {
+
+            if (!validation()) return;
+
+            var ProjectNameText = '';
+            if ($("#ProjectName").val() != '') {
+                ProjectNameText = $("#ProjectName option:selected").text();
+            }
+            var formData = {
+                ManpowerID: $("#ID").val(),
+                DetailID: $("#DetailID").val(),
+                Working: $("#Working").val(),
+                WorkingText: $("#Working option:selected").text(),
+                Staff: $("#Staff").val(),
+                StaffText: $("#Staff option:selected").text(),
+                PlacePosting: $("#PlacePosting").val(),
+                ProjectName: $("#ProjectName").val(),
+                ProjectNameText: ProjectNameText,
+                Nameofcluster: $("#Nameofcluster").val(),
+                Fromdate: $("#Fromdate").val(),
+                Todate: $("#Todate").val()
+            }
+            $.post("@Url.Action("SaveManpowerDetail", "ManPowerQA")", { model: formData }, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                    InitializeDetailsData();
+                    clearManpowerDetail();
+                }
+            });
+            return false;
+        });
+
+        function InitializeDetailsData() {
+            $("#dtCluster").DataTable({
+                stateSave: false,
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, 
+                serverSide: true,
+                destroy: true,
+                paging: true,
+                searching: true,
+                ajax: {
+                    url: "@Url.Action("LoadManpowerDetailTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+
+                    { data: "WorkingText" },
+                    { data: "StaffText" },
+                    { data: "PlacePosting" },
+                    { data: "ProjectNameText" },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.DetailID;
+                            var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="EditManpowerDetail(' + id + ');" href="javascript:void(\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
+                            html += '<a onclick="DeleteManpowerDetail(' + id + ');"  href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+
+        function EditManpowerDetail(id) {
+            $.ajax({
+                url: '@Url.Action("EditManpowerDetail", "ManPowerQA")?id=' + id,
+                type: 'GET',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                if (response.status) {
+                    $("#ID").val(response.data.ManpowerID);
+                    $("#DetailID").val(response.data.DetailID);
+                    $('#Working').val(response.data.Working);
+                    $('#Staff').val(response.data.Staff);
+                    $("#PlacePosting").val(response.data.PlacePosting);
+                    $('#ProjectName').val(response.data.ProjectName);
+                }
+            });
+        }
+
+        function DeleteManpowerDetail(id) {
+            $("#btnDeletevaluationDetail").attr("data-id", id);
+            $("#modal-delete-conf-valuation-detail").modal("show");
+        }
+
+        $("#btnDeletevaluationDetail").click(function () {
+            var ManpowerID= $("#ID").val();
+            $.ajax({
+                url: '@Url.Action("DeleteManpowerDetail", "ManPowerQA")?DetailID=' + $(this).attr("data-id") + '&ManpowerID=' + ManpowerID,
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                    $("#btnDeletevaluationDetail").attr("data-id", "");
+                    $("#modal-delete-conf-valuation-detail").modal('hide');
+                    InitializeDetailsData();
+                }
+            });
+        });
+
+        function clearManpowerDetail() {
+            $("#DetailID").val("");
+            $('#Working').val("");
+            $('#Staff').val("");
+            $("#PlacePosting").val("");
+            $('#ProjectName').val("");
+            $("#PlacePosting").val("");
+            $("#Fromdate").val("");
+            $("#Todate").val("");
+        }
+
+    </script>
+}
+
+

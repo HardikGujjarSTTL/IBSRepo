@@ -1,11 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Text.Json;
 
 namespace IBS.Controllers
 {
@@ -52,7 +48,7 @@ namespace IBS.Controllers
             try
             {
                 string Region = GetRegionCode;
-                
+
                 result = TDSEntryRepository.SaveTDSEntry(RegNo, TDSAmt, TDSDate);
             }
             catch (Exception ex)

@@ -4,7 +4,6 @@ using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -91,8 +90,8 @@ namespace IBS.Controllers.Client
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            string rly_cd= IBS.Helper.SessionHelper.UserModelDTO.Organisation.Trim();
-            string RlyNonrly= IBS.Helper.SessionHelper.UserModelDTO.OrgnType.Trim();
+            string rly_cd = IBS.Helper.SessionHelper.UserModelDTO.Organisation.Trim();
+            string RlyNonrly = IBS.Helper.SessionHelper.UserModelDTO.OrgnType.Trim();
             DTResult<PO_MasterModel> dTResult = pOMasterRepository.GetPOMasterListForClient(dtParameters, rly_cd, RlyNonrly);
             return Json(dTResult);
         }
@@ -142,7 +141,7 @@ namespace IBS.Controllers.Client
                     }
                 }
                 model.Createdby = UserId;
-                model.ClientUserID=ClientUserID.Trim();
+                model.ClientUserID = ClientUserID.Trim();
                 //model.Purchaser = model.TempPurchaser;
                 model.PoiCd = model.TempPoiCd;
                 if (model.PoiCd == null || model.PoiCd == 0)
@@ -253,7 +252,7 @@ namespace IBS.Controllers.Client
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
         [HttpGet]
-        public IActionResult GetVendor(string searchValues = null, bool isSameAs = false,string VendCdID="")
+        public IActionResult GetVendor(string searchValues = null, bool isSameAs = false, string VendCdID = "")
         {
             try
             {
@@ -264,12 +263,12 @@ namespace IBS.Controllers.Client
                     IsDigit = Char.IsDigit(characterToCheck);
                     //IsDigit = Char.IsDigit(searchValues, 5);
                 }
-                
+
                 List<SelectListItem> agencyClient = new List<SelectListItem>();
                 if (isSameAs)
                 {
                     int VendID = 0;
-                    if(VendCdID!= null && VendCdID != "")
+                    if (VendCdID != null && VendCdID != "")
                     {
                         VendID = Convert.ToInt32(VendCdID);
                     }
@@ -302,7 +301,7 @@ namespace IBS.Controllers.Client
             try
             {
                 VendorModel getvendor = Common.GetManufVEND(id);
-                if(getvendor!=null)
+                if (getvendor != null)
                 {
                     return Json(new { status = true, getvendor = getvendor });
                 }

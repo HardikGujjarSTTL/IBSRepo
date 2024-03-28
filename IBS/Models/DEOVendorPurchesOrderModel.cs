@@ -62,5 +62,8 @@ namespace IBS.Models
 
         public virtual T05Vendor? VendCdNavigation { get; set; }
         public string? VendName { get; set; }
+        public bool IsFileExist { get; set; }
+        public bool IsPO_DOC { get; set; }
+        public string? File { get; set; }
     }
 }

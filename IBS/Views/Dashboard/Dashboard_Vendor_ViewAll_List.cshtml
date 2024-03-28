@@ -1,6 +1,13 @@
 ﻿@model DashboardModel
 @{
-    ViewData["Title"] = "Dashboard_Vendor_ViewAll_List";
+    @if (Model.ActionType == "RCS")
+    {
+        ViewData["Title"] = "Recent_Calls_Status ";
+    }
+    else if (Model.ActionType == "RPO")
+    {
+        ViewData["Title"] = "Recent_Purchase_Order ";
+    }
 }
 
 <div class="list-inner">
@@ -14,7 +21,7 @@
 
 <div class="accordion-body" id="body">
     <div class="row my-0">
-        <input asp-for="ActionType" hidden />
+        <input type="hidden" asp-for="ActionType" />
         <div class="col-md-3 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
@@ -30,7 +37,7 @@
     </div>
     <div class="row my-0">
         <div class="col-md-12 mb-3">
-            <div class="savenext-btn">
+            <div class="savenext-btn btnAlign">
                 <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
             </div>
         </div>
@@ -69,7 +76,6 @@
             debugger
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
-            $("#ActionType").val(type);
             $("#ActionType").val(type);
             if (type == "RCS") {
                 $("#spnHeading").text("Recent Calls Status ");

@@ -43,6 +43,8 @@ public partial class T06Consignee
 
     public DateTime? Updateddate { get; set; }
 
+    public string? Status { get; set; }
+
     public virtual T03City? ConsigneeCityNavigation { get; set; }
 
     public virtual ICollection<T13PoMaster> T13PoMasters { get; set; } = new List<T13PoMaster>();

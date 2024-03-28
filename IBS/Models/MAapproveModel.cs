@@ -1,4 +1,5 @@
 ﻿using IBS.DataAccess;
+using System.ComponentModel.DataAnnotations;
 
 namespace IBS.Models
 {
@@ -8,14 +9,18 @@ namespace IBS.Models
 
         public string? PoNo { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         public DateTime? PoDt { get; set; }
 
         public string? RlyNonrly { get; set; }
 
         public string? RlyCd { get; set; }
 
-        public string MaNo { get; set; } = null!;
+        public string MaNo1 { get; set; } = null!;
 
+        public string encryptMaNo { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Common.CommonDateFormateForDT)]
         public DateTime? MaDt { get; set; }
 
         public string? PoOrLetter { get; set; }

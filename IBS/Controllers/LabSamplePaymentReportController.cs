@@ -1,12 +1,8 @@
-﻿using IBS.DataAccess;
-using IBS.Interfaces;
+﻿using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
-using System.Drawing;
-using System.Text.Json;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers
 {

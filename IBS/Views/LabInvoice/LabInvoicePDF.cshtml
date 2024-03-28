@@ -1,0 +1,209 @@
+﻿@model labInvoicelst
+@{
+    var size = Model.items.Count();
+    var requireQr = false;
+    var total = 0;
+    var no = 1;
+    var count = 1;
+    var Adh = "@";
+}
+
+<table width="800" align="center" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #000;">
+    <tr>
+        <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td valign="middle" width="40%" style="text-align:left; vertical-align:middle;"><img src="@Model.base64Logo" alt="" style="width:150px;height:53px;" /></td>
+                    @if (Model.RegionChar == "N")
+                    {
+                        <td width="33%" align="center" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:14px; text-align:center;">
+                            <span style="font-size:12px;"><strong>RITES LTD</strong></span><br>
+                            NORTHERN REGION(INSPECTION)<br>
+                            12TH FLOOR,CORE-II,SCOPE MINAR,<br>
+                            LAXMI NAGAR,DELHI-110092(INDIA)<br>
+                            Phone: 011-22029110,22029109 Email:nrinspn@rites.com
+                        </td>
+                    }
+                    else if (Model.RegionChar == "S")
+                    {
+                        <td width="33%" align="center" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:14px; text-align:center;">
+                            <span style="font-size:12px;"><strong>RITES LTD</strong></span><br>
+                            SOUTHERN REGION(INSPECTION)<br>
+                            BSNL Office,CTS BUILDING, II FLOOR<br>
+                            16 Greams Road, Chennai - 600016<br>
+                            Phone: 28290355,28290356 Email:srinspn@rites.com
+                        </td>
+                    }
+                    else if (Model.RegionChar == "E")
+                    {
+                        <td width="33%" align="center" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:14px; text-align:center;">
+                            <span style="font-size:12px;"><strong>RITES LTD</strong></span><br>
+                            EASTERN REGION(INSPECTION)<br>
+                            56, C R Avenue, 3rd floor<br>
+                            Kolkata - 700012<br>
+                            Phone: 033-2234-8665/8730 Email:erinspn@rites.com
+                        </td>
+                    }
+                    else if (Model.RegionChar == "W")
+                    {
+                        <td width="33%" align="center" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:14px; text-align:center;">
+                            <span style="font-size:12px;"><strong>RITES LTD</strong></span><br>
+                            WESTERN REGION(INSPECTION)<br>
+                            Regent Chamber, 5th floor<br>
+                            Above Status Restaurant, Nariman Poin<br>
+                            Mumbai - 40002<br>
+                            Phone: 022-22012523/22015573 Email:wrinspn@rites.com
+                        </td>
+                    }
+
+                    <td width="33%">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family:Arial, Helvetica, sans-serif; text-align:center; font-size:12px; height:25px;"><strong>TAX INVOICE</strong></td>
+    </tr>
+    <tr>
+        <td style="border-top:1px solid #000; border-bottom:1px solid #000;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    @if (Model.RegionChar == "N")
+                    {
+                        <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px;"><strong>GSTIN:</strong> 07AAACR0830QIZ8</td>
+                        <td style="font-family:Arial, Helvetica, sans-serif; text-align:right; font-size:11px;"><strong>PAN:</strong> AAACR0830Q</td>
+                    }
+                    else if (Model.RegionChar == "E")
+                    {
+                        <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px;"><strong>GSTIN:</strong> 19AAACR0830Q1Z3</td>
+                        <td style="font-family:Arial, Helvetica, sans-serif; text-align:right; font-size:11px;"><strong>PAN:</strong> AAACR0830Q</td>
+                    }
+                    else if (Model.RegionChar == "S")
+                    {
+                        <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px;"><strong>GSTIN:</strong> 33AAACR0830Q1ZD</td>
+                        <td style="font-family:Arial, Helvetica, sans-serif; text-align:right; font-size:11px;"><strong>PAN:</strong> AAACR0830Q</td>
+                    }
+                    else if (Model.RegionChar == "W")
+                    {
+                        <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px;"><strong>GSTIN:</strong> 27AAACR0830Q1Z6</td>
+                        <td style="font-family:Arial, Helvetica, sans-serif; text-align:right; font-size:11px;"><strong>PAN:</strong> AAACR0830Q</td>
+                    }
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; width:33%;">
+                        <strong>
+                            M/s @Model.BPO_NAME
+                        </strong><br>
+                        <br>
+                        @Model.bpo_add<br>
+                        @Model.bpo_city<br>
+                        <br>
+                        <strong>Recipient GSTIN No:</strong><br>
+                        @Model.recipient_gstin_no
+                    </td>
+                    <td align="center" valign="top" style="text-align:center; width:33%;"><img src="@Model.qr_code" width="159" height="156" alt="QR"></td>
+                    <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; width:33%;">
+                        <strong>Invoice No. :</strong>@Model.InvoiceNo<br>
+                        <strong>Invoive Date:</strong>@Model.InvoiceDt
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td style="width:70%; font-family:Arial, Helvetica, sans-serif; font-size:11px;">
+                        <strong>Irn No.</strong> @Model.irn_no<br>
+                        <strong>Case No:</strong> @Model.CaseNo
+                    </td>
+                    <td style="width:30%; font-family:Arial, Helvetica, sans-serif; font-size:11px;"><strong>Ack No.</strong> @Model.ack_no<br><strong>Ack Date.</strong>@Model.ack_dt</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>
+            <table width="100%" border="1" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="center" valign="middle" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:11px;">SR. No.</td>
+                    <td align="center" valign="middle" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:11px;">Item Description</td>
+                    <td align="center" valign="middle" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:11px;">HSN/SAC</td>
+                    <td align="center" valign="middle" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:11px;">Qty.</td>
+                    <td align="center" valign="middle" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:11px;">Totat testing Charges (in INR)</td>
+                </tr>
+
+                @{
+                    var SrNo = 0;
+                    foreach (var val in Model.items.Skip(0).Take(7))
+                    {
+                        SrNo = SrNo + 1;
+                        <tr>
+                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@SrNo</td>
+                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.ITEM_DESC</td>
+                            <td align="center" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">998346</td>
+                            <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.QTY</td>
+                            <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.TESTING_CHARGES</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="left" valign="top">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="16%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">iGST18%</td>
+                                        <td width="58%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.IGST</td>
+                                        <td width="18%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">SUB TOTAL</td>
+                                        <td width="8%" align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@Model.TotalTESTING_CHARGES</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="top">&nbsp;</td>
+                                        <td align="left" valign="top">&nbsp;</td>
+                                        <td align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">Total Tax</td>
+                                        <td align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@val.IGST</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td colspan="3" width="80%" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;" align="center"><b>@(Common.ConvertAmountToWords(Model.GrandTotal.Value))</b></td>
+                                        <td width="18%" align="left" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">GRAND TOTAL</td>
+                                        <td width="8%" align="right" valign="top" style=" font-family:Arial, Helvetica, sans-serif; font-size:11px;">@Model.GrandTotal</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:11px;">
+                        <u>Terms &amp; Conditions</u><br>
+                        1.PLEASE ADDRESS ALL COMMUNICATION TO ADDRESS SHOWN ABOVE<br>
+                        2.NAME OF BANK-AXIS BANK LTD,BRANCH-DLF GURGAON,TYPE OF ACCOUNT CURRENT A/C,<br>
+                        ACCOUNT NO.131010200012272,BRANCH CODE-131 IFSC NEFT CODE-UTIB0000131<br>
+                        MICR/Br Code:110211019,PAN NO:AAACR0830Q<br><br><br><br>
+                        This is computer generated invoice and does not require physical signature
+                    </td>
+                    @*<td align="center" valign="top"><img src="digital-sign.png" width="241" height="98" alt="digital sign"></td>*@
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

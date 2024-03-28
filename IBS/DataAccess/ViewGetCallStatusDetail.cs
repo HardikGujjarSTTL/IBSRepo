@@ -39,7 +39,11 @@ public partial class ViewGetCallStatusDetail
 
     public string? CallCancelStatus { get; set; }
 
-    public short? CallCancelCharges { get; set; }
+    public int? CallCancelCharges { get; set; }
+
+    public string? CallCancelChargesStatus { get; set; }
+
+    public decimal? CallCancelAmount { get; set; }
 
     public string? BkNo { get; set; }
 
@@ -60,4 +64,12 @@ public partial class ViewGetCallStatusDetail
     public decimal? Count { get; set; }
 
     public int ItemSrnoPo { get; set; }
+
+    public string? RlyNonrly { get; set; }
+
+    public decimal? RejCharges { get; set; }
+
+    public string? LocalOrOuts { get; set; }
+
+    public string? FifoVoilateReason { get; set; }
 }

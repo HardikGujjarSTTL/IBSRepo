@@ -49,8 +49,6 @@
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger
-            
         });
 
         function BillSearch() {
@@ -64,7 +62,6 @@
 
             let myObject = { BillNo };
             $.get("@Url.Action("GetBillDetails", "BillAdjustments")", $.param(myObject), function (response) {
-                debugger
                 if (response.status == false) {
                     ShowHideMsgNew(response.status, response.responseText);
                 }
@@ -73,18 +70,23 @@
                     $("#BpoFeeType").val($("#_BpoFeeType").val());
                     InitializeDatatable();
                     onBpoFeeType();
-                    AdjustCalculation();
-                    $("#IcTypeId").val("9");
-                    
+                    // AdjustCalculation();
+                    $("#IcTypeId").val("10");
+
                     $('input[type=radio][name=BillAdType]').change(function () {
                         var BillAdType = $('input[type=radio][name=BillAdType]:checked').val();
                         $('#BillAdType').val(BillAdType);
-                        AdjustCalculation();
-                    });
+                        //AdjustCalculation();
+                        if (BillAdType == "Credit") {
+                            $("#IcTypeId").val("9");
+                        }
+                        else if (BillAdType == "Debit") {
+                            $("#IcTypeId").val("10");
+                        }
 
-                    //$('input[type=radio][name=BillAdType]').change();
+                    });
                 }
-                
+
             });
         }
 
@@ -130,7 +132,7 @@
                             var _Caseno = data.Caseno;
                             var _Callrecvdt = data.Callrecvdt;
                             var _Callsno = data.Callsno;
-                            
+
                             //var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a onclick="OpenEditCallDetailsModal(\'' + _ItemSrnoPo + '\'); return false; " href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
                             var html = '<div align="center" class="reportIcon actionCenter">';
                             html += '<a onclick="OpenEditCallDetailsModal(\'' + _Caseno + '\',\'' + _Callrecvdt + '\' ,\'' + _Callsno + '\',\'' + _ItemSrnoPo + '\'); return false;" href="javascript: void (\'0\');" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
@@ -289,6 +291,18 @@
                 else {
                     ShowHideMsgNew(response.status, response.responseText);
                 }
+                $("#IrfcBpo").attr("disabled", true);
+                $("#IrfcFunded").attr("disabled", true);
+                $("#Consignee").attr("disabled", true);
+                $("#Bpo").attr("disabled", true);
+                $("#FullPart").attr("disabled", true);
+                $("#StampPatternCd").attr("disabled", true);
+
+                $("#Photo").attr("disabled", true);
+                $("#IcTypeId").attr("disabled", true);
+                $("#BpoFeeType").attr("disabled", true);
+                $("#TaxType").attr("disabled", true);
+                $("#AdvBill").attr("disabled", true);
             });
         }
 
@@ -305,7 +319,6 @@
 
             let myObject = { Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee, ConsigneeCd, BillAdType };
             $.get("@Url.Action("GetFeeCalculation", "BillAdjustments")", $.param(myObject), function (response) {
-                debugger
                 if (response.status) {
                     $("#TMValueNew").val(parseFloat(response.responseText.TMValueNew).toFixed(2));
                     $("#TIFeeNew").val(parseFloat(response.responseText.TIFeeNew).toFixed(2));
@@ -327,20 +340,6 @@
                     $("#NetFeeDiff").val(NetFeeDiffValueM);
                 }
             });
-
-            //$.ajax({
-            //    url: '@Url.Action("GetFeeCalculation", "BillAdjustments")',
-            //    type: "GET",
-            //    dataType: "JSON",
-            //    data: { Caseno, Callrecvdt, Callsno, Consignee, BillNo, AdjustmentFee },
-            //    success: function (contacts) {
-            //        $("#TMValueNew").val(contacts.recordsTotal);
-            //        var OldValueM = $("#TMValue").val();
-            //        var NewValueM = $("#TMValueNew").val();
-            //        var DiffValueM = (parseFloat(OldValueM) - parseFloat(NewValueM));
-            //        $("#TMValueDiff").val(DiffValueM);
-            //    }
-            //});
         }
 
         function PopUp(BillNo) {
@@ -410,11 +409,24 @@
             if (BpoFeeType == "P") {
                 $(".RlyBpoFee").show();
                 $(".BpoFee").hide();
+                var Fees = $("#RlyBpoFee").val();
+                $("#AdjustmentFee").val(Fees);
             }
             else {
                 $(".RlyBpoFee").hide();
                 $(".BpoFee").show();
+
+                var Fees = $("#BpoFee").val();
+                $("#AdjustmentFee").val(Fees);
             }
+
+            if (BpoFeeType == "L") {
+                $("#AdjustmentFee").attr("disabled", false);
+            }
+            else {
+                $("#AdjustmentFee").attr("disabled", true);
+            }
+            AdjustCalculation();
         }
 
         function onAdjustmentFee() {

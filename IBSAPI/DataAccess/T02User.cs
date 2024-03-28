@@ -50,4 +50,6 @@ public partial class T02User
     public string? Mobile { get; set; }
 
     public int? CoCd { get; set; }
+
+    public string? UserEmail { get; set; }
 }

@@ -1,5 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
+﻿using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -140,6 +139,22 @@ namespace IBS.Controllers
             get
             {
                 return (GetUserInfo.RoleName);
+            }
+        }
+
+        public int Master_ID
+        {
+            get
+            {
+                return (GetUserInfo.MasterID);
+            }
+        }
+
+        public string AuthType
+        {
+            get
+            {
+                return (GetUserInfo.LoginType);
             }
         }
 

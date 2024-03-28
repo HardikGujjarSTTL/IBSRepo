@@ -141,7 +141,7 @@
                             var id = row.CONSIGNEE_CD;
                             var editUrl = '@Url.Action("Manage", "ConsigneePurchase")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit btnedit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                            html += '<a onclick="Delete(' + id + ')" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete btndelete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            //html += '<a onclick="Delete(' + id + ')" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete btndelete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }

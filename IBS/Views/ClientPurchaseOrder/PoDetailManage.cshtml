@@ -265,7 +265,9 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
             });
-            $("#UomCd").val(3);
+            if ($("#UomCd").val() == "") {
+                $("#UomCd").val(6);
+            }
             $('#OtChargePer ,#ExcisePer ,#DiscountPer ,#Rate ,#Qty, #SalesTaxPer').on('keyup', function () {
                 var idName = $(this).attr('id');
                 if (idName == "OtChargePer") {
@@ -362,7 +364,7 @@
             });
         }
 
-        function SearchBPO() {
+        function SearchBPO(id) {
             var SBPO = $("#SBPO").val();
             if (id != null) {
                 SBPO = id;
@@ -385,7 +387,7 @@
                 }
             });
         }
-        function SearchConsignee() {
+        function SearchConsignee(id) {
             var ConsigneeSearch = $("#ConsigneeSearch").val();
             if (id != null) {
                 ConsigneeSearch = id;

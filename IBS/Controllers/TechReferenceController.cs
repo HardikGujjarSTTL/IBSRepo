@@ -3,7 +3,6 @@ using IBS.Helper;
 using IBS.Helpers;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -103,9 +102,10 @@ namespace IBS.Controllers
                 {
                     if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
+                        string fileName = id.ToString();
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref, (int)Enums.DocumentCategory_CANRegisrtation.Upload_Tech_Ref_Reply };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.ContractDocument), env, iDocument, "TechnicalRef", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(id), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.Tech), env, iDocument, "TechnicalRef", fileName, DocumentIds);
                     }
                     return Json(new { status = true, responseText = msg });
                 }

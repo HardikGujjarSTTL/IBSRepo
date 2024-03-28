@@ -1,13 +1,6 @@
 ﻿using IBS.DataAccess;
-using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Humanizer;
-using MessagePack;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging.Core;
-using System.IO;
 using System.Net;
 using System.Net.Mail;
 
@@ -46,7 +39,7 @@ namespace IBS.Repositories
             using (var message = new MailMessage())
             {
                 message.IsBodyHtml = true;
-                if(model.From != null)
+                if (model.From != null)
                 {
                     message.From = new MailAddress(model.From);
                 }
@@ -94,6 +87,7 @@ namespace IBS.Repositories
                 SmtpClient smtpClient = new SmtpClient(SMTPServer, SMTPPort);
                 NetworkCredential nc = new NetworkCredential(SMTPUser, SMTPPass);
                 smtpClient.Credentials = nc;
+                smtpClient.UseDefaultCredentials = false;
                 smtpClient.EnableSsl = EnableSsl;
                 try
                 {

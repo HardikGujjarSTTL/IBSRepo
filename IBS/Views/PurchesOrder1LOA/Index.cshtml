@@ -41,16 +41,12 @@
                 </div>
             </div>
         </div>
-
-
         <div class="savenext-btn">
             <a asp-controller="PurchesOrder1LOA" asp-action="Index" class="reset-btn">Cancel</a>
             @*<a asp-controller="Modified" asp-action="Manage" class="reset-btn">Cancel</a>*@
             <button type="button" class="save-btn" id="btnModifyLOA">Modify LOA</button>
             <button type="button" class="save-btn active" id="btnSearchLOA">Search LOA</button>
         </div>
-
-
     </div>
     <section class="table-section">
         <div class="task-listinput">
@@ -177,7 +173,6 @@
                             return html;
                         }
                     },
-
                 ],
                 "order": [[0, "asc"]]
             });
@@ -186,7 +181,7 @@
         $("#btnModifyLOA").click(function () {
             var CaseNo = $("#CaseNo").val();
             var PoDt = $("#PoDt").val();
-            debugger
+            
             if (CaseNo != "") {
                 window.location.href = '@Url.Action("Manage", "PurchesOrder1LOA")' + '?CaseNo=' + CaseNo + "&PODT=" + PoDt;
             }
@@ -202,4 +197,4 @@
             window.location.href = '@Url.Action("Index", "PurchesOrder1LOA")';
         };
     </script>
-    }
+}

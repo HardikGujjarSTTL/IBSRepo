@@ -1,6 +1,28 @@
 ﻿@model CM_JI_ViewAll_Model
 @{
-    ViewData["Title"] = "Dashboard_CM_JI_ViewAll_List";
+    var type = Model.Type;
+    var title = "";
+    if (type == "IEP")
+    {
+        title = "IE Wise Perfomance";
+    }
+    else if (type == "OPJC")
+    {
+        title = "Oldest Pending Cases";
+    }
+    else if (type == "ICC")
+    {
+        title = "IEs with the Highest Consignee Complaints";
+    }
+    else if (type == "VCC")
+    {
+        title = "Vendors with the Highest Consignee Complaints";
+    }
+    else if (type == "CCC")
+    {
+        title = "Clients with the Most Complaints Raised";
+    }
+    ViewData["Title"] = title;
 }
 
 <div class="list-inner">
@@ -14,27 +36,35 @@
 
 <div class="accordion-body" id="body">
     <div class="row my-0">
-        <input asp-for="Type" hidden />
-        <div class="col-md-3 mb-3">
+        <input type="hidden" asp-for="Type" />
+        <input type="hidden" asp-for="JI_REGION" />
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">From</label>
                 <input type="text" class="datepicker" id="FromDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-2 mb-3">
             <div class="reference">
                 <label for="Reference">To</label>
                 <input type="text" class="datepicker" id="ToDate" placeholder="DD/MM/YYYY" />
             </div>
         </div>
-    </div>
-    <div class="row my-0">
-        <div class="col-md-12 mb-3">
-            <div class="savenext-btn">
-                <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference">Region</label>
+                @Html.DropDownListFor(model => model.JI_REGION, Common.GetDashboardRegion().Where(x=>x.Value == Model.JI_REGION), new { })
             </div>
         </div>
-    </div>
+        <div class="col-md-2 mb-3">
+            <div class="reference">
+                <label for="Reference"></label>
+                <div class="savenext-btn btnAlign">
+                    <button type="button" class="save-btn active Permission_Save" onclick="InitializeDatatable()" id="btnSearch">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>    
 </div>
 
 <section class="table-section">
@@ -64,7 +94,7 @@
 
     <script type="text/javascript">
         var Columns = [];
-        $(function () {            
+        $(function () {
             var currentDate = new Date();
             var financialYearDates = GetFinancialYearStartEndDate(); //calculateFinancialYearDates(currentDate);
 
@@ -73,8 +103,9 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('Type');
-            $("#ActionType").val(type);
-            $("#ActionType").val(type);
+            const region = urlParams.get('Region');
+            $("#Type").val(type);
+            $("#JI_REGION").val(region);
             if (type == "IEP") {
                 $("#spnHeading").text("IE Wise Perfomance");
                 Columns = [
@@ -95,7 +126,7 @@
                 ]
             }
             else if (type == "OPJC") {
-                $("#spnHeading").text("Oldest Pending Cases");
+                $("#spnHeading").text("Oldest Pending JI Cases");
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -127,7 +158,7 @@
                     },
                 ]
             } else if (type == "ICC") {
-                $("#spnHeading").text("IE Wise Consignee Complaints");
+                $("#spnHeading").text("IE with the Highest Consignee Complaints");
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -139,7 +170,7 @@
                     { data: "NO_OF_CONSINEE_COMPLAINTS", title: "Number of complaints" }
                 ]
             } else if (type == "VCC") {
-                $("#spnHeading").text("Vendor Wise Consignee Complaints");
+                $("#spnHeading").text("Vendors with the Highest Consignee Complaints");
                 Columns = [
                     {
                         data: '', title: "#", orderable: false, width: '5%',
@@ -164,12 +195,13 @@
                 ]
             }
             InitializeDatatable();
-        });        
+        });
 
         function InitializeDatatable() {
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var Type = $("#Type").val();
+            var Region = $("#JI_REGION").val();
 
             $("#dtList").DataTable({
                 stateSave: false,
@@ -188,7 +220,7 @@
                     dataType: "json",
                     data: function (d) {
                         var AdditionalValues = {
-                            FromDate, ToDate, Type
+                            FromDate, ToDate, Type, Region
                         };
                         d.AdditionalValues = AdditionalValues;
                         return JSON.stringify(d);
@@ -197,7 +229,7 @@
                 columns: Columns,
                 "order": [[0, "asc"]]
             });
-        }                
+        }
     </script>
 }
 

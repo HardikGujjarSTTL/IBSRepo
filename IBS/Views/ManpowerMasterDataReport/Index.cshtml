@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Manpower Master Data Report";
+}
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Manpower Master Data Report</h2>
+    </div>
+</div>
+<div class="task-listinput">
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Sl.No.</th>
+                            <th>
+                                RIO
+                            </th>
+                            <th>
+                                Name of the Employee (S/Shri)
+                            </th>
+                            <th>
+                                Emp. No.
+                            </th>
+                            <th>
+                                Designation
+                            </th>
+                            <th>
+                                Cadre
+                            </th>
+                            <th>
+                                Discipline
+                            </th>
+                            <th>
+                                Status (Reg./Dep./Cont./Thru MPA/Consultant/Apprentice etc.)
+                            </th>
+                            <th>
+                                Date of Birth
+                            </th>
+                            <th>
+                                Date of Joining in RITES
+                            </th>
+                            <th>
+                                Date of Joining in RIO
+                            </th>
+                            <th>
+                                Date of Repatriation/ Retirement/ Term Completion
+                            </th>
+                            <th>
+                                Working as (SBU Head/C.M/I.E/DFO/Others etc.)
+                            </th>
+                            <th>
+                                Technical/ Non Tech. staff
+                            </th>
+                            <th>
+                                Place of posting
+                            </th>
+                            <th>
+                                Project Name (Lab/TPI Work/GeM/SAIL Conversion/SAIL DSP/MSF/RINL/MCF/ICF/NSIC/HO etc.)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeDatatable();
+        });
+
+        function InitializeDatatable() {
+            // var Region = $("#Region").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: true,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTable")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            // Region
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Region" },
+                    { data: "EmpName" },
+                    { data: "EmpNo" },
+                    { data: "Desig" },
+                    { data: "Cadre" },
+                    { data: "Discp" },
+                    { data: "Status" },
+                    {
+                        data: "Dob",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "RitesDt",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "RioDt",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    {
+                        data: "DrrtDt",
+                        render: function (data, type, row) {
+                            return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                        }
+                    },
+                    { data: "Working" },
+                    { data: "Staff" },
+                    { data: "PlacePosting" },
+                    { data: "ProjectName" },
+                    
+                ],
+                "order": [[0, "asc"]]
+            });
+        }
+    </script>
+}

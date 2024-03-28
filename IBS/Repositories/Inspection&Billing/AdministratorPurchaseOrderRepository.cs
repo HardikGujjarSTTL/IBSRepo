@@ -1,22 +1,29 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
+using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using Newtonsoft.Json;
-using IBS.Interfaces.Inspection_Billing;
 
 namespace IBS.Repositories.Inspection_Billing
 {
     public class AdministratorPurchaseOrderRepository : IAdministratorPurchaseOrderRepository
     {
         private readonly ModelContext context;
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration _configuration;
 
-        public AdministratorPurchaseOrderRepository(ModelContext context)
+        private readonly IDocument iDocument;
+
+        public AdministratorPurchaseOrderRepository(ModelContext context, IWebHostEnvironment _environment, IConfiguration configuration, IDocument _iDocumentRepository)
         {
             this.context = context;
+            env = _environment;
+            _configuration = configuration;
+
+            iDocument = _iDocumentRepository;
         }
         public AdministratorPurchaseOrderModel FindByID(string CaseNo)
         {
@@ -60,7 +67,7 @@ namespace IBS.Repositories.Inspection_Billing
                 return model;
             }
         }
-        public DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters, string region_code)
+        public DTResult<AdministratorPurchaseOrderListModel> GetPOMasterList(DTParameters dtParameters, string region_code, string RootHostName)
         {
 
             DTResult<AdministratorPurchaseOrderListModel> dTResult = new() { draw = 0 };
@@ -104,41 +111,92 @@ namespace IBS.Repositories.Inspection_Billing
             {
                 vend_name = Convert.ToString(dtParameters.AdditionalValues["vend_name"]);
             }
-
-            OracleParameter[] par = new OracleParameter[6];
+            OracleParameter[] par = new OracleParameter[9];
             par[0] = new OracleParameter("p_cs_no", OracleDbType.Varchar2, CaseNo.ToString() == "" ? DBNull.Value : CaseNo.ToString(), ParameterDirection.Input);
             par[1] = new OracleParameter("p_po_no", OracleDbType.Varchar2, PoNo.ToString() == "" ? DBNull.Value : PoNo.ToString(), ParameterDirection.Input);
             par[2] = new OracleParameter("p_po_date", OracleDbType.Varchar2, PoDt.ToString() == "" ? DBNull.Value : PoDt.ToString(), ParameterDirection.Input);
             par[3] = new OracleParameter("p_vend_name", OracleDbType.Varchar2, vend_name.ToString() == "" ? DBNull.Value : vend_name.ToString(), ParameterDirection.Input);
             par[4] = new OracleParameter("p_region_code", OracleDbType.Varchar2, region_code.ToString() == "" ? DBNull.Value : region_code.ToString(), ParameterDirection.Input);
-            par[5] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[5] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[7] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[8] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var ds = DataAccessDB.GetDataSet("SP_GET_Administrator_PO_DETAILS", par, 1);
-            DataTable dt = ds.Tables[0];
-
-
+            var ds = DataAccessDB.GetDataSet("SP_GET_Administrator_PO_DETAILS", par, 2);
             List<AdministratorPurchaseOrderListModel> list = new();
             if (ds != null && ds.Tables.Count > 0)
             {
                 string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
                 list = JsonConvert.DeserializeObject<List<AdministratorPurchaseOrderListModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                if (list.Count > 0)
+                {
+                    string HostUrl = _configuration.GetSection("AppSettings")["SiteUrl"];
+                    if (RootHostName.Contains("14.143.90.241"))
+                    {
+                        HostUrl = HostUrl.Replace("192.168.0.101", "14.143.90.241");
+                    }
+                    foreach (var item in list)
+                    {
+                        //New
+                        var lstParentLOADocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, item.CASE_NO.ToString());
+                        var lstParentLOA = lstParentLOADocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.ParentLOA).ToList();
+
+                        string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
+                        string fpath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
+                        if (!File.Exists(fpath) && !File.Exists(fpath1))
+                        {
+                            item.IsFileExist = false;
+                        }
+                        else if (File.Exists(fpath))
+                        {
+                            item.IsFileExist = true;
+                            item.IsPO_DOC = true;
+                            item.IsPO_DOC1 = false;
+                            item.PO_DOC = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
+                        }
+                        else if (File.Exists(fpath1))
+                        {
+                            item.IsFileExist = true;
+                            item.IsPO_DOC = false;
+                            item.IsPO_DOC1 = true;
+                            item.PO_DOC1 = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
+                        }
+
+
+                        //Old
+                        //string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
+                        //string fpath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
+                        //if (!File.Exists(fpath) && !File.Exists(fpath1))
+                        //{
+                        //    item.IsFileExist = false;
+                        //}
+                        //else if (File.Exists(fpath))
+                        //{
+                        //    item.IsFileExist = true;
+                        //    item.IsPO_DOC = true;
+                        //    item.IsPO_DOC1 = false;
+                        //    item.PO_DOC = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
+                        //}
+                        //else if (File.Exists(fpath1))
+                        //{
+                        //    item.IsFileExist = true;
+                        //    item.IsPO_DOC = false;
+                        //    item.IsPO_DOC1 = true;
+                        //    item.PO_DOC1 = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
+                        //}
+                    }
+                }
             }
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
 
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
             query = list.AsQueryable();
-
-
-            dTResult.recordsTotal = query.Count();
-
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.CASE_NO).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.PO_NO).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.VEND_NAME).ToLower().Contains(searchBy.ToLower())
-                );
-
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
 
             return dTResult;
@@ -197,7 +255,7 @@ namespace IBS.Repositories.Inspection_Billing
                 obj.Createddate = DateTime.Now;
                 obj.Ispricevariation = Convert.ToByte(model.Ispricevariation);
                 obj.Isstageinspection = Convert.ToByte(model.Isstageinspection);
-                obj.Contractid=model.Contractid;
+                obj.Contractid = model.Contractid;
                 context.T13PoMasters.Add(obj);
                 context.SaveChanges();
                 CaseNo = obj.CaseNo;
@@ -384,8 +442,8 @@ namespace IBS.Repositories.Inspection_Billing
             if (count > 0)
             {
                 maxSrNo = (from pm in context.T15PoDetails
-                               where pm.CaseNo == CaseNo
-                               select pm.ItemSrno).Max() + 1;
+                           where pm.CaseNo == CaseNo
+                           select pm.ItemSrno).Max() + 1;
             }
             return maxSrNo;
         }

@@ -1,31 +1,11 @@
-﻿using IBS.Controllers;
-using IBS.DataAccess;
+﻿using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces;
-using IBS.Interfaces.Vendor;
 using IBS.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGeneration;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Dynamic;
-using System.Globalization;
-using System.Net;
-using System.Net.Mail;
-using System.Xml;
-using System.Xml.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories
 {
@@ -33,11 +13,13 @@ namespace IBS.Repositories
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public ComplaintApprovalRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public ComplaintApprovalRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
 
         public string GetItems(string InspRegionDropdown)
@@ -56,7 +38,7 @@ namespace IBS.Repositories
             return json;
         }
 
-        public DTResult<OnlineComplaints> GetRejComplaints(DTParameters dtParameters)
+        public DTResult<OnlineComplaints> GetRejComplaints(DTParameters dtParameters, string Region)
         {
 
             DTResult<OnlineComplaints> dTResult = new() { draw = 0 };
@@ -83,7 +65,7 @@ namespace IBS.Repositories
             }
 
             query = from t in context.TempOnlineComplaints
-                    where t.Status == null
+                    where t.Status == null && t.InspRegion == Region
                     orderby t.TempComplaintId, t.TempComplaintId
                     select new OnlineComplaints
                     {
@@ -98,10 +80,11 @@ namespace IBS.Repositories
                         SetNo = t.SetNo,
                         InspRegion = t.InspRegion,
                         RejMemono = t.RejMemoNo,
-                        //RejMemodate = t.RejMemoDt,
+                        RejMemodate = t.RejMemoDt,
                         RejectionValue = t.RejectionValue,
                         RejectionReason = t.RejectionReason,
                         Remarks = t.Remarks,
+                        COMP_DOC = t.TempComplaintId
                         //COMP_DOC = "Online_Complaints/" + t.TEMP_COMPLAINT_ID + ".pdf"
                     };
 
@@ -133,10 +116,10 @@ namespace IBS.Repositories
 
             if (model.Regioncode != "N")
             {
-               var existingComplaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == ComplaintID);
+                var existingComplaint = context.T40ConsigneeComplaints.FirstOrDefault(c => c.ComplaintId == ComplaintID);
 
-               if (existingComplaint != null)
-               {
+                if (existingComplaint != null)
+                {
                     DataTable dt = new DataTable();
 
                     OracleParameter[] par = new OracleParameter[4];
@@ -152,38 +135,38 @@ namespace IBS.Repositories
                     string JiSno = firstRow["W_JISNO"].ToString().Trim();
 
                     if (model.Regioncode == "N")
-                   {
-                       existingComplaint.JiRequired = model.AcceptRejornot;
-                       existingComplaint.JiRegion = model.InspRegion;
-                       existingComplaint.JiSno = JiSno;
-                       existingComplaint.JiIeCd = model.JiIeCd;
-                       existingComplaint.JiDt = model.JIDate;
-                       existingComplaint.JiFixDt = model.JiFixDt;
-                       existingComplaint.JiStatusCd = 0;
-                       existingComplaint.UserId = model.UserId;
-                       existingComplaint.Datetime = DateTime.Now;
-                       existingComplaint.Updateddate= DateTime.Now;
-                       existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
-                   }
-                   else
-                   {
-                       existingComplaint.JiRequired = model.AcceptRejornot;
-                       existingComplaint.JiRegion = model.InspRegion;
-                       existingComplaint.JiSno = JiSno;
-                       existingComplaint.JiDt = model.JIDate;
-                       existingComplaint.JiStatusCd = 0;
-                       existingComplaint.UserId = model.UserId;
-                       existingComplaint.Datetime = DateTime.Now;
-                       existingComplaint.Updateddate = DateTime.Now;
-                       existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
+                    {
+                        existingComplaint.JiRequired = model.AcceptRejornot;
+                        existingComplaint.JiRegion = model.InspRegion;
+                        existingComplaint.JiSno = JiSno;
+                        existingComplaint.JiIeCd = model.JiIeCd;
+                        existingComplaint.JiDt = model.JIDate;
+                        existingComplaint.JiFixDt = model.JiFixDt;
+                        existingComplaint.JiStatusCd = 0;
+                        existingComplaint.UserId = model.UserId;
+                        existingComplaint.Datetime = DateTime.Now;
+                        existingComplaint.Updateddate = DateTime.Now;
+                        existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
+                    }
+                    else
+                    {
+                        existingComplaint.JiRequired = model.AcceptRejornot;
+                        existingComplaint.JiRegion = model.InspRegion;
+                        existingComplaint.JiSno = JiSno;
+                        existingComplaint.JiDt = model.JIDate;
+                        existingComplaint.JiStatusCd = 0;
+                        existingComplaint.UserId = model.UserId;
+                        existingComplaint.Datetime = DateTime.Now;
+                        existingComplaint.Updateddate = DateTime.Now;
+                        existingComplaint.Updatedby = Convert.ToInt32(model.UserId);
                     }
                     msg = "Data Saved.";
-                   context.SaveChanges();
-               }
+                    context.SaveChanges();
+                }
 
-               send_IE_Email(model);
+                send_IE_Email(model);
             }
-            else if(model.Regioncode == "N")
+            else if (model.Regioncode == "N")
             {
                 string no_ji_other = "";
 
@@ -242,7 +225,7 @@ namespace IBS.Repositories
                 DataRow firstRow = dt.Rows[0];
                 string ComplaintID = firstRow["W_COMPID"].ToString().Trim();
 
-                 model.ComplaintID = ComplaintID;
+                model.ComplaintID = ComplaintID;
 
                 T40ConsigneeComplaint obj = new T40ConsigneeComplaint();
                 obj.ComplaintId = ComplaintID;
@@ -299,7 +282,7 @@ namespace IBS.Repositories
             par[0] = new OracleParameter("p_CaseNo", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
             par[1] = new OracleParameter("p_BkNo", OracleDbType.Varchar2, BKNo, ParameterDirection.Input);
             par[2] = new OracleParameter("p_SetNo", OracleDbType.Varchar2, SetNo, ParameterDirection.Input);
-            par[3] = new OracleParameter("p_TempComplaintId", OracleDbType.Varchar2,TEMP_COMPLAINT_ID, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_TempComplaintId", OracleDbType.Varchar2, TEMP_COMPLAINT_ID, ParameterDirection.Input);
             par[4] = new OracleParameter("p_ResultCursor", OracleDbType.RefCursor, ParameterDirection.Output);
 
             var ds = DataAccessDB.GetDataSet("GET_REJECTIONCOMPLAINT_DETAILS", par, 1);
@@ -358,7 +341,7 @@ namespace IBS.Repositories
 
                     if (DateTime.TryParse(dt.Rows[0]["rej_memo_dt"].ToString(), out DateTime memodt))
                     {
-                       // model.RejMemodate = memodt;
+                        // model.RejMemodate = memodt;
                     }
                     model.RejMemono = dt.Rows[0]["rej_memo_no"].ToString();
 
@@ -388,29 +371,24 @@ namespace IBS.Repositories
         public void send_Consignee_Email_for_Rejected_Complaints(OnlineComplaints model)
         {
             string wRegion = "";
-            string sender = "";
 
-            if(model.Regioncode == "N")
+            if (model.Regioncode == "N")
             {
                 wRegion = "NORTHERN REGION \n 12th FLOOR,CORE-II,SCOPE MINAR,LAXMI NAGAR, DELHI - 110092 \n Phone : +918800018691-95 \n Fax : 011-22024665";
-                sender = "nrinspn@rites.com";
             }
-            else if(model.Regioncode == "S")
+            else if (model.Regioncode == "S")
             {
                 wRegion = "SOUTHERN REGION \n CTS BUILDING - 2ND FLOOR, BSNL COMPLEX, NO. 16, GREAMS ROAD,  CHENNAI - 600 006 \n Phone : 044-28292807/044- 28292817 \n Fax : 044-28290359";
-                sender = "srinspn@rites.com";
             }
-            else if(model.Regioncode == "E")
+            else if (model.Regioncode == "E")
             {
                 wRegion = "EASTERN REGION \n CENTRAL STATION BUILDING(METRO), 56, C.R. AVENUE,3rd FLOOR,KOLKATA-700 012  \n Fax : 033-22348704";
-                sender = "erinspn@rites.com";
             }
-            else if(model.Regioncode == "W")
+            else if (model.Regioncode == "W")
             {
                 wRegion = "WESTERN REGION \n 5TH FLOOR, REGENT CHAMBER, ABOVE STATUS RESTAURANT, NARIMAN POINT,MUMBAI-400021 \n Phone : 022-68943400/68943445";
-                sender = "wrinspn@rites.com";
             }
-            else if(model.Regioncode == "C")
+            else if (model.Regioncode == "C")
             {
                 wRegion = "Central Region";
             }
@@ -429,20 +407,24 @@ namespace IBS.Repositories
 
             string mailBody = "Dear Sir/Madam,\n\n Online Consignee Complaint vide Rej Memo Letter dated:  " + complaint.RejMemoNo + " for JI of material against PO No. - " + model.Contract + " dated - " + model.Date + ", on date: " + complaint.TempComplaintDt + ". The Complaint is rejected due to following Reason:- " + model.Reasonforreject + ", so Complaint not registered. \n\n Thanks for using RITES Inspection Services. \n NATIONAL INSPECTION HELP LINE NUMBER : 1800 425 7000 (TOLL FREE). \n\n" + wRegion + ".";
 
-            SendMailModel SendMailModel = new SendMailModel();
-            SendMailModel.To = complaint.ConsigneeEmail; ;
-            SendMailModel.From = "nrinspn@gmail.com"; ;
-            SendMailModel.Subject = "Your Consignee Complaint For RITES";
-            SendMailModel.Message = mailBody;
+            bool isSend = false;
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+            {
+                SendMailModel SendMailModel = new SendMailModel();
+                SendMailModel.To = complaint.ConsigneeEmail; ;
+                SendMailModel.From = "nrinspn@gmail.com"; ;
+                SendMailModel.Subject = "Your Consignee Complaint For RITES";
+                SendMailModel.Message = mailBody;
 
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+                isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
 
         }
 
         public void send_IE_Email(OnlineComplaints model)
         {
             string wRegion = "";
-            string ie_name="", ie_email="", co_email = "";
+            string ie_name = "", ie_email = "", co_email = "";
             SendMailModel SendMailModel = new SendMailModel();
 
 
@@ -483,9 +465,9 @@ namespace IBS.Repositories
             var result = query.FirstOrDefault();
             if (result != null)
             {
-                 ie_name = result.IeName;
-                 ie_email = result.IeEmail;
-                 co_email = result.CoEmail;
+                ie_name = result.IeName;
+                ie_email = result.IeEmail;
+                co_email = result.CoEmail;
             }
 
             string mail_body = "";

@@ -20,6 +20,8 @@
             <input type="hidden" asp-for="UpdateAllowed" />
             <input type="hidden" asp-for="RlyNonrly" />
             <input type="hidden" asp-for="IeCd" />
+            <input type="hidden" asp-for="DelvDt" />
+
         </div>
         <div class="accordion-body">
             <div class="row my-0">
@@ -98,7 +100,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="Name">Inspecting Engineer to whom Call is marked <i class="text-danger">*</i></label>
-                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.ClusterCode, new SelectList(IBS.Models.Common.GetCluster(Model.RegionCode, Model.CallRecvDt), "Value", "Text"), "--Select--")
                         <span asp-validation-for="ClusterCode" class="text-danger"></span>
                     </div>
                 </div>
@@ -130,7 +132,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="reference">
                         <label for="CallRemarkStatus">Call Re-Mark Status(If Call has been Re-marked)</label>
-                        @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.CallRemarkStatus, new SelectList(IBS.Models.Common.CallRStatus(), "Value", "Text"), "--Select--")
                         @* <span asp-validation-for="CallRemarkStatus" class="text-danger"></span> *@
                     </div>
                 </div>
@@ -143,7 +145,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="DepartmentCode">Item to be inspected viz. Mechanical, Electrical, Civil etc <i class="text-danger">*</i></label>
-                    @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist() , "Value", "Text"),"--Select--")
+                    @Html.DropDownListFor(model => model.DepartmentCode, new SelectList(IBS.Models.Common.Departmentlist(), "Value", "Text"), "--Select--")
                     <span asp-validation-for="DepartmentCode" class="text-danger"></span>
                 </div>
             </div>
@@ -174,7 +176,7 @@
                 <div class="col-md-4 mb-3" id="dvIrfcFunded">
                     <div class="reference">
                         <label for="IrfcFunded"><span style="color:red">In case of IRFC Funded Project, Select 'Yes'</span></label>
-                        @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.CommonYesNo() , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.IrfcFunded, new SelectList(IBS.Models.Common.CommonYesNo(), "Value", "Text"), "--Select--")
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -230,7 +232,7 @@
                 <div class="col-md-8 mb-3">
                     <div class="reference">
                         <label for="Name"><br /></label>
-                        @Html.DropDownListFor(model => model.MfgCd, new SelectList(IBS.Models.Common.GetVendor_City(@Model.MfgCd) , "Value", "Text"),"--Select--")
+                        @Html.DropDownListFor(model => model.MfgCd, new SelectList(IBS.Models.Common.GetVendor_City(@Model.MfgCd), "Value", "Text"), "--Select--")
                         <span asp-validation-for="MfgCd" class="text-danger"></span>
                     </div>
                 </div>
@@ -340,16 +342,16 @@
         </div>
     </form>
 </div>
-@section scripts{
+@section scripts {
     <partial name="_DataTablesScriptsPartial" />
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-            debugger
+
             $("#CallRecvDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
             $("#PoDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
             $("#CallStatusDt").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
-            $("#DtInspDesire").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
+            // $("#DtInspDesire").datepicker({ minDate: -1, maxDate: -2 }).attr('readonly', 'readonly');
 
             $("#MfgCd").prop("disabled", "disabled");
             if ($("#RlyNonrly").val() == "R") {
@@ -391,7 +393,7 @@
                 $("#btnDelete").hide();
                 $("#CallStatus").val("Marked");
             }
-
+            //FillVendor();
         });
 
         function Save() {
@@ -399,6 +401,53 @@
                 $("#frmDetails").submit();
             }
         }
+        function parseDate(dateString) {
+            var parts = dateString.split("/");
+            return new Date(parts[2], parts[1] - 1, parts[0]);
+        }
+
+        $("#DtInspDesire").change(function () {
+            debugger
+            var CallMarkDt = $("#CallMarkDt").val();
+            var Delv_dt = $("#DelvDt").val();
+            var DtInspDesire = $("#DtInspDesire").val();
+
+            var day = Delv_dt.substring(0, 2);
+            var month = Delv_dt.substring(3, 5);
+            var year = Delv_dt.substring(6, 10);
+            var formattedDate = day + "/" + month + "/" + year;
+            
+
+            var callMarkDate = parseDate(CallMarkDt);
+            var dtInspDesireDate = parseDate(DtInspDesire);
+            var Delv_dtDate = parseDate(formattedDate);
+            
+            // if (callMarkDate > dtInspDesireDate) {
+            //     $("#DtInspDesire").val(CallMarkDt);
+            //     ShowHideMsgNew(false, "Not less then Expected Date of Inspection/Material Readiness Date.");
+            // }
+            if (dtInspDesireDate > Delv_dtDate) {
+                $("#DtInspDesire").val(CallMarkDt);
+                ShowHideMsgNew(false, "Not more then Delevery Date PO.");
+            }
+            var CallRecvDt = $("#CallRecvDt").val();
+
+            var futureDate = parseDate(CallRecvDt);
+            futureDate.setDate(futureDate.getDate() + 5);
+            
+            var timeDifference = futureDate.getTime() - parseDate(DtInspDesire).getTime();
+            var daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+            if (daysDifference > 5) {
+                $("#DtInspDesire").val(CallRecvDt);
+                ShowHideMsgNew(false, "Inspection Desired date not less then call registration.");
+            }
+            if (daysDifference < 0) {
+                $("#DtInspDesire").val(CallRecvDt);
+                ShowHideMsgNew(false, "Inspection Desired date may be within 5 days from the call registration.");
+            }
+        });
+
+        
 
         $("#SearchDetailsM").click(function () {
             FillVendorClick();
@@ -431,7 +480,7 @@
                 url: '@Url.Action("GetVendorDetails", "CallRegisterIB")',
                 type: "GET",
                 dataType: "JSON",
-                data: { "MfgCd": MfgCd, "CaseNo": CaseNo },
+                data: { "MfgCd": 0, "CaseNo": CaseNo },
                 success: function (contacts) {
                     if (contacts.data && contacts.data.length > 0) {
                         $("#MfgCd").val(contacts.data[0].VendCd);
@@ -528,7 +577,7 @@
         });
 
         $("#btnRegiserCallSave").click(function () {
-            debugger
+
             const urlParams = new URLSearchParams(window.location.search);
             const actiontype = urlParams.get('ActionType');
 
@@ -567,12 +616,12 @@
                 var formData = $("#frmDetails").serialize();
                 $.post("@Url.Action("DetailsSave", "CallRegisterIB")", formData, function (response) {
                     ShowHideMsgNew(response.status, response.responseText);
-                    
+
                     if (response.status) {
                         $("#btnRegiserCallSave").hide();
                         $("#btnDelete").hide();
                         $("#btnCDetails").show();
-                        
+
                     }
                     //var UpdateAllowed = $("#UpdateAllowed").val();
                     //    if (UpdateAllowed == "N") {
@@ -583,7 +632,7 @@
                     //        $("#btnRegiserCallSave").show();
                     //    }
                 });
-                
+
             }
             return false;
         });
@@ -612,7 +661,7 @@
             //var CallSNo = urlParams.get('CallSNo');
             var cstatus = urlParams.get('cstatus');
             var status = "";
-            debugger
+
             if ($('#btnRegisterCallSave').is(':hidden') || $('#btnDelete').is(':hidden')) {
                 status = "M";
             }
@@ -642,5 +691,14 @@
             ShowHideMsgNew(res.status, res.responseText);
             window.location.href = '@Url.Action("VendorCallRegister", "VendorCallRegister")';
         };
+
+        function Select_IE() {
+            var IE = $("#ClusterCode").val();
+            $.get("@Url.Action("UploadDoc", "CallRegisterIB")", formData, function (response) {
+                ShowHideMsgNew(response.status, response.responseText);
+                if (response.status) {
+                }
+            });
+        }
     </script>
 }

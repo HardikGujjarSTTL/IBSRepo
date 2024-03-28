@@ -4,7 +4,7 @@ namespace IBS.Interfaces.Vendor
 {
     public interface IVendorCallRegisterRepository
     {
-        public VenderCallRegisterModel FindByID(string ActionType, string CaseNo, DateTime? CallRecvDt,int CallSno, string FOS, string UserName);
+        public VenderCallRegisterModel FindByID(string ActionType, string CaseNo, DateTime? CallRecvDt, int CallSno, string FOS, string UserName, string Region);
 
         public VenderCallRegisterModel FindByVenderDetail(int MfgCd);
 

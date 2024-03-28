@@ -366,3 +366,6 @@ FodyWeavers.xsd
 /IBS/wwwroot/ReadWriteData/LAB
 /IBS/Views/RecieptVoucher/PrintBankStatementVoucher.cshtml
 /IBS/Views/RecieptVoucher/PrintManage.cshtml
+/IBSAPI/wwwroot/ReadWriteData/IC_PHOTOS
+/IBSAPI/wwwroot/ReadWriteData/TESTPLAN
+/IBS/wwwroot/ReadWriteData/Files

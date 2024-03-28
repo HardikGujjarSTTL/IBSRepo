@@ -64,6 +64,7 @@
     <script type="text/javascript">
         $(function () {
             // Get the current date
+            debugger
             var FromDate = GetFinalcialStartDate();
             $("#FromDate").val($.datepicker.formatDate("dd/mm/yy", FromDate));
             $("#ToDate").val($.datepicker.formatDate("dd/mm/yy", new Date()));
@@ -75,6 +76,8 @@
             }
             else if (type == "M") {
                 $("#spnHeading").text("No. of Pending Calls.");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
             }
             else if (type == "A") {
                 $("#spnHeading").text("No. of Accepted Calls.");
@@ -84,9 +87,13 @@
             }
             else if (type == "U") {
                 $("#spnHeading").text("No. of Under Lab Testing.");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
             }
             else if (type == "S") {
                 $("#spnHeading").text("No. of Still Under Inspection.");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
             }
             else if (type == "T") {
                 $("#spnHeading").text("No. of Stage Rejection.");
@@ -95,6 +102,9 @@
         });
 
         function InitializeDatatable(type) {
+            const urlParams = new URLSearchParams(window.location.search);
+            type = urlParams.get('Type');
+
             var FromDate = $("#FromDate").val();
             var ToDate = $("#ToDate").val();
             var Status = type;

@@ -147,8 +147,18 @@
             loadLabInfoReport();
             fileName = 'LAB_SAMPLE_INFO_DETAILS';
         }
+        else if ('@ReportType' == 'Barcode') {
+            loadBarcodeReport();
+            fileName = 'BARCODE_REPORT';
+        }
 
     });
+    function loadBarcodeReport() {
+        $("#dvReportViewer").load("@Url.Action("BarcodeReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt' }, function (response) {
+            $("#dvReportViewer").empty();
+            $("#dvReportViewer").html(response);
+        });
+    }
     function loadLabRegReport() {
         $("#dvReportViewer").load("@Url.Action("LabRegisterReport")", { wFrmDtO: '@Model.wFrmDtO', wToDt: '@Model.wToDt', rdbIEWise: '@Model.rdbIEWise', rdbPIE: '@Model.rdbPIE', rdbVendWise: '@Model.rdbVendWise', rdbPVend: '@Model.rdbPVend', rdbLabWise: '@Model.rdbLabWise', rdbPLab: '@Model.rdbPLab', rdbPending: '@Model.rdbPending', rdbPaid: '@Model.rdbPaid', rdbDue: '@Model.rdbDue', rdbPartlyPaid: '@Model.rdbPartlyPaid', lstTStatus: '@Model.lstTStatus', lstIE: '@Model.lstIE', ddlVender: '@Model.ddlVender', lstLab: '@Model.lstLab', from: '@Model.from', to: '@Model.to', Disciplinewise: '@Model.Disciplinewise', rdbPDis: '@Model.rdbPDis', Discipline: '@Model.Discipline' }, function (response) {
             $("#dvReportViewer").empty();

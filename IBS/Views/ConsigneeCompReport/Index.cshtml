@@ -963,13 +963,14 @@
             $("#vendortxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Search/GetVendorData",
+                        url: "@Url.Action("GetVendorData", "Search")",
+                       // url: "/Search/GetVendorData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.VEND_NAME, value: item.VEND_NAME };
+                                return { text: item.VEND_NAME, value: item.VEND_NAME };
                             }))
                         }
                     })
@@ -980,13 +981,14 @@
             $("#consigneetxt").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: "/Search/GetConsigneeData",
+                        url: "@Url.Action("GetConsigneeData", "Search")",
+                        //url: "/Search/GetConsigneeData",
                         type: "POST",
                         dataType: "json",
                         data: { Prefix: request.term },
                         success: function (data) {
                             response($.map(data, function (item) {
-                                return { label: item.CONSIGNEE, value: item.CONSIGNEE };
+                                return { text: item.CONSIGNEE, value: item.CONSIGNEE };
                             }))
                         }
                     })
@@ -1352,12 +1354,14 @@
             var ParticularConsignee = $("#ParticularConsignee").is(":checked") == true ? "true" : "false";
             var ParticularVendor = $("#ParticularVendor").is(":checked") == true ? "true" : "false";
             var Detailed = $("#Detailed").is(":checked") == true ? "true" : "false";
-            var FinancialYearsvalue = $("#FinancialYears").val();
-            var FinancialYears = $('#FinancialYears option:selected').text();
-            var ddlsupercm = $('#ddlsupercm').val();
-            var ddliename = $('#ddliename').val();
-            var Clientwiseddl = $('#Clientwiseddl').val();
-            var vendor = $('#vendor').val();
+            var FinancialYearsvalue = $("#FinancialYears").val() == "--Select--" ? null : $("#FinancialYears").val();
+            var FinancialYears = $('#FinancialYears option:selected').text() == "--Select--" ? null : $('#FinancialYears option:selected').text();
+            var ddlsupercm = $('#ddlsupercm').val() == "--Select--" ? null : $('#ddlsupercm').val();
+            var ddliename = $('#ddliename').val() == "--Select--" ? null : $('#ddliename').val();
+            var Clientwiseddl = $('#Clientwiseddl').val() == "--Select--" ? null : $('#Clientwiseddl').val();
+            var vendortxt = $('#vendortxt').val();
+            var indexOfHyphen = vendortxt.indexOf("-");
+            var vendor = vendortxt.substr(0, indexOfHyphen).trim();
             var Item = $('#Item').val();
             var consignee = $('#consignee').val();
 

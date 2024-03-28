@@ -1,34 +1,26 @@
 ﻿@model IBS.Models.Statement_IeVendorWiseModel
 
 <div>
-    @* <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></font></p> *@
+    @* <p align="center"><font size="3" face="Verdana"><b><u>(@ViewBag.Region)</u></b></p> *@
     <h3 class="center">(@ViewBag.Region)</h3>
-
-
-
     @*<h3 class="center">Statement of IE & Vendor Wise Calls Cancelled during the Period <span class="orangeText"> @ViewBag.Frm </span> To <span class="orangeText">@ViewBag.To </span></h3>*@
-
-
     <h3 class="center">Statement of Overdue Calls on <span class="orangeText">@ViewBag.OnDate </span></h3>
-
-    <button type="button" id="Print" class="btn btn-secondary" onclick="window.print()" >Print</button>
-
     <br>
     <div class="tableOuter">
         <table class="borderTable" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
-                    <th width="3%" valign="top" align="center"><b><font size="1" face="Verdana">S.NO.</font></b></th>
-                    <th width="25%" valign="top" align="center"><b><font size="1" face="Verdana">Case No.</font></b></th>
-                    <th width="7%" valign="top" align="center"><b><font size="1" face="Verdana">Call Date</font></b></th>
-                    <th width="8%" valign="top" align="center"><b><font size="1" face="Verdana">Desire Date</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Sno.</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Client</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">IE</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">CO</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Vendor</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Status</font></b></th>
-                    <th width="6%" valign="top" align="center"><b><font size="1" face="Verdana">Call Status Date</font></b></th>
+                    <th valign="top" align="center"><b>S.NO.</b></th>
+                    <th valign="top" align="center"><b>Case No.</b></th>
+                    <th valign="top" align="center"><b>Call Date</b></th>
+                    <th valign="top" align="center"><b>Desire Date</b></th>
+                    <th valign="top" align="center"><b>Call Sno.</b></th>
+                    <th valign="top" align="center"><b>Client</b></th>
+                    <th valign="top" align="center"><b>IE</b></th>
+                    <th valign="top" align="center"><b>CO</b></th>
+                    <th valign="top" align="center"><b>Vendor</b></th>
+                    <th valign="top" align="center"><b>Call Status</b></th>
+                    <th valign="top" align="center"><b>Call Status Date</b></th>
 
                 </tr>
                 @if (Model != null && Model.statement_IeVendorWiseModels.Count > 0)
@@ -38,17 +30,17 @@
                     {
 
                         <tr>
-                            <td width="3%" valign="top" align="Left"><font size="1" face="Verdana">@serialNumber</font></td>
-                            <td width="25%" valign="top" align="center"><font size="1" face="Verdana">@item.CASE_NO</font></td>
-                            <td width="7%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_RECV_DT</font></td>
-                            <td width="8%" valign="top" align="center"><font size="1" face="Verdana">@item.DESIRE_DT</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_SNO</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.RLY_CD</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.IE_NAME</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CO_NAME</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.VENDOR</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_STATUS_DESC</font></td>
-                            <td width="6%" valign="top" align="center"><font size="1" face="Verdana">@item.CALL_STATUS_DATE</font></td>
+                            <td valign="top" align="Left">@serialNumber</td>
+                            <td valign="top" align="center">@item.CASE_NO</td>
+                            <td valign="top" align="center">@item.CALL_RECV_DT</td>
+                            <td valign="top" align="center">@item.DESIRE_DT</td>
+                            <td valign="top" align="center">@item.CALL_SNO</td>
+                            <td valign="top" align="center">@item.RLY_CD</td>
+                            <td valign="top" align="center">@item.IE_NAME</td>
+                            <td valign="top" align="center">@item.CO_NAME</td>
+                            <td valign="top" align="center">@item.VENDOR</td>
+                            <td valign="top" align="center">@item.CALL_STATUS_DESC</td>
+                            <td valign="top" align="center">@item.CALL_STATUS_DATE</td>
                         </tr>
                         serialNumber++;
                     }

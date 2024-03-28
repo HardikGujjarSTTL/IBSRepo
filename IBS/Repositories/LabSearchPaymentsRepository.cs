@@ -2,10 +2,7 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
 
 namespace IBS.Repositories
 {
@@ -24,14 +21,14 @@ namespace IBS.Repositories
             var CASE_NO = dtParameters.AdditionalValues?.GetValueOrDefault("CASE_NO");
             var AMOUNT = dtParameters.AdditionalValues?.GetValueOrDefault("AMOUNT");
             var CHQ_NO = dtParameters.AdditionalValues?.GetValueOrDefault("CHQ_NO");
-            var BankNameDropdown = dtParameters.AdditionalValues?.GetValueOrDefault("BankNameDropdown");
+            var BankNameDropdown = dtParameters.AdditionalValues?.GetValueOrDefault("BANK_NAME");
             var CHQ_DT = dtParameters.AdditionalValues?.GetValueOrDefault("CHQ_DT");
 
             query = (from t25 in context.T25RvDetails
                      join t24 in context.T24Rvs on t25.VchrNo equals t24.VchrNo
                      join t94 in context.T94Banks on t25.BankCd equals t94.BankCd
                      from b in context.T12BillPayingOfficers.Where(x => t25.BpoCd != null && x.BpoCd == t25.BpoCd).DefaultIfEmpty()
-                    // where t25.CaseNo == CASE_NO || t25.Amount == Convert.ToDecimal(AMOUNT) || t25.ChqNo == CHQ_NO
+                         // where t25.CaseNo == CASE_NO || t25.Amount == Convert.ToDecimal(AMOUNT) || t25.ChqNo == CHQ_NO
 
                      select new SearchPaymentsModel
                      {
@@ -59,14 +56,14 @@ namespace IBS.Repositories
             }
             else
             {
-                query = query; 
+                query = query;
             }
 
             if (!string.IsNullOrEmpty(CHQ_NO))
             {
                 query = query.Where(t => t.CHQ_NO.Trim().ToUpper().StartsWith(CHQ_NO.Trim().ToUpper()));
             }
-            
+
             if (!string.IsNullOrEmpty(AMOUNT))
             {
                 query = query.Where(t => t.AMOUNT == Convert.ToDecimal(AMOUNT));

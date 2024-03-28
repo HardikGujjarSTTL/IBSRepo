@@ -4,17 +4,8 @@ using IBS.Interfaces;
 using IBS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Data.OracleClient;
-using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.Globalization;
-using System.Reflection;
-using System.Security.Cryptography;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBS.Repositories
 {
@@ -319,7 +310,7 @@ namespace IBS.Repositories
                 string dt = Convert.ToDateTime(model.CALL_DT).ToString("dd-MM-yy");
                 DateTime callRecvDt = DateTime.ParseExact(dt, "dd-MM-yy", CultureInfo.InvariantCulture);
 
-                var _data = context.T33HologramAccountals.Find(model.CASE_NO, callRecvDt,Convert.ToInt32(model.CONSIGNEE_CD), Convert.ToInt16(model.CALL_SNO),Convert.ToByte(model.REC_NO));
+                var _data = context.T33HologramAccountals.Find(model.CASE_NO, callRecvDt, Convert.ToInt32(model.CONSIGNEE_CD), Convert.ToInt16(model.CALL_SNO), Convert.ToByte(model.REC_NO));
                 _data.HgNoMaterialFr = model.HG_NO_MATERIAL_FR;
                 _data.HgNoMaterialTo = model.HG_NO_MATERIAL_TO;
                 _data.HgNoSampleFr = model.HG_NO_SAMPLE_FR;

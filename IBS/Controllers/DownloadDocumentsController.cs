@@ -1,11 +1,8 @@
 ﻿using IBS.Filters;
-using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Data;
 
 namespace IBS.Controllers
 {
@@ -35,7 +32,7 @@ namespace IBS.Controllers
             model.DocType = "R";
 
 
-            
+
 
             return View(model);
         }

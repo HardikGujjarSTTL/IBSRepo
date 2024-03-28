@@ -50,14 +50,19 @@ namespace IBS.Controllers
                 if (model.IsNew)
                 {
                     model.Createdby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
-                    clusterMasterRepository.SaveDetails(model);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
+                    var res = clusterMasterRepository.SaveDetails(model);
+                    if(res < 0)
+                    {
+                        AlertAlreadyExist("Record already exists !!");
+                        return View(model);
+                    }
                     AlertAddSuccess("Record Added Successfully.");
                 }
                 else
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                     clusterMasterRepository.SaveDetails(model);
                     AlertAddSuccess("Record Updated Successfully.");
                 }

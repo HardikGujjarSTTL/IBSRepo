@@ -3,16 +3,10 @@ using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Vendor;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Globalization;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography.Xml;
 
 namespace IBS.Repositories.Vendor
 {
@@ -183,7 +177,7 @@ namespace IBS.Repositories.Vendor
                 orderAscendingDirection = true;
             }
 
-            string CaseNo = "", CallRecvDt="",  PoNo = "", PoDt = "", VendName = "", CallLetterNo = "", VendCd = "", CallSNo = "";
+            string CaseNo = "", CallRecvDt = "", PoNo = "", PoDt = "", VendName = "", CallLetterNo = "", VendCd = "", CallSNo = "";
 
             if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
             {

@@ -1,15 +1,15 @@
-﻿using IBS.DataAccess;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using IBS.DataAccess;
 using IBS.Helper;
 using IBS.Interfaces.Reports.OtherReports;
+using IBS.Models;
 using IBS.Models.Reports;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
-using System.Security.Cryptography;
 
 namespace IBS.Repositories.Reports.OtherReports
 {
@@ -329,7 +329,7 @@ namespace IBS.Repositories.Reports.OtherReports
                     }).ToList();
                     foreach (var item in listcong)
                     {
-                        item.Total = (decimal)item.Total_Minor + (decimal)item.Total_Major + (decimal)item.Total_Critical;
+                        item.Total = item.Total_Minor + item.Total_Major + item.Total_Critical;
                     }
                     model.lstAllNCRCMIE = listcong;
                 }
@@ -853,8 +853,18 @@ namespace IBS.Repositories.Reports.OtherReports
                         {
                             IE_NAME = Convert.ToString(row["IE_NAME"]),
                             CO_NAME = Convert.ToString(row["CO_NAME"]),
+                            Date = date,
                         }).ToList();
-                        model.lstDailyIECMWorkPlanReporttbl3 = listcong;
+
+                        if (model.lstDailyIECMWorkPlanReporttbl3 == null)
+                        {
+                            model.lstDailyIECMWorkPlanReporttbl3 = new List<DailyIECMWorkPlanReporttbl3>();
+                        }
+
+                        foreach (var item in listcong)
+                        {
+                            model.lstDailyIECMWorkPlanReporttbl3.Add(item);
+                        }
                     }
                 }
 
@@ -931,15 +941,15 @@ namespace IBS.Repositories.Reports.OtherReports
                     orderAscendingDirection = true;
                 }
 
-                string CaseNo = "", CallRecDT = "", CallSno = null, BKNO = null, SETNO = null;
-
+                string CaseNo = "", CallSno = null, BKNO = null, SETNO = null;
+                DateTime? CallRecDT = null;
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
                 {
                     CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
                 }
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallRecDT"]))
                 {
-                    CallRecDT = Convert.ToString(dtParameters.AdditionalValues["CallRecDT"]);
+                    CallRecDT = Convert.ToDateTime(dtParameters.AdditionalValues["CallRecDT"]);
                 }
                 if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CallSno"]))
                 {
@@ -958,21 +968,13 @@ namespace IBS.Repositories.Reports.OtherReports
                 DataTable dt = new DataTable();
 
                 DataSet ds;
-
-                string formattedFromDate = null;
-
-                if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
-                {
-                    DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-                    formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
-                }
+                
                 try
                 {
                     OracleParameter[] par = new OracleParameter[7];
                     par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
                     par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-                    par[2] = new OracleParameter("p_recdt", OracleDbType.Date, formattedFromDate, ParameterDirection.Input); // Corrected type to OracleDbType.Date
+                    par[2] = new OracleParameter("p_recdt", OracleDbType.Date, CallRecDT, ParameterDirection.Input); // Corrected type to OracleDbType.Date
                     par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
                     par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
                     par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
@@ -1040,20 +1042,12 @@ namespace IBS.Repositories.Reports.OtherReports
             DataSet ds = null;
             DataTable dt = new DataTable();
 
-
-            string formattedFromDate = null;
-
-            if (CallRecDT != null && CallRecDT != "" && Convert.ToDateTime(CallRecDT) != DateTime.MinValue)
-            {
-                DateTime parsedFromDate = DateTime.ParseExact(CallRecDT, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-
-                formattedFromDate = parsedFromDate.ToString("dd/MM/yyyy");
-            }
+            DateTime? Call_Recv_Dt = !string.IsNullOrEmpty(CallRecDT) ? Convert.ToDateTime(CallRecDT) : null;
 
             OracleParameter[] par = new OracleParameter[7];
             par[0] = new OracleParameter("p_region", OracleDbType.Varchar2, Region, ParameterDirection.Input);
             par[1] = new OracleParameter("p_caseNO", OracleDbType.Varchar2, CaseNo, ParameterDirection.Input);
-            par[2] = new OracleParameter("p_recdt", OracleDbType.Date, formattedFromDate, ParameterDirection.Input); // Corrected type to OracleDbType.Date
+            par[2] = new OracleParameter("p_recdt", OracleDbType.Date, Call_Recv_Dt, ParameterDirection.Input); // Corrected type to OracleDbType.Date
             par[3] = new OracleParameter("p_callsno", OracleDbType.Varchar2, CallSno, ParameterDirection.Input);
             par[4] = new OracleParameter("p_bkno", OracleDbType.Varchar2, BKNO, ParameterDirection.Input);
             par[5] = new OracleParameter("p_setno", OracleDbType.Varchar2, SETNO, ParameterDirection.Input);
@@ -1085,6 +1079,50 @@ namespace IBS.Repositories.Reports.OtherReports
                 model.lstlistSubmittedPhotobyIE = listcong;
             }
 
+            return model;
+        }
+
+        public OtherReportsModel GetDSCExpReport(string DSCMonth, string DSCYear, string DSCToMonth, string DSCToYear, string DSC_Monthrdo, string Region)
+        {
+            OtherReportsModel model = new();
+            List<DSCExpModel> lstDSCExpModel = new();
+            DataSet ds = null;
+            DataTable dt = new DataTable();
+            string wYrMth_FR = "";
+            string wYrMth_To = "";
+
+            if (DSC_Monthrdo == "true")
+            {
+                wYrMth_FR = DSCYear + DSCMonth;
+                wYrMth_To = DSCYear + DSCMonth;
+            }
+            else
+            {
+                wYrMth_FR = DSCYear + DSCMonth;
+                wYrMth_To = DSCToYear + DSCToMonth;
+            }
+
+            OracleParameter[] par = new OracleParameter[4];
+            par[0] = new OracleParameter("p_regioncode", OracleDbType.Varchar2, Region, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_yearMFr", OracleDbType.Varchar2, wYrMth_FR, ParameterDirection.Input);
+            par[2] = new OracleParameter("p_yearMTo", OracleDbType.Varchar2, wYrMth_To, ParameterDirection.Input);
+            par[3] = new OracleParameter("p_result", OracleDbType.RefCursor, ParameterDirection.Output);
+            ds = DataAccessDB.GetDataSet("GetDSCEXP", par, 1);
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                dt = ds.Tables[0];
+                List<DSCExpModel> listcong = dt.AsEnumerable().Select(row => new DSCExpModel
+                {
+                    IE_Name = Convert.ToString(row["IE_Name"]),
+                    IE_Department = Convert.ToString(row["IE_DEPARTMENT"]),
+                    IE_Emp_No = Convert.ToInt32(row["IE_EMP_NO"]),
+                    R_Desgination = Convert.ToString(row["R_DESIGNATION"]),
+                    IE_Phone_No = Convert.ToString(row["IE_PHONE_NO"]),
+                    IE_Email = Convert.ToString(row["IE_EMAIL"]),
+                    ExpiryDate = Convert.ToString(row["EXPIRY_DT"]),
+                }).ToList();
+                model.lstDSCExpModel = listcong;
+            }
             return model;
         }
     }

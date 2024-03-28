@@ -33,7 +33,7 @@ public partial class T20Ic
 
     public string? FullPart { get; set; }
 
-    public int? NoOfInsp { get; set; }
+    public decimal? NoOfInsp { get; set; }
 
     public DateTime? FirstInspDt { get; set; }
 
@@ -76,6 +76,8 @@ public partial class T20Ic
     public DateTimeOffset? Updateddate { get; set; }
 
     public decimal? Isdeleted { get; set; }
+
+    public string? GstinType { get; set; }
 
     public virtual T22Bill? BillNoNavigation { get; set; }
 

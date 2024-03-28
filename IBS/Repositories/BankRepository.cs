@@ -60,7 +60,7 @@ namespace IBS.Repositories
                      && (!string.IsNullOrEmpty(BankName) ? t94.BankName.ToLower().Contains(BankName.ToLower()) : true)
                      && ((FMISBankCD != null) ? t94.FmisBankCd == FMISBankCD : true)
                     select new BankMasterModel
-                    {   
+                    {
                         BankCd = t94.BankCd,
                         BankName = t94.BankName,
                         FmisBankCd = t94.FmisBankCd
@@ -87,6 +87,12 @@ namespace IBS.Repositories
         {
             if (model.BankCd == 0)
             {
+                var Cnt = context.T94Banks.Where(x => x.BankName.ToLower() == model.BankName.ToLower() && x.FmisBankCd == model.FmisBankCd).Count();
+                if(Cnt > 0)
+                {
+                    return -1;
+                }
+
                 int BankCd = GetMaxBankCd();
                 BankCd += 1;
 

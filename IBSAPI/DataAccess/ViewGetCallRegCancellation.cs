@@ -9,7 +9,7 @@ public partial class ViewGetCallRegCancellation
 
     public DateTime CallRecvDt { get; set; }
 
-    public byte? CallInstallNo { get; set; }
+    public int? CallInstallNo { get; set; }
 
     public int CallSno { get; set; }
 

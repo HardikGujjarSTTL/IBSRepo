@@ -13,11 +13,11 @@ namespace IBS.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save(Call_Cancellation_FormModel model ,string selectedValues) 
+        public IActionResult Save(Call_Cancellation_FormModel model, string selectedValues)
         {
             string Uname = Convert.ToString(UserId);
 
-            string i = callcancellationformrepository.SaveDetails(model ,selectedValues,Uname);
+            string i = callcancellationformrepository.SaveDetails(model, selectedValues, Uname);
             if (i != null)
             {
                 return RedirectToAction("Index");
@@ -39,14 +39,14 @@ namespace IBS.Controllers
         public IActionResult Index(string caseNo = "", string callRecvDate = "", string callSno = "")
         {
             Call_Cancellation_FormModel dtresult = callcancellationformrepository.Combined(caseNo, callRecvDate, callSno);
-            
-            if(dtresult != null)
+
+            if (dtresult != null)
             {
                 return View(dtresult);
                 //return Json(dtresult);
             }
             return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
         }
-                
+
     }
 }

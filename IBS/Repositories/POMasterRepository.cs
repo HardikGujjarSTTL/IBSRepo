@@ -2,10 +2,9 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using Newtonsoft.Json;
 
 namespace IBS.Repositories
 {
@@ -62,7 +61,6 @@ namespace IBS.Repositories
             var searchBy = dtParameters.Search?.Value;
             var orderCriteria = string.Empty;
             var orderAscendingDirection = true;
-
             if (dtParameters.Order != null)
             {
                 // in this example we just default sort on the 1st column
@@ -76,48 +74,56 @@ namespace IBS.Repositories
             }
             else
             {
-                // if we have an empty search then just order the results by Id ascending
                 orderCriteria = "RealCaseNo";
                 orderAscendingDirection = true;
             }
-            query = from POMaster in context.ViewPomasterlists
-                    where POMaster.VendCd == VendCd
-                    && POMaster.Isdeleted != Convert.ToByte(true)
-                    select new PO_MasterModel
-                    {
-                        VendCd = POMaster.VendCd,
-                        CaseNo = POMaster.CaseNo.Trim(),
-                        PoNo = POMaster.PoNo,
-                        PoDtDate = Convert.ToDateTime(POMaster.PoDt).ToString("dd/MM/yyyy"),
-                        RlyCd = POMaster.RlyCd,
-                        VendorName = POMaster.VendName,
-                        ConsigneeSName = POMaster.ConsigneeSName,
-                        RealCaseNo = POMaster.RealCaseNo,
-                        Remarks = POMaster.Remarks,
-                        RlyNonrly = POMaster.RlyNonrly,
-                        MainrlyCd = POMaster.MainrlyCd,
-                    };
 
+            string CaseNo = "", PoNo = "", PoDt = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
+            {
+                CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
+            {
+                PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
+            {
+                PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
+            }
 
-            dTResult.recordsTotal = query.Count();
+            OracleParameter[] par = new OracleParameter[8];
+            par[0] = new OracleParameter("p_VendCd", OracleDbType.Int32, VendCd, ParameterDirection.Input);
+            par[1] = new OracleParameter("p_CASE_NO", OracleDbType.Varchar2, CaseNo.ToString() == "" ? DBNull.Value : CaseNo.ToString(), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_PO_NO", OracleDbType.Varchar2, PoNo.ToString() == "" ? DBNull.Value : PoNo.ToString(), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_PO_DT", OracleDbType.Varchar2, PoDt.ToString() == "" ? DBNull.Value : PoDt.ToString(), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[5] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[6] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[7] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                );
+            var ds = DataAccessDB.GetDataSet("SP_GET_POMASTERLIST_For_Vendor", par, 2);
+            List<PO_MasterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            }
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            query = list.AsQueryable();
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
-
             return dTResult;
         }
 
-        public DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string rly_cd,string RlyNonrly)
+        public DTResult<PO_MasterModel> GetPOMasterListForClient(DTParameters dtParameters, string rly_cd, string RlyNonrly)
         {
 
             DTResult<PO_MasterModel> dTResult = new() { draw = 0 };
@@ -144,39 +150,85 @@ namespace IBS.Repositories
                 orderCriteria = "RealCaseNo";
                 orderAscendingDirection = true;
             }
-            query = from POMaster in context.ViewPomasterlists
-                    where POMaster.Rlycds == rly_cd && POMaster.RlyNonrly== RlyNonrly
-                    && POMaster.Isdeleted != Convert.ToByte(true)
-                    select new PO_MasterModel
-                    {
-                        VendCd = POMaster.VendCd,
-                        CaseNo = POMaster.CaseNo.Trim(),
-                        PoNo = POMaster.PoNo,
-                        PoDtDate = Convert.ToDateTime(POMaster.PoDt).ToString("dd/MM/yyyy"),
-                        RlyCd = POMaster.RlyCd,
-                        VendorName = POMaster.VendName,
-                        ConsigneeSName = POMaster.ConsigneeSName,
-                        RealCaseNo = POMaster.RealCaseNo,
-                        Remarks = POMaster.Remarks,
-                        RlyNonrly = POMaster.RlyNonrly,
-                        MainrlyCd = POMaster.MainrlyCd,
-                    };
 
+            string CaseNo = "", PoNo = "", PoDt = "";
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["CaseNo"]))
+            {
+                CaseNo = Convert.ToString(dtParameters.AdditionalValues["CaseNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoNo"]))
+            {
+                PoNo = Convert.ToString(dtParameters.AdditionalValues["PoNo"]);
+            }
+            if (!string.IsNullOrEmpty(dtParameters.AdditionalValues["PoDt"]))
+            {
+                PoDt = Convert.ToString(dtParameters.AdditionalValues["PoDt"]);
+            }
 
-            dTResult.recordsTotal = query.Count();
+            OracleParameter[] par = new OracleParameter[9];
+            par[0] = new OracleParameter("p_rly_cd", OracleDbType.Varchar2, rly_cd.ToString() == "" ? DBNull.Value : rly_cd.ToString(), ParameterDirection.Input);
+            par[1] = new OracleParameter("p_RlyNonrly", OracleDbType.Varchar2, RlyNonrly.ToString() == "" ? DBNull.Value : RlyNonrly.ToString(), ParameterDirection.Input);
+            par[2] = new OracleParameter("p_CASE_NO", OracleDbType.Varchar2, CaseNo.ToString() == "" ? DBNull.Value : CaseNo.ToString(), ParameterDirection.Input);
+            par[3] = new OracleParameter("p_PO_NO", OracleDbType.Varchar2, PoNo.ToString() == "" ? DBNull.Value : PoNo.ToString(), ParameterDirection.Input);
+            par[4] = new OracleParameter("p_PO_DT", OracleDbType.Varchar2, PoDt.ToString() == "" ? DBNull.Value : PoDt.ToString(), ParameterDirection.Input);
+            par[5] = new OracleParameter("p_page_start", OracleDbType.Int32, dtParameters.Start + 1, ParameterDirection.Input);
+            par[6] = new OracleParameter("p_page_end", OracleDbType.Int32, (dtParameters.Start + dtParameters.Length), ParameterDirection.Input);
+            par[7] = new OracleParameter("p_result_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+            par[8] = new OracleParameter("p_result_records", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            if (!string.IsNullOrEmpty(searchBy))
-                query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
-                || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
-                );
+            var ds = DataAccessDB.GetDataSet("SP_GET_POMASTERLIST_For_Client", par, 2);
+            List<PO_MasterModel> list = new();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                string serializeddt = JsonConvert.SerializeObject(ds.Tables[0], Formatting.Indented);
+                list = JsonConvert.DeserializeObject<List<PO_MasterModel>>(serializeddt, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            dTResult.recordsFiltered = query.Count();
-
-            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
-
+            }
+            int recordsTotal = 0;
+            if (ds != null && ds.Tables[1].Rows.Count > 0)
+            {
+                recordsTotal = Convert.ToInt32(ds.Tables[1].Rows[0]["total_records"]);
+            }
+            query = list.AsQueryable();
+            dTResult.recordsTotal = recordsTotal;
+            dTResult.recordsFiltered = recordsTotal;
+            dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Select(p => p).ToList();
             dTResult.draw = dtParameters.Draw;
+
+
+            //query = from POMaster in context.ViewPomasterlists
+            //        where POMaster.Rlycds == rly_cd && POMaster.RlyNonrly == RlyNonrly
+            //        && POMaster.Isdeleted != Convert.ToByte(true)
+            //        select new PO_MasterModel
+            //        {
+            //            VendCd = POMaster.VendCd,
+            //            CaseNo = POMaster.CaseNo.Trim(),
+            //            PoNo = POMaster.PoNo,
+            //            PoDtDate = Convert.ToDateTime(POMaster.PoDt).ToString("dd/MM/yyyy"),
+            //            RlyCd = POMaster.RlyCd,
+            //            VendorName = POMaster.VendName,
+            //            ConsigneeSName = POMaster.ConsigneeSName,
+            //            RealCaseNo = POMaster.RealCaseNo,
+            //            Remarks = POMaster.Remarks,
+            //            RlyNonrly = POMaster.RlyNonrly,
+            //            MainrlyCd = POMaster.MainrlyCd,
+            //        };
+
+
+            //dTResult.recordsTotal = query.Count();
+
+            //if (!string.IsNullOrEmpty(searchBy))
+            //    query = query.Where(w => Convert.ToString(w.RealCaseNo).ToLower().Contains(searchBy.ToLower())
+            //    || Convert.ToString(w.VendorName).ToLower().Contains(searchBy.ToLower())
+            //    || Convert.ToString(w.ConsigneeSName).ToLower().Contains(searchBy.ToLower())
+            //    || Convert.ToString(w.CaseNo).ToLower().Contains(searchBy.ToLower())
+            //    );
+
+            //dTResult.recordsFiltered = query.Count();
+
+            //dTResult.data = DbContextHelper.OrderByDynamic(query, orderCriteria, orderAscendingDirection).Skip(dtParameters.Start).Take(dtParameters.Length).Select(p => p).ToList();
+
+            //dTResult.draw = dtParameters.Draw;
 
             return dTResult;
         }
@@ -358,7 +410,7 @@ namespace IBS.Repositories
                 model.Remarks = POMaster.Remarks;
                 model.PoiCd = POMaster.PoiCd;
                 model.Contractid = POMaster.Contractid;
-                model.Isstageinspection =Convert.ToBoolean(POMaster.Isstageinspection);
+                model.Isstageinspection = Convert.ToBoolean(POMaster.Isstageinspection);
                 model.Ispricevariation = Convert.ToBoolean(POMaster.Ispricevariation);
                 return model;
             }
@@ -673,25 +725,25 @@ namespace IBS.Repositories
             return result;
         }
 
-        public IBS_DocumentDTO FindAPPDocumentByID(string Applicationid,int DocumentID)
+        public IBS_DocumentDTO FindAPPDocumentByID(string Applicationid, int DocumentID)
         {
             IBS_DocumentDTO aPPDocument = (from x in context.IbsAppdocuments
-                                                       where x.Applicationid == Convert.ToString(Applicationid)
-                                                       && x.Documentid == DocumentID
-                                          select new IBS_DocumentDTO
-                                          {
-                                              ID = x.Id,
-                                              DocumentCategory = x.Documentcategory,
-                                              APPDocumentID = x.Id,
-                                              ApplicationID = x.Applicationid,
-                                              DocumentID = x.Documentid ?? 0,
-                                              RelativePath = x.Relativepath,
-                                              FileID = x.Fileid,
-                                              Extension = x.Extension,
-                                              FileDisplayName = x.Filedisplayname,
-                                              IsOtherDoc = x.Isotherdoc,
-                                              OtherDocumentName = x.Otherdocumentname,
-                                          }).FirstOrDefault();
+                                           where x.Applicationid == Convert.ToString(Applicationid)
+                                           && x.Documentid == DocumentID
+                                           select new IBS_DocumentDTO
+                                           {
+                                               ID = x.Id,
+                                               DocumentCategory = x.Documentcategory,
+                                               APPDocumentID = x.Id,
+                                               ApplicationID = x.Applicationid,
+                                               DocumentID = x.Documentid ?? 0,
+                                               RelativePath = x.Relativepath,
+                                               FileID = x.Fileid,
+                                               Extension = x.Extension,
+                                               FileDisplayName = x.Filedisplayname,
+                                               IsOtherDoc = x.Isotherdoc,
+                                               OtherDocumentName = x.Otherdocumentname,
+                                           }).FirstOrDefault();
             return aPPDocument;
         }
 

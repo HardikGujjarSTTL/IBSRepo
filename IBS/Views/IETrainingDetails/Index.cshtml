@@ -70,7 +70,7 @@
                     }
                 },
 
-                columns: [// Columns Setups
+                columns: [
                     {
                         data: '', orderable: false, width: '5%',
                         render: function (data, type, row, meta) {
@@ -81,30 +81,28 @@
                     { data: "course_name" },
                     { data: "course_institute" },
                     { data: "certificate" },
-                    { data: "training_category" },
-                    
-                    //{
-                    //    data: null, orderable: false,
-                    //    render: function (data, type, row) {
-                    //        var Id = data.LabId;
-                    //        var editUrl = '@Url.Action("LaboratoryManage", "LaboratoryMaster")?LabId=' + Id;
-                    //        var html = '<div align=\"center\" class=\"reportIcon\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
-                    //        //html += '<a onclick="UserDelete(\'' + Id + '\'); return false;" href="javascript:void(\'0\');" id=\"' + Id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
-                    //        html += '</div>';
-                    //        return html;
-                    //    }
-                    //},
-                    
+                     //{ data: "training_category" },
+
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var Category = data.training_category;
+                            
+                            var TrainName = "";
+                            if (Category == 'O') {
+                                TrainName = "Outside";
+                            }
+                            else
+                            {
+                                TrainName = "In-House";
+                            }
+                            var html = TrainName;
+                            return html;
+                        }
+                    },
                 ],
                 "order": [[0, "asc"]]
             });
         }
-
-        //function UserDelete(UserId) {
-        //        var url = '@Url.Action("Delete", "UserAdministrator")?UserId=' + UserId;
-        //    $("#btn-delete-yes").attr("href", url);
-        //    $("#modal-delete-conf").modal("show");
-        //}
-
     </script>
 }

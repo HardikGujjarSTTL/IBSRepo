@@ -1,5 +1,4 @@
-﻿using IBS.DataAccess;
-using IBS.Models;
+﻿using IBS.Models;
 
 namespace IBS.Interfaces
 {
@@ -8,6 +7,8 @@ namespace IBS.Interfaces
         public void Add(UserModel model);
 
         public UserModel FindByID(string UserId);
+        public UserModel FindByUserID(string UserId, string LoginType);
+        public List<UserModel> FindByUserType(string LoginType);
 
         public void Update(UserModel model);
 
@@ -17,9 +18,10 @@ namespace IBS.Interfaces
 
         public UserSessionModel FindByLoginDetail(LoginModel model);
 
-        public void ChangePassword(int UserId, String NewPassword);
+        public void ChangePassword(string UserId, String NewPassword, string UserType);
 
         public UserSessionModel FindByUsernameOrEmail(string UserName, string UserType);
+        public UserModel CheckPasswordIsBlank(string UserName, string UserType);
 
         public void ChangePassword(ResetPasswordModel resetPassword);
 
@@ -40,5 +42,11 @@ namespace IBS.Interfaces
         public bool VerifyOTP(LoginModel model);
 
         public UserModel FindByIDForResetPass(string UserId, string UserType);
+
+        public string send_Vendor_Email(LoginModel model, string EmailID);
+
+        public CertificateDetails GetDSC_Exp_DT(int IeCd);
+
+        public string UpdateDSCDate(int IeCd,DateTime DSC_Exp_DT);
     }
 }

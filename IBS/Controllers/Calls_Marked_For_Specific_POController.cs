@@ -15,7 +15,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult Dropdown(string selectedValue)
         {
-            if(selectedValue == "R")
+            if (selectedValue == "R")
             {
                 List<railway_dropdown> result = callmarkedforspecificpo.GetValue(selectedValue);
                 return Json(result);
@@ -35,9 +35,9 @@ namespace IBS.Controllers
             return Json(dTResult);
         }
 
-        public IActionResult edit(string PO_NO , string PO_DT, string RLY_NONRLY, string RLY_CD)
+        public IActionResult edit(string PO_NO, string PO_DT, string RLY_NONRLY, string RLY_CD)
         {
-           Calls_Marked_For_Specific_POModel dTResult = callmarkedforspecificpo.edit(PO_NO, PO_DT, RLY_NONRLY, RLY_CD);
+            Calls_Marked_For_Specific_POModel dTResult = callmarkedforspecificpo.edit(PO_NO, PO_DT, RLY_NONRLY, RLY_CD);
             return View(dTResult);
         }
 

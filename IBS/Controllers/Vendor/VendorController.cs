@@ -66,7 +66,7 @@ namespace IBS.Controllers.Vendor
                 if (model.VendCd == 0)
                 {
                     model.Createdby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID;
                     model.Region = Region;
                     model.VendCd = vendorRepository.SaveDetails(model);
                     AlertAddSuccess("Record Added Successfully.");
@@ -74,7 +74,7 @@ namespace IBS.Controllers.Vendor
                 else
                 {
                     model.Updatedby = UserId;
-                    model.UserId = USER_ID.Substring(0, 8);
+                    model.UserId = USER_ID;
                     model.Region = Region;
                     vendorRepository.SaveDetails(model);
                     AlertAddSuccess("Record Updated Successfully.");
@@ -84,9 +84,10 @@ namespace IBS.Controllers.Vendor
                 {
                     if (!string.IsNullOrEmpty(formCollection["hdnUploadedDocumentList"]))
                     {
+                        string fileName = model.VendCd.ToString();
                         int[] DocumentIds = { (int)Enums.DocumentCategory_CANRegisrtation.Document_Vendor_manufacturer_created };
                         List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(formCollection["hdnUploadedDocumentList"]);
-                        DocumentHelper.SaveFiles(Convert.ToString(model.VendCd), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.Vendor), env, iDocument, "Venor", string.Empty, DocumentIds);
+                        DocumentHelper.SaveFiles(Convert.ToString(model.VendCd), DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.VendorCreationBasis), env, iDocument, "Vendor", fileName, DocumentIds);
                     }
                 }
 

@@ -7,16 +7,22 @@ namespace IBS.Models
         [Required(ErrorMessage = "Username is required.")]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        //[Required(ErrorMessage = "Password is required.")]
+        //[DataType(DataType.Password)]
+        public string? Password { get; set; }
 
         [Required(ErrorMessage = "OTP is required.")]
         public string OTP { get; set; }
+
         public string MOBILE { get; set; }
+
+        public string EmailID { get; set; }
+
         public string DecryptUserName { get; set; }
+
         [Required(ErrorMessage = "User Type is required.")]
         public string UserType { get; set; }
+
         public string DecryptUserType { get; set; }
 
     }
@@ -41,6 +47,8 @@ namespace IBS.Models
         public string MOBILE { get; set; }
         public int CoCd { get; set; }
         public string FPUserID { get; set; }
+        public int MasterID { get; set; }
+        public string AuthType { get; set; }
     }
 
     public class ForgotPasswordModel

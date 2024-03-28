@@ -1,16 +1,7 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
-using PuppeteerSharp;
-using System;
-using System.Drawing;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IBS.Controllers

@@ -2,10 +2,8 @@
 using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using NuGet.Protocol.Plugins;
-using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Globalization;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace IBS.Repositories
 {
@@ -13,11 +11,13 @@ namespace IBS.Repositories
     {
         private readonly ModelContext context;
         private readonly ISendMailRepository pSendMailRepository;
+        private readonly IConfiguration config;
 
-        public FeedbackSuggestionRepository(ModelContext context, ISendMailRepository pSendMailRepository)
+        public FeedbackSuggestionRepository(ModelContext context, ISendMailRepository pSendMailRepository, IConfiguration _config)
         {
             this.context = context;
             this.pSendMailRepository = pSendMailRepository;
+            this.config = _config;
         }
         public string SaveFeedback(EmailFeedback model)
         {
@@ -94,9 +94,12 @@ namespace IBS.Repositories
             SendMailModel.To = tosender;
             SendMailModel.From = model.Email;
             SendMailModel.Subject = model.Subject;
-            SendMailModel.Message = model.Description + "\n\n Name: " + model.Name + "\n\n Mobile No. : " +  model.MobileNo;
-
-            bool isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            SendMailModel.Message = model.Description + "\n\n Name: " + model.Name + "\n\n Mobile No. : " + model.MobileNo;
+            bool isSend = false;
+            if (Convert.ToString(config.GetSection("MailConfig")["SendMail"]) == "1")
+            {
+                isSend = pSendMailRepository.SendMail(SendMailModel, null);
+            }
         }
     }
 }

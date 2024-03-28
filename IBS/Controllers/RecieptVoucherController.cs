@@ -1,9 +1,9 @@
-﻿using IBS.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using IBS.Filters;
-using OfficeOpenXml;
+﻿using IBS.Filters;
+using IBS.Interfaces;
 using IBS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using OfficeOpenXml;
 
 namespace IBS.Controllers
 {
@@ -85,7 +85,7 @@ namespace IBS.Controllers
             else
             {
                 model.Updatedby = UserId;
-                model.UserName = USER_ID.Substring(0, 8);
+                model.UserName = USER_ID.Length > 8 ? USER_ID.Substring(0, 8) : USER_ID;
                 model.lstVoucherDetails = GetLstVoucherDetailsModel;
 
                 if (model.lstVoucherDetails != null && model.lstVoucherDetails.Count > 0)

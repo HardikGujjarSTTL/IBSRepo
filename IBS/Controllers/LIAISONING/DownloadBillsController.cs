@@ -1,23 +1,10 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
 //using CrystalDecisions.Shared;
-using IBS.DataAccess;
-using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Models.Reports;
-using IBS.Repositories;
-using IBS.Repositories.Reports;
 using Microsoft.AspNetCore.Mvc;
-using PuppeteerSharp.Media;
 using PuppeteerSharp;
-using System;
-using System.Drawing;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using IBS.Interfaces.Reports;
-using System.Data;
-using OfficeOpenXml;
-using System.IO;
+using PuppeteerSharp.Media;
 
 namespace IBS.Controllers
 {
@@ -38,8 +25,8 @@ namespace IBS.Controllers
             ViewBag.Region = Region;
             return View();
         }
-        
-        public IActionResult Manage(string Month, string Year, string FromDate, string ToDate,string RBMonth)
+
+        public IActionResult Manage(string Month, string Year, string FromDate, string ToDate, string RBMonth)
         {
 
             DownloadBillsModel model = new()
@@ -84,7 +71,7 @@ namespace IBS.Controllers
                 else if (Region == "C")
                 { ViewBag.Region = "CENTRAL REGION"; }
 
-                model = DownloadBillsRepository.GetReturnedBills(Month,Year,FromDate,ToDate,OrgnType,Org, RBMonth);
+                model = DownloadBillsRepository.GetReturnedBills(Month, Year, FromDate, ToDate, OrgnType, Org, RBMonth);
             }
             catch (Exception ex)
             {

@@ -1,0 +1,121 @@
+﻿@model IBS.Models.HolidayDetailModel
+@{
+    ViewData["Title"] = "Holiday Detail";
+}
+
+<div class="list-inner">
+    <div class="tast-list">
+        <h2>Holiday Detail List</h2>
+    </div>
+    <div class="list-btn">
+        <a asp-area="" asp-controller="HolidayMaster" asp-action="ManageDetail" class="formBtn"><span class="fa fa-plus"></span> Add New Holiday Detail</a>
+        <a asp-area="" asp-controller="HolidayMaster" asp-action="Index" class="formBtn">View Holiday Master List</a>
+    </div>
+</div>
+<div class="task-listinput">
+    <input type="hidden" asp-for="HOLIDAY_ID" />
+    <section class="table-section">
+        <div class="task-listinput">
+            <div class="dash-table">
+                <table id="dtList" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Action</th>
+                            <th>Financial Year</th>
+                            <th>Region</th>
+                            <th>Holiday Date</th>
+                            <th>Holiday Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section scripts {
+    <partial name="_DataTablesScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            InitializeHolidayDetailDatatable();
+        });
+
+        function InitializeHolidayDetailDatatable() {
+            debugger
+            var HOLIDAY_ID = $("#HOLIDAY_ID").val();
+            $("#dtList").DataTable({
+                stateSave: false,// Design Assets
+                autoWidth: true,
+                //scrollX: true,
+                scrollCollapse: true,
+                processing: true, // ServerSide Setups
+                serverSide: true,
+                destroy: true,
+                paging: true,// Paging Setups
+                searching: false,// Searching Setups
+                ajax: {// Ajax Filter
+                    url: "@Url.Action("LoadTableDetail","HolidayMaster")",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: function (d) {
+                        var AdditionalValues = {
+                            HOLIDAY_ID
+                        };
+                        d.AdditionalValues = AdditionalValues;
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [// Columns Setups
+                    {
+                        data: '', orderable: false, width: '5%',
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: null, orderable: false,
+                        render: function (data, type, row) {
+                            var id = data.ID;
+                            var editUrl = '@Url.Action("ManageDetail", "HolidayMaster")/' + id;
+                            var html = '<div align=\"center\" class=\"reportIcon center\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil Permission_EditView\" title="Edit"></i></a>';
+                            //html += '<a onclick="HolidayDetailDelete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash Permission_Delete\" title="Delete" style="margin:10px;"></i>';
+                            html += '</div>';
+                            return html;
+
+                        }
+                    },
+                    { data: "FINANCIAL_YEAR" },
+                    { data: "REGION" },
+                    {
+                        data: "HOLIDAY_DT",
+                        render: function (data, type, row) {
+                            if (type === "display" || type === "filter") {// If display or filter data is requested, format the date
+                                return data != null && data != "" ? moment(data).format("DD/MM/YYYY") : "";
+                            }
+                            return data;
+                        }
+                    },
+                    { data: "HOLIDAY_DESC" },
+                ],
+                "order": [[0, "asc"]],
+                "initComplete": function (settings, json) {
+                    $("#dtPOMaster").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
+            });
+        }
+
+        function HolidayDetailDelete(id) {
+            var url = '@Url.Action("HolidayDetailDelete", "HolidayMaster")/' + id;
+            $("#btn-delete-yes").attr("href", url);
+            $("#modal-delete-conf").modal("show");
+        }
+
+    </script>
+}

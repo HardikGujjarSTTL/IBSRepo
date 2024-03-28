@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_FrontendLayout.cshtml";
 }
 
-<div class="container">
+<div class="container" id="content">
     <div class="innerContent">
         <div class="list-inner">
             <div class="tast-list">
@@ -13,7 +13,7 @@
         </div>
         <div class="accordion-body" id="tab-1">
             <form data-ajax="true" asp-antiforgery="true" asp-controller="OnlineComplaints" asp-action="ComplaintsSave" data-ajax-method="post" data-ajax-complete="completed" id="frmComplaints" enctype="multipart/form-data">
-                <div class="row m-3">
+                
                     <input type="hidden" name="hdnUploadedDocumentList_tab-1" id="hdnUploadedDocumentList_tab-1" value="" />
                     <input type="text" asp-for="ItemSrnoPo"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="UomCd"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
@@ -25,8 +25,20 @@
                     <input type="text" asp-for="IE_CD"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="CoCd"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
                     <input type="text" asp-for="ITEM_DESC_PO"  maxlength="100" readonly="true" style="text-transform: uppercase;" hidden>
-                    <label asp-for="Registrationdt">Registration Date: <span id="registrationDate"></span></label>
-                    <h3 class="heading3 mb-4">Consignee Details</h3>
+
+                <div class="row m-3">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                        <label style="padding:0; margin:0;" asp-for="Registrationdt">Registration Date: <span id="registrationDate"></span></label>
+                        </div>
+                   </div>
+                </div>                    
+                <div class="row m-3">
+                    <div class="col-md-12">
+                        <h3 class="heading3 mb-4">Consignee Details</h3>
+                    </div>
+                </div>
+                <div class="row m-3">
                     <div class="col-md-3 mb-3">
                         <label for="Reference">Name</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="Name" maxlength="300" required />
@@ -49,7 +61,12 @@
                     </div>
                 </div>
                 <div class="row m-3">
-                    <h3 class="heading3 mb-4">Rejection Details</h3>
+                    <div class="col-md-12">
+                <h3 class="heading3 mb-4">Rejection Details</h3>
+                </div>
+                </div>
+
+                <div class="row m-3">
                     <div class="col-md-2 mb-2">
                         <label for="Reference">Book No.</label><i class="text-danger">*</i>
                         <input type="text" class="input" ASP-FOR="BKNo" maxlength="300" id="bkno" required />
@@ -136,7 +153,7 @@
         });
 
         $("#InspRegionDropdown").change(function () {
-            debugger
+            
             var InspRegionDropdown = $(this).val();
             var bkno = $("#bkno").val();
             var setno = $("#setno").val();
@@ -191,7 +208,7 @@
         });
 
         function Save(){
-            debugger
+            
             var Item = $("#Item").val();
 
             if(Item == ''){

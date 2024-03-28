@@ -1,11 +1,10 @@
-﻿using IBS.Interfaces;
-using IBS.Models;
+﻿using IBS.Models;
 using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
 {
-    public class Print_Bank_Statement_VoucherController : BaseController 
+    public class Print_Bank_Statement_VoucherController : BaseController
     {
         private readonly IPrint_Bank_Statement_VoucherRepository printbankstatementvoucherrepository;
 
@@ -15,7 +14,7 @@ namespace IBS.Controllers
         }
 
 
-        public IActionResult Index(string VCHR_NO = "" , string VCHR_DT = "")
+        public IActionResult Index(string VCHR_NO = "", string VCHR_DT = "")
         {
             string region = GetRegionCode;
             string Region = "";
@@ -44,7 +43,7 @@ namespace IBS.Controllers
             ViewBag.VCHR_DT = VCHR_DT;
             Print_Bank_Statement_VoucherModel model = printbankstatementvoucherrepository.ReportData(VCHR_NO, Region);
             return View(model);
-        
+
         }
     }
 }

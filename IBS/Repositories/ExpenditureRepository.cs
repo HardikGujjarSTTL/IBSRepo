@@ -1,15 +1,8 @@
 ﻿using IBS.DataAccess;
+using IBS.Helper;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Composition;
-using System;
 using System.Data;
-using System.Diagnostics.Contracts;
-using System.Drawing;
-using IBS.Helper;
-using Newtonsoft.Json;
-using Oracle.ManagedDataAccess.Client;
 
 namespace IBS.Repositories
 {
@@ -27,9 +20,9 @@ namespace IBS.Repositories
             //T63Exp tenant = context.T63Exps.Find(ExpPer);
 
             var tenant = (from m in context.T63Exps
-                             where m.ExpPer == ExpPer
-                             && m.RegionCode == rgnCode
-                             select m).FirstOrDefault();
+                          where m.ExpPer == ExpPer
+                          && m.RegionCode == rgnCode
+                          select m).FirstOrDefault();
 
             if (tenant == null)
                 throw new Exception("Record Not found");
@@ -46,11 +39,11 @@ namespace IBS.Repositories
                 //model.Updateddate = tenant.Updateddate;
                 //model.Updatedby = tenant.Updatedby;
                 return model;
-            } 
-        } 
+            }
+        }
 
         public DTResult<ExpenditureModel> GetExpenditureList(DTParameters dtParameters, string RgnCd)
-        { 
+        {
             DTResult<ExpenditureModel> dTResult = new() { draw = 0 };
             IQueryable<ExpenditureModel>? query = null;
 
@@ -76,9 +69,9 @@ namespace IBS.Repositories
                 orderAscendingDirection = true;
             }
             query = from l in context.T63Exps
-                    where l.RegionCode == RgnCd &&(l.Isdeleted == 0 || l.Isdeleted == null)
+                    where l.RegionCode == RgnCd && (l.Isdeleted == 0 || l.Isdeleted == null)
                     select new ExpenditureModel
-                    {  
+                    {
                         ExpPer = l.ExpPer,
                         ExpAmt = l.ExpAmt,
                         TaxAmt = l.TaxAmt,
@@ -112,7 +105,7 @@ namespace IBS.Repositories
         public string ExpenditureDetailsInsertUpdate(ExpenditureModel model)
         {
             var Id = "";
-            model.ExpPer = model.ExpPerYear + model.ExpPerMonth;              
+            model.ExpPer = model.ExpPerYear + model.ExpPerMonth;
             var _contract = (from m in context.T63Exps
                              where m.ExpPer == model.ExpPer
                              && m.RegionCode == model.RegionCode

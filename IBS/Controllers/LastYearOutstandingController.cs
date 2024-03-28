@@ -1,7 +1,6 @@
 ﻿using IBS.Filters;
 using IBS.Interfaces;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IBS.Controllers
@@ -35,7 +34,7 @@ namespace IBS.Controllers
         [HttpPost]
         public IActionResult LoadTable([FromBody] DTParameters dtParameters)
         {
-            DTResult<LastYearOutstandingModel> dTResult = LastYearOutstandingRepository.GetLastYearOutstandingList(dtParameters,GetRegionCode);
+            DTResult<LastYearOutstandingModel> dTResult = LastYearOutstandingRepository.GetLastYearOutstandingList(dtParameters, GetRegionCode);
             return Json(dTResult);
         }
         [Authorization("LastYearOutstanding", "Index", "delete")]
@@ -43,7 +42,7 @@ namespace IBS.Controllers
         {
             try
             {
-                if(LastYearOutstandingRepository.Remove(_LyPer, GetRegionCode))
+                if (LastYearOutstandingRepository.Remove(_LyPer, GetRegionCode))
                     AlertDeletedSuccess();
                 else
                     AlertDanger();

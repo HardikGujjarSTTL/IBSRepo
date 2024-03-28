@@ -1,21 +1,30 @@
-﻿using IBS.DataAccess;
-using IBS.Filters;
+﻿using IBS.Filters;
+using IBS.Helper;
+using IBS.Helpers;
 using IBS.Interfaces;
+using IBS.Interfaces.Administration;
 using IBS.Models;
-using IBS.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace IBS.Controllers
 {
+    [Authorization]
     public class LabSampleInfoController : BaseController
     {
         #region Variables
+        private readonly IUploadDocRepository uploaddocRepository;
+        private readonly IDocument iDocument;
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration _config;
         private readonly ILabSampleInfoRepository LabSampleInfoRepository;
         #endregion
-        public LabSampleInfoController(ILabSampleInfoRepository _LabSampleInfoRepository)
+        public LabSampleInfoController(IUploadDocRepository _uploaddocRepository, IDocument _iDocumentRepository, IWebHostEnvironment _environment, IConfiguration configuration,ILabSampleInfoRepository _LabSampleInfoRepository)
         {
+            uploaddocRepository = _uploaddocRepository;
+            iDocument = _iDocumentRepository;
+            env = _environment;
+            _config = configuration;
             LabSampleInfoRepository = _LabSampleInfoRepository;
         }
 
@@ -44,10 +53,21 @@ namespace IBS.Controllers
         }
         public IActionResult LabSampleDtl(string CaseNo, string CallRdt, string CallSno, string Flag)
         {
-            ViewBag.CaseNo = CaseNo; 
+            string Id = "";
+            string mdt = dateconcate(CallRdt.Trim());
+            Id = CaseNo.Trim() + '_' + CallSno.Trim() + '_' + mdt;
+            ViewBag.CaseNo = CaseNo;
             ViewBag.CallRdt = CallRdt;
             ViewBag.Sno = CallSno;
             ViewBag.Flag = Flag;
+            List<IBS_DocumentDTO> lstDocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.UploadLab, Id);
+            FileUploaderDTO FileUploaderCOI = new FileUploaderDTO();
+            FileUploaderCOI.Mode = (int)Enums.FileUploaderMode.Add_Edit;
+            FileUploaderCOI.IBS_DocumentList = lstDocument.Where(m => m.ID == (int)Enums.DocumentCategory_LabUploadDoc.Upload_Lab_Report).ToList();
+            FileUploaderCOI.OthersSection = false;
+            FileUploaderCOI.MaxUploaderinOthers = 5;
+            FileUploaderCOI.FilUploadMode = (int)Enums.FilUploadMode.Single;
+            ViewBag.LabUploadDoc = FileUploaderCOI;
             return View();
         }
         [HttpPost]
@@ -68,61 +88,88 @@ namespace IBS.Controllers
         }
         [HttpPost]
         [Authorization("LabSampleInfo", "LabSampleInfo", "edit")]
-        public JsonResult SaveDataDetails()
+        public IActionResult SaveDataDetails(LabSampleInfoModel model, IFormCollection FrmCollection)
         {
-            LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();
             try
             {
-                LabSampleInfoModel.UName = UserId.ToString();
-                LabSampleInfoModel.CaseNo = Request.Form["CaseNo"];
-                LabSampleInfoModel.CallRecDt = Request.Form["CallRecDt"];
-                LabSampleInfoModel.CallSNO = Request.Form["CallSNO"];
-                LabSampleInfoModel.IE = Request.Form["IE"];
-                LabSampleInfoModel.Status = Request.Form["Status"];
-                LabSampleInfoModel.DateofRecSample = Request.Form["DateofRecSample"];
-                LabSampleInfoModel.TotalTFee = Request.Form["TotalTFee"];
-                LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
-                LabSampleInfoModel.Remarks = Request.Form["Remarks"];
-                var file = Request.Form.Files["UploadLab"];
-                bool result;
-                if (file != null && file.Length > 0)
+                string msg = "Inserted Successfully.";
+
+                if (model.FileId != null)
                 {
-                    // Save the file or process it as needed
-                    // For example:
-                    //var fileName = Path.GetFileName(file.FileName);
-                    //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData","LAB", fileName);
-                    //using (var stream = new FileStream(filePath, FileMode.Create))
-                    //{
-                    //    file.CopyTo(stream);
-                    //}
-                    string fn = "", MyFile = "", fx = "", fl = "";
-                    string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
-                    MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
-                    fn = Path.GetFileName(file.FileName);
-                    String SaveLocation = null;
-                    SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
-                    using (var stream = new FileStream(SaveLocation, FileMode.Create))
+                    msg = "Updated Successfully.";
+                }
+                model.UName = UserId.ToString();
+                string MyFile = "";
+                string mdt = dateconcate(model.CallRecDt.Trim());
+                MyFile = model.CaseNo.Trim() + '_' + model.CallSNO.Trim() + '_' + mdt;
+                bool i = LabSampleInfoRepository.SaveDataDetails(model);
+                if (i == true)
+                {
+                    #region File Upload Profile Picture
+                    if (!string.IsNullOrEmpty(FrmCollection["hdnUploadedDocumentList_tab-1"]))
                     {
-                        file.CopyTo(stream);
-                        result = LabSampleInfoRepository.UploadDate(LabSampleInfoModel);
+                        
+                        int[] DocumentIds = { (int)Enums.DocumentCategory_LabUploadDoc.Upload_Lab_Report };
+                        List<APPDocumentDTO> DocumentsList = JsonConvert.DeserializeObject<List<APPDocumentDTO>>(FrmCollection["hdnUploadedDocumentList_tab-1"]);
+                        DocumentHelper.SaveFiles(MyFile, DocumentsList, Enums.GetEnumDescription(Enums.FolderPath.Lab), env, iDocument, string.Empty, MyFile, DocumentIds);
+
                     }
-                }
-               
-                result = LabSampleInfoRepository.SaveDataDetails(LabSampleInfoModel);
-                if (result == false)
-                {
-                    return Json(false);
-                }
-                else
-                {
-                    return Json(true);
+                    #endregion
+
+                    return Json(new { status = true, responseText = msg, Id = i });
                 }
             }
             catch (Exception ex)
             {
                 Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSampleInfo", "SaveDataDetails", 1, GetIPAddress());
             }
-            return Json(false);
+            return Json(new { status = false, responseText = "Oops Somthing Went Wrong !!" });
+            //LabSampleInfoModel LabSampleInfoModel = new LabSampleInfoModel();
+            //try
+            //{
+            //LabSampleInfoModel.UName = UserId.ToString();
+            //LabSampleInfoModel.CaseNo = Request.Form["CaseNo"];
+            //LabSampleInfoModel.CallRecDt = Request.Form["CallRecDt"];
+            //LabSampleInfoModel.CallSNO = Request.Form["CallSNO"];
+            //LabSampleInfoModel.IE = Request.Form["IE"];
+            //LabSampleInfoModel.Status = Request.Form["Status"];
+            //LabSampleInfoModel.DateofRecSample = Request.Form["DateofRecSample"];
+            //LabSampleInfoModel.TotalTFee = Request.Form["TotalTFee"];
+            //LabSampleInfoModel.LikelyDt = Request.Form["LikelyDt"];
+            //LabSampleInfoModel.Remarks = Request.Form["Remarks"];
+            //var file = Request.Form.Files["UploadLab"];
+            //bool result;
+            //if (file != null && file.Length > 0)
+            //{
+
+            //    string fn = "", MyFile = "";
+            //    string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
+            //    MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
+            //    fn = Path.GetFileName(file.FileName);
+            //    String SaveLocation = null;
+            //    SaveLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReadWriteData", "LAB", MyFile + ".PDF");
+            //    using (var stream = new FileStream(SaveLocation, FileMode.Create))
+            //    {
+            //        file.CopyTo(stream);
+            //        result = LabSampleInfoRepository.UploadDate(LabSampleInfoModel);
+            //    }
+            //}
+
+            //    result = LabSampleInfoRepository.SaveDataDetails(LabSampleInfoModel);
+            //    if (result == false)
+            //    {
+            //        return Json(false);
+            //    }
+            //    else
+            //    {
+            //        return Json(true);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Common.AddException(ex.ToString(), ex.Message.ToString(), "LabSampleInfo", "SaveDataDetails", 1, GetIPAddress());
+            //}
+            //return Json(false);
         }
         [HttpPost]
         [Authorization("LabSampleInfo", "LabSampleInfo", "edit")]
@@ -152,7 +199,7 @@ namespace IBS.Controllers
                     //{
                     //    file.CopyTo(stream);
                     //}
-                    string fn = "", MyFile = "", fx = "", fl = "";
+                    string fn = "", MyFile = "";
                     string mdt = dateconcate(LabSampleInfoModel.CallRecDt.Trim());
                     MyFile = LabSampleInfoModel.CaseNo.Trim() + '_' + LabSampleInfoModel.CallSNO.Trim() + '_' + mdt;
                     fn = Path.GetFileName(file.FileName);
@@ -165,7 +212,7 @@ namespace IBS.Controllers
                     }
 
                 }
-                
+
                 result = LabSampleInfoRepository.UpdateDetails(LabSampleInfoModel);
                 if (result == false)
                 {
@@ -210,11 +257,11 @@ namespace IBS.Controllers
             string dt1 = myYear + myDay + myMonth;
             return (dt1);
         }
-        public IActionResult DownloadFile(string caseno,string calldt,string csno,string filename)
+        public IActionResult DownloadFile(string caseno, string calldt, string csno, string filename)
         {
             try
             {
-                string fn = "", MyFile = "", fx = "", fl = "";
+                string fn = "", MyFile = "";
                 string mdt = dateconcate2(calldt.Trim());
                 MyFile = caseno.Trim() + '_' + csno.Trim() + '_' + mdt;
                 fn = Path.GetFileName(filename);

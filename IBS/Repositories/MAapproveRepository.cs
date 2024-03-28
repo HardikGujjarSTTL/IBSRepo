@@ -16,15 +16,15 @@ namespace IBS.Repositories
         public MAapproveModel FindByID(string CaseNo, string MaNo, string MaDtc, byte MaSno)
         {
             MAapproveModel model = new();
-            string first = MaDtc.Substring(0,2);
+            string first = MaDtc.Substring(0, 2);
             string second = MaDtc.Substring(2, 2);
             string third = MaDtc.Substring(4, 4);
             string conc = first + "-" + second + "-" + third;
             string SetMaDt = conc.ToString();
-            
+
             var GetValuePO = (from v in context.VendPoMaMasters
                               join d in context.VendPoMaDetails on v.CaseNo equals d.CaseNo
-                              where v.CaseNo == d.CaseNo && v.MaNo == v.MaNo 
+                              where v.CaseNo == d.CaseNo && v.MaNo == v.MaNo
                               && v.MaDt == Convert.ToDateTime(SetMaDt)
                               && v.CaseNo == CaseNo && v.MaNo == MaNo
                               && d.MaStatus == "P" && d.MaSno == MaSno
@@ -35,12 +35,12 @@ namespace IBS.Repositories
                               }
                   ).ToList();
 
-            if (GetValuePO == null)
+            if (GetValuePO == null || GetValuePO.Count == 0)
                 throw new Exception("Record Not found");
             else
             {
                 model.CaseNo = GetValuePO[0].v.CaseNo;
-                model.MaNo = GetValuePO[0].v.MaNo;
+                model.MaNo1 = GetValuePO[0].v.MaNo;
                 model.MaDt = GetValuePO[0].v.MaDt;
                 model.MaSno = GetValuePO[0].d.MaSno;
                 model.PoNo = GetValuePO[0].v.PoNo;
@@ -100,7 +100,7 @@ namespace IBS.Repositories
                         CaseNo = v.CaseNo,
                         PoNo = v.PoNo,
                         PoDt = v.PoDt,
-                        MaNo = v.MaNo,
+                        MaNo1 = v.MaNo,
                         MaDt = v.MaDt,
                         RlyNonrly = v.RlyNonrly,
                         RlyCd = v.RlyNonrly.Equals("R") ? "Railway(" + v.RlyCd + ")" : v.RlyNonrly.Equals("P") ? "Private(" + v.RlyCd + ")" : v.RlyNonrly.Equals("S") ? "State Government(" + v.RlyCd + ")" : v.RlyNonrly.Equals("F") ? "Foreign Railways(" + v.RlyCd + ")" : v.RlyNonrly.Equals("U") ? "PSU(" + v.RlyCd + ")" : v.RlyNonrly,
@@ -113,6 +113,7 @@ namespace IBS.Repositories
                         PoSrc = v.PoSrc.Equals("V") ? "Vendor" : v.PoSrc.Equals("C") ? "Client" : v.PoSrc,
                         MaDtc = Convert.ToDateTime(v.MaDt).ToString("ddMMyyyy"),
                         MaSno = d.MaSno,
+                        encryptMaNo = Common.EncryptQueryString(d.MaNo),
                     };
 
             dTResult.recordsTotal = query.Count();
@@ -134,7 +135,7 @@ namespace IBS.Repositories
         public int DetailsUpdate(MAapproveModel model)
         {
             int Id = 0;
-            var GetValue = context.VendPoMaDetails.Find(model.CaseNo, model.MaNo, model.MaDt, model.MaSno);
+            var GetValue = context.VendPoMaDetails.Find(model.CaseNo, model.MaNo1, model.MaDt, model.MaSno);
 
             #region save
             if (GetValue == null)

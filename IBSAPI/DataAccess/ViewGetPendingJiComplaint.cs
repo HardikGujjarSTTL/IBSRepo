@@ -67,7 +67,7 @@ public partial class ViewGetPendingJiComplaint
 
     public DateTime? JiFixDt { get; set; }
 
-    public byte? IeCd { get; set; }
+    public int? IeCd { get; set; }
 
     public string? IeJiRemarks { get; set; }
 }

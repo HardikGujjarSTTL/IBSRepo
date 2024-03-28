@@ -1,8 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Interfaces;
 using IBS.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace IBS.Repositories
 {
@@ -18,7 +16,7 @@ namespace IBS.Repositories
         public BillCheckPostingModel FindByID(string ChqNo, DateTime ChqDt, string BankName, string BillNo, int AmountCleared, string Region)
         {
             BillCheckPostingModel model = new();
-            var query1 = context.ViewChequePostingEditDetails.Where(x=>x.ChqNo == ChqNo && x.ChqDt == ChqDt && x.BankCd == Convert.ToInt32(BankName) && x.VchrNo.StartsWith(Region.Substring(0, 1))).FirstOrDefault();
+            var query1 = context.ViewChequePostingEditDetails.Where(x => x.ChqNo == ChqNo && x.ChqDt == ChqDt && x.BankCd == Convert.ToInt32(BankName) && x.VchrNo.StartsWith(Region.Substring(0, 1))).FirstOrDefault();
             if (query1 != null)
             {
                 model.VcharNo = query1.VchrNo;
@@ -35,7 +33,7 @@ namespace IBS.Repositories
                 model.Bpo = query1.Bpo;
             }
 
-            var ChqPosting = context.T26ChequePostings.Where(x=>x.BankCd == Convert.ToInt32(BankName) && x.ChqNo == ChqNo && x.ChqDt == ChqDt && x.BillNo == BillNo).FirstOrDefault();
+            var ChqPosting = context.T26ChequePostings.Where(x => x.BankCd == Convert.ToInt32(BankName) && x.ChqNo == ChqNo && x.ChqDt == ChqDt && x.BillNo == BillNo).FirstOrDefault();
             if (ChqPosting != null)
             {
                 model.BillNo = ChqPosting.BillNo;
@@ -44,7 +42,7 @@ namespace IBS.Repositories
                 model.PostingDt = ChqPosting.PostingDt;
             }
 
-            var BillDetails = context.V22Bills.Where(x=>x.BillNo == BillNo).FirstOrDefault();
+            var BillDetails = context.V22Bills.Where(x => x.BillNo == BillNo).FirstOrDefault();
             if (BillDetails != null)
             {
                 model.BillDt = BillDetails.BillDt;

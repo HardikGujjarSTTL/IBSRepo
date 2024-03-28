@@ -41,7 +41,9 @@
                         <tr>
                             <th>#</th>
                             <th>Item Description</th>
-                            <th>PL NO</th>
+                            <th>PL NO.</th>
+                            <th>Drawing No.</th>
+                            <th>Specification No.</th>
                             <th class="dt-align-center">Action</th>
                         </tr>
                     </thead>
@@ -101,13 +103,15 @@
                     },
                     { data: "ItemDesc" },
                     { data: "PlNo" },
+                    { data: "DrawingNo" },
+                    { data: "SpecificationNo" },
                     {
                         data: null, orderable: false,
                         render: function (data, type, row) {
                             var id = data.PlNo;
                             var editUrl = '@Url.Action("Manage", "MasterItemsPLForm")/' + id;
                             var html = '<div align=\"center\" class=\"reportIcon actionCenter\"> <a href=\"' + editUrl + '\" class=\"edit\"><i class=\"fa fa-pencil\" title="Edit"></i></a>';
-                            html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
+                            //html += '<a onclick="Delete(this.id); return false;" href="javascript:void(\'0\');" id=\"' + id + '\" class=\"delete\"><i class=\"fa fa-trash\" title="Delete" style="margin:10px;"></i>';
                             html += '</div>';
                             return html;
                         }
