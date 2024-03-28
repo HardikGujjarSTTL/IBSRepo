@@ -14,11 +14,16 @@ namespace IBS.Repositories
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration _configuration;
 
-        public DEOVendorPurchesOrderRepository(ModelContext context, IWebHostEnvironment _environment, IConfiguration configuration)
+        private readonly IDocument iDocument;
+
+
+        public DEOVendorPurchesOrderRepository(ModelContext context, IWebHostEnvironment _environment, IConfiguration configuration, IDocument _iDocumentRepository)
         {
             this.context = context;
             env = _environment;
             _configuration = configuration;
+
+            iDocument = _iDocumentRepository;
         }
 
         public DTResult<DEOVendorPurchesOrderModel> GetDataList(DTParameters dtParameters, string GetRegionCode, string RootHostName)
@@ -89,16 +94,32 @@ namespace IBS.Repositories
                     }
                     foreach (var item in list)
                     {
-                        string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO) + "/" + item.CaseNo.Trim().ToString()+ ".pdf";
+                        //New
+                        var lstParentLOADocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, item.CaseNo.Trim().ToString());
+                        var lstParentLOA = lstParentLOADocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.ParentLOA).ToList();
+
+                        string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
                         if (!File.Exists(fpath))
                         {
                             item.IsFileExist = false;
                         }
-                        else 
+                        else
                         {
                             item.IsFileExist = true;
-                            item.File = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.VendorPO) + "/" + item.CaseNo.Trim().ToString() + ".pdf";
+                            item.File = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
                         }
+
+                        //old
+                        //string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.VendorPO) + "/" + item.CaseNo.Trim().ToString()+ ".pdf";
+                        //if (!File.Exists(fpath))
+                        //{
+                        //    item.IsFileExist = false;
+                        //}
+                        //else 
+                        //{
+                        //    item.IsFileExist = true;
+                        //    item.File = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.VendorPO) + "/" + item.CaseNo.Trim().ToString() + ".pdf";
+                        //}                       
                     }
                 }
             }

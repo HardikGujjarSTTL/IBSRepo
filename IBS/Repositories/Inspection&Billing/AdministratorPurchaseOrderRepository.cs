@@ -1,5 +1,6 @@
 ﻿using IBS.DataAccess;
 using IBS.Helper;
+using IBS.Interfaces;
 using IBS.Interfaces.Inspection_Billing;
 using IBS.Models;
 using Newtonsoft.Json;
@@ -14,11 +15,15 @@ namespace IBS.Repositories.Inspection_Billing
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration _configuration;
 
-        public AdministratorPurchaseOrderRepository(ModelContext context, IWebHostEnvironment _environment, IConfiguration configuration)
+        private readonly IDocument iDocument;
+
+        public AdministratorPurchaseOrderRepository(ModelContext context, IWebHostEnvironment _environment, IConfiguration configuration, IDocument _iDocumentRepository)
         {
             this.context = context;
             env = _environment;
             _configuration = configuration;
+
+            iDocument = _iDocumentRepository;
         }
         public AdministratorPurchaseOrderModel FindByID(string CaseNo)
         {
@@ -132,8 +137,12 @@ namespace IBS.Repositories.Inspection_Billing
                     }
                     foreach (var item in list)
                     {
-                        string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
-                        string fpath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
+                        //New
+                        var lstParentLOADocument = iDocument.GetRecordsList((int)Enums.DocumentCategory.PurchaseOrderForm, item.CASE_NO.ToString());
+                        var lstParentLOA = lstParentLOADocument.Where(m => m.ID == (int)Enums.DocumentPurchaseOrderForm.ParentLOA).ToList();
+
+                        string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
+                        string fpath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
                         if (!File.Exists(fpath) && !File.Exists(fpath1))
                         {
                             item.IsFileExist = false;
@@ -143,15 +152,38 @@ namespace IBS.Repositories.Inspection_Billing
                             item.IsFileExist = true;
                             item.IsPO_DOC = true;
                             item.IsPO_DOC1 = false;
-                            item.PO_DOC = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
+                            item.PO_DOC = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
                         }
                         else if (File.Exists(fpath1))
                         {
                             item.IsFileExist = true;
                             item.IsPO_DOC = false;
                             item.IsPO_DOC1 = true;
-                            item.PO_DOC1 = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
+                            item.PO_DOC1 = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.PurchaseOrderForm) + "/" + lstParentLOA[0].FileID;
                         }
+
+
+                        //Old
+                        //string fpath = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
+                        //string fpath1 = env.WebRootPath + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
+                        //if (!File.Exists(fpath) && !File.Exists(fpath1))
+                        //{
+                        //    item.IsFileExist = false;
+                        //}
+                        //else if (File.Exists(fpath))
+                        //{
+                        //    item.IsFileExist = true;
+                        //    item.IsPO_DOC = true;
+                        //    item.IsPO_DOC1 = false;
+                        //    item.PO_DOC = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC.ToString();
+                        //}
+                        //else if (File.Exists(fpath1))
+                        //{
+                        //    item.IsFileExist = true;
+                        //    item.IsPO_DOC = false;
+                        //    item.IsPO_DOC1 = true;
+                        //    item.PO_DOC1 = HostUrl + Enums.GetEnumDescription(Enums.FolderPath.AdministratorPurchaseOrderCASE_NO) + "/" + item.PO_DOC1.ToString();
+                        //}
                     }
                 }
             }
