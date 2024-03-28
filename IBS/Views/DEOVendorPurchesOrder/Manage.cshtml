@@ -34,9 +34,7 @@
                         <label for="Reference">Ref No.</label>
                         <input type="text" class="input" asp-for="CaseNo" readonly>
                     </div>                   
-                    <div class="col-md-3 mb-4" style="color:Red">
-                        <label for="Reference" id="lblRealCaseNO1"></label>
-                    </div>
+                   
                     <div class="col-md-4 mb-3">
                         <label for="Reference">Railway/Non-Railway<i class="text-danger">*</i></label>
                         @{
@@ -54,6 +52,9 @@
 
                         }
                         <input type="text" class="input" value="@rValues" readonly>
+                    </div>
+                    <div class="col-md-2 mb-3" style="color:Red">
+                        <label for="Reference" id="lblRealCaseNO1" style="position:absolute;right:50px"></label>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="Reference">&nbsp;</label>
